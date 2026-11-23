@@ -8,12 +8,12 @@
 
 import { PAGE_STALE_MS } from "~/lib/player-route";
 import { orpc } from "~/lib/orpc";
-import type { GamePage, GameStatsPage } from "@statsify/contract";
+import type { GameContent, GamePage, GameStatsPage } from "@statsify/contract";
 
-export type { GamePage, GameStatsPage };
+export type { GameContent, GamePage, GameStatsPage };
 
 /** What every game page has, whether the API lays it out or the site does: the player, the game and the switchers. */
-export type GameFrame = Omit<GameStatsPage, "stats" | "ranked" | "names"> & Partial<Pick<GamePage, "periods" | "period" | "window">>;
+export type GameFrame = Omit<GameStatsPage, "stats"> & Partial<Pick<GamePage, "periods" | "period" | "window">>;
 
 /** The card's title after the game's name. */
 export type Heading = GamePage["heading"];
@@ -27,6 +27,9 @@ export const isStatsPage = (page: GamePage | GameStatsPage): page is GameStatsPa
  */
 export const gamePageQuery = (uuid: string, game: string, mode?: string, submode?: string, period?: string) =>
   orpc.player.game.queryOptions({ input: { uuid, game, mode, submode, period }, staleTime: PAGE_STALE_MS });
+
+/** What every player's page of a game the site lays out shares. It changes only with a deploy, so it's kept for the visit. */
+export const gameContentQuery = (game: string) => orpc.content.game.queryOptions({ input: { game }, staleTime: Infinity });
 
 /** A search parameter as typed (the router reads `?mode=4v4` as a string and `?mode=123` as a number); the API checks it. */
 export const searchParam = (raw: unknown) =>

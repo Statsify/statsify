@@ -9,8 +9,9 @@
 import { BEDWARS_PAGE } from "./bedwars";
 import { DUELS_PAGE } from "./duels";
 import { SKYWARS_PAGE } from "./skywars";
+import { type GameContent, type GameStatsPage, type Heading, gameContentQuery } from "~/features/game/game-data";
+import { type QueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { type StatsGame, StatsContext, cellsOf, headingOf, levelOf, pairsOf, rowsIn, statsIn } from "./parts";
-import type { GameStatsPage, Heading } from "~/features/game/game-data";
 
 /** The games whose pages the site lays out itself, by their URL segment; the API sends their stats. */
 const STATS_GAMES: Record<string, StatsGame> = { bedwars: BEDWARS_PAGE, duels: DUELS_PAGE, skywars: SKYWARS_PAGE };
@@ -21,11 +22,22 @@ function gameOf(page: GameStatsPage): StatsGame {
   return game;
 }
 
+/**
+ * For a game the site lays out, starts loading what its pages share alongside the player's page, which a loader then
+ * awaits with `gameContentQuery`.
+ */
+export function prefetchGameContent(queryClient: QueryClient, game: string) {
+  if (Object.hasOwn(STATS_GAMES, game)) void queryClient.prefetchQuery(gameContentQuery(game));
+}
+
+const useGameContent = (page: GameStatsPage) => useSuspenseQuery(gameContentQuery(page.game.key)).data;
+
 /** A player's page of a game the site lays out, or on a session's page what they gained since it started. */
 export function StatsView({ page }: { page: GameStatsPage }) {
   const game = gameOf(page);
+  const content = useGameContent(page);
   return (
-    <StatsContext value={{ game, kind: page.session ? "session" : "player", page }}>
+    <StatsContext value={{ game, kind: page.session ? "session" : "player", page: { ...page, ...content } }}>
       <game.Page mode={page.mode} submode={page.submode} />
     </StatsContext>
   );
@@ -34,8 +46,9 @@ export function StatsView({ page }: { page: GameStatsPage }) {
 /** Two players' pages of a game the site lays out, each table a row per player. */
 export function StatsCompareView({ a, b }: { a: GameStatsPage; b: GameStatsPage }) {
   const game = gameOf(a);
+  const content = useGameContent(a);
   return (
-    <StatsContext value={{ game, kind: "compare", a, b }}>
+    <StatsContext value={{ game, kind: "compare", a: { ...a, ...content }, b: { ...b, ...content } }}>
       <game.Page mode={a.mode} submode={a.submode} />
     </StatsContext>
   );
@@ -45,8 +58,9 @@ export function StatsCompareView({ a, b }: { a: GameStatsPage; b: GameStatsPage 
 export const statsHeading = (page: GameStatsPage): Heading => headingOf(gameOf(page), page);
 
 /** The level and the first numbers of the first table (or of the game-wide row), for a page's link preview. */
-export function statsHeadline(page: GameStatsPage) {
-  const game = gameOf(page);
+export function statsHeadline(player: GameStatsPage, content: GameContent) {
+  const game = gameOf(player);
+  const page = { ...player, ...content };
   const level = levelOf(game, page);
   const table = rowsIn(game.headline(page.mode, page.submode)).flatMap(({ stats }) => stats);
   const cells = cellsOf(table.length > 0 ? table : statsIn(game.overview(page.mode)), page, false).filter((cell) => !cell.inline);
@@ -54,8 +68,8 @@ export function statsHeadline(page: GameStatsPage) {
 }
 
 /** Both players' values in the first table, for a comparison's link preview. */
-export function statsHeadlinePairs(a: GameStatsPage, b: GameStatsPage) {
+export function statsHeadlinePairs(a: GameStatsPage, b: GameStatsPage, content: GameContent) {
   const game = gameOf(a);
   const table = rowsIn(game.headline(a.mode, a.submode)).flatMap(({ stats }) => stats);
-  return pairsOf(table.length > 0 ? table : statsIn(game.overview(a.mode)), a, b);
+  return pairsOf(table.length > 0 ? table : statsIn(game.overview(a.mode)), { ...a, ...content }, { ...b, ...content });
 }

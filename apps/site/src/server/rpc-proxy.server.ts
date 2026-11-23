@@ -30,6 +30,7 @@ const RPC_PROCEDURES = new Map<string, { ttl: number; params: readonly string[] 
   ["leaderboard/page", { ttl: 60, params: ["field", "page", "size", "around"] }],
   ["home/previews", { ttl: 600, params: [] }],
   ["content/prestiges", { ttl: 3600, params: [] }],
+  ["content/game", { ttl: 3600, params: ["game"] }],
 ]);
 
 const json = (status: number, body: Record<string, unknown>, headers: Record<string, string> = {}) =>

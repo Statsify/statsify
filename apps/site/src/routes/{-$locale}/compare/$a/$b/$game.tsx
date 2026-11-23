@@ -18,8 +18,17 @@ import { cacheHeaders } from "~/lib/cache";
 import { cacheNotFoundResponse } from "~/lib/response";
 import { createFileRoute, isNotFound, notFound, redirect } from "@tanstack/react-router";
 import { ensurePlayer } from "~/features/player/resolve";
-import { type GamePage, type GameStatsPage, gamePageQuery, gameSearch, headingText, isStatsPage, pageSearch } from "~/features/game/game-data";
-import { StatsCompareView, statsHeading, statsHeadlinePairs } from "~/features/game/stats";
+import {
+  type GamePage,
+  type GameStatsPage,
+  gameContentQuery,
+  gamePageQuery,
+  gameSearch,
+  headingText,
+  isStatsPage,
+  pageSearch,
+} from "~/features/game/game-data";
+import { StatsCompareView, prefetchGameContent, statsHeading, statsHeadlinePairs } from "~/features/game/stats";
 import { orNull } from "~/lib/orpc";
 import { plainText } from "~/components/ui/minecraft-text";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -52,6 +61,7 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
     }
 
     preloadBackground(backgroundFor(game));
+    prefetchGameContent(context.queryClient, game);
     const load = (uuid: string) =>
       orNull(context.queryClient.ensureQueryData(gamePageQuery(uuid, game, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
     const [first, second] = await Promise.all([load(a.uuid), load(b.uuid)]);
@@ -76,7 +86,9 @@ export const Route = createFileRoute("/{-$locale}/compare/$a/$b/$game")({
     // For the unfurl's text: the first numbers of the headline table, as on the game page, else of the game-wide row.
     const pages = pairOf(first, second);
     const groups = pages.stats ? [] : comparePairs(pages.a, pages.b);
-    const table = pages.stats ? statsHeadlinePairs(pages.a, pages.b) : (groups.find(({ section }) => section?.title === null) ?? groups[0])?.pairs;
+    const table = pages.stats ?
+      statsHeadlinePairs(pages.a, pages.b, await context.queryClient.ensureQueryData(gameContentQuery(game))) :
+      (groups.find(({ section }) => section?.title === null) ?? groups[0])?.pairs;
     const pairs = (table ?? []).filter(({ a, b }) => !a.hidden && !b.hidden).slice(0, 4);
     const heading = pages.stats ? statsHeading(pages.a) : pages.a.heading;
 

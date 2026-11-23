@@ -20,8 +20,8 @@ import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-route
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { type GamePage, gamePageQuery, gameSearch, headingText, isStatsPage, pageSearch } from "~/features/game/game-data";
-import { StatsView, statsHeading, statsHeadline } from "~/features/game/stats";
+import { type GamePage, gameContentQuery, gamePageQuery, gameSearch, headingText, isStatsPage, pageSearch } from "~/features/game/game-data";
+import { StatsView, prefetchGameContent, statsHeading, statsHeadline } from "~/features/game/stats";
 import { SEARCH_DESCRIPTION_MAX, localeData, socialMeta, statText, statsDescription } from "~/lib/social-meta";
 import { plainText } from "~/components/ui/minecraft-text";
 import { playerTabIcon } from "~/lib/tab-icon";
@@ -64,6 +64,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     }
 
     preloadBackground(backgroundFor(game));
+    prefetchGameContent(context.queryClient, game);
     const load = (key: string) =>
       // A game without a page, a mode or submode it doesn't have, or a name too long to be either.
       orNull(context.queryClient.ensureQueryData(gamePageQuery(identity.uuid, key, deps.mode, deps.submode, deps.period)), ["NOT_FOUND", "BAD_REQUEST"]);
@@ -109,7 +110,9 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     // The card's title in plain text, without the mode on the game's first page.
     const heading = isStatsPage(page) ? statsHeading(page) : page.heading;
     const titled = mode || submode ? heading : { ...heading, mode: null };
-    const { level, cells } = isStatsPage(page) ? statsHeadline(page) : layoutHeadline(page);
+    const { level, cells } = isStatsPage(page) ?
+      statsHeadline(page, await context.queryClient.ensureQueryData(gameContentQuery(game))) :
+      layoutHeadline(page);
 
     return {
       ...identity,

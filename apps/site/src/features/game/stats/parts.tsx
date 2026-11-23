@@ -10,7 +10,7 @@ import { BoxPanels, GameShell, HeadlinePanels, type Level } from "~/features/gam
 import { Children, Fragment, type ReactElement, type ReactNode, createContext, isValidElement, use } from "react";
 import { CompareSection, CompareShell, type Pair, compareSides } from "~/features/compare/compare-page";
 import { SectionTitle, StatPanel } from "~/features/game/stat-panel";
-import type { GameFrame, GameStatsPage, Heading } from "~/features/game/game-data";
+import type { GameContent, GameFrame, GameStatsPage, Heading } from "~/features/game/game-data";
 import type { StatCell, StatSection } from "@statsify/contract";
 
 type Leaf = number | string;
@@ -91,10 +91,13 @@ export interface StatsGame<G = object, M extends string = string> {
   headline(mode: M, submode: string | null): ReactNode;
 }
 
+/** A page as the parts read it: the player's stats, and what every player's page of the game shares. */
+export type StatsPage = GameStatsPage & GameContent;
+
 /** Where a page reads its stats: the player's, what they gained in a session, or two players' side by side. */
 export type StatsSource = { game: StatsGame } & (
-  | { kind: "player" | "session"; page: GameStatsPage }
-  | { kind: "compare"; a: GameStatsPage; b: GameStatsPage }
+  | { kind: "player" | "session"; page: StatsPage }
+  | { kind: "compare"; a: StatsPage; b: StatsPage }
 );
 
 export const StatsContext = createContext<StatsSource | null>(null);
@@ -147,16 +150,17 @@ export const readStat = (stats: object, path: string): unknown =>
 // A value the schema couldn't work out (NaN) shows as one never set.
 const finite = (value: number) => (Number.isFinite(value) ? value : 0);
 
-const rankedSets = new WeakMap<GameStatsPage, Set<string>>();
+// By the content's own list, which the query cache keeps, as a page with it is put together on every render.
+const rankedSets = new WeakMap<readonly string[], Set<string>>();
 
-function isRanked(page: GameStatsPage, path: string) {
-  let ranked = rankedSets.get(page);
-  if (!ranked) rankedSets.set(page, (ranked = new Set(page.ranked)));
+function isRanked(page: StatsPage, path: string) {
+  let ranked = rankedSets.get(page.ranked);
+  if (!ranked) rankedSets.set(page.ranked, (ranked = new Set(page.ranked)));
   return ranked.has(path);
 }
 
 /** One stat of a player's (or a session's) stats as the page draws it. A session's numbers rank nowhere. */
-function cellOf(stat: AnyStat, page: GameStatsPage, session: boolean): StatCell {
+function cellOf(stat: AnyStat, page: StatsPage, session: boolean): StatCell {
   const { stats } = page;
   const stored = readStat(stats, stat.path);
   const raw = typeof stored === "number" ? finite(stored) : stored;
@@ -183,14 +187,14 @@ function cellOf(stat: AnyStat, page: GameStatsPage, session: boolean): StatCell 
 }
 
 /** The stats a page shows: a session leaves off its `session={false}`s, and in a list the ones it didn't move. */
-export const cellsOf = (stats: AnyStat[], page: GameStatsPage, session: boolean, list = false): StatCell[] =>
+export const cellsOf = (stats: AnyStat[], page: StatsPage, session: boolean, list = false): StatCell[] =>
   stats
     .filter((stat) => !(session && stat.session === false) && (stat.show?.(page.stats) ?? true))
     .map((stat) => cellOf(stat, page, session))
     .filter((cell) => !session || !list || cell.value !== 0);
 
 /** Both players' values of each stat that shows for both; a selection (a kit) has no difference to show. */
-export const pairsOf = (stats: AnyStat[], a: GameStatsPage, b: GameStatsPage): Pair[] =>
+export const pairsOf = (stats: AnyStat[], a: StatsPage, b: StatsPage): Pair[] =>
   stats
     .filter((stat) => !stat.inline && [a, b].every((page) => stat.show?.(page.stats) ?? true))
     .map((stat) => ({ a: cellOf(stat, a, false), b: cellOf(stat, b, false) }));
@@ -204,7 +208,7 @@ interface TableHeading {
 }
 
 /** A table's rows as the page draws them, without the rows a session empties, or nothing when it empties them all. */
-function tableOf(rows: ReturnType<typeof rowsIn>, page: GameStatsPage, session: boolean, { title, name, color }: TableHeading): StatSection | null {
+function tableOf(rows: ReturnType<typeof rowsIn>, page: StatsPage, session: boolean, { title, name, color }: TableHeading): StatSection | null {
   const kept = rows.map((row) => ({ title: row.title, cells: cellsOf(row.stats, page, session) })).filter(({ cells }) => cells.length > 0);
   if (kept.length === 0) return null;
   const titled = rows.some((row) => row.title !== undefined);
@@ -218,7 +222,7 @@ function tableOf(rows: ReturnType<typeof rowsIn>, page: GameStatsPage, session: 
   };
 }
 
-function CompareTable({ heading, stats, a, b }: { heading: TableHeading; stats: AnyStat[]; a: GameStatsPage; b: GameStatsPage }) {
+function CompareTable({ heading, stats, a, b }: { heading: TableHeading; stats: AnyStat[]; a: StatsPage; b: StatsPage }) {
   const pairs = pairsOf(stats, a, b);
   if (pairs.length === 0) return null;
   const titled = heading.title !== undefined || heading.name !== undefined;
@@ -281,7 +285,7 @@ function levelProgression({ current, max = 0, percent }: Level["progression"]): 
 }
 
 /** The level header of a player's page in a mode, linked to its leaderboard; none on a mode without one. */
-export function levelOf(game: StatsGame, page: GameStatsPage): Level | null {
+export function levelOf(game: StatsGame, page: StatsPage): Level | null {
   const level = game.level(page.stats, page.mode);
   if (!level) return null;
   const { key, label = "stats.level", progress = "stats.progression.exp", progression, ...text } = level;

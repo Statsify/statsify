@@ -19,8 +19,8 @@ import { cacheNotFoundResponse } from "~/lib/response";
 import { createI18n } from "~/i18n/i18n";
 import { ensurePlayer } from "~/features/player/resolve";
 import { gameKeysFor } from "~/features/leaderboards/leaderboard-list";
-import { headingText, isStatsPage, pageSearch, searchParam } from "~/features/game/game-data";
-import { StatsView, statsHeading } from "~/features/game/stats";
+import { gameContentQuery, headingText, isStatsPage, pageSearch, searchParam } from "~/features/game/game-data";
+import { StatsView, prefetchGameContent, statsHeading } from "~/features/game/stats";
 import { localeData, socialMeta } from "~/lib/social-meta";
 import { orNull } from "~/lib/orpc";
 import { plainText } from "~/components/ui/minecraft-text";
@@ -68,6 +68,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
     }
 
     preloadBackground(backgroundFor(game));
+    prefetchGameContent(context.queryClient, game);
     const load = (key: string) =>
       orNull(context.queryClient.ensureQueryData(sessionGameQuery(identity.uuid, key, deps.mode, deps.submode)), ["NOT_FOUND", "BAD_REQUEST"]);
     const page = await load(game);
@@ -108,6 +109,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/session/$game")({
       });
     }
 
+    if (isStatsPage(page)) await context.queryClient.ensureQueryData(gameContentQuery(game));
     const heading = isStatsPage(page) ? statsHeading(page) : page.heading;
 
     return {
