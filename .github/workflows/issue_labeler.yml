@@ -3,6 +3,10 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   labeler:
     runs-on: ubuntu-latest
