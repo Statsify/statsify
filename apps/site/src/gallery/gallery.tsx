@@ -807,9 +807,9 @@ const LOOKUPS = [
 function LookupSection() {
   return (
     <Section id="lookups">
-      <Demo label="An unknown player, with the lookup (no Turnstile widget in the gallery)">
+      <Demo label="An unknown player, with the lookup (no Turnstile widget in the gallery) and this browser's recently viewed players">
         <div className="flex flex-col">
-          <PlayerNotFoundView name="zzznotaplayer" turnstileSiteKey="" lookup={LOOKUPS[0][1]} />
+          <PlayerNotFoundView name="zzznotaplayer" turnstileSiteKey="" lookup={LOOKUPS[0][1]} recent />
         </div>
       </Demo>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
