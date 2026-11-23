@@ -9,7 +9,7 @@
 import { type GameId, Player, getLeaderboardFields } from "@statsify/schemas";
 import { GAMES, type Stat, allStats, modeName } from "@statsify/catalog";
 import { gameName, siteName } from "./names.js";
-import { removeFormatting } from "@statsify/util";
+import { prettify, removeFormatting } from "@statsify/util";
 import type { LeaderboardColumn, LeaderboardGame, LeaderboardGroup } from "@statsify/contract";
 
 let catalog: Map<string, Stat> | undefined;
@@ -104,34 +104,10 @@ const gameGroup = (game: GameId): GroupNames => ({ game, formatted: gameName(gam
 /** A group that isn't a game's, so it has no colors. */
 const otherGroup = (name: string): GroupNames => ({ game: null, formatted: name });
 
-/** `PlayerStats` keys → the leaderboard group they belong to. */
+/** `PlayerStats` keys → the leaderboard group they belong to: each catalog game's, and General's. */
 export const LEADERBOARD_GROUPS: Record<string, GroupNames> = {
-  arcade: gameGroup("ARCADE"),
-  arenabrawl: gameGroup("ARENA_BRAWL"),
-  bedwars: gameGroup("BEDWARS"),
-  blitzsg: gameGroup("BLITZSG"),
-  buildbattle: gameGroup("BUILD_BATTLE"),
-  challenges: otherGroup("Challenges"),
-  copsandcrims: gameGroup("COPS_AND_CRIMS"),
-  duels: gameGroup("DUELS"),
   general: gameGroup("GENERAL"),
-  megawalls: gameGroup("MEGAWALLS"),
-  murdermystery: gameGroup("MURDER_MYSTERY"),
-  paintball: gameGroup("PAINTBALL"),
-  parkour: gameGroup("PARKOUR"),
-  pit: gameGroup("PIT"),
-  quake: gameGroup("QUAKE"),
-  quests: otherGroup("Quests"),
-  skywars: gameGroup("SKYWARS"),
-  smashheroes: gameGroup("SMASH_HEROES"),
-  speeduhc: gameGroup("SPEED_UHC"),
-  tntgames: gameGroup("TNT_GAMES"),
-  turbokartracers: gameGroup("TURBO_KART_RACERS"),
-  uhc: gameGroup("UHC"),
-  vampirez: gameGroup("VAMPIREZ"),
-  walls: gameGroup("WALLS"),
-  warlords: gameGroup("WARLORDS"),
-  woolgames: gameGroup("WOOLGAMES"),
+  ...Object.fromEntries(Object.values(GAMES).map(({ key, id }) => [key, id ? gameGroup(id) : otherGroup(prettify(key))])),
 };
 
 /** Every enabled player leaderboard, grouped by the `stats.<game>` it lives under. Static metadata. */
