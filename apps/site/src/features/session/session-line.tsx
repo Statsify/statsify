@@ -19,7 +19,12 @@ export function SessionLine({ start, updatedAt }: { start: number; updatedAt: nu
   return (
     <p className="text-mc-1.5 text-mc-gray">
       {t("session.started")} <LoginDate ms={start} />
-      {now !== undefined && ` · ${t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}`}
+      {now !== undefined && (
+        <span className="max-md:block">
+          <span className="max-md:hidden"> · </span>
+          {t("player.updated", { time: relativeTime(updatedAt, now, i18n.language) })}
+        </span>
+      )}
     </p>
   );
 }
