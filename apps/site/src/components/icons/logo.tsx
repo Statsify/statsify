@@ -79,9 +79,9 @@ export function Wordmark({ className, as: Tag = "p" }: { className?: string; as?
 // Icon + Text
 export function Brand({ className }: { className?: string }) {
   return (
-    <div className={cn("flex items-center gap-4", className)}>
-      <Logo className="size-16" />
-      <Wordmark />
+    <div className={cn("flex items-center gap-2", className)}>
+      <Logo className="size-8" />
+      <Wordmark className="text-mc-2" />
     </div>
   );
 }

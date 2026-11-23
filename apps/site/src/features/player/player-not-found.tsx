@@ -13,6 +13,8 @@ import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
 import { PLACEHOLDER_UUID, isPlayerTag } from "~/lib/uuid";
+import { RecentPlayers } from "./recent-players";
+import { cn } from "~/lib/util";
 import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { type ReactNode, useEffect, useState } from "react";
@@ -28,29 +30,31 @@ type Lookup<T = PlayerIdentity> = (name: string, token: string | undefined, dead
 
 const lookupOnHypixel: Lookup = (name, token, deadline) => lookupPlayer({ data: { name, token }, signal: deadline });
 
-/** The player-not-found page for the route's name. */
+/** The player-not-found page for the route's name, with the players this browser viewed as a way back. */
 export function PlayerNotFound() {
   const { name = "" } = useParams({ strict: false });
-  return <PlayerNotFoundView name={name} />;
+  return <PlayerNotFoundView name={name} recent />;
 }
 
 /**
  * The player-not-found page with the Turnstile-gated "Look up on Hypixel" action, or Bingo's own `search` and action
- * (`children`), since its header has no search.
+ * (`children`), since its header has no search. With `recent`, the recently viewed players follow.
  */
 export function PlayerNotFoundView({
   name,
   lookup,
   turnstileSiteKey,
   search,
+  recent = false,
   children,
-}: { name: string; lookup?: Lookup; turnstileSiteKey?: string; search?: ReactNode; children?: ReactNode }) {
+}: { name: string; lookup?: Lookup; turnstileSiteKey?: string; search?: ReactNode; recent?: boolean; children?: ReactNode }) {
   const { t } = useTranslation();
   // A name no account can have has nothing to look up.
   const valid = isPlayerTag(name);
 
+  // `gap-8` is the gap `RecentPlayers` takes back while it holds nothing.
   return (
-    <Error className={search ? "flex-col-reverse md:flex-col" : undefined}>
+    <Error className={cn(search && "flex-col-reverse md:flex-col", recent && "gap-8")}>
       {search}
       <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
         <div className="flex max-w-full flex-col items-center gap-4">
@@ -68,6 +72,7 @@ export function PlayerNotFoundView({
         </ErrorText>
         {valid && (children ?? <LookupButton name={name} lookup={lookup} turnstileSiteKey={turnstileSiteKey} />)}
       </div>
+      {recent && <RecentPlayers />}
     </Error>
   );
 }

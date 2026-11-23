@@ -79,8 +79,9 @@ function useStuck<T extends Element>() {
 
 /**
  * From `md` up: a header row of boxes (position, player, the board's columns), then one row per player: position,
- * head, name and each value. The header row stays at the window's top while the table scrolls under it, on the page's
- * color then, since its boxes are see-through; the color reaches over the gap under it.
+ * head, name and each value. The header row stays at the window's top while the table scrolls under it, on a band of the
+ * page's color then, since its boxes are see-through: the band runs the window's width, reaches over the gap under the
+ * row, and casts the panels' 4 px shadow.
  */
 function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: LeaderboardPage[] }) {
   const { t } = useTranslation();
@@ -98,7 +99,10 @@ function BoxTable({ page, chunks }: { page: LeaderboardPage; chunks: Leaderboard
         ref={header}
         role="row"
         data-stuck={stuck || undefined}
-        className={cn("sticky top-0 z-10 col-span-full -mb-1 grid grid-cols-subgrid pb-1 data-stuck:bg-blackify-950", BOX_GAP)}
+        className={cn(
+          "sticky top-0 z-10 col-span-full -mb-1 grid grid-cols-subgrid pb-1 data-stuck:bg-blackify-950 data-stuck:shadow-[0_0_0_100vmax_var(--color-blackify-950),0_4px_0_100vmax_rgb(0_0_0/0.84)] data-stuck:[clip-path:inset(0_-100vmax_-4px)]",
+          BOX_GAP
+        )}
       >
         <Box role="columnheader" className={CELL}>
           <span className={cn(TEXT, "font-bold")}>{t("leaderboards.position")}</span>
