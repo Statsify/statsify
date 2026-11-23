@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { WHISPERS, type Whisper } from "@statsify/skyblock";
@@ -24,11 +23,7 @@ export const SkyBlockHotfProfile = ({ profile, t, ...card }: SkyBlockProfileProp
   const hotf = profile.member.hotf;
 
   if (!hotf) {
-    return (
-      <Card {...card} name={profile.displayName}>
-        <Empty text={t("skyblock.noHotf")} />
-      </Card>
-    );
+    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noHotf")} />;
   }
 
   const { level, centerLevel, loadout, tokens, ability, whispers, nodes } = hotf;

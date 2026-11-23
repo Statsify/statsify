@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { MEDAL_COLORS, gridRows } from "./components/ItemGrid.js";
@@ -27,11 +27,7 @@ export const SkyBlockFishingProfile = ({ profile, t, page, ...card }: SkyBlockFi
   const fishing = profile.member.fishing;
 
   if (!fishing) {
-    return (
-      <Card {...card} name={profile.displayName}>
-        <Empty text={t("skyblock.noFishing")} />
-      </Card>
-    );
+    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noFishing")} />;
   }
 
   const sidebar: SidebarItem[] = [
