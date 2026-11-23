@@ -1,4 +1,4 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
@@ -233,7 +233,10 @@ impl<'a> BodyPart<'a> {
         }
         .create();
         // In Minecraft the outer layer is scaled up 12.5%
-        layer.scale_around(1.125, position);
+        let center = rotation.map_or(position, |rotation| {
+          rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+        });
+        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -398,7 +401,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.grow_around(1.1875, neck);
+            box_geometry.scale_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
