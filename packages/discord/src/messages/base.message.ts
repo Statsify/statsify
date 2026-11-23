@@ -7,7 +7,12 @@
  */
 
 import { type APIAllowedMentions, type APIAttachment, MessageFlags } from "discord-api-types/v10";
-import { ActionRowBuilder, type ContainerBuilder, type ContainerComponent } from "./components/index.js";
+import {
+  ActionRowBuilder,
+  type ContainerBuilder,
+  type ContainerComponent,
+  TextDisplayBuilder,
+} from "./components/index.js";
 import { EmbedBuilder } from "./embed.js";
 import { InteractionAttachment, InteractionContent } from "#interaction";
 import { LocalizationString, LocalizeFunction, translateField } from "./localize.js";
@@ -59,15 +64,22 @@ export class Message {
     if (data.ephemeral) flags |= MessageFlags.Ephemeral;
     if (v2) flags |= MessageFlags.IsComponentsV2;
 
+    let { content, components } = data;
+
+    if (v2 && content) {
+      components = [new TextDisplayBuilder(content).build(locale), ...(components ?? [])];
+      content = undefined;
+    }
+
     return {
-      content: data.content,
+      content,
       tts: data.tts,
       flags: flags || undefined,
       // Unlike embeds, text displays ping what they mention, and some show user input
       allowed_mentions: data.mentions ?? (v2 ? { parse: [] } : undefined),
       embeds: data.embeds,
       attachments: data.attachments,
-      components: data.components,
+      components,
       files: data.files?.map(({ name, data, type }) => ({ name, data, contentType: type })),
     };
   }
