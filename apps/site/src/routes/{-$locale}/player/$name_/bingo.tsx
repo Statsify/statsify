@@ -28,7 +28,8 @@ import type { AutoUpdate } from "@statsify/contract/refresh";
 
 const EDGE_TTL_SECONDS = 300;
 
-export const Route = createFileRoute("/{-$locale}/player/$name/bingo")({
+// Outside the player's layout, so an unknown name gets Bingo's own not-found page.
+export const Route = createFileRoute("/{-$locale}/player/$name_/bingo")({
   validateSearch: validateBoardSearch,
   loader: async ({ params, context }) => {
     const player = await loadBingoPlayer(context.queryClient, params.name);
