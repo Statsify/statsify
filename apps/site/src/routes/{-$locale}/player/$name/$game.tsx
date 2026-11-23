@@ -15,7 +15,7 @@ import { PlayerNotFound } from "~/features/player/player-not-found";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead, possessive } from "~/lib/player-route";
 import { orNull } from "~/lib/orpc";
 import { cacheHeaders } from "~/lib/cache";
-import { cacheNotFoundResponse } from "~/lib/response";
+import { cacheNotFoundResponse, missingPlayerResponse } from "~/lib/response";
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { formatNumber } from "~/i18n/format";
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/{-$locale}/player/$name/$game")({
     const identity = await ensurePlayer(context.queryClient, params.name);
 
     if (!identity) {
-      cacheNotFoundResponse();
+      missingPlayerResponse();
       throw notFound({ data: { player: true } satisfies Missing });
     }
 
