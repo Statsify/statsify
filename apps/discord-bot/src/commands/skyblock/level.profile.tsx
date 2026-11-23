@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { LevelBar } from "./components/LevelBar.js";
@@ -20,17 +21,7 @@ const topSources = ({ level }: MemberView) => level!.sources.slice(0, SOURCES_SH
 
 export const levelIcons = (member: MemberView) => topSources(member).map(({ texture }) => texture);
 
-export const SkyBlockLevelProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockLevelProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const { level, pricesAsOf: asOf, market } = profile.member.level!;
 
   const sidebar: SidebarItem[] = [[t("skyblock.xp"), t(level.xp), "§3"]];
@@ -49,8 +40,7 @@ export const SkyBlockLevelProfile = ({
     t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
           <LevelBar title={t("skyblock.level")} level={level} color={profile.levelColor} t={t} />
@@ -69,7 +59,6 @@ export const SkyBlockLevelProfile = ({
       <box width="100%">
         <text>{`§7${footnote}`}</text>
       </box>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };

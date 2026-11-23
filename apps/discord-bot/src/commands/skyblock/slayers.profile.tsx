@@ -6,22 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
 import { BOSS_COLORS, SLAYER_BOSSES } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSlayersProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockSlayersProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const slayers = profile.member.slayers!;
 
   const sidebar: SidebarItem[] = [[t("skyblock.slayerXp"), t(slayers.xp), "§5"]];
@@ -40,14 +32,12 @@ export const SkyBlockSlayersProfile = ({
   });
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         {arrayGroup(cells, 3).map((row) => (
           <Table.tr>{row}</Table.tr>
         ))}
       </Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
