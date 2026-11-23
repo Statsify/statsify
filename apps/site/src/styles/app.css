@@ -149,8 +149,8 @@
 /*
  * The space the recently viewed section takes (`/player`, a player not found), from `--recent` (how many players: set
  * on the root before first paint, then on the section by React): the heading row, then the result cards, one a row on
- * phones, two from md and three from xl, 124 px tall below sm and 156 from it, 4 px apart. None for none. So the page
- * stays put when the cards arrive.
+ * phones and two from md, 124 px tall below sm and 156 from it, 4 px apart. None for none. So the page stays put when the
+ * cards arrive.
  */
 @utility recent-hold {
   --recent-rows: var(--recent, 0);
@@ -165,10 +165,6 @@
 
   @variant md {
     --recent-rows: round(up, var(--recent, 0) / 2, 1);
-  }
-
-  @variant xl {
-    --recent-rows: round(up, var(--recent, 0) / 3, 1);
   }
 }
 
