@@ -15,7 +15,6 @@ import {
   CHEST_SCREEN,
   DEFAULT_SKIN,
   GLINT,
-  InventoryRenderer,
   type ItemLayer,
   ItemRenderer,
   type ItemStack,
@@ -193,7 +192,7 @@ const patterns = [...textureIds]
 const inBrowser = new ItemRenderer(atlas);
 
 await Promise.all([
-  InventoryRenderer.load(atlas),
+  atlas.inventoryRenderer(),
   ...Object.keys(layers).map((id) => {
     const item: ItemStack = { id, enchanted: true, color: 0xff_00_00, effects: [{ id: "minecraft:speed" }], patterns, baseColor: "blue" };
     return inBrowser.render(item, scales.at(-1)!);

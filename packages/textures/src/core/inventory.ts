@@ -9,7 +9,6 @@
 import { type PackStack, assetPath } from "./pack.js";
 import { context, createCanvas, decodePng } from "./canvas.js";
 import { drawTooltip, loadNames, tooltipLines } from "./tooltip.js";
-import { Atlas } from "./atlas.js";
 import { ItemRenderer } from "./item-renderer.js";
 import type { ItemStack } from "./item-stack.js";
 import { TextRenderer } from "./text.js";
@@ -82,7 +81,8 @@ function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, 
 
 /** Draws containers the way Minecraft draws them, from a resource pack */
 export class InventoryRenderer {
-  private constructor(
+  /** Without a font, as from an atlas, it draws no title, counts or tooltips, which the page draws */
+  public constructor(
     private icons: IconSource,
     private text: TextRenderer | undefined,
     private names: Record<string, string>,
@@ -90,9 +90,7 @@ export class InventoryRenderer {
   ) {}
 
   /** The panel, font and names come from the pack stack, and the icons from `icons`, by default an ItemRenderer over it */
-  public static async load(pack: PackStack | Atlas, icons: IconSource = new ItemRenderer(pack)) {
-    if (pack instanceof Atlas) return new InventoryRenderer(icons, undefined, pack.names, pack.texture(CHEST_SCREEN));
-
+  public static async load(pack: PackStack, icons: IconSource = new ItemRenderer(pack)) {
     const chestScreen = pack.get(assetPath(CHEST_SCREEN, "textures", ".png"));
 
     const [text, panel] = await Promise.all([

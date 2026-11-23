@@ -7,13 +7,12 @@
  */
 
 import { type ItemLayer, type Model, ModelResolver, type SpecialModel } from "./models.js";
-import { Atlas } from "./atlas.js";
 import { type Quad, type Transformation, boxQuads, elementQuads, rasterize, transformQuads } from "./geometry.js";
 import { context, createCanvas, createImageData, decodePng, hex } from "./canvas.js";
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { BannerLayer, ItemStack } from "./item-stack.js";
-import { type PackStack, assetPath, namespaced } from "./pack.js";
+import { PackStack, assetPath, namespaced } from "./pack.js";
 import { dyeColor, tintColor } from "./tints.js";
 
 const SIZE = 16;
@@ -226,11 +225,24 @@ function textureIds({ model, special }: ItemLayer) {
  */
 export type SkinLoader = (url: string) => Promise<Uint8Array>;
 
+/** What an ItemRenderer draws from in place of a pack stack, like an atlas of icons drawn ahead of time */
+export interface ItemSource {
+  /** Icon cache keys start with it */
+  readonly hash: string;
+  readonly legacyGlint: boolean;
+  readonly models: Pick<ModelResolver, "resolve">;
+  readonly textures: Pick<TextureLoader, "get" | "frame">;
+  /** Whether an item is drawn from its models, rather than taken from icon() */
+  drawsFromModels(id: string): boolean;
+  /** An item's icon drawn ahead of time, 16 × scale pixels square */
+  icon(id: string, scale: number): OffscreenCanvas;
+}
+
 export class ItemRenderer {
   /** Whether the glint moves the way 1.8's does, which a 1.8 pack's glint texture picks */
   public readonly legacyGlint: boolean;
   private hash: string;
-  private atlas?: Atlas;
+  private source?: ItemSource;
   private models: Pick<ModelResolver, "resolve">;
   private textures: Pick<TextureLoader, "get" | "frame">;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
@@ -238,14 +250,14 @@ export class ItemRenderer {
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
 
   public constructor(
-    source: PackStack | Atlas,
+    source: PackStack | ItemSource,
     private cache?: IconCache,
     private loadSkin?: SkinLoader,
   ) {
     this.hash = source.hash;
 
-    if (source instanceof Atlas) {
-      this.atlas = source;
+    if (!(source instanceof PackStack)) {
+      this.source = source;
       this.models = source.models;
       this.textures = source.textures;
       this.legacyGlint = source.legacyGlint;
@@ -294,7 +306,7 @@ export class ItemRenderer {
   }
 
   private async base(item: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
-    if (this.atlas && !this.atlas.drawsFromModels(item.id)) return this.atlas.icon(item.id, scale);
+    if (this.source && !this.source.drawsFromModels(item.id)) return this.source.icon(item.id, scale);
 
     const resolved = this.models.resolve(item);
 

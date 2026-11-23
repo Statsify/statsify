@@ -6,8 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { context, createCanvas, decodePng } from "./canvas.js";
+import { CHEST_SCREEN, InventoryRenderer } from "./inventory.js";
 import { type ComponentBranches, type ItemLayer, hasComponent } from "./models.js";
+import { ItemRenderer, type ItemSource, type SkinLoader } from "./item-renderer.js";
+import { context, createCanvas, decodePng } from "./canvas.js";
+import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
 import { namespaced } from "./pack.js";
 
@@ -33,7 +36,7 @@ export interface AtlasData {
 }
 
 /** A pack's icons drawn ahead of time, which stand in for the pack in the renderers */
-export class Atlas {
+export class Atlas implements ItemSource {
   private icons = new Map<string, OffscreenCanvas>();
   private sprites = new Map<string, ImageData>();
 
@@ -66,6 +69,11 @@ export class Atlas {
 
   public get names() {
     return this.data.names;
+  }
+
+  /** An InventoryRenderer over the atlas. An atlas has no font, so the page draws the title, counts and tooltips */
+  public inventoryRenderer(cache?: IconCache, loadSkin?: SkinLoader) {
+    return new InventoryRenderer(new ItemRenderer(this, cache, loadSkin), undefined, this.names, this.texture(CHEST_SCREEN));
   }
 
   /** Whether the item is drawn from its models rather than its icon, since its stack changes how it looks */

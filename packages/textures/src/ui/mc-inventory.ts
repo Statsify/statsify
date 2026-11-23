@@ -69,7 +69,10 @@ function resourcesFor(pack: PackStack | Atlas) {
 
   if (!shared) {
     shared = {
-      renderer: InventoryRenderer.load(pack, new ItemRenderer(pack, cache, fetchSkin)),
+      renderer:
+        pack instanceof Atlas
+          ? Promise.resolve(pack.inventoryRenderer(cache, fetchSkin))
+          : InventoryRenderer.load(pack, new ItemRenderer(pack, cache, fetchSkin)),
       tooltips: new WeakMap(),
     };
     resources.set(pack, shared);

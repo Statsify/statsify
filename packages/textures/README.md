@@ -107,8 +107,8 @@ Items whose look depends on their stack are still drawn in the browser, from mod
 the atlas carries: dyed leather and wolf armor, potions, banners, shields and player heads with skins,
 and the glint on anything. Atlas icons don't animate.
 
-`loadAtlas(url)` loads one, and it goes wherever a `PackStack` does: `ItemRenderer`,
-`InventoryRenderer.load` and `<mc-inventory>`'s `pack`. An atlas has no font, so `<mc-inventory>`
+`loadAtlas(url)` loads one. It goes where a `PackStack` does in `ItemRenderer` and `<mc-inventory>`'s
+`pack`, and `atlas.inventoryRenderer()` gives its `InventoryRenderer`. An atlas has no font, so `<mc-inventory>`
 puts its title and counts in HTML, in the page's `Minecraft` font (or `--mc-inventory-font`;
 `::part(title)` and `::part(count)` restyle them). It draws no tooltips: it sends
 `mc-tooltip-change` events with the hovered `item`, its tooltip `lines` and the pointer, and `null`
