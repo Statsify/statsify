@@ -37,7 +37,11 @@ export function fromTntGamesLayout(
   const slots: (ItemStack | undefined)[] = Array.from({ length: ARMOR.boots });
 
   for (const [slot, token] of Object.entries(stored ?? mode.default)) {
-    if (inRange(Number(slot), slots.length)) slots[Number(slot)] = mode.tokens[token];
+    if (!inRange(Number(slot), slots.length)) continue;
+
+    const item = mode.tokens[token];
+    if (!item) throw new Error(`No TNT Games ${key} item ${token}`);
+    slots[Number(slot)] = item;
   }
 
   return slots;

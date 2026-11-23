@@ -177,10 +177,15 @@ const blank = (line: string) => plain(line).trim() === "";
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
 const storedSlot = (slot: number) => (slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined);
 
+const SPAWN_EGG = 383;
+
+// 1.8's untyped spawn egg (Damage 0, Zookeeper's Mystery Egg) has no 26.3 item, so editors leave it out
+const untypedEgg = ({ id, damage }: DumpItem) => id === "minecraft:spawn_egg" && !legacyItem(SPAWN_EGG, damage);
+
 const editorItems = (screen: Screen) =>
   screen.slots.flatMap(({ slot, item }) => {
     const stored = storedSlot(slot);
-    return item && stored !== undefined ? [{ slot: stored, item }] : [];
+    return item && stored !== undefined && !untypedEgg(item) ? [{ slot: stored, item }] : [];
   });
 
 /** A single-kit editor's items by stored slot, from its first screen (the default) or, in older dumps, where each was seen */

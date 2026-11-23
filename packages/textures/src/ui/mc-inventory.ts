@@ -9,6 +9,7 @@
 import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
 import { context, createCanvas } from "../core/canvas.js";
 import { IconCache } from "../core/icon-cache.js";
+import { ItemRenderer } from "../core/item-renderer.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
 import { tooltipOverlay } from "./tooltip-overlay.js";
@@ -23,11 +24,21 @@ interface Resources {
 const cache = new IconCache();
 const resources = new WeakMap<PackStack, Resources>();
 
+/** A player head's skin from the texture server, which allows cross-origin reads */
+async function fetchSkin(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
 function resourcesFor(pack: PackStack) {
   let shared = resources.get(pack);
 
   if (!shared) {
-    shared = { renderer: InventoryRenderer.load(pack, cache), tooltips: new WeakMap() };
+    shared = {
+      renderer: InventoryRenderer.load(pack, new ItemRenderer(pack, cache, fetchSkin)),
+      tooltips: new WeakMap(),
+    };
     resources.set(pack, shared);
   }
 

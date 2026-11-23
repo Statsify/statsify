@@ -4392,20 +4392,7 @@
   },
   "insane_zookeeper": {
     "name": "Insane Zookeeper",
-    "items": [
-      {
-        "slot": 0,
-        "token": "MONSTER_EGG:0",
-        "item": {
-          "id": "minecraft:pig_spawn_egg",
-          "count": 5,
-          "name": "§dMystery Egg",
-          "tooltip": [
-            "§5§oSpawns a random monster."
-          ]
-        }
-      }
-    ]
+    "items": []
   },
   "insane_pyro": {
     "name": "Insane Pyro",
