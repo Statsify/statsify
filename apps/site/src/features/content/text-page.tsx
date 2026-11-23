@@ -57,7 +57,7 @@ export function TextPage({
         >
           {listed && <Rail contents={contents} current={current} />}
           <div className="flex min-w-0 flex-col gap-6">
-            <header className="flex flex-col gap-2">
+            <header className="flex flex-col items-center gap-2 text-center">
               <h1 className="text-mc-2 lg:text-mc-3 font-bold">{title}</h1>
               {meta && <p className="text-mc-1 text-mc-gray">{meta}</p>}
             </header>
@@ -284,6 +284,9 @@ export function List({ children }: { children: ReactNode }) {
     </ul>
   );
 }
+
+/** A link's tap area grown past its line of text to at least 44 px, as a line of links sits closer than that. */
+export const TAP_AREA = "relative after:absolute after:-inset-x-2 after:-inset-y-4 after:min-h-11 after:min-w-11";
 
 const TEXT_LINK = "font-semibold text-white underline decoration-2 underline-offset-3 hover:text-mc-aqua";
 
