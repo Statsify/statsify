@@ -325,8 +325,8 @@ export function KeyTable({ head, rows }: { head: [ReactNode, ReactNode]; rows: [
         <tbody>
           {rows.map(([label, value], index) => (
             <tr key={index} className="max-sm:block not-first:border-t-2 border-black/20">
-              <td className="px-4 py-3 align-top text-mc-1 text-white whitespace-nowrap max-sm:block max-sm:pb-0">{label}</td>
-              <td className="mc-crisp px-4 py-3 align-top max-sm:block max-sm:pt-1">{value}</td>
+              <td className="px-4 py-3 align-top text-mc-1 lg:text-mc-1.5 text-white whitespace-nowrap max-sm:block max-sm:pb-0">{label}</td>
+              <td className="mc-crisp px-4 py-3 align-top max-sm:block max-sm:pt-1 lg:text-mc-1.5">{value}</td>
             </tr>
           ))}
         </tbody>
