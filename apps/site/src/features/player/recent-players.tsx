@@ -31,7 +31,7 @@ export function RecentPlayers({ onClear }: { onClear?: () => void }) {
   const players = recent ?? [];
 
   return (
-    <div className="recent-hold w-full text-start" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
+    <div className="recent-hold w-full max-w-200 text-start" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
       {players.length > 0 && (
         <section aria-labelledby={headingId} className={cn("flex flex-col", BOX_GAP)}>
           {/* Clear's ring sits inside, as the box clips. */}
@@ -48,7 +48,7 @@ export function RecentPlayers({ onClear }: { onClear?: () => void }) {
               {t("search.recent.clear")}
             </button>
           </Box>
-          <ul className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3", BOX_GAP)}>
+          <ul className={cn("grid grid-cols-1 md:grid-cols-2", BOX_GAP)}>
             {players.map((player) => <RecentCard key={player.uuid} player={player} />)}
           </ul>
         </section>

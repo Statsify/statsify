@@ -8,13 +8,13 @@
 
 import { useEffect, useRef } from "react";
 
-export function useOutsideClick<T extends HTMLElement>(fn: () => void) {
+export function useOutsideClick<T extends HTMLElement>(fn: (event: globalThis.PointerEvent) => void) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
     function onClick(event: globalThis.PointerEvent) {
       if (event.target && ref.current && !ref.current.contains(event.target as Node)) {
-        fn();
+        fn(event);
       }
     }
 
