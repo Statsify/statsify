@@ -79,7 +79,6 @@ export class InventoryRenderer {
     private chestScreen?: OffscreenCanvas,
   ) {}
 
-  /** The panel, font and names come from the pack stack, and the icons from `icons`, by default an ItemRenderer over it */
   public static async load(pack: PackStack, icons: IconSource = new ItemRenderer(pack)) {
     const chestScreen = pack.get(CHEST_SCREEN);
 

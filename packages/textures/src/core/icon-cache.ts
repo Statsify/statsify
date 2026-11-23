@@ -35,18 +35,13 @@ function open(onClose: () => void) {
   return db;
 }
 
-/** Deletes every icon whose key doesn't start with the stack's hash */
 async function keepStack(db: IDBPDatabase<Icons>, stack: string) {
   const store = db.transaction(STORE, "readwrite").store;
   const keys = await store.getAllKeys();
   await Promise.all(keys.filter((key) => !key.startsWith(`${stack}/`)).map((key) => store.delete(key)));
 }
 
-/**
- * Rendered icons as PNGs in IndexedDB, keyed by their pack stack's hash first, so the next page load skips
- * drawing them. The first stack to use it after a page load drops every other stack's icons, so a pack change
- * doesn't leave the old ones behind. A failed read is a miss
- */
+/** Keyed by their pack stack's hash first. The first stack to open it after a page load drops the others' icons */
 export class IconCache {
   private db?: Promise<IDBPDatabase<Icons>>;
 
