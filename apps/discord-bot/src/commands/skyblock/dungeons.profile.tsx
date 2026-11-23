@@ -7,7 +7,7 @@
  */
 
 import { Card } from "./components/Card.js";
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
@@ -98,16 +98,7 @@ export const SkyBlockDungeonsProfile = ({ profile, t, mode, ...card }: SkyBlockD
   );
 };
 
-export const SkyBlockEssenceProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockEssenceProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { essence } = profile.member.dungeons!;
 
   const cells = essence.map(({ type, amount, perks, maxPerks }) => (
@@ -123,10 +114,8 @@ export const SkyBlockEssenceProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName}>
       <Table.table>{gridRows(cells, 4)}</Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
