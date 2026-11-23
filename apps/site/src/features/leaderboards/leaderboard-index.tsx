@@ -11,7 +11,7 @@ import { Chevron } from "~/components/icons/chevron";
 import { DEFAULT_LOCALE } from "~/i18n/locales";
 import { FilterBox } from "~/components/filter-box";
 import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
-import { type GroupSummary, type ListGroup, boardLinksHtml, fetchLeaderboardList, filterGroups } from "./leaderboard-list";
+import { type GroupSummary, type ListGroup, boardLinksHtml, filterGroups, leaderboardListQuery } from "./leaderboard-list";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { type MouseEvent, type ReactNode, type SyntheticEvent, useMemo, useRef, useState } from "react";
 import { builtLeaderboardList } from "~/server/leaderboard-list.server";
@@ -19,6 +19,7 @@ import { cn } from "~/lib/util";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRouteApi, useHydrated, useRouter } from "@tanstack/react-router";
 import { useNumberFormat } from "~/i18n/use-number-format";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { IndexData } from "./leaderboard-data";
 
@@ -128,6 +129,7 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
   const { t } = useTranslation();
   const n = useNumberFormat();
   const { prefix, delegation } = useBoardLinks();
+  const queryClient = useQueryClient();
   const [list, setList] = useState(() => loaded ?? serverList());
   const [failed, setFailed] = useState(false);
   const [filter, setFilter] = useState(query);
@@ -135,7 +137,7 @@ export function AllLeaderboards({ data, list: loaded, query = "" }: { data: Inde
   const loadList = () => {
     if (list) return;
     setFailed(false);
-    fetchLeaderboardList(data.hash).then(setList, () => setFailed(true));
+    queryClient.fetchQuery(leaderboardListQuery(data.hash)).then(setList, () => setFailed(true));
   };
 
   // Until the list is here, the server's render stands, for the query it rendered.
