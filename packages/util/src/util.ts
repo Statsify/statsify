@@ -143,13 +143,7 @@ const HOURS = 24;
 const MONTHS = 30;
 const YEARS = 12;
 
-// Format milliseconds to a human readable string
-export const formatTime = (
-  timeMs: number,
-  { short = true, entries = 2 }: FormatTimeOptions = {}
-): string => {
-  if (timeMs < MS) return `${timeMs}${short ? "ms" : " milliseconds"}`;
-
+export const splitTime = (timeMs: number) => {
   const seconds = Math.floor(timeMs / MS);
   const minutes = Math.floor(seconds / SECONDS);
   const hours = Math.floor(minutes / MINUTES);
@@ -157,7 +151,7 @@ export const formatTime = (
   const months = Math.floor(days / MONTHS);
   const years = Math.floor(months / YEARS);
 
-  const time = [
+  return [
     { value: years, short: "y", long: "year" },
     { value: months % YEARS, short: "mo", long: "month" },
     { value: days % MONTHS, short: "d", long: "day" },
@@ -166,8 +160,16 @@ export const formatTime = (
     { value: seconds % SECONDS, short: "s", long: "second" },
     { value: timeMs - seconds * MS, short: "ms", long: "millisecond" },
   ];
+};
 
-  return time
+// Format milliseconds to a human readable string
+export const formatTime = (
+  timeMs: number,
+  { short = true, entries = 2 }: FormatTimeOptions = {}
+): string => {
+  if (timeMs < MS) return `${timeMs}${short ? "ms" : " milliseconds"}`;
+
+  return splitTime(timeMs)
     .filter(({ value }) => value > 0)
     .map(
       (unit) =>

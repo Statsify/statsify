@@ -371,7 +371,7 @@
       "title": "Higher Tier Required"
     },
     "hypixelRateLimited": {
-      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time}}!",
+      "description": "Statsify has reached its Hypixel API limit. Please try again in about {{time, duration}}!",
       "title": "$t(errors.hypixelUnavailable.title)"
     },
     "hypixelUnavailable": {
