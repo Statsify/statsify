@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
+import { Card } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, gridRows } from "./components/ItemGrid.js";
@@ -22,17 +23,7 @@ const gearKinds = (gear: GearSection) => [filled(gear.armor), filled(gear.equipm
 
 export const gearIcons = ({ gear }: MemberView) => (gear ? gearKinds(gear).flat().map(({ texture }) => texture) : []);
 
-export const SkyBlockGearProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-  icons,
-}: SkyBlockProfileProps) => {
+export const SkyBlockGearProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
   const { gear } = profile.member;
 
   const sidebar: SidebarItem[] = gear ?
@@ -47,8 +38,7 @@ export const SkyBlockGearProfile = ({
   const items = gear ? gearKinds(gear).flatMap((kind) => (kind.length % 2 === 0 ? kind : [...kind, undefined])) : [];
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {gear ?
         (
           <ItemGrid
@@ -58,30 +48,18 @@ export const SkyBlockGearProfile = ({
           />
         ) :
         <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noGear")} t={t} />}
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
 
-export const SkyBlockMuseumProfile = ({
-  profile,
-  title,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: SkyBlockProfileProps) => {
+export const SkyBlockMuseumProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
   const { museum } = profile.member;
 
   if (!museum) {
     return (
-      <Container background={background}>
-        <Header skin={skin} name={profile.displayName} badge={badge} title={title} time="LIVE" />
+      <Card {...card} name={profile.displayName}>
         <Empty text={t("skyblock.noMuseum")} />
-        <Footer logo={logo} user={user} />
-      </Container>
+      </Card>
     );
   }
 
@@ -97,10 +75,8 @@ export const SkyBlockMuseumProfile = ({
   ));
 
   return (
-    <Container background={background}>
-      <Header skin={skin} name={profile.displayName} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>{gridRows(categories, 3, true)}</Table.table>
-      <Footer logo={logo} user={user} />
-    </Container>
+    </Card>
   );
 };
