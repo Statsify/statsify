@@ -88,7 +88,7 @@ function Panel({ id, heading, count, className, children }: { id: string; headin
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className={cn("grid scroll-mt-6 grid-cols-2", BOX_GAP, className)}>
       <Box className={HEADING_BOX}>
-        <h2 id={`${id}-heading`} className="text-mc-1.5 font-bold">
+        <h2 id={`${id}-heading`} className="text-mc-1.5 lg:text-mc-2 font-bold">
           {heading} {count !== undefined && <span className="font-normal text-mc-gray">{count}</span>}
         </h2>
       </Box>
