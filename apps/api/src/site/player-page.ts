@@ -46,9 +46,13 @@ interface Summary {
   id: GameId;
   /** Minecraft-formatted level or prefix for the panel title. */
   level?: (stats: PlayerStats) => string | undefined;
+  /** From the game's own play counts: games played where it stores them, else its wins, losses, kills and deaths. */
+  played: (stats: PlayerStats) => boolean;
   /** Up to four `[stats.* locale key, value]` rows. */
   rows: [key: string, value: Value, suffix?: string][];
 }
+
+const anyCount = (...counts: number[]) => counts.some((count) => count > 0);
 
 /**
  * What each game panel shows: four headline numbers from the overall mode, picked by hand.
@@ -57,6 +61,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "BEDWARS",
     level: (s) => s.bedwars.levelFormatted,
+    played: ({ bedwars }) => bedwars.overall.gamesPlayed > 0,
     rows: [
       ["wins", (s) => s.bedwars.overall.wins],
       ["finalKills", (s) => s.bedwars.overall.finalKills],
@@ -67,6 +72,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "SKYWARS",
     level: (s) => s.skywars.levelFormatted,
+    played: ({ skywars }) => skywars.overall.gamesPlayed > 0,
     rows: [
       ["wins", (s) => s.skywars.overall.wins],
       ["kills", (s) => s.skywars.overall.kills],
@@ -76,6 +82,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "DUELS",
+    played: ({ duels: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.duels.overall.wins],
       ["kills", (s) => s.duels.overall.kills],
@@ -85,6 +92,19 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "ARCADE",
+    // Its games' wins, and the games played or deaths of the games that store them, for a player who never won.
+    played: ({ arcade }) =>
+      anyCount(
+        arcade.wins,
+        arcade.bountyHunters.deaths,
+        arcade.disasters.gamesPlayed,
+        arcade.dropper.gamesPlayed,
+        arcade.galaxyWars.deaths,
+        arcade.miniWalls.deaths,
+        arcade.pixelParty.overall.gamesPlayed,
+        arcade.throwOut.deaths,
+        arcade.zombies.overall.deaths
+      ),
     rows: [
       ["wins", (s) => s.arcade.wins],
       ["coins", (s) => s.arcade.coins],
@@ -93,6 +113,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "ARENA_BRAWL",
     level: (s) => s.arenabrawl.naturalPrefix,
+    played: ({ arenabrawl: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.arenabrawl.overall.wins],
       ["kills", (s) => s.arenabrawl.overall.kills],
@@ -103,6 +124,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "BLITZSG",
     level: (s) => s.blitzsg.naturalPrefix,
+    played: ({ blitzsg: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.blitzsg.overall.wins],
       ["kills", (s) => s.blitzsg.overall.kills],
@@ -113,6 +135,8 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "BUILD_BATTLE",
     level: (s) => s.buildbattle.titleFormatted,
+    // It stores no games played or losses, so score and correct guesses count a player who never won.
+    played: ({ buildbattle }) => anyCount(buildbattle.overall.wins, buildbattle.score, buildbattle.correctGuesses),
     rows: [
       ["wins", (s) => s.buildbattle.overall.wins],
       ["score", (s) => s.buildbattle.score],
@@ -123,6 +147,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "COPS_AND_CRIMS",
     level: (s) => s.copsandcrims.levelFormatted,
+    played: ({ copsandcrims: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.copsandcrims.overall.wins],
       ["kills", (s) => s.copsandcrims.overall.kills],
@@ -132,6 +157,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "MEGAWALLS",
+    played: ({ megawalls: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.megawalls.overall.wins],
       ["finalKills", (s) => s.megawalls.overall.finalKills],
@@ -141,6 +167,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "MURDER_MYSTERY",
+    played: ({ murdermystery }) => murdermystery.overall.gamesPlayed > 0,
     rows: [
       ["wins", (s) => s.murdermystery.overall.wins],
       ["kills", (s) => s.murdermystery.overall.kills],
@@ -151,6 +178,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "PAINTBALL",
     level: (s) => s.paintball.naturalPrefix,
+    played: ({ paintball }) => anyCount(paintball.wins, paintball.kills, paintball.deaths),
     rows: [
       ["wins", (s) => s.paintball.wins],
       ["kills", (s) => s.paintball.kills],
@@ -161,6 +189,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "PIT",
     level: (s) => s.pit.levelFormatted,
+    played: ({ pit }) => anyCount(pit.kills, pit.deaths),
     rows: [
       ["kills", (s) => s.pit.kills],
       ["deaths", (s) => s.pit.deaths],
@@ -171,6 +200,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "QUAKE",
     level: (s) => s.quake.naturalPrefix,
+    played: ({ quake: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.quake.overall.wins],
       ["kills", (s) => s.quake.overall.kills],
@@ -181,6 +211,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "SMASH_HEROES",
     level: (s) => s.smashheroes.levelFormatted,
+    played: ({ smashheroes: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.smashheroes.overall.wins],
       ["kills", (s) => s.smashheroes.overall.kills],
@@ -191,6 +222,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "SPEED_UHC",
     level: (s) => s.speeduhc.levelFormatted,
+    played: ({ speeduhc: { overall } }) => anyCount(overall.wins, overall.losses, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.speeduhc.overall.wins],
       ["kills", (s) => s.speeduhc.overall.kills],
@@ -200,6 +232,9 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "TNT_GAMES",
+    // Only its modes store losses, kills and deaths.
+    played: ({ tntgames: { wins, tntRun, bowSpleef, pvpRun, wizards, tntTag } }) =>
+      anyCount(wins, tntRun.losses, bowSpleef.losses, pvpRun.kills, pvpRun.deaths, wizards.kills, wizards.deaths, tntTag.kills, tntTag.deaths),
     rows: [
       ["wins", (s) => s.tntgames.wins],
       ["coins", (s) => s.tntgames.coins],
@@ -207,6 +242,7 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "TURBO_KART_RACERS",
+    played: ({ turbokartracers }) => turbokartracers.gamesPlayed > 0,
     rows: [
       ["goldTrophies", (s) => s.turbokartracers.gold],
       ["silverTrophies", (s) => s.turbokartracers.silver],
@@ -217,6 +253,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "UHC",
     level: (s) => s.uhc.levelFormatted,
+    played: ({ uhc: { overall } }) => anyCount(overall.wins, overall.kills, overall.deaths),
     rows: [
       ["wins", (s) => s.uhc.overall.wins],
       ["kills", (s) => s.uhc.overall.kills],
@@ -226,6 +263,8 @@ const GAME_SUMMARIES: Summary[] = [
   },
   {
     id: "VAMPIREZ",
+    played: ({ vampirez: { human, vampire, zombieKills } }) =>
+      anyCount(human.wins, human.kills, human.deaths, vampire.wins, vampire.kills, vampire.deaths, zombieKills),
     rows: [
       ["overallWins", (s) => s.vampirez.overallWins],
       ["zombieKills", (s) => s.vampirez.zombieKills],
@@ -236,6 +275,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "WALLS",
     level: (s) => s.walls.naturalPrefix,
+    played: ({ walls }) => anyCount(walls.wins, walls.losses, walls.kills, walls.deaths),
     rows: [
       ["wins", (s) => s.walls.wins],
       ["kills", (s) => s.walls.kills],
@@ -246,6 +286,7 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "WARLORDS",
     level: (s) => s.warlords.titleFormatted,
+    played: ({ warlords }) => warlords.gamesPlayed > 0,
     rows: [
       ["wins", (s) => s.warlords.wins],
       ["kills", (s) => s.warlords.kills],
@@ -256,6 +297,9 @@ const GAME_SUMMARIES: Summary[] = [
   {
     id: "WOOLGAMES",
     level: (s) => s.woolgames.levelFormatted,
+    // Capture The Wool stores no games played.
+    played: ({ woolgames: { woolwars, sheepwars, captureTheWool } }) =>
+      anyCount(woolwars.overall.gamesPlayed, sheepwars.gamesPlayed, captureTheWool.wins, captureTheWool.losses, captureTheWool.kills, captureTheWool.deaths),
     rows: [
       ["wins", (s) => s.woolgames.wins],
       // Out of 100, as the card prints it.
@@ -267,14 +311,12 @@ const GAME_SUMMARIES: Summary[] = [
 
 /** A game panel, or `undefined` for a game the player has never played, which the page leaves out. */
 function summarize(stats: PlayerStats, summary: Summary): GameSummary | undefined {
+  if (!summary.played(stats)) return undefined;
+
   const rows = summary.rows.flatMap(([key, read, suffix]) => {
     const value = read(stats);
     return value === undefined ? [] : [{ key, value, ...(suffix && { suffix }) }];
   });
-
-  // Ratios and formatted levels follow from the counts, so all-zero counts mean there is nothing to show.
-  const played = rows.some((row) => typeof row.value === "number" && row.value > 0);
-  if (!played) return undefined;
 
   return { id: summary.id, name: FormattedGame[summary.id], level: summary.level?.(stats), rows };
 }
