@@ -36,13 +36,26 @@ interface Texture {
 
 let messenger: Promise<typeof SkinMessenger> | undefined;
 
-/** The skin renderer's wasm build, fetched and started once per page, since its event loop can only start once. */
+/**
+ * The skin renderer's wasm build, fetched and started once per page, since its event loop can only start once. A failed
+ * download or compile is tried again the next time the panel opens.
+ */
 function loadMessenger() {
-  messenger ??= import("@statsify/skin-renderer/wasm").then(async ({ default: init, SkinMessenger, SkinRenderer }) => {
-    await init();
-    new SkinRenderer().run();
-    return SkinMessenger;
-  });
+  messenger ??= import("@statsify/skin-renderer/wasm")
+    .then(async (wasm) => {
+      await wasm.default();
+      return wasm;
+    })
+    .then(
+      ({ SkinMessenger, SkinRenderer }) => {
+        new SkinRenderer().run();
+        return SkinMessenger;
+      },
+      (error: unknown) => {
+        messenger = undefined;
+        throw error;
+      }
+    );
 
   return messenger;
 }
@@ -63,15 +76,23 @@ const cameraYaw = (yaw: number) => (-yaw * Math.PI) / 180;
 /** True once the wasm renderer has drawn the skin; until then, and where it can't draw, the CSS model stands in. */
 function useRenderer(canvasId: string, texture: Texture | undefined, yaw: number) {
   const [drawn, setDrawn] = useState(false);
+  const loading = useRef<Promise<typeof SkinMessenger | undefined>>(undefined);
   const renderer = useRef<typeof SkinMessenger>(undefined);
   const latestYaw = useRef(yaw);
 
+  // On mount, beside the texture's fetch rather than after it: the renderer's download is the slow part.
   useEffect(() => {
-    if (!texture) return;
+    const load = canDraw3d().then((can) => (can ? loadMessenger() : undefined));
+    // A failure is reported below, once there's a texture to draw.
+    load.catch(() => undefined);
+    loading.current = load;
+  }, []);
+
+  useEffect(() => {
+    if (!texture || !loading.current) return;
     let active = true;
 
-    canDraw3d()
-      .then((can) => (can ? loadMessenger() : undefined))
+    loading.current
       .then((messenger) => {
         if (!messenger || !active) return;
         renderer.current = messenger;
