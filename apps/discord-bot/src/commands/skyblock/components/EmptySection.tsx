@@ -20,8 +20,4 @@ export interface EmptySectionProps {
 export const EmptySection = ({ setting, newProfile, empty, t }: EmptySectionProps) =>
   newProfile ?
     <Empty text={empty} /> :
-    (
-      <box width="100%">
-        <text>{`§c${t("skyblock.apiOffCard", { setting: t(`skyblock.apiSettings.${setting}`) })}`}</text>
-      </box>
-    );
+    <Empty text={t("skyblock.apiOffCard", { setting: t(`skyblock.apiSettings.${setting}`) })} color="§c" />;

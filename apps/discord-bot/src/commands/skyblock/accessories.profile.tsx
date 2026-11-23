@@ -8,6 +8,7 @@
 
 import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
+import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
@@ -68,14 +69,8 @@ export const SkyBlockAccessoriesProfile = ({ profile, t, icons, ...card }: SkyBl
             <ItemGrid items={missing} icons={icons} />
           </>
         ) :
-        (
-          <box width="100%">
-            <text>{`§a${t("skyblock.noMissingAccessories")}`}</text>
-          </box>
-        )}
-      <box width="100%">
-        <text>{`§7${footnote}`}</text>
-      </box>
+        <Empty text={t("skyblock.noMissingAccessories")} color="§a" />}
+      <Empty text={footnote} />
     </Card>
   );
 };

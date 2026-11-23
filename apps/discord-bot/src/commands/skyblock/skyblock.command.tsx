@@ -12,7 +12,6 @@ import {
   CommandContext,
   ErrorMessage,
   type IMessage,
-  type LocalizationString,
   type LocalizeFunction,
   Message,
   type Page,
@@ -20,63 +19,25 @@ import {
   SubCommand,
   paginate,
 } from "@statsify/discord";
-import { FormattedGame, type User } from "@statsify/schemas";
+import {
+  GAME_MODES,
+  SKYBLOCK_CARDS,
+  type SkyBlockCard,
+  type SkyBlockCardName,
+  type SkyBlockProfile,
+  getSkyBlockBackground,
+  skyBlockTitle,
+} from "./cards.js";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
-import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
-import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
-import { SkyBlockHotmProfile } from "./hotm.profile.js";
-import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
-import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
-import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
-import { SkyBlockSkillsProfile } from "./skills.profile.js";
-import { SkyBlockSlayersProfile } from "./slayers.profile.js";
-import { SkyBlockSummaryProfile } from "./summary.profile.js";
-import { getBackground, getLogo } from "@statsify/assets";
 import { getItemIcon } from "@statsify/skyblock/icons";
+import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import type {
-  ApiSettings,
-  GameMode,
-  ItemTexture,
-  MemberView,
-  SkyBlockProfileView,
-  SkyBlockSection,
-} from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
-
-const GAME_MODES: Record<GameMode, { emoji: string | false; badge: string }> = {
-  normal: { emoji: false, badge: "" },
-  ironman: { emoji: "♻️", badge: " §7♲" },
-  stranded: { emoji: "🏝️", badge: " §a☀" },
-  bingo: { emoji: "🎯", badge: " §6Ⓑ" },
-};
-
-const FORMATTED_PROFILES: Record<string, string | undefined> = {
-  Apple: "§cApple",
-  Banana: "§eBanana",
-  Blueberry: "§9Blueberry",
-  Coconut: "§6Coco§fnut",
-  Cucumber: "§2Cucumber",
-  Grapes: "§5Grapes",
-  Kiwi: "§aKiwi",
-  Lemon: "§eLemon",
-  Lime: "§aLime",
-  Mango: "§6Mango",
-  Orange: "§6Orange",
-  Papaya: "§6Papaya",
-  Peach: "§dPeach",
-  Pear: "§aPear",
-  Pineapple: "§ePineapple",
-  Pomegranate: "§4Pomegranate",
-  Raspberry: "§dRaspberry",
-  Strawberry: "§cStrawberry",
-  Tomato: "§cTomato",
-  Watermelon: "§aWater§cmelon",
-  Zucchini: "§2Zucchini",
-};
+import type { SkyBlockProfileView } from "@statsify/skyblock";
+import type { User } from "@statsify/schemas";
 
 export interface SkyBlockProfileProps {
   profile: SkyBlockProfileView;
@@ -88,83 +49,6 @@ export interface SkyBlockProfileProps {
   user: User | null;
   t: LocalizeFunction;
   icons: ItemIcons;
-}
-
-type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
-
-export interface SkyBlockCard {
-  sections: SkyBlockSection[];
-  /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
-  settings: Exclude<keyof ApiSettings, "museum">[];
-  icons?: (member: MemberView) => ItemTexture[];
-  profile: SkyBlockProfile | { label: LocalizationString; profile: SkyBlockProfile }[];
-}
-
-export const SKYBLOCK_CARDS = {
-  profile: {
-    sections: ["skills", "dungeons", "slayers", "accessories", "networth"],
-    settings: ["skills", "inventory", "personalVault", "banking"],
-    profile: SkyBlockSummaryProfile,
-  },
-  networth: {
-    sections: ["networth"],
-    settings: ["inventory", "personalVault", "banking"],
-    icons: networthIcons,
-    profile: SkyBlockNetworthProfile,
-  },
-  skills: {
-    sections: ["skills"],
-    settings: ["skills"],
-    profile: SkyBlockSkillsProfile,
-  },
-  pets: {
-    sections: ["pets"],
-    settings: [],
-    icons: petIcons,
-    profile: SkyBlockPetsProfile,
-  },
-  hotm: {
-    sections: ["hotm"],
-    settings: [],
-    profile: SkyBlockHotmProfile,
-  },
-  slayers: {
-    sections: ["slayers"],
-    settings: [],
-    profile: SkyBlockSlayersProfile,
-  },
-  dungeons: {
-    sections: ["dungeons"],
-    settings: [],
-    profile: [
-      { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
-      { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
-    ],
-  },
-  accessories: {
-    sections: ["accessories"],
-    settings: ["inventory"],
-    icons: accessoryIcons,
-    profile: SkyBlockAccessoriesProfile,
-  },
-  level: {
-    sections: ["level"],
-    settings: ["inventory"],
-    icons: levelIcons,
-    profile: SkyBlockLevelProfile,
-  },
-} satisfies Record<string, SkyBlockCard>;
-
-type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
-
-// Not arrow functions: the command loader takes those for commands
-export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName}${GAME_MODES[profile.gameMode].badge}§r)`;
-}
-
-export function getSkyBlockBackground() {
-  // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
-  return getBackground("hypixel", "overall");
 }
 
 // A new profile reads every API setting as off and has no museum yet
