@@ -70,28 +70,19 @@ export class SessionService {
     tag: string,
     userUuid?: string
   ): Promise<{ player: Player; hypixelUnavailable: boolean }> {
-    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
-      uuid: true,
-      displayName: true,
-    });
+    // Fetched before the session is read, so a name whose stored owner renamed finds the new owner's session
+    const { player: newPlayer, hypixelError } = await this.playerService.getWithFallback(tag, CacheLevel.LIVE);
 
-    if (!player) throw new PlayerNotFoundException();
+    if (!newPlayer) throw new PlayerNotFoundException();
 
     let oldPlayer = await this.sessionModel
-      .findOne({ uuid: player.uuid })
+      .findOne({ uuid: newPlayer.uuid })
       .lean()
       .exec() as Player;
 
     let isNew = false;
 
-    if (!oldPlayer && userUuid !== player.uuid) throw new SessionNotFoundException(player.uuid, player.displayName);
-
-    const { player: newPlayer, hypixelError } = await this.playerService.getWithFallback(
-      player.uuid,
-      CacheLevel.LIVE
-    );
-
-    if (!newPlayer) throw new PlayerNotFoundException();
+    if (!oldPlayer && userUuid !== newPlayer.uuid) throw new SessionNotFoundException(newPlayer.uuid, newPlayer.displayName);
 
     if (oldPlayer) {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
