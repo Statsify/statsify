@@ -7,7 +7,7 @@
  */
 
 import { Account, AccountProfile, Player, User } from "@statsify/schemas";
-import { type AccountPage, SESSION_TTL_SECONDS } from "@statsify/contract";
+import { type AccountPage, LOGIN_STATE_TTL_SECONDS, SESSION_TTL_SECONDS } from "@statsify/contract";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
@@ -33,6 +33,7 @@ const LOGIN_LIMIT = 10;
 const LOGIN_WINDOW_SECONDS = 5 * 60;
 const loginKey = (clientIp: string) => `site:account:login:${rateLimitAddress(clientIp)}`;
 const DISCORD_COOLDOWN_KEY = "site:account:login:discord-cooldown";
+const loginStateKey = (state: string) => `site:account:login-state:${state}`;
 
 // Redis keeps a hash of the cookie's token, so a copy of Redis can't be replayed as live sessions.
 const sessionKey = (session: string) => `site:account:session:${createHash("sha256").update(session).digest("base64url")}`;
@@ -51,7 +52,16 @@ export class AccountService {
     @InjectRedis() private readonly redis: Redis
   ) {}
 
-  public async login(code: string, redirectUri: string, clientIp: string): Promise<{ session: string }> {
+  /** The site asks for one only after the visitor passed Turnstile, so each Discord exchange costs a solved challenge. */
+  public async startLogin(): Promise<{ state: string }> {
+    const state = randomBytes(32).toString("base64url");
+    await this.redis.set(loginStateKey(state), "1", "EX", LOGIN_STATE_TTL_SECONDS);
+    return { state };
+  }
+
+  public async login(state: string, code: string, redirectUri: string, clientIp: string): Promise<{ session: string }> {
+    if (!(await this.redis.getdel(loginStateKey(state)))) throw new ORPCError("UNAUTHORIZED");
+
     const [attempts] = await hitWindow(this.redis, loginKey(clientIp), LOGIN_WINDOW_SECONDS);
     if (attempts > LOGIN_LIMIT || (await this.redis.exists(DISCORD_COOLDOWN_KEY))) throw new ORPCError("TOO_MANY_REQUESTS");
 

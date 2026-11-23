@@ -20,10 +20,16 @@ export class AccountController {
   public constructor(private readonly accountService: AccountService) {}
 
   @Auth(SITE_ONLY)
+  @Implement(contract.account.startLogin)
+  public startLogin() {
+    return implement(contract.account.startLogin).handler(() => this.accountService.startLogin());
+  }
+
+  @Auth(SITE_ONLY)
   @Implement(contract.account.login)
   public login() {
     return implement(contract.account.login).handler(({ input }) =>
-      this.accountService.login(input.code, input.redirectUri, input.clientIp)
+      this.accountService.login(input.state, input.code, input.redirectUri, input.clientIp)
     );
   }
 

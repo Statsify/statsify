@@ -639,9 +639,12 @@ const LeaderboardGameInputSchema = z.object({
 /** The opaque token in the visitor's session cookie: 32 random bytes, base64url. */
 export const SessionSchema = z.string().regex(/^[\w-]{43}$/);
 export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
+export const LOGIN_STATE_TTL_SECONDS = 10 * 60;
 const SessionInputSchema = z.object({ session: SessionSchema });
 const AccountProfileInputSchema = SessionInputSchema.extend({ uuid: UuidSchema });
 const AccountLoginInputSchema = z.object({
+  /** From `startLogin`, and spent by this call whether or not Discord takes the code. */
+  state: SessionSchema,
   code: z.string().min(1).max(256),
   /** The callback URL the authorize request named, which the token exchange has to repeat. */
   redirectUri: z.url().max(512),
@@ -665,7 +668,7 @@ export const AccountPageSchema = z.object({
 });
 
 const accountErrors = oc.errors({
-  /** No session, an expired one, or a login code Discord refused. */
+  /** No session, an expired one, a login state that's missing or spent, or a login code Discord refused. */
   UNAUTHORIZED: { message: "Log in again" },
   NOT_FOUND: { message: "That profile isn't on this account" },
   /** Unlinking the primary while the account owns another profile. */
@@ -785,6 +788,9 @@ export const contract = {
    * makes a session, from a code Discord gave the visitor.
    */
   account: {
+    startLogin: oc
+      .route({ method: "POST", path: "/account/start-login", summary: "A single-use state for one Discord login" })
+      .output(z.object({ state: SessionSchema })),
     login: accountErrors
       .route({ method: "POST", path: "/account/login", summary: "Log in with a Discord authorization code" })
       .input(AccountLoginInputSchema)
