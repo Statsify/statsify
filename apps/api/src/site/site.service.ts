@@ -28,7 +28,7 @@ import {
 import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { Session } from "#session";
+import { SessionService } from "#session";
 import { HypixelUnavailableError } from "#hypixel";
 import { Injectable, InternalServerErrorException, type OnApplicationBootstrap } from "@nestjs/common";
 import type {
@@ -73,7 +73,6 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 type GuildModel = ReturnModelType<typeof Guild>;
-type SessionModel = ReturnModelType<typeof Session>;
 
 /** How long the home previews are kept in Redis, or with a section missing, how soon they're built again. */
 const HOME_PREVIEWS_KEY = "site:home:previews";
@@ -203,11 +202,11 @@ export class SiteService implements OnApplicationBootstrap {
     private readonly playerLeaderboardService: PlayerLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     private readonly guildService: GuildService,
+    private readonly sessionService: SessionService,
     private readonly skinService: SkinService,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @InjectModel(Guild) private readonly guildModel: GuildModel,
-    @InjectRedis() private readonly redis: Redis,
-    @InjectModel(Session) private readonly sessionModel: SessionModel
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   /** Builds the home previews once at start, without holding up the API's readiness. */
@@ -488,16 +487,10 @@ export class SiteService implements OnApplicationBootstrap {
    * `/session`, from the stored player, never Hypixel. NOT_FOUND "Session not found" when they never started one.
    */
   private async loadSession(uuid: string): Promise<{ player: Player; gains: Player; start: number }> {
-    const tag = normalizeUuid(uuid);
-    const [player, document] = await Promise.all([
-      this.playerService.getStored(tag),
-      this.sessionModel.findOne().where("uuid").equals(tag).lean<Player>().exec(),
-    ]);
-
+    const [player, started] = await Promise.all([this.playerService.getStored(uuid), this.sessionService.getStored(uuid)]);
     if (!player) throw notFound();
 
-    // Flattened for `deserialize` like `SessionService` does; `sessionReset` is in seconds.
-    const started = document && deserialize(Player, flatten(document));
+    // `sessionReset` is in seconds.
     if (started?.sessionReset === undefined) throw notFound("Session not found");
 
     return { player, gains: createHistoricalPlayer(started, player), start: started.sessionReset * 1000 };
@@ -505,9 +498,9 @@ export class SiteService implements OnApplicationBootstrap {
 
   /** A stored guild by its name in any case. One the API has never fetched is NOT_FOUND, for `lookupGuild` to fetch. */
   public async guild(name: string): Promise<GuildPage> {
-    const document: Guild | null = await this.guildModel.findOne().where("nameToLower").equals(name.toLowerCase()).lean().exec();
-    if (!document) throw notFound("Guild not found");
-    return buildGuildPage(deserialize(Guild, flatten(document)));
+    const guild = await this.guildService.getStored(name, GuildQuery.NAME);
+    if (!guild) throw notFound("Guild not found");
+    return buildGuildPage(guild);
   }
 
   /** The home page's previews, each loaded on its own so one missing player hides one section. */
@@ -613,7 +606,7 @@ export class SiteService implements OnApplicationBootstrap {
   private async toPage(player: Player): Promise<PlayerPage> {
     const [guild, session] = await Promise.all([
       player.guildId ? this.findGuild(player.guildId) : null,
-      this.sessionModel.findOne().where("uuid").equals(player.uuid).select("sessionReset").lean().exec(),
+      this.sessionService.getStored(player.uuid, { sessionReset: true }),
     ]);
 
     // `sessionReset` is in seconds.

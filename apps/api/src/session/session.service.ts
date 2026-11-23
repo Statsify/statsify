@@ -11,7 +11,7 @@ import {
   PlayerNotFoundException,
   SessionNotFoundException,
 } from "@statsify/api-client";
-import { type Circular, flatten } from "@statsify/util";
+import { type Circular, flatten, normalizeUuid } from "@statsify/util";
 import { DateTime } from "luxon";
 import {
   Inject,
@@ -75,10 +75,7 @@ export class SessionService {
 
     if (!player) throw new PlayerNotFoundException();
 
-    let oldPlayer = await this.sessionModel
-      .findOne({ uuid: player.uuid })
-      .lean()
-      .exec() as Player;
+    let oldPlayer = await this.getStored(player.uuid);
 
     let isNew = false;
 
@@ -88,9 +85,7 @@ export class SessionService {
 
     if (!newPlayer) throw new PlayerNotFoundException();
 
-    if (oldPlayer) {
-      oldPlayer = deserialize(Player, flatten(oldPlayer));
-    } else {
+    if (!oldPlayer) {
       oldPlayer = await this.resetPlayer(newPlayer);
       isNew = true;
     }
@@ -101,6 +96,12 @@ export class SessionService {
     merged.isNew = isNew;
 
     return merged;
+  }
+
+  /** The player as they were when their session started, from the stored session only. */
+  public async getStored(uuid: string, selector: Record<string, boolean> = {}): Promise<Player | null> {
+    const session = await this.sessionModel.findOne().where("uuid").equals(normalizeUuid(uuid)).select(selector).lean().exec();
+    return session && deserialize(Player, flatten(session));
   }
 
   public async delete(discordId: string) {
