@@ -58,7 +58,7 @@ export function Footer() {
             <p>{t("footer.mojang")}</p>
             <p>{t("footer.operator")}</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-4">
+          <div className="flex flex-wrap justify-center gap-x-4 md:justify-end">
             <a href="/privacy" className={LINK}>{t("footer.privacy")}</a>
             <a href="/terms" className={LINK}>{t("footer.terms")}</a>
             <a href={`mailto:${email}`} className={LINK}>{email}</a>
