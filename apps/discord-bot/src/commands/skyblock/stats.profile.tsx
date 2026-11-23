@@ -10,7 +10,7 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { PLAYER_STATS, RARITY_COLORS } from "@statsify/skyblock/display";
-import { gridRows } from "./components/ItemGrid.js";
+import { gridRows, progressText } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 import type { StatGroup } from "@statsify/skyblock";
@@ -71,7 +71,7 @@ export const SkyBlockAttributesProfile = ({ profile, t, ...card }: SkyBlockProfi
   const cells = shown.map(({ attribute, rarity, level, maxLevel }) => (
     <Table.td
       title={attribute}
-      value={`${level === maxLevel ? "§6" : "§e"}${t(level)}§7/${t(maxLevel)}`}
+      value={progressText(t, level, maxLevel)}
       color={RARITY_COLORS[rarity]}
       size="small"
     />

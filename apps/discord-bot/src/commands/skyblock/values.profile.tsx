@@ -62,9 +62,7 @@ export const SkyBlockValuesProfile = ({ profile, t, icons, ...card }: SkyBlockPr
           />
         ) :
         <Empty text={t("skyblock.noMissingPets")} />}
-      <box width="100%">
-        <text>{`§7${pricesAsOf(t, values.pricesAsOf)}`}</text>
-      </box>
+      <Empty text={pricesAsOf(t, values.pricesAsOf)} />
     </Card>
   );
 };

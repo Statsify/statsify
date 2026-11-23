@@ -10,14 +10,10 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, gridRows } from "./components/ItemGrid.js";
+import { ItemGrid, gridRows, progressText } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import type { CollectionCategory, MemberView } from "@statsify/skyblock";
-import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const tierText = (t: LocalizeFunction, tier: number, maxTier: number) =>
-  `${tier === maxTier ? "§6" : "§e"}${t(tier)}§7/${t(maxTier)}`;
 
 const categoryItems = (collections: MemberView["collections"], category: CollectionCategory) =>
   collections?.categories.find(({ id }) => id === category)?.items ?? [];
@@ -45,20 +41,14 @@ export const SkyBlockCollectionsProfile = ({ profile, t, icons, category, ...car
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {tiersOnly ?
-        (
-          <box width="100%">
-            <text>{`§7${t("skyblock.collectionTiersOnly")}`}</text>
-          </box>
-        ) :
-        <></>}
+      {tiersOnly ? <Empty text={t("skyblock.collectionTiersOnly")} /> : <></>}
       {collections ?
         (
           <ItemGrid
             items={items.map(({ texture, name, amount, tier, maxTier }) => ({
               texture,
               name: `§f${name}`,
-              value: amount === undefined ? tierText(t, tier, maxTier) : `§b${t(amount)} ${tierText(t, tier, maxTier)}`,
+              value: amount === undefined ? progressText(t, tier, maxTier) : `§b${t(amount)} ${progressText(t, tier, maxTier)}`,
             }))}
             icons={icons}
             columns={3}
@@ -91,7 +81,7 @@ export const SkyBlockMinionsProfile = ({ profile, t, icons, ...card }: SkyBlockP
             items={crafted.map(({ texture, name, tiers, maxTier }) => ({
               texture,
               name: `§f${name.replace(/ Minion$/, "")}`,
-              value: tierText(t, Math.max(...tiers), maxTier),
+              value: progressText(t, Math.max(...tiers), maxTier),
             }))}
             icons={icons}
             columns={3}
@@ -117,7 +107,7 @@ export const SkyBlockBestiaryProfile = ({ profile, t, ...card }: SkyBlockProfile
     const tiers = add(...families.map(({ tier }) => tier));
     const maxTiers = add(...families.map(({ maxTier }) => maxTier));
     const label = category && category !== name ? `${category}: ${name}` : name;
-    return <Table.td title={label} value={tierText(t, tiers, maxTiers)} color="§f" size="small" />;
+    return <Table.td title={label} value={progressText(t, tiers, maxTiers)} color="§f" size="small" />;
   });
 
   return (

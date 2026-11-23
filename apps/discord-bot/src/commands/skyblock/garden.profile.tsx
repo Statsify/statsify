@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Card } from "./components/Card.js";
+import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { Empty } from "./components/Empty.js";
 import { ItemGrid } from "./components/ItemGrid.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup } from "@statsify/util";
@@ -32,9 +31,12 @@ export const SkyBlockGardenProfile = ({ profile, t, icons, ...card }: SkyBlockPr
 
   if (!garden) {
     return (
-      <Card {...card} name={profile.displayName} sidebar={memberSidebar}>
-        <Empty text={t(profile.gardenFetchedAt === undefined ? "skyblock.gardenNotLoaded" : "skyblock.noGarden")} />
-      </Card>
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        sidebar={memberSidebar}
+        text={t(profile.gardenFetchedAt === undefined ? "skyblock.gardenNotLoaded" : "skyblock.noGarden")}
+      />
     );
   }
 
