@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
-    "lint:ci": "cargo fmt && cargo clippy --fix --allow-dirty",
+    "lint:ci": "cargo fmt --check && cargo clippy -- -D warnings",
     "test": "cargo test"
   }
 }

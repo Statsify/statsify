@@ -95,7 +95,6 @@ impl Backend for NativeBackend {
     &self,
     mut encoder: wgpu::CommandEncoder,
     output_texture: OutputTexture<'_>,
-    unpremultiply: bool,
   ) -> RenderResult<Vec<u8>> {
     let dimensions = BufferDimensions::new(output_texture.width(), output_texture.height());
 
@@ -144,9 +143,7 @@ impl Backend for NativeBackend {
       .copied()
       .collect::<Vec<u8>>();
 
-    if unpremultiply {
-      unpremultiply_pixels(&mut buffer);
-    }
+    unpremultiply_pixels(&mut buffer);
 
     let mut png = Vec::new();
 

@@ -49,7 +49,6 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
-  posed: bool,
 }
 
 impl Placement {
@@ -147,7 +146,6 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
-      posed: part_pose.is_some(),
     }
   }
 
@@ -260,18 +258,11 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
-
-        // In Minecraft the outer layer is scaled up 12.5%. Unposed parts keep scale_around, so
-        // standing renders stay the same.
-        match rotation {
-          Some(rotation) if self.placement.posed => {
-            let turned_center =
-              rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot;
-            layer.grow_around(1.125, turned_center);
-          }
-          _ => layer.scale_around(1.125, position),
-        }
-
+        // In Minecraft the outer layer is scaled up 12.5%
+        let center = rotation.map_or(position, |rotation| {
+          rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+        });
+        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -299,6 +290,7 @@ pub struct Model {
   glint: Option<Material>,
   pose: Pose,
   held: Held,
+  #[cfg(not(target_arch = "wasm32"))]
   wears_armor: bool,
   points: Vec<Vector3<f32>>,
 }
@@ -422,6 +414,7 @@ impl Model {
       glint: None,
       pose,
       held,
+      #[cfg(not(target_arch = "wasm32"))]
       wears_armor: armor.pieces().next().is_some(),
       points,
     };
@@ -432,6 +425,7 @@ impl Model {
 
   // Boots and a player head reach past the frame that fits a bare player, and every
   // armored render pulls back with them so they share one scale
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn camera_radius(&self) -> f32 {
     let radius = self.pose.camera_radius();
 
@@ -442,6 +436,7 @@ impl Model {
     }
   }
 
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn points(&self) -> &[Vector3<f32>] {
     &self.points
   }
@@ -501,7 +496,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.grow_around(1.1875, neck);
+            box_geometry.scale_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
@@ -601,12 +596,12 @@ impl Model {
     });
   }
 
-  // Every pipeline blends and writes depth, so this order shows in the render
+  // Partly transparent texels blend in this order, so what the player wears goes over the skin
   pub fn draw_items(&self) -> Vec<DrawItem<'_>> {
     let skin = self.meshes.iter().map(|mesh| DrawItem {
       mesh,
       material: &self.material,
-      pipeline: Pipeline::Main,
+      pipeline: Pipeline::Worn(None),
       transform: Matrix4::identity(),
     });
 
@@ -617,7 +612,7 @@ impl Model {
       .map(|attachment| DrawItem {
         mesh: &attachment.mesh,
         material: &attachment.material,
-        pipeline: Pipeline::Attachment,
+        pipeline: Pipeline::Worn(None),
         transform: Matrix4::identity(),
       });
 
@@ -629,7 +624,7 @@ impl Model {
         .map(move |attachment| DrawItem {
           mesh: &attachment.mesh,
           material: &attachment.material,
-          pipeline: Pipeline::Enchanted(glint),
+          pipeline: Pipeline::Worn(Some(glint)),
           transform: Matrix4::identity(),
         })
     });
