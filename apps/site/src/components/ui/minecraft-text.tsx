@@ -43,7 +43,10 @@ export const colorOf = (code: string): { className?: string; style?: CSSProperti
 };
 
 /** The class of the first color in a formatted string, for a title that takes its value's color. */
-export const leadingColorClass = (text: string): string => colorClass(/§([\da-f])/.exec(text)?.[1] ?? "");
+export const leadingColorClass = (text: string): string => {
+  for (const { code } of parseFormatting(text)) if (code?.kind === "color") return COLOR_CLASSES[code.code];
+  return "text-mc-white";
+};
 
 /** The renderer's default text size; `§^N^` is relative to it. */
 const BASE_SIZE = 2;
