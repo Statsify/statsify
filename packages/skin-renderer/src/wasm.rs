@@ -1,7 +1,7 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
 
 use futures_channel::oneshot;
-use once_cell::sync::Lazy;
 use statsify_render_core::renderer::wasm::WasmBackend;
 use statsify_render_core::renderer::Renderer;
 use wasm_bindgen::prelude::*;
@@ -20,7 +20,9 @@ use crate::pose::{Held, Pose};
 
 // Since the winit EventLoop consumes self, we need a static variable to
 // communicate with JavaScript
-static mut JS_MESSAGE_QUEUE: Lazy<Vec<JsMessage>> = Lazy::new(Vec::new);
+thread_local! {
+  static JS_MESSAGE_QUEUE: RefCell<Vec<JsMessage>> = const { RefCell::new(Vec::new()) };
+}
 
 // Basic events that can be triggered from JavaScript
 enum JsMessage {
@@ -32,15 +34,15 @@ enum JsMessage {
 #[wasm_bindgen(js_name = SkinMessenger)]
 pub struct JsMessenger;
 
-// Modifying JS_MESSAGE_QUEUE is marked as unsafe because we are accessing a
-// mutable static variable This is safe since we are only accessing this in a
-// single thread and we are only making 1 mutable reference at a time
+fn push_message(message: JsMessage) {
+  JS_MESSAGE_QUEUE.with_borrow_mut(|queue| queue.push(message));
+}
 
 #[wasm_bindgen(js_class = SkinMessenger)]
 impl JsMessenger {
   #[wasm_bindgen(js_name = registerCanvas)]
   pub fn register_canvas(canvas_id: String) {
-    unsafe { JS_MESSAGE_QUEUE.push(JsMessage::RegisterCanvas(canvas_id)) };
+    push_message(JsMessage::RegisterCanvas(canvas_id));
   }
 
   #[wasm_bindgen(js_name = renderSkin)]
@@ -56,21 +58,19 @@ impl JsMessenger {
       ModelOuterLayer::D2
     };
 
-    unsafe {
-      JS_MESSAGE_QUEUE.push(JsMessage::RenderSkin {
-        canvas_id,
-        model: JsModel {
-          bytes,
-          model_kind,
-          model_outer_layer,
-        },
-      })
-    };
+    push_message(JsMessage::RenderSkin {
+      canvas_id,
+      model: JsModel {
+        bytes,
+        model_kind,
+        model_outer_layer,
+      },
+    });
   }
 
   #[wasm_bindgen(js_name = unregisterCanvas)]
   pub fn unregister_canvas(canvas_id: String) {
-    unsafe { JS_MESSAGE_QUEUE.push(JsMessage::UnregisterCanvas(canvas_id)) };
+    push_message(JsMessage::UnregisterCanvas(canvas_id));
   }
 }
 
@@ -113,7 +113,7 @@ impl JsSkinRenderer {
       }
 
       // Drain the message queue and process each message
-      let messages = unsafe { JS_MESSAGE_QUEUE.drain(0..) };
+      let messages = JS_MESSAGE_QUEUE.take();
 
       for message in messages {
         match message {
