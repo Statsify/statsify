@@ -41,28 +41,40 @@ type RefreshState =
 
 let clockNow: number | undefined;
 let clockTimer: ReturnType<typeof setTimeout> | undefined;
+let clockDelay: number | undefined;
 /** Each `useNow` on the page, with the end of its countdown (0 for none). */
 const clockListeners = new Map<() => void, number>();
 
+function tick() {
+  clockNow = Date.now();
+  for (const listener of clockListeners.keys()) listener();
+}
+
 function scheduleTick() {
-  clearTimeout(clockTimer);
   const counting = [...clockListeners.values()].some((until) => until > Date.now());
+  const delay = counting ? 1000 : 60_000;
+  if (delay === clockDelay) return;
+
+  clearTimeout(clockTimer);
+  clockDelay = delay;
   clockTimer = setTimeout(() => {
-    clockNow = Date.now();
-    for (const listener of clockListeners.keys()) listener();
+    clockDelay = undefined;
+    tick();
     scheduleTick();
-  }, counting ? 1000 : 60_000);
+  }, delay);
 }
 
 function subscribeClock(listener: () => void, until: number) {
   clockListeners.set(listener, until);
-  clockNow ??= Date.now();
+  // A caller joining a running clock would otherwise read its last tick, up to a minute old.
+  tick();
   scheduleTick();
 
   return () => {
     clockListeners.delete(listener);
     if (clockListeners.size > 0) return;
     clearTimeout(clockTimer);
+    clockDelay = undefined;
     clockNow = undefined;
   };
 }
