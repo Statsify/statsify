@@ -8,13 +8,14 @@
 
 import { UserFont } from "@statsify/schemas";
 import { loadFonts } from "../fonts.js";
-import { move } from "piscina";
 import { renderCard } from "./render.js";
 import type { RenderRequest } from "./protocol.js";
 
 // Site visitors never carry a premium theme, so only the default font pages are needed.
 await loadFonts([UserFont.DEFAULT]);
 
-export default async function render(request: RenderRequest) {
-  return move(await renderCard(request));
+// Not piscina's `move()`: the built site runs the pool from its own copy of piscina, which doesn't recognize another
+// copy's transfer wrapper and posts the wrapper instead of the image.
+export default function render(request: RenderRequest) {
+  return renderCard(request);
 }
