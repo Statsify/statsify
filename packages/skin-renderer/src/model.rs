@@ -1,10 +1,12 @@
-use cgmath::{Deg, Quaternion, Rotation as _, Rotation3, Vector3};
+use cgmath::{Deg, Quaternion, Rotation as _, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
 use crate::error::Result;
 use crate::geometry::coordinate::Coordinate;
-use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
+use crate::geometry::{
+  axis_angle, BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion,
+};
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
@@ -119,14 +121,14 @@ impl Part {
     let quaternion = match part_pose {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
-      None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+      None => Some(axis_angle(Vector3::unit_z(), Deg(rest_angle))),
       Some(PartPose { rotation, offset }) => {
         position += offset;
 
         Some(
-          Quaternion::from_angle_z(Deg(rest_angle + rotation.z))
-            * Quaternion::from_angle_y(Deg(rotation.y))
-            * Quaternion::from_angle_x(Deg(rotation.x)),
+          axis_angle(Vector3::unit_z(), Deg(rest_angle + rotation.z))
+            * axis_angle(Vector3::unit_y(), Deg(rotation.y))
+            * axis_angle(Vector3::unit_x(), Deg(rotation.x)),
         )
       }
     };
@@ -493,7 +495,7 @@ impl Model {
         mirror: false,
       },
       rotation: Some(Rotation {
-        quaternion: Quaternion::from_angle_y(Deg(180.0)),
+        quaternion: axis_angle(Vector3::unit_y(), Deg(180.0)),
         pivot: position,
       }),
       inflation: 0.0,
@@ -504,7 +506,7 @@ impl Model {
 
     geometry.rotate_around(Rotation {
       // A standing player's cape swings 6 degrees out from the back
-      quaternion: Quaternion::from_angle_x(Deg(6.0 + rotation.x)),
+      quaternion: axis_angle(Vector3::unit_x(), Deg(6.0 + rotation.x)),
       pivot: Vector3::new(0.0, top, back),
     });
     geometry.translate(offset);
