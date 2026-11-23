@@ -25,6 +25,13 @@ const DAYS_IN_WEEK = {
   sunday: 6,
 };
 
+/** Positions 1 to 10 count under 10, 11 to 100 under 100, and so on */
+const getDepthBucket = (position: number) => {
+  let bucket = 10;
+  while (bucket < position) bucket *= 10;
+  return bucket;
+};
+
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
@@ -120,6 +127,8 @@ export abstract class LeaderboardService {
         break;
       }
     }
+
+    await this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]);
 
     const leaderboard = await this.getLeaderboardFromRedis(
       constructor,
@@ -261,15 +270,19 @@ export abstract class LeaderboardService {
   public async countDemand<T>(
     constructor: Constructor<T>,
     request: "page" | "rankings",
-    fields: string[]
+    positions: [field: string, position: number][]
   ) {
     const month = new Date().toISOString().slice(0, 7);
     const key = `leaderboard-demand:${request}:${month}`;
     const name = constructor.name.toLowerCase();
 
+    const counters = new Set(
+      positions.map(([field, position]) => `${name}.${field}:${getDepthBucket(position)}`)
+    );
+
     const pipeline = this.redis.pipeline();
 
-    for (const field of new Set(fields)) pipeline.hincrby(key, `${name}.${field}`, 1);
+    for (const counter of counters) pipeline.hincrby(key, counter, 1);
 
     pipelineValues(await pipeline.exec());
   }

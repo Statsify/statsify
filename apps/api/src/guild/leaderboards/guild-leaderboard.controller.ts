@@ -31,8 +31,6 @@ export class GuildLeaderboardController {
   public async getGuildLeaderboard(
     @Body() { field, page, guild, position }: GuildLeaderboardDto
   ) {
-    await this.guildLeaderboardService.countDemand(Guild, "page", [field]);
-
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -63,8 +61,6 @@ export class GuildLeaderboardController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public async getGuildRanking(@Body() { fields, id }: GuildRankingDto) {
-    await this.guildLeaderboardService.countDemand(Guild, "rankings", fields);
-
     return this.guildLeaderboardService.getLeaderboardRankings(Guild, fields, id);
   }
 }
