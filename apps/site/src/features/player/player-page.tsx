@@ -11,6 +11,7 @@ import { BOX_GAP, Box, CELL, HEADING_BOX, StatBox } from "~/components/ui/box";
 import { ClockScript } from "~/lib/clock";
 import { Discord } from "~/components/icons/discord";
 import { Forums } from "~/components/icons/forums";
+import { GameIcon, hasGameIcon } from "~/components/ui/game-icon";
 import { GameNav } from "~/features/game/game-nav";
 import { gameLink } from "~/features/game/game-data";
 import { Hint, Spoken } from "~/components/ui/hint";
@@ -22,7 +23,7 @@ import { MinecraftText, colorOf, nameColor } from "~/components/ui/minecraft-tex
 import { MiniHeader } from "./mini-header";
 import { PanelToggle, SharePanel, useRevealOnOpen } from "./share-panel";
 import { LoginDate } from "./login-date";
-import { RefreshBar, savedDate, useNow } from "./refresh-bar";
+import { RefreshButton, SharedRefreshBar, savedDate, useNow, useRefresh } from "./refresh-bar";
 import { SignaturePanel } from "./signature-panel";
 import { SkinBust, SkinHead } from "~/components/ui/skin";
 import { TikTok } from "~/components/icons/tiktok";
@@ -90,13 +91,14 @@ export function PlayerView({ page }: { page: PlayerPage }) {
 
     return result;
   };
+  const refreshing = useRefresh({ updatedAt: page.updatedAt, expiresAt: page.expiresAt, refresh, auto: true });
 
   return (
     <div className="relative grow">
       <PageBackground background="general" />
-      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} />
+      <MiniHeader watch={nametag} uuid={page.uuid} name={page.displayName} action={<RefreshButton refresh={refreshing} />} />
       <div className="w-container flex flex-col gap-4 px-4 py-6 text-mc-white md:px-8">
-        <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_auto_1fr]", BOX_GAP)}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-[auto_1fr] xl:grid-cols-[fit-content(50%)_1fr]", BOX_GAP)}>
           <NametagPanel
             ref={nametag}
             page={page}
@@ -115,16 +117,16 @@ export function PlayerView({ page }: { page: PlayerPage }) {
                 >
                   {t("player.skin.open")}
                 </PanelToggle>
-                <RefreshBar updatedAt={page.updatedAt} expiresAt={page.expiresAt} refresh={refresh} auto />
               </>
             )}
+            refresh={<SharedRefreshBar refresh={refreshing} />}
             className="md:col-span-full md:row-start-1 xl:col-span-1"
           />
-          {/* From `xl` the nametag shares its row with the level and overview, too narrow for the facts' values, so they
-              get a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
-          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-2 xl:grid xl:grid-cols-3 xl:[&>:last-child:nth-child(3n+1)]:col-span-3 xl:[&>:last-child:nth-child(3n+2)]:col-span-2" />
-          <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2 xl:col-start-2 xl:row-start-1" />
-          <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:col-start-3 xl:row-start-1" />
+          {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
+              a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
+          <PlayerFacts page={page} className="hidden xl:col-span-full xl:row-start-3 xl:grid xl:grid-cols-3 xl:[&>:last-child:nth-child(3n+1)]:col-span-3 xl:[&>:last-child:nth-child(3n+2)]:col-span-2" />
+          <NetworkLevelPanel level={page.level} username={page.username} className="md:col-start-1 md:row-start-2" />
+          <OverviewPanel overview={page.overview} username={page.username} className="md:col-start-2 md:row-start-2 xl:row-span-2 xl:row-start-1" />
         </div>
         {sharing && (
           <SharePanel
@@ -196,12 +198,15 @@ function SkinPanelFrame({ id }: { id: string }) {
 function NametagPanel({
   page,
   actions,
+  refresh,
   className,
   ref,
 }: {
   page: PlayerPage;
   /** Buttons after the socials that open panels under the header. */
   actions: ReactNode;
+  /** The refresh bar, on a row of its own under them. */
+  refresh: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
 }) {
@@ -230,6 +235,7 @@ function NametagPanel({
           {/* One item, so the buttons wrap under the socials together rather than one at a time */}
           <div className="flex max-w-full flex-wrap items-center justify-center gap-x-4">{actions}</div>
         </div>
+        <div className="flex max-w-full flex-wrap items-center justify-center">{refresh}</div>
       </Box>
       <PlayerFacts page={page} className="col-span-full md:col-span-1 md:col-start-2 xl:hidden" />
     </div>
@@ -358,14 +364,13 @@ function OverviewPanel({ overview, username, className }: { overview: PlayerPage
     );
   }
 
-  // Two wide beside the level from `xl`, unless the guild row's three cells need the four columns. Columns never get
-  // narrower than their values, so the row takes its room from the nametag rather than run values together.
+  // Columns never get narrower than their values, so the row takes its room from the nametag rather than run values
+  // together.
   return (
     <div
       className={cn(
         "grid grid-cols-snap-2 sm:grid-cols-snap-4 max-sm:[&>:last-child:nth-child(odd)]:col-span-2 sm:[&>:last-child:nth-child(4n+3)]:col-span-2",
         BOX_GAP,
-        !overview.guildMember && "xl:grid-cols-snap-2",
         className
       )}
     >
@@ -564,6 +569,7 @@ function GamePanel({ game, username, session }: { game: GameSummary; username: s
         <h2>
           {/* The whole box is the link, its ring on the box's edge: the box clips anything past it. */}
           <Link {...gameLink({ kind: session ? "session" : "player", name: username }, game.page)} className={cn(STAT_LINK, "after:inset-0")}>
+            {hasGameIcon(game.id) && <span aria-hidden className="me-2 inline-block size-6 align-middle"><GameIcon game={game.id} /></span>}
             {title}
             {/* Text, not an icon, so the title's box keeps the height of every other panel's. */}
             <span aria-hidden className="text-mc-1.5 text-mc-gray"> »</span>

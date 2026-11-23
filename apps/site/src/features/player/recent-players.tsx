@@ -21,17 +21,17 @@ import type { CSSProperties } from "react";
 const STALE_MS = 60_000;
 
 /**
- * `/player`'s recently viewed players as result cards, drawn after hydration from the browser's storage. A card whose
- * name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
+ * The recently viewed players (`/player`, a player not found) as result cards, drawn after hydration from the browser's
+ * storage. A card whose name no longer finds its player is asked for by UUID, and takes the new name or leaves the list.
  */
-export function RecentPlayers({ onClear }: { onClear: () => void }) {
+export function RecentPlayers({ onClear }: { onClear?: () => void }) {
   const { t } = useTranslation();
   const headingId = useId();
   const recent = useRecentPlayers();
   const players = recent ?? [];
 
   return (
-    <div className="recent-hold w-full" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
+    <div className="recent-hold w-full text-start" style={recent ? ({ "--recent": players.length } as CSSProperties) : undefined}>
       {players.length > 0 && (
         <section aria-labelledby={headingId} className={cn("flex flex-col", BOX_GAP)}>
           {/* Clear's ring sits inside, as the box clips. */}
@@ -41,7 +41,7 @@ export function RecentPlayers({ onClear }: { onClear: () => void }) {
               type="button"
               onClick={() => {
                 clearPlayers();
-                onClear();
+                onClear?.();
               }}
               className="min-h-11 min-w-11 text-end text-mc-1 text-mc-gray underline hover:text-mc-white focus-visible:focus-ring-inset"
             >
