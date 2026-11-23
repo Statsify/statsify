@@ -7,7 +7,8 @@
  */
 
 import { DEFAULT_LOCALE } from "~/i18n/locales";
-import { CompareView, comparePairs } from "~/features/compare/compare-page";
+import { CompareView } from "~/features/compare/compare-page";
+import { comparePairs } from "~/features/compare/compare-data";
 import { EDGE_CACHE, REDIRECT_HEADERS, notFoundHead } from "~/lib/player-route";
 import { LABEL_NAMESPACES, createI18n } from "~/i18n/i18n";
 import { NotFound } from "~/components/not-found";
