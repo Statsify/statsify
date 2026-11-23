@@ -49,9 +49,10 @@ export class HypixelService {
     );
   }
 
-  public getPlayer(tag: string) {
+  // Not by name: Hypixel answers a name looked up again soon after with a 429
+  public getPlayer(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
+      this.request<APIData>("/player", { uuid }).pipe(
         map((data) => {
           if (data.player) return new Player(data.player);
           return null;

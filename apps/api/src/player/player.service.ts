@@ -15,12 +15,15 @@ import {
 import {
   CacheLevel,
   HypixelUnavailableException,
+  PlayerNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { HttpService } from "@nestjs/axios";
 import { HypixelService } from "#hypixel";
 import {
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   forwardRef,
 } from "@nestjs/common";
@@ -31,6 +34,7 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { catchError, lastValueFrom, map } from "rxjs";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -48,7 +52,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    private readonly httpService: HttpService
   ) {}
 
   /**
@@ -92,10 +97,13 @@ export class PlayerService {
       return { player: deserialize(Player, mongoPlayer) };
     }
 
+    const uuid = mongoPlayer?.uuid ?? (await this.resolveUuid(tag));
+    if (!uuid) return { player: null };
+
     let player: Player | null;
 
     try {
-      player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
+      player = await this.hypixelService.getPlayer(uuid);
     } catch (error) {
       if (!mongoPlayer || !(error instanceof HypixelUnavailableException)) throw error;
 
@@ -228,6 +236,35 @@ export class PlayerService {
     return flatPlayer;
   }
 
+  public getUuid(username: string): Promise<string> {
+    return lastValueFrom(
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
+        map((response) => response.data as AccountProfile),
+        map((data) => data.id),
+        catchError((error) => {
+          if (error.response?.status === 404) throw new PlayerNotFoundException();
+          // Ratelimited
+          if (error.response?.status === 429) throw new InternalServerErrorException();
+
+          // Unknown
+          throw new InternalServerErrorException();
+        })
+      )
+    );
+  }
+
+  /** Null when no Minecraft account has the name */
+  private async resolveUuid(tag: string): Promise<string | null> {
+    if (tag.length > 16) return tag;
+
+    try {
+      return await this.getUuid(tag);
+    } catch (error) {
+      if (error instanceof PlayerNotFoundException) return null;
+      throw error;
+    }
+  }
+
   private async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
@@ -248,4 +285,11 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
+}
+
+interface AccountProfile {
+  id: string;
+  name: string;
+  legacy?: true;
+  demo?: true;
 }
