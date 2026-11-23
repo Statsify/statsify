@@ -121,7 +121,8 @@ export function PlayerView({ page }: { page: PlayerPage }) {
               </>
             )}
             refresh={<SharedRefreshBar refresh={refreshing} className="justify-center" />}
-            className="md:col-span-full md:row-start-1 xl:col-span-1"
+            // Wide enough for the refresh row's longest state, so the column keeps its width when the countdown ends.
+            className="md:col-span-full md:row-start-1 xl:col-span-1 xl:min-w-104"
           />
           {/* From `xl` the nametag sits over the level, beside the overview, too narrow for the facts' values, so they get
               a row of their own, three across, the last row filled; below that `NametagPanel` draws them. */}
