@@ -273,7 +273,7 @@ export function GameHeader({
           <MinecraftText className="text-mc-1.5">{headingText(page, (key) => t(key))}</MinecraftText>
         </h1>
         {(actions || refresh) && (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-3">
             {actions}
             {refresh}
           </div>
