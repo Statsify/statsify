@@ -38,6 +38,6 @@ Sentry.init({
     return breadcrumb;
   },
   normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate"),
+  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
   environment: await config("environment"),
 });
