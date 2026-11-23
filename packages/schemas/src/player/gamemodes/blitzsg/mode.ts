@@ -38,9 +38,6 @@ export class BlitzSGOverall {
   @Field()
   public kdr: number;
 
-  @Field()
-  public gamesPlayed: number;
-
   @Field({
     leaderboard: { formatter: formatTime, limit: 50_000 },
     historical: { enabled: false },
@@ -83,7 +80,6 @@ export class BlitzSGOverall {
     this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
 
-    this.gamesPlayed = data.games_played;
     this.playtime = (data.time_played ?? 0) * 1000;
     this.damage = data.damage;
     this.damageTaken = data.damage_taken;

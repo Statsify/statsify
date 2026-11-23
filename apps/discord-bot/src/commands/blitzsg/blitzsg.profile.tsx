@@ -57,11 +57,6 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
       </Table.tr>
       <Table.tr>
         <Table.td
-          title={t("stats.gamesPlayed")}
-          value={t(blitzsg.overall.gamesPlayed)}
-          color="§b"
-        />
-        <Table.td
           title={t("stats.playtime")}
           value={formatTime(blitzsg.overall.playtime)}
           color="§e"
