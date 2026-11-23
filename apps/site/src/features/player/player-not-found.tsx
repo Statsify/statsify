@@ -13,9 +13,10 @@ import { Skin } from "~/components/ui/skin";
 import { Turnstile } from "~/components/turnstile";
 import { formatCountdown } from "~/i18n/format";
 import { PLACEHOLDER_UUID, isPlayerTag } from "~/lib/uuid";
+import { HOLD_SCRIPT } from "./recent";
 import { RecentPlayers } from "./recent-players";
 import { cn } from "~/lib/util";
-import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
+import { getRouteApi, useHydrated, useNavigate, useParams } from "@tanstack/react-router";
 import { type ActionResult, BROWSER_TIMEOUT_MS, lookupPlayer } from "./player-actions";
 import { type ReactNode, useEffect, useState } from "react";
 import { rememberPlayer } from "./resolve";
@@ -55,6 +56,7 @@ export function PlayerNotFoundView({
   // `gap-8` is the gap `RecentPlayers` takes back while it holds nothing.
   return (
     <Error className={cn(search && "flex-col-reverse md:flex-col", recent && "gap-8")}>
+      {recent && <HoldScript />}
       {search}
       <div className="flex w-full max-w-160 flex-col items-center gap-4 self-center">
         <div className="flex max-w-full flex-col items-center gap-4">
@@ -75,6 +77,12 @@ export function PlayerNotFoundView({
       {recent && <RecentPlayers />}
     </Error>
   );
+}
+
+/** `HOLD_SCRIPT` in the page, for each route it shows on. Rendered only while hydrating, as `ClockScript`. */
+function HoldScript() {
+  const hydrated = useHydrated();
+  return !hydrated && <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: HOLD_SCRIPT }} />;
 }
 
 type LookupState =
