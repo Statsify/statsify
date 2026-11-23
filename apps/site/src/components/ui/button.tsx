@@ -21,9 +21,12 @@ const SIZES = {
   small: { root: cn(styles.root, styles.small), text: "text-mc-1.5" },
 } as const;
 
-/** A flat dark button without the bevel, for a card's own actions: 32 px, with a tap area reaching past it to 44 px. */
+/**
+ * A flat dark button without the bevel, for a card's own actions: 32 px, with a tap area reaching past it to 44 px. It
+ * sits above the text beside it, so a tooltip's taller tap area (`Hint`) never takes taps meant for its box.
+ */
 export const FLAT_BUTTON =
-  "relative flex h-8 min-w-8 shrink-0 items-center justify-center bg-blackify-800 text-mc-1 after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset";
+  "relative z-1 flex h-8 min-w-8 shrink-0 items-center justify-center bg-blackify-800 text-mc-1 after:absolute after:-inset-1.5 hover:bg-blackify-700 focus-visible:focus-ring-inset";
 
 export function Button({
   children,
