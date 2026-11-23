@@ -41,13 +41,7 @@ export const SkyBlockCollectionsProfile = ({ profile, t, icons, category, ...car
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {tiersOnly ?
-        (
-          <box width="100%">
-            <text>{`§7${t("skyblock.collectionTiersOnly")}`}</text>
-          </box>
-        ) :
-        <></>}
+      {tiersOnly ? <Empty text={t("skyblock.collectionTiersOnly")} /> : <></>}
       {collections ?
         (
           <ItemGrid
