@@ -54,7 +54,7 @@ export function GuildSection({ guild }: { guild: GuildPreview }) {
           {guild.member && <GuildMember guild={guild} member={guild.member} />}
         </Carousel>
       </div>
-      <div className="block md:hidden">
+      <div className="md:hidden">
         <GuildOverall guild={guild} className="shadow-none" />
       </div>
     </BaseSection>

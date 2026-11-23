@@ -122,6 +122,32 @@ function getMetadataEntries(
   return metadataEntries;
 }
 
+/**
+ * The leaderboard name of each level of a field's path, which `scanMetadata`
+ * joins into the field's `name`.
+ */
+export function getLeaderboardNames(
+  constructor: Constructor,
+  path: string,
+): string[] {
+  let type = constructor;
+
+  return path.split(".").map((key) => {
+    const classMetadata = Reflect.getMetadata(
+      METADATA_KEY,
+      type.prototype,
+    ) as ClassMetadata | undefined;
+
+    const metadata = classMetadata?.[key];
+
+    if (!metadata)
+      throw new Error(`${path} is not a field for ${constructor.name}`);
+
+    type = metadata.type.type;
+    return metadata.leaderboard.name;
+  });
+}
+
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
@@ -342,6 +368,33 @@ if (import.meta.vitest) {
         limit: 50_000,
         resetEvery: undefined,
       });
+    });
+
+    it("should give the leaderboard name of each level of a path", () => {
+      class ChildClazz {
+        @Field()
+        public fieldB: number;
+      }
+
+      class ParentClazz {
+        @Field({ leaderboard: { name: "" } })
+        public fieldA: ChildClazz;
+
+        @Field({ leaderboard: { fieldName: "Second" } })
+        public fieldC: ChildClazz;
+      }
+
+      expect(getLeaderboardNames(ParentClazz, "fieldA.fieldB")).toEqual([
+        "",
+        "Field B",
+      ]);
+
+      expect(getLeaderboardNames(ParentClazz, "fieldC.fieldB")).toEqual([
+        "Second",
+        "Field B",
+      ]);
+
+      expect(() => getLeaderboardNames(ParentClazz, "fieldC.fieldD")).toThrow();
     });
   });
 }
