@@ -678,8 +678,7 @@ export class SiteService implements OnApplicationBootstrap {
 
   /**
    * One slot from the visitor's address, then its Hypixel `calls` from the global budget, which a rejected slot never
-   * eats into. With `site.hypixelBudget: 0` every slot is rejected here, before `PlayerService` runs. An automatic update
-   * (`auto`) stops at two-thirds of the budget, so a third stays for clicks and for names the site has never stored.
+   * spends. An automatic update (`auto`) stops at two-thirds of the budget, so a third stays for clicks and new names.
    */
   private async consumeBudget(clientIp: string, { auto = false, calls = 1 } = {}): Promise<void> {
     const [attempts, ipTtl] = await this.hit(ipKey(clientIp), IP_WINDOW_SECONDS);
@@ -697,8 +696,7 @@ export class SiteService implements OnApplicationBootstrap {
 
   /**
    * Counts `by` hits (a negative `by` hands them back) in a fixed window that opens on the first; returns the count and
-   * the seconds left. The window's key is created with its expiry in the same transaction as the count, so it can never
-   * be left without one.
+   * the seconds left. The key gets its expiry in the same transaction as the count, so it can never be left without one.
    */
   private async hit(key: string, windowSeconds: number, by = 1): Promise<[count: number, ttl: number]> {
     const results = await this.redis.multi().set(key, 0, "EX", windowSeconds, "NX").incrby(key, by).ttl(key).exec();
