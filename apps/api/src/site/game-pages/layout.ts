@@ -11,7 +11,7 @@ import { freshness } from "../cooldown.js";
 import { gameName, siteName } from "../names.js";
 import { arrayGroup } from "@statsify/util";
 import type { GameId, Player, PlayerStats } from "@statsify/schemas";
-import type { GamePage, GameStats, GameStatsPage, StatCell, StatSection } from "@statsify/contract";
+import type { GameContent, GamePage, GameStats, GameStatsPage, StatCell, StatSection } from "@statsify/contract";
 
 /** A stat by its catalog key, at the page's place unless `at` gives another (`""` for a game stat). */
 export type CellSpec =
@@ -500,31 +500,6 @@ export function buildGamePage(
   };
 }
 
-const rankedPaths = new Map<string, string[]>();
-const catalogNames = new Map<string, Record<string, string>>();
-
-/** The game's stats with a leaderboard, by path below the game, in the schema's order. */
-function rankedOf(game: Game): string[] {
-  const prefix = `stats.${game.key}.`;
-  let ranked = rankedPaths.get(game.key);
-  if (!ranked) {
-    ranked = [...playerFields()].filter(([path, { leaderboard }]) => path.startsWith(prefix) && leaderboard.enabled).map(([path]) => path.slice(prefix.length));
-    rankedPaths.set(game.key, ranked);
-  }
-  return ranked;
-}
-
-/** The card's own names for the game's stats that have one (a challenge's), by path below the game. */
-function namesOf(game: Game): Record<string, string> {
-  const prefix = `stats.${game.key}.`;
-  let names = catalogNames.get(game.key);
-  if (!names) {
-    names = Object.fromEntries(allStats(game).flatMap(({ path, name }) => (name === undefined ? [] : [[path.slice(prefix.length), name]])));
-    catalogNames.set(game.key, names);
-  }
-  return names;
-}
-
 /** One page of a game the site lays out itself: the frame, and the player's stats for the game to lay out. */
 export function buildStatsPage(
   player: Player,
@@ -536,7 +511,20 @@ export function buildStatsPage(
   const { game } = entry;
   // The schema's classes declare no index signature, but every value in them is JSON.
   const stats = { ...player.stats[game.key] } as unknown as GameStats;
-  return { ...pageFrame(player, entry, mode, submode, session), stats, ranked: rankedOf(game), names: namesOf(game) };
+  return { ...pageFrame(player, entry, mode, submode, session), stats };
+}
+
+/**
+ * What every player's page of a game the site lays out shares: the stats with a leaderboard, in the schema's order,
+ * and the card's own names for the ones that have one (a challenge's), each by path below the game.
+ */
+export function buildGameContent({ game }: PageEntry): GameContent {
+  const prefix = `stats.${game.key}.`;
+  const below = (path: string) => path.slice(prefix.length);
+  return {
+    ranked: [...playerFields()].filter(([path, { leaderboard }]) => path.startsWith(prefix) && leaderboard.enabled).map(([path]) => below(path)),
+    names: Object.fromEntries(allStats(game).flatMap(({ path, name }) => (name === undefined ? [] : [[below(path), name]]))),
+  };
 }
 
 export function pagesOf(layout: GameLayout): { mode: string; submode?: string; period?: string }[] {

@@ -34,7 +34,7 @@ import { WOOL_GAMES_PAGE } from "./woolgames.js";
 import { type GameId, GameIdMapping } from "@statsify/schemas";
 import { type PageEntry, isLayout, pageModes } from "./layout.js";
 
-export { buildGamePage, buildStatsPage, isLayout, pageModes, pageName } from "./layout.js";
+export { buildGameContent, buildGamePage, buildStatsPage, isLayout, pageModes, pageName } from "./layout.js";
 export type { GameLayout, PageEntry } from "./layout.js";
 
 /** Where a game comes in the game registry; a page that isn't a game's comes after every game. */

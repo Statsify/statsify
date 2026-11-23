@@ -149,4 +149,10 @@ export class SiteController {
   public prestiges() {
     return implement(contract.content.prestiges).handler(() => this.siteService.prestiges());
   }
+
+  @Auth(SITE_ONLY)
+  @Implement(contract.content.game)
+  public gameContent() {
+    return implement(contract.content.game).handler(({ input }) => this.siteService.gameContent(input));
+  }
 }

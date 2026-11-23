@@ -33,6 +33,8 @@ import { HypixelUnavailableError } from "#hypixel";
 import { Injectable, InternalServerErrorException, type OnApplicationBootstrap } from "@nestjs/common";
 import type {
   BingoPlayer,
+  GameContent,
+  GameContentInput,
   GameInput,
   GamePage,
   GameStatsPage,
@@ -66,6 +68,7 @@ import { LEADERBOARD_GROUPS, buildLeaderboardGroups, catalogGlossary, leaderboar
 import { type PlayerGuild, buildPlayerPage, gameNav, gamePanels, sessionOverview } from "./player-page.js";
 import {
   boardGamePage,
+  buildGameContent,
   buildGamePage,
   buildStatsPage,
   findGamePage,
@@ -199,6 +202,7 @@ export class SiteService implements OnApplicationBootstrap {
   private leaderboardGroups?: LeaderboardGroup[];
   private glossarySheet?: Glossary;
   private prestigeSheet?: PrestigeSheet;
+  private readonly gameContents = new Map<string, GameContent>();
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -564,6 +568,16 @@ export class SiteService implements OnApplicationBootstrap {
   public prestiges(): PrestigeSheet {
     this.prestigeSheet ??= buildPrestigeSheet();
     return this.prestigeSheet;
+  }
+
+  /** What every player's page of a game the site lays out shares; code, so built once per game. */
+  public gameContent({ game }: GameContentInput): GameContent {
+    const entry = findGamePage(game);
+    if (!entry || isLayout(entry)) throw notFound("Game not found");
+
+    let content = this.gameContents.get(game);
+    if (!content) this.gameContents.set(game, (content = buildGameContent(entry)));
+    return content;
   }
 
   public leaderboardGame({ key }: LeaderboardGameInput): LeaderboardGame {
