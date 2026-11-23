@@ -23,6 +23,7 @@ impl LightUniform {
     }
   }
 
+  #[cfg(target_arch = "wasm32")]
   pub fn update_position(&mut self, position: [f32; 3]) {
     self.position = position;
   }
