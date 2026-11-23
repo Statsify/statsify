@@ -12,6 +12,7 @@ import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
 import { SpeedUHCMastery } from "./mastery.js";
 import { SpeedUHCMode } from "./mode.js";
+import { add } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util.js";
 import type { APIData } from "@statsify/util";
 
@@ -113,7 +114,6 @@ export class SpeedUHC {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
-    this.gamesPlayed = data.games;
     this.highestKillstreak = data.highestKillstreak;
     this.activeMastery = (data.activeMasterPerk ?? "none").replace("mastery_", "");
 
@@ -121,6 +121,7 @@ export class SpeedUHC {
     this.solo = new SpeedUHCMode(data, "solo");
     this.teams = new SpeedUHCMode(data, "team");
     this.insane = new SpeedUHCMode(data, "insane");
+    this.gamesPlayed = add(this.overall.wins, this.overall.losses);
 
     this.wildSpecialist = new SpeedUHCMastery(data, "wild_specialist");
     this.guardian = new SpeedUHCMastery(data, "guardian");
