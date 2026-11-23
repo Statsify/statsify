@@ -54,8 +54,9 @@ const DYES: Record<string, string> = {
   black: "ink_sac",
 };
 
-// 1.8 ids minecraft-data's legacy table skips: 31:0 is the shrub, which the game draws as a dead bush
-const LEGACY_ITEMS: Record<string, string> = { "31:0": "minecraft:dead_bush" };
+// 1.8 ids minecraft-data's legacy table skips or names by a later version: 31:0 is the shrub, which the game
+// draws as a dead bush, and 1.8's only bed is red
+const LEGACY_ITEMS: Record<string, string> = { "31:0": "minecraft:dead_bush", "355:0": "minecraft:red_bed" };
 
 const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
 
@@ -247,9 +248,10 @@ if (names.items.size === 0) throw new Error(`${path} has no assets/minecraft/ite
 const [modernAssets, legacyAssets] = await Promise.all([readAssets(path), readAssets(legacyPath)]);
 if (!legacyAssets.textures.has("items/diamond_sword")) throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
 
-const [legacy, items, entities, effects, modernItems] = await Promise.all([
+const [legacy, items, blocks, entities, effects, modernItems] = await Promise.all([
   fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
   fetchJson<LegacyItem[]>("1.8/items.json"),
+  fetchJson<LegacyItem[]>("1.8/blocks.json"),
   fetchJson<LegacyEntity[]>("1.8/entities.json"),
   fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
   fetchJson<ModernItem[]>("26.1/items.json"),
@@ -281,13 +283,21 @@ const mobs = new Map(
   entities.filter((entity) => entity.type === "mob").map((entity) => [entity.id, entity]),
 );
 
+// The legacy table also has later versions' Damage values, like 1.12's bed colors and 1.9's dragon head
+const legacyDamages = new Map<number, Set<number>>();
+for (const { id, variations = [] } of [...items, ...blocks]) {
+  legacyDamages.set(id, new Set([...(legacyDamages.get(id) ?? []), 0, ...variations.map(({ metadata }) => metadata)]));
+}
+
 // With LEGACY_ITEMS, the legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
 // its id alone, and any Damage on it (tool wear) still finds it
 const variants = Map.groupBy(
-  Object.entries({ ...legacy.items, ...LEGACY_ITEMS }).map(([key, name]) => {
-    const [id, damage] = key.split(":").map(Number);
-    return { id, damage, name };
-  }),
+  Object.entries({ ...legacy.items, ...LEGACY_ITEMS })
+    .map(([key, name]) => {
+      const [id, damage] = key.split(":").map(Number);
+      return { id, damage, name };
+    })
+    .filter(({ id, damage }) => legacyDamages.get(id)?.has(damage) ?? true),
   ({ id }) => id,
 );
 
@@ -296,6 +306,9 @@ for (const [id, entries] of variants) {
 
   // Potions take their effects from the Damage value at runtime, see legacy-items.ts
   if (id === POTION) continue;
+
+  // Spawn eggs are keyed by their mob below. The table's one egg, 383:0, is 1.8's untyped egg, which 26.3 has no item for
+  if (id === SPAWN_EGG) continue;
 
   for (const { damage, name } of entries) {
     if (!name) continue;
@@ -306,7 +319,7 @@ for (const [id, entries] of variants) {
   }
 }
 
-// The legacy table has no spawn eggs, whose Damage is the mob's entity id
+// The legacy table has no mob's spawn egg, whose Damage is the mob's entity id
 const eggs = items.find(({ id }) => id === SPAWN_EGG)?.variations ?? [];
 
 for (const { metadata } of eggs) {
