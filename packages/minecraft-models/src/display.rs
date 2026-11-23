@@ -1,14 +1,10 @@
 use cgmath::{Deg, Matrix4, Vector3};
 
-/// A model's `display` transforms by context, as 1.8 names them.
+/// A model's `display` transforms for the contexts scenes draw, as 1.8 names them.
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Display {
   pub thirdperson: Option<Transform>,
-  pub firstperson: Option<Transform>,
   pub head: Option<Transform>,
-  pub gui: Option<Transform>,
-  pub ground: Option<Transform>,
-  pub fixed: Option<Transform>,
 }
 
 impl Display {
@@ -22,11 +18,7 @@ impl Display {
 
     Display {
       thirdperson: pick(self.thirdperson, parent.thirdperson),
-      firstperson: pick(self.firstperson, parent.firstperson),
       head: pick(self.head, parent.head),
-      gui: pick(self.gui, parent.gui),
-      ground: pick(self.ground, parent.ground),
-      fixed: pick(self.fixed, parent.fixed),
     }
   }
 }
