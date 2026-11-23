@@ -383,7 +383,7 @@ function LoginPanel({ page, className }: { page: PlayerPage; className?: string 
  * Status and logins as the card's header lists them: in the nametag from `md`, in their own panel on phones. The last
  * game links to its page where the player has one for it.
  */
-function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt }, className }: { page: PlayerPage; className?: string }) {
+function LoginList({ page: { status, games, username, updatedAt, expiresAt }, className }: { page: PlayerPage; className?: string }) {
   const { t } = useTranslation();
   const lastGame = status.lastGame && <MinecraftText>{status.lastGame.name}</MinecraftText>;
   const lastGamePage = games.find((game) => game.id === status.lastGame?.id)?.page;
@@ -395,7 +395,7 @@ function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt
         (
           <InlineStat
             label={t("default:stats.status")}
-            value={status.online ? <OnlineStatus uuid={uuid} updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
+            value={status.online ? <OnlineStatus updatedAt={updatedAt} expiresAt={expiresAt} /> : t("default:stats.offline")}
             color={status.online ? "text-mc-green" : "text-mc-red"}
             large
           />
@@ -419,17 +419,15 @@ function LoginList({ page: { uuid, status, games, username, updatedAt, expiresAt
 }
 
 /**
- * "Online" while the save is fresh, then how long ago the save saw them online. Until mount the clock is when the
- * server fetched the page, so a cached page hydrates to the server's text.
+ * "Online" while the save is fresh, then how long ago the save saw them online. That part waits for mount: `Intl`'s
+ * narrow text differs between engines, so the server's could break hydration.
  */
-function OnlineStatus({ uuid, updatedAt, expiresAt }: { uuid: string; updatedAt: number; expiresAt: number }) {
+function OnlineStatus({ updatedAt, expiresAt }: { updatedAt: number; expiresAt: number }) {
   const { t, i18n } = useTranslation();
-  const queryClient = useQueryClient();
   const now = useNow();
-  const clock = now ?? queryClient.getQueryState(playerPageQuery(uuid).queryKey)?.dataUpdatedAt ?? updatedAt;
   const online = t("default:stats.online");
-  const ago = clock < expiresAt ? undefined : relativeTime(updatedAt, clock, i18n.language, { style: "narrow" });
-  const date = now === undefined || ago === undefined ? undefined : savedDate(updatedAt, i18n.language);
+  const ago = now === undefined || now < expiresAt ? undefined : relativeTime(updatedAt, now, i18n.language, { style: "narrow" });
+  const date = ago === undefined ? undefined : savedDate(updatedAt, i18n.language);
 
   return (
     <Hint full={date} spoken={date && `${online} · ${ago}, ${date}`}>
