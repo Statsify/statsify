@@ -95,11 +95,7 @@ export const SkyBlockAccessoriesProfile = ({ profile, t, icons, page, ...card }:
       <Card {...card} name={profile.displayName} sidebar={sidebar}>
         {inactive.length > 0 ?
           <ItemGrid items={inactive} icons={icons} columns={1} /> :
-          (
-            <box width="100%">
-              <text>{`§a${t("skyblock.noInactiveAccessories")}`}</text>
-            </box>
-          )}
+          <Empty text={t("skyblock.noInactiveAccessories")} color="§a" />}
       </Card>
     );
   }
