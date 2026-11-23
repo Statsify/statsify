@@ -813,7 +813,6 @@ function HomeSection() {
 
 const ICONS = [Logo, LogoError, Board, Caret, Check, Chevron, Cross, Menu, RefreshIcon, SearchIcon];
 const SOCIAL_ICONS = [Discord, GitHub, Patreon, Twitter, YouTube];
-// Placeholder drawings until the designed set replaces them one for one.
 const PLACEHOLDER_ICONS = [Forums, Instagram, TikTok, Twitch];
 
 function MediaSection() {

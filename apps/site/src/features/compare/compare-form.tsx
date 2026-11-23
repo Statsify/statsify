@@ -10,7 +10,7 @@ import { Box } from "~/components/ui/box";
 import { gameLink, pageSearch } from "~/features/game/game-data";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { localePrefix } from "~/i18n/locales";
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 import { useRevealOnOpen } from "~/features/player/share-panel";
 import { useTranslation } from "react-i18next";
 import type { GamePage } from "@statsify/contract";
@@ -25,9 +25,14 @@ export function ComparePanel({ id, page }: { id: string; page: GamePage }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const inputId = useId();
+  const input = useRef<HTMLInputElement>(null);
   const { locale } = localeRoute.useRouteContext();
   const search = pageSearch(page);
   useRevealOnOpen(id);
+  // The reveal has brought the whole panel into view; focusing's own scroll would show only the input, not its title.
+  useEffect(() => {
+    input.current?.focus({ preventScroll: true });
+  }, []);
 
   return (
     <Box id={id} title={<h2 className="text-mc-1.5">{t("compare.title")}</h2>}>
@@ -46,6 +51,7 @@ export function ComparePanel({ id, page }: { id: string; page: GamePage }) {
         {Object.entries(search).map(([key, value]) => value !== undefined && <input key={key} type="hidden" name={key} value={value} />)}
         <label htmlFor={inputId} className="shrink-0 text-mc-1 text-mc-gray">{t("compare.player")}</label>
         <input
+          ref={input}
           id={inputId}
           name="b"
           required
