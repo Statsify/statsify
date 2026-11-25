@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node", "vitest/importMeta"]
   },
-  "include": ["src"]
+  "include": ["src", "../../config.schema.ts"]
 }

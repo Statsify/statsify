@@ -281,7 +281,7 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  for (const file of ["config.json", "config.js"]) {
+  for (const file of ["config.json", "config.ts"]) {
     const path = join(directory, "../../../", file);
 
     if (existsSync(path)) {
