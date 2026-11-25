@@ -1,0 +1,59 @@
+name: statsify
+
+services:
+  redis:
+    image: redis:8
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - "./data/redis:/data"
+    command: redis-server --requirepass statsify
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: statsify
+      MONGO_INITDB_ROOT_PASSWORD: statsify
+    volumes:
+      - "./data/mongodb:/data/db"
+  api:
+    image: statsify-api:dev
+    build:
+      context: .
+      target: api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config.js:/app/config.js:ro
+      - ./media:/app/media
+      - ./assets:/app/assets
+  discord-bot:
+    image: statsify-discord-bot:dev
+    build:
+      context: .
+      target: discord-bot
+    volumes:
+      - ./config.js:/app/config.js:ro
+      - ./assets:/app/assets
+      - ./locales:/app/locales
+  support-bot:
+    image: statsify-support-bot:dev
+    build:
+      context: .
+      target: support-bot
+    volumes:
+      - ./config.js:/app/config.js:ro
+      - ./assets:/app/assets
+      - ./locales:/app/locales
+  verify-server:
+    image: statsify-verify-server:dev
+    build:
+      context: .
+      target: verify-server
+    volumes:
+      - ./config.js:/app/config.js:ro
+      - ./assets:/app/assets
+  

@@ -2,6 +2,11 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalDependencies": ["pnpm-lock.yaml", "tsconfig.base.json", ".swcrc"],
   "ui": "tui",
+  "globalPassThroughEnv": [
+    "RUSTUP_HOME",
+    "CARGO_HOME",
+    "CARGO_TARGET_DIR"
+  ],
   "tasks": {
     "build": {
       "env": ["API_URL", "API_KEY"],

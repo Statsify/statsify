@@ -13,6 +13,7 @@
       "default": "./dist/jsx-runtime/index.js"
     }
   },
+  "files": ["dist", "positions.json", "sizes.json"],
   "scripts": {
     "build": "swc src --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",

@@ -4,6 +4,7 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "files": ["dist"],
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",

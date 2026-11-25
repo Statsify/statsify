@@ -97,4 +97,4 @@ const document = SwaggerModule.createDocument(app, redoc);
 
 SwaggerModule.setup("swagger", app, document);
 
-await app.listen(await config("api.port"));
+await app.listen(await config("api.port"), "0.0.0.0");
