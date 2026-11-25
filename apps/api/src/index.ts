@@ -69,7 +69,6 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter,
   logger: new Logger(),
 });
 
-// nestjs-zod's default 400 body doesn't match ErrorResponse in @statsify/api-client
 const ZodValidationPipe = createZodValidationPipe({
   createValidationException: (error) =>
     new BadRequestException(
