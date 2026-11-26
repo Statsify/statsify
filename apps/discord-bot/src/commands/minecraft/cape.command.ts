@@ -18,6 +18,14 @@ import { Image, loadImage } from "skia-canvas";
 import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
+// 46x22 and HD capes use the 64x32 layout scaled by the smallest power of two that fits
+function getCapeFront(cape: Image) {
+  let scale = 1;
+  while (64 * scale < cape.width || 32 * scale < cape.height) scale *= 2;
+
+  return { x: scale, y: scale, width: 10 * scale, height: 16 * scale };
+}
+
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {
   public constructor(private readonly apiService: ApiService) {}
@@ -35,12 +43,9 @@ export class CapeCommand {
       this.getMojangCape(player),
     ]);
 
-    const pages = capes
-      .filter((c) => !!c.image)
-      .map((c) => ({
-        label: c.label,
-        generator: () => this.renderCape(c.image as Image),
-      }));
+    const pages = capes.flatMap(({ label, image }) =>
+      image ? [{ label, generator: () => this.renderCape(image) }] : []
+    );
 
     if (pages.length === 0)
       return new ErrorMessage(
@@ -69,59 +74,21 @@ export class CapeCommand {
   }
 
   private renderCape(cape: Image) {
-    const canvas = createCanvas(636, 1024);
+    const front = getCapeFront(cape);
+    const canvas = createCanvas(640, 1024);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    let height: number;
-    let width: number;
-    let start: number;
-
-    switch (cape.width) {
-      case 92:
-        height = 32;
-        width = 20;
-        start = 2;
-        break;
-
-      case 184:
-        height = 64;
-        width = 40;
-        start = 4;
-        break;
-
-      case 1024:
-        height = 256;
-        width = 160;
-        start = 16;
-        break;
-
-      case 2048:
-        height = 512;
-        width = 318;
-        start = 12;
-        break;
-
-      default:
-      case 46:
-        height = 16;
-        width = 10;
-        start = 1;
-        break;
-    }
-
-    const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
-
     ctx.drawImage(
       cape,
-      start,
-      start,
-      cape.width,
-      cape.height,
+      front.x,
+      front.y,
+      front.width,
+      front.height,
       0,
       0,
-      cape.width * ratio,
-      cape.height * ratio
+      canvas.width,
+      canvas.height
     );
 
     return canvas;
