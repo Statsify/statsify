@@ -8,28 +8,30 @@
 
 import {
   type APIGuildMember,
+  type APIInteraction,
+  type APIInteractionResponse,
   type APIUser,
   ComponentType,
   InteractionType,
+  Routes,
 } from "discord-api-types/v10";
 import { type IMessage, Message, getLocalizeFunction } from "#messages";
-import { parseDiscordResponse } from "#util/parse-discord-error";
-import type {
-  InteractionServer,
-  RestClient,
-} from "tiny-discord";
+import type { API } from "@discordjs/core/http-only";
+import type { RawFile } from "@discordjs/rest";
 
-export type InteractionResponder = (
-  response: InteractionServer.InteractionReply
-) => Promise<unknown>;
+export type InteractionReply = APIInteractionResponse & { files?: RawFile[] };
+
+export type InteractionResponder = (response: InteractionReply) => Promise<unknown>;
 
 export class Interaction {
   private locale: string | null = null;
+
+  // Webhook edits and followups fail with 10008 or 10015 if they reach Discord before the reply
   private readonly acknowledged = Promise.withResolvers<void>();
 
   public constructor(
-    private readonly rest: RestClient,
-    private readonly data: InteractionServer.InteractionData,
+    private readonly api: API,
+    private readonly data: APIInteraction,
     private readonly applicationId: string,
     private readonly respond?: InteractionResponder
   ) {}
@@ -93,7 +95,7 @@ export class Interaction {
   }
 
   public getLocale() {
-    return this.locale ?? this.data.locale ?? "en-US";
+    return this.locale ?? ("locale" in this.data ? this.data.locale : undefined) ?? "en-US";
   }
 
   public setLocale(locale: string | null) {
@@ -108,71 +110,56 @@ export class Interaction {
     return this.getData().custom_id;
   }
 
-  public async reply(data: InteractionServer.InteractionReply) {
+  public async reply(response: InteractionReply) {
     try {
-      await (this.respond ?
-        this.respond(data) :
-        this.send({
-          method: "post",
-          path: `/interactions/${this.data.id}/${this.data.token}/callback`,
-          body: data,
-        }));
+      if (this.respond) {
+        await this.respond(response);
+      } else {
+        const { files, ...body } = response;
+
+        await this.api.rest.post(Routes.interactionCallback(this.data.id, this.data.token), {
+          auth: false,
+          body,
+          files,
+        });
+      }
     } finally {
       this.acknowledged.resolve();
     }
   }
 
   public async editReply(data: Message | IMessage) {
-    await this.request({
-      method: "patch",
-      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
-      body: this.convertToApiData(data),
-    });
+    await this.acknowledged.promise;
+    await this.api.interactions.editReply(this.applicationId, this.data.token, this.convertToApiData(data));
   }
 
   public async deleteReply() {
-    await this.request({
-      method: "delete",
-      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
-    });
+    await this.acknowledged.promise;
+    await this.api.interactions.deleteReply(this.applicationId, this.data.token);
   }
 
   public async sendFollowup(data: Message | IMessage) {
-    await this.request({
-      method: "post",
-      path: `/webhooks/${this.applicationId}/${this.data.token}`,
-      body: this.convertToApiData(data),
-    });
+    await this.acknowledged.promise;
+    await this.api.interactions.followUp(this.applicationId, this.data.token, this.convertToApiData(data));
   }
 
   public async editFollowup(messageId: string, data: Message | IMessage) {
-    await this.request({
-      method: "patch",
-      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
-      body: this.convertToApiData(data),
-    });
+    await this.acknowledged.promise;
+    await this.api.interactions.editReply(
+      this.applicationId,
+      this.data.token,
+      this.convertToApiData(data),
+      messageId
+    );
   }
 
   public async deleteFollowup(messageId: string) {
-    await this.request({
-      method: "delete",
-      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
-    });
+    await this.acknowledged.promise;
+    await this.api.interactions.deleteReply(this.applicationId, this.data.token, messageId);
   }
 
   public convertToApiData(m: Message | IMessage) {
     const message = m instanceof Message ? m : new Message(m);
     return message.toAPI(getLocalizeFunction(this.getLocale()));
-  }
-
-  private async request(options: RestClient.RequestOptions) {
-    // Webhook edits and followups fail with 10008 or 10015 if they reach Discord before the reply
-    await this.acknowledged.promise;
-    return this.send(options);
-  }
-
-  private async send(options: RestClient.RequestOptions) {
-    const response = await this.rest.request(options);
-    return parseDiscordResponse(response);
   }
 }

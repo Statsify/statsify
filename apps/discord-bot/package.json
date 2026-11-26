@@ -12,6 +12,9 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
+    "@discordjs/core": "^2.7.0",
+    "@discordjs/rest": "^2.6.3",
+    "@discordjs/ws": "^2.0.4",
     "@sentry/node": "^7.118.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
@@ -30,8 +33,8 @@
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "4.0.0",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "undici": "^6.29.1"
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2"

@@ -15,6 +15,7 @@ import {
   ErrorMessage,
   IMessage,
   Interaction,
+  type InteractionServer,
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -23,7 +24,8 @@ import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import { tips } from "../tips.js";
-import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import type { API } from "@discordjs/core/http-only";
+import type { WebSocketManager } from "@discordjs/ws";
 
 const isDevelopment = await config("environment") === "dev";
 const applicationId = await config("discordBot.applicationId");
@@ -35,13 +37,13 @@ export class CommandListener extends AbstractCommandListener {
   private static instance: CommandListener;
 
   private constructor(
-    client: WebsocketShard | InteractionServer,
-    rest: RestClient,
+    client: WebSocketManager | InteractionServer,
+    api: API,
     commands: Map<string, CommandResolvable>
   ) {
     super(
       client as InteractionServer,
-      rest,
+      api,
       commands,
       applicationId,
       port!
@@ -177,11 +179,11 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   public static create(
-    client: WebsocketShard | InteractionServer,
-    rest: RestClient,
+    client: WebSocketManager | InteractionServer,
+    api: API,
     commands: Map<string, CommandResolvable>
   ) {
-    this.instance = new CommandListener(client, rest, commands);
+    this.instance = new CommandListener(client, api, commands);
     return this.instance;
   }
 

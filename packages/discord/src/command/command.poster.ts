@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIApplicationCommand } from "discord-api-types/v10";
+import { API } from "@discordjs/core/http-only";
+import { APIApplicationCommand, Routes } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
-import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "#util/parse-discord-error";
 import { readFile, writeFile } from "node:fs/promises";
 import type { CommandResolvable } from "./command.resolvable.js";
 
@@ -18,7 +17,7 @@ import type { CommandResolvable } from "./command.resolvable.js";
 export class CommandPoster {
   private readonly logger = new Logger("CommandPoster");
 
-  public constructor(private readonly rest: RestClient) {}
+  public constructor(private readonly api: API) {}
 
   public async post(
     command: CommandResolvable,
@@ -40,11 +39,7 @@ export class CommandPoster {
   }
 
   public async delete(id: string, applicationId: string, guildId?: string) {
-    const response = await this.rest.delete(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/${id}`
-    );
-
-    parseDiscordResponse(response);
+    await this.api.rest.delete(`${this.getCommandsRoute(applicationId, guildId)}/${id}`);
   }
 
   private async postAll(
@@ -59,17 +54,12 @@ export class CommandPoster {
       return null;
     }
 
-    const response = await this.rest.put(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands`,
-      commandsToPost
-    );
-
     let cmds: APIApplicationCommand[];
 
     try {
-      cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
-      // A response could return a non-JSON error, like a 502 page
-      if (!cmds) throw new Error(`Discord responded with ${response.status}`);
+      cmds = (await this.api.rest.put(this.getCommandsRoute(applicationId, guildId), {
+        body: commandsToPost,
+      })) as APIApplicationCommand[];
     } catch (err) {
       this.logger.error("Failed to post commands");
       this.logger.error(err);
@@ -93,12 +83,9 @@ export class CommandPoster {
     applicationId: string,
     guildId?: string
   ): Promise<APIApplicationCommand> {
-    const response = await this.rest.post(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/`,
-      command.toJSON()
-    );
-
-    return parseDiscordResponse(response);
+    return this.api.rest.post(this.getCommandsRoute(applicationId, guildId), {
+      body: command.toJSON(),
+    }) as Promise<APIApplicationCommand>;
   }
 
   private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
@@ -118,7 +105,9 @@ export class CommandPoster {
     return false;
   }
 
-  private getGuildRoute(guildId?: string) {
-    return guildId ? `guilds/${guildId}` : "";
+  private getCommandsRoute(applicationId: string, guildId?: string) {
+    return guildId ?
+      Routes.applicationGuildCommands(applicationId, guildId) :
+      Routes.applicationCommands(applicationId);
   }
 }

@@ -8,7 +8,6 @@
 
 import * as Sentry from "@sentry/node";
 import {
-  type APIUser,
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
   InteractionResponseType,
@@ -16,21 +15,23 @@ import {
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
-import { Interaction, type InteractionAttachment } from "#interaction";
+import {
+  Interaction,
+  type InteractionAttachment,
+  type InteractionReply,
+  type InteractionServer,
+} from "#interaction";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
+import { type WebSocketManager, WebSocketShardEvents } from "@discordjs/ws";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
+import type { API } from "@discordjs/core/http-only";
 import type { CommandResolvable } from "./command.resolvable.js";
-import type {
-  InteractionServer,
-  RestClient,
-  WebsocketShard,
-} from "tiny-discord";
 
 export type InteractionHook = (
   interaction: Interaction
-) => InteractionServer.InteractionReply | undefined | Promise<any>;
+) => InteractionReply | undefined | Promise<any>;
 
 export type CommandPrecondition = () => void;
 
@@ -48,20 +49,20 @@ export abstract class AbstractCommandListener {
 
   protected constructor(
     client: InteractionServer,
-    rest: RestClient,
+    api: API,
     commands: Map<string, CommandResolvable>,
     applicationId: string,
     port: number
   );
   protected constructor(
-    client: WebsocketShard,
-    rest: RestClient,
+    client: WebSocketManager,
+    api: API,
     commands: Map<string, CommandResolvable>,
     applicationId: string
   );
   protected constructor(
-    private client: WebsocketShard | InteractionServer,
-    private rest: RestClient,
+    private client: WebSocketManager | InteractionServer,
+    private api: API,
     protected commands: Map<string, CommandResolvable>,
     private applicationId: string,
     private port?: number
@@ -71,7 +72,7 @@ export abstract class AbstractCommandListener {
     if (port) {
       this.handleInteractionServer(this.client as InteractionServer);
     } else {
-      this.handleWebsocketShard(this.client as WebsocketShard);
+      this.handleWebSocketManager(this.client as WebSocketManager);
     }
   }
 
@@ -89,8 +90,8 @@ export abstract class AbstractCommandListener {
       return (this.client as InteractionServer).listen(this.port as number);
     }
 
-    this.logger.log("Connecting to gateway with WebsocketShard");
-    return (this.client as WebsocketShard).connect();
+    this.logger.log("Connecting to gateway with WebSocketManager");
+    return (this.client as WebSocketManager).connect();
   }
 
   protected getCommandAndData(
@@ -224,7 +225,7 @@ export abstract class AbstractCommandListener {
     }
   }
 
-  protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onMessageComponent(interaction: Interaction): InteractionReply {
     const hook = this.hooks.get(interaction.getCustomId());
 
     const res = hook?.(interaction);
@@ -234,13 +235,13 @@ export abstract class AbstractCommandListener {
     return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
-  protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
+  protected onModal(interaction: Interaction): InteractionReply {
     // Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }
 
-  protected async onAutocomplete(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
-    const defaultResponse = {
+  protected async onAutocomplete(interaction: Interaction): Promise<InteractionReply> {
+    const defaultResponse: InteractionReply = {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: [] },
     };
@@ -268,7 +269,7 @@ export abstract class AbstractCommandListener {
     };
   }
 
-  private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
+  private async onInteraction(interaction: Interaction): Promise<InteractionReply> {
     if (interaction.isCommandInteraction()) {
       this.onCommand(interaction);
       return { type: InteractionResponseType.DeferredChannelMessageWithSource };
@@ -283,49 +284,22 @@ export abstract class AbstractCommandListener {
   }
 
   private handleInteractionServer(client: InteractionServer) {
-    client.on("error", (err) => {
-      this.logger.error(err);
-    });
-
-    client.on("interaction", async (event) => {
-      const interaction = new Interaction(
-        this.rest,
-        event.interaction,
-        this.applicationId,
-        (response) => event.reply(response)
-      );
-
-      try {
-        const response = await this.onInteraction(interaction);
-        await interaction.reply(response);
-      } finally {
-        if (!event.response.writableEnded) {
-          event.response.statusCode = 500;
-          event.response.end();
-        }
-      }
+    client.onInteraction(async (data, respond) => {
+      const interaction = new Interaction(this.api, data, this.applicationId, respond);
+      const response = await this.onInteraction(interaction);
+      await interaction.reply(response);
     });
   }
 
-  private handleWebsocketShard(client: WebsocketShard) {
-    client.on("ready", (event) => {
-      if (event.type === "resume") return;
-      const data = event.data as WebsocketShard.ShardReady;
-      const user = data.user as APIUser;
-
-      this.logger.log(
-        `Connected to gateway with WebsocketShard on ${user.username}`
-      );
+  private handleWebSocketManager(client: WebSocketManager) {
+    client.on(WebSocketShardEvents.Ready, ({ user }) => {
+      this.logger.log(`Connected to gateway with WebSocketManager on ${user.username}`);
     });
 
-    client.on("event", async (event) => {
+    client.on(WebSocketShardEvents.Dispatch, async (event) => {
       if (event.t !== GatewayDispatchEvents.InteractionCreate) return;
 
-      const interaction = new Interaction(
-        this.rest,
-        event.d as InteractionServer.InteractionData,
-        this.applicationId
-      );
+      const interaction = new Interaction(this.api, event.d, this.applicationId);
 
       const response = await this.onInteraction(interaction);
       interaction.reply(response);

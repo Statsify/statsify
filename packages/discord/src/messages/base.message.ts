@@ -45,7 +45,7 @@ export class Message {
   public toAPI(locale: LocalizeFunction) {
     const data = this.build(locale);
 
-    const res = {
+    return {
       content: data.content,
       tts: data.tts,
       flags: data.ephemeral ? 1 << 6 : undefined,
@@ -53,14 +53,7 @@ export class Message {
       embeds: data.embeds,
       attachments: data.attachments,
       components: data.components,
+      files: data.files?.map(({ name, data, type }) => ({ name, data, contentType: type })),
     };
-
-    if (data.files)
-      return {
-        files: data.files,
-        payload_json: res,
-      };
-
-    return res;
   }
 }
