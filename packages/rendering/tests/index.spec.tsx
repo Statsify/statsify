@@ -122,6 +122,17 @@ suite("createInstructions with remaining sizes", () => {
     expect(instructions.children![1].x.size).toBe(6);
   });
 
+  it("a remaining size next to a percentage", () => {
+    const instructions = createInstructions(
+      <div width={100} direction="row">
+        <div width="30%" />
+        <div width="remaining" />
+      </div>
+    );
+
+    expect(instructions.children![1].x.size).toBe(70);
+  });
+
   it("a basic remaining size on the other axis", () => {
     const parentHeight = 10;
 
