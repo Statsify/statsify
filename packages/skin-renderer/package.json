@@ -14,8 +14,6 @@
   },
   "files": ["index.cjs", "index.d.ts", "*.node", "pkg/"],
   "scripts": {
-    "build": "pnpm build:napi && pnpm build:wasm",
-    "build:debug": "pnpm build:napi:debug && pnpm build:wasm:debug",
     "build:napi": "napi build --platform --release && mv index.js index.cjs",
     "build:napi:debug": "napi build --platform && mv index.js index.cjs",
     "build:wasm": "wasm-pack build --target web --release",

@@ -68,6 +68,4 @@ const listener = CommandListener.create(
 const verifyCommand = Container.get(VerifyCommand);
 verifyCommand.registerComponentListeners(listener);
 
-console.log("Hello WOrld");
-
 await listener.listen();
