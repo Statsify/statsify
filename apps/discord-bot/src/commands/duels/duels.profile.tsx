@@ -47,14 +47,21 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   const stats = duels[mode.api];
 
-  if ("shotsFired" in stats) {
-    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
-  } else if ("overall" in stats && "shotsFired" in stats.overall) {
-    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
+  const bowStats = "overall" in stats ? stats.overall : stats;
+
+  if ("shotsHit" in bowStats) {
+    sidebar.push(
+      [t("stats.bowShots"), t(bowStats.shotsFired), "§6"],
+      [t("stats.bowHits"), t(bowStats.shotsHit), "§c"]
+    );
   }
 
-  if ("headshots" in stats)
-    sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
+  if ("headshots" in stats) {
+    sidebar.push(
+      [t("stats.shotsFired"), t(stats.shotsFired), "§6"],
+      [t("stats.headshots"), t(stats.headshots), "§3"]
+    );
+  }
 
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
@@ -92,6 +99,7 @@ export const DuelsProfile = <T extends ProfileTime>({
 
     case "spleef":
       if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), "§b"]);
+      else sidebar.push([t("stats.bowShots"), t(duels.spleef.bowSpleef.shotsFired), "§6"]);
       table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 

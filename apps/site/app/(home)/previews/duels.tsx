@@ -44,7 +44,8 @@ export function DuelsPreview({ className }: { className?: string }) {
           <SidebarItem color="text-mc-dark-green" name="Tokens" value={t(duels.tokens)} />
           <SidebarItem color="text-mc-green" name="Ping Range" value={`${duels.pingRange}ms`} />
           <SidebarItem color="text-mc-blue" name="Blocks" value={t(stats.blocksPlaced)} />
-          <SidebarItem color="text-mc-gold" name="Shots Fired" value={t(stats.shotsFired)} />
+          <SidebarItem color="text-mc-gold" name="Bow Shots" value={t(stats.shotsFired)} />
+          <SidebarItem color="text-mc-red" name="Bow Hits" value={t(stats.shotsHit)} />
         </Sidebar>
       </div>
       <TableData title="Wins" value={t(stats.wins)} color="text-mc-green" />
