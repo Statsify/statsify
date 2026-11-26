@@ -25,7 +25,10 @@ export class ServerCommand {
 
   public constructor() {
     this.axios = axios.create({
-      baseURL: "https://api.mcsrvstat.us/2/",
+      baseURL: "https://api.mcsrvstat.us/3/",
+      allowAbsoluteUrls: false,
+      headers: { "User-Agent": "Statsify (https://statsify.net)" },
+      timeout: 10_000,
     });
 
     getServerMappings().then((mappings) => {
@@ -41,7 +44,9 @@ export class ServerCommand {
     const server = await this.getServer(context.option<string>("server"));
 
     const [serverLogo, background] = await Promise.all([
-      server.icon ? loadImage(server.icon) : undefined,
+      server.icon?.startsWith("data:image/png;base64,") ?
+        loadImage(server.icon) :
+        undefined,
       getServerBackground(server.mapping),
     ]);
 
