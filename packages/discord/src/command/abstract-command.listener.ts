@@ -86,7 +86,7 @@ export abstract class AbstractCommandListener {
   public listen() {
     if (this.port !== undefined) {
       this.logger.log(`Listening with InteractionServer on port ${this.port}`);
-      return (this.client as InteractionServer).listen(this.port as number);
+      return (this.client as InteractionServer).listen(this.port);
     }
 
     this.logger.log("Connecting to gateway with WebsocketShard");
@@ -287,14 +287,14 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    client.on("interaction", async (event) => {
+    client.on("interaction", (event) => void (async () => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       const response = await this.onInteraction(interaction);
       await interaction.reply(response);
 
       event.response.statusCode = 204;
       event.response.end();
-    });
+    })());
   }
 
   private handleWebsocketShard(client: WebsocketShard) {
@@ -308,7 +308,7 @@ export abstract class AbstractCommandListener {
       );
     });
 
-    client.on("event", async (event) => {
+    client.on("event", (event) => void (async () => {
       if (event.t !== GatewayDispatchEvents.InteractionCreate) return;
 
       const interaction = new Interaction(
@@ -319,7 +319,7 @@ export abstract class AbstractCommandListener {
 
       const response = await this.onInteraction(interaction);
       interaction.reply(response);
-    });
+    })());
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<void> | void;

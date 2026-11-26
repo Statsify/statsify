@@ -58,7 +58,7 @@ const port = await config("discordBot.port", { required: false });
 
 const listener = CommandListener.create(
   port ?
-    new InteractionServer({ key: await config("discordBot.publicKey")! }) :
+    new InteractionServer({ key: await config("discordBot.publicKey") }) :
     new WebsocketShard({ token: await config("discordBot.token"), intents: 1 }),
   rest,
   commands

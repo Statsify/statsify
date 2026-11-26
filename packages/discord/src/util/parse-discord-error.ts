@@ -33,7 +33,7 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
       error.message
     }`.trim();
 
-  const entries = Object.entries(error) as [string, any][];
+  const entries = Object.entries<any>(error);
   let message = "";
 
   for (const [key, value] of entries) {

@@ -19,7 +19,7 @@ export function useOutisdeClick<T extends HTMLElement>(fn: () => void) {
     }
 
     document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    return () => { document.removeEventListener("click", onClick, true); };
   }, [ref, fn]);
 
   return ref;

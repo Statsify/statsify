@@ -39,7 +39,7 @@ export class CapeCommand {
       .filter((c) => !!c.image)
       .map((c) => ({
         label: c.label,
-        generator: () => this.renderCape(c.image as Image),
+        generator: () => this.renderCape(c.image!),
       }));
 
     if (pages.length === 0)

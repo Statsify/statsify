@@ -84,8 +84,10 @@ const setTimestamps = async (collectionName) => {
     });
   }
 
-  if (bulkOperations.length === 0)
-    return console.log(`No players to update for ${collectionName}.`);
+  if (bulkOperations.length === 0) {
+    console.log(`No players to update for ${collectionName}.`);
+    return;
+  }
   
   const repsonse = await collection.bulkWrite(bulkOperations);
   

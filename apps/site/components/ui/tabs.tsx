@@ -39,7 +39,7 @@ export function Tabs<T extends string | number>({
   className,
   ...props
 }: TabsProps<T>) {
-  const [internalTab, setInternalTab] = useState(defaultTab as T);
+  const [internalTab, setInternalTab] = useState(defaultTab!);
 
   const onTabChange = useCallback((tab: T) => {
     setInternalTab(tab);

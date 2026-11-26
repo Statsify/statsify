@@ -60,7 +60,7 @@ export class VerifyCommand {
     private readonly memberService: MemberService
   ) {}
 
-  public async run(): Promise<IMessage> {
+  public run(): IMessage {
     const row = new ActionRowBuilder([VERIFY_BUTTON]);
 
     return {
@@ -109,7 +109,7 @@ export class VerifyCommand {
         .then(() => this.apiService.updateUser(userId, { serverMember: true }))
         .catch(() => null);
 
-      const player = await this.apiService.getPlayer(user.uuid as string);
+      const player = await this.apiService.getPlayer(user.uuid!);
 
       const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 

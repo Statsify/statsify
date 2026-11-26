@@ -294,7 +294,7 @@ export class RatiosCommand {
     return ratioModes;
   }
 
-  private getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor<any>) {
+  private getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor) {
     const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
     const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
 

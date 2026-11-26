@@ -61,7 +61,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const guild = await this.guildService.get(guildId);
 
-    const memberId = data.user!.id;
+    const memberId = data.user.id;
 
     const user = await this.apiService.getUser(memberId);
 
@@ -74,7 +74,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       getBackground("minecraft", "overall"),
     ]);
 
-    const username = data.user!.username;
+    const username = data.user.username;
 
     const canvas = render(
       <WelcomeProfile
@@ -93,11 +93,11 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
-    await this.roleService.addRole(GUILD_ID, member.user!.id, MEMBER_ROLE);
-    await this.apiService.updateUser(member.user!.id, { serverMember: true });
+    await this.roleService.addRole(GUILD_ID, member.user.id, MEMBER_ROLE);
+    await this.apiService.updateUser(member.user.id, { serverMember: true });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${randomJoinMessage()}`)
+      .description(`<@${member.user.id}> ${randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 
@@ -107,12 +107,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
     await this.messageService.send(UNVERIFIED_CHANNEL_ID, {
       content: `<@${
-        member.user!.id
+        member.user.id
       }>, run and complete \`/verify\` to get access to the rest of the discord server.`,
     });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${randomJoinMessage()}`)
+      .description(`<@${member.user.id}> ${randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 
@@ -125,11 +125,11 @@ function getDiscordAvatar(member: APIGuildMember): Promise<Image> {
 
   if (avatar)
     return loadImage(
-      `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
+      `https://cdn.discordapp.com/avatars/${member.user.id}/${avatar}.png?size=96`
     );
 
   // choose the proper default Discord avatar for the user
-  const { id, discriminator } = member.user!;
+  const { id, discriminator } = member.user;
   const index = discriminator === "0" ? (BigInt(id) >> 22n) % 6n : Number(discriminator) % 5;
 
   return loadImage(`https://cdn.discordapp.com/embed/avatars/${index}.png?size=96`);

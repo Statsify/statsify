@@ -25,7 +25,7 @@ export interface GameListProps {
 export const GameList = ({ gameIcons, entries, rowSize = 2 }: GameListProps) => {
   const values = entries.map(([field, value, boxProps]) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }} {...boxProps}>
-      <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />
+      <img image={gameIcons[field]} width={32} height={32} />
       <text>§l{FormattedGame[field as keyof typeof FormattedGame] ?? field}</text>
       <div width="remaining" margin={{ left: 4, right: 4 }} />
       <text>{value}</text>

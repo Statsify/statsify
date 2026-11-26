@@ -27,7 +27,7 @@ export class ResetCommand {
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     await this.apiService.resetPlayerSession(
-      user.uuid!
+      user.uuid
     );
 
     const embed = new EmbedBuilder()

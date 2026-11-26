@@ -44,4 +44,4 @@ export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   children,
 });
 
-export const render: JSX.Render<DivRenderProps> = noop;
+export const render: JSX.Render = noop;

@@ -61,7 +61,7 @@ export class ButtonBuilder {
   }
 
   public getCustomId() {
-    return this.#custom_id as string;
+    return this.#custom_id!;
   }
 
   public build(

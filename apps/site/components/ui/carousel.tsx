@@ -64,8 +64,8 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
   }
 
   useEffect(() => {
-    const interval = setInterval(() => paginate(1), 7500);
-    return () => clearInterval(interval);
+    const interval = setInterval(() => { paginate(1); }, 7500);
+    return () => { clearInterval(interval); };
   }, []);
 
   return (
@@ -74,7 +74,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
         {/* TODO: investigate why clicking the very edges of the button doesn't work */}
         <Box className="hidden lg:block has-[button:active]:scale-[0.8] transition-transform z-10 content:backdrop-blur-2xl content:relative">
           <Chevron className="rotate-180" />
-          <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => paginate(-1)} />
+          <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => { paginate(-1); }} />
         </Box>
         <div className={cn("relative flex overflow-visible", "cursor-pointer")}>
           <div className="grid grid-areas-stack">{cards.map((card, index) => <div key={index} className="grid-area-stack invisible">{card}</div>)}</div>
@@ -102,13 +102,13 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
                 }}
                 className={cn("w-fit absolute top-1/2 -translate-y-1/2 left-0 right-0 mx-auto select-none", className)}
               >
-                {cards[cardIndex] as ReactNode}
+                {cards[cardIndex]}
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
         <Box className="hidden lg:block has-[button:active]:scale-[0.8] transition-transform content:backdrop-blur-2xl content:relative">
-          <button aria-label="Next Card" type="button" className="z-10 absolute inset-0" onClick={() => paginate(1)} />
+          <button aria-label="Next Card" type="button" className="z-10 absolute inset-0" onClick={() => { paginate(1); }} />
           <Chevron />
         </Box>
       </div>
@@ -120,7 +120,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
             aria-label={`Go to card ${index + 1}`}
             aria-selected={cardIndex === index}
             key={index}
-            onClick={() => setPage([index, index > cardIndex ? 1 : -1])}
+            onClick={() => { setPage([index, index > cardIndex ? 1 : -1]); }}
             className="bg-black/40 w-4 h-4 aria-selected:bg-black/70 aria-selected:scale-[1.5] transition-all"
           />
         ))}

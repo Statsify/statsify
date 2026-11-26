@@ -13,8 +13,8 @@ import { type RefObject, useEffect, useMemo, useState } from "react";
 export function useMeasure<T extends HTMLElement>(ref: RefObject<T | null>) {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
-  // This must check for window since ResizeObserver only exists on the web
-  const observer = useMemo(() => typeof window !== "undefined" && window.ResizeObserver ? new ResizeObserver((entries) => setSize(entries[0].contentRect)) : undefined, []);
+  // ResizeObserver only exists in the browser, not during server render
+  const observer = useMemo(() => "ResizeObserver" in globalThis ? new ResizeObserver((entries) => { setSize(entries[0].contentRect); }) : undefined, []);
 
   useEffect(() => {
     if (!ref.current) return;

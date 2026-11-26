@@ -42,7 +42,7 @@ export const GuildMemberProfile = ({
 
   const positions = guild.expHistory.slice(0, 7).map((_, i) => {
     const position = guild.members
-      .sort((a, b) => Number(b.expHistory[i]) - Number(a.expHistory[i]))
+      .sort((a, b) => b.expHistory[i] - a.expHistory[i])
       .findIndex((m) => m.uuid === member.uuid);
 
     return `§7#§f${t(position + 1)}§8/§7${guild.members.length}`;

@@ -120,15 +120,13 @@ export class SkinService {
   private requestSkin(uuid: string) {
     return lastValueFrom(
       this.httpService.get(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).pipe(
-        map((response) => {
-          if (response.status !== 200) throw response;
-          return response.data;
-        }),
-        map((data) => new Skin(data)),
-        catchError((error) => {
-          // Player not found
-          if (error.status === 204) throw new PlayerNotFoundException();
+        catchError(() => {
           throw new InternalServerErrorException();
+        }),
+        map((response) => {
+          if (response.status === 204) throw new PlayerNotFoundException();
+          if (response.status !== 200) throw new InternalServerErrorException();
+          return new Skin(response.data);
         })
       )
     );

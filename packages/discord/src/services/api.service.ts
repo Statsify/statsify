@@ -50,7 +50,7 @@ export class ApiService extends StatsifyApiService {
     return super
       .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
       .catch((err) => {
-        if (!err.response || !err.response.data) throw this.unknownError();
+        if (!err.response?.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;
 
         if (error.message === "player") throw this.missingPlayer(type, tag);
@@ -68,7 +68,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayerSession(input, userUuid).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response?.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
@@ -97,7 +97,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getStatus(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response?.data) throw this.unknownError();
       const error = err.response.data as
         | StatusNotFoundException |
         PlayerNotFoundException;
@@ -151,7 +151,7 @@ export class ApiService extends StatsifyApiService {
     }
 
     return super.getGuild(input, resolvedType).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response?.data) throw this.unknownError();
 
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
@@ -217,7 +217,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayerSkinTextures(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
+      if (!err.response?.data) throw this.unknownError();
 
       const error = err.response.data as PlayerNotFoundException;
       if (error.message === "player") throw this.missingPlayer(type, tag);
@@ -315,6 +315,6 @@ export class ApiService extends StatsifyApiService {
   }
 
   private isDiscordId(tag: string) {
-    return Boolean(/^<@!?(\d{17,19})>$/.test(tag)) || Boolean(/^\d{17,19}$/m.test(tag));
+    return /^<@!?(\d{17,19})>$/.test(tag) || /^\d{17,19}$/m.test(tag);
   }
 }

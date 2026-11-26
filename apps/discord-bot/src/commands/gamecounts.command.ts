@@ -35,7 +35,7 @@ export class GameCountsCommand {
       .filter(([, g]) => g.modes && Object.keys(g.modes).length > 1)
       .map(([id, { players, modes }]) => {
         const name = removeFormatting(FormattedGame[id]);
-        const list = Object.entries(modes!).sort((a, b) => Number(b[1]) - Number(a[1]));
+        const list = Object.entries(modes!).sort((a, b) => b[1] - a[1]);
 
         const embed = new EmbedBuilder()
           .title((t) => `${name} ${t("players")}`)

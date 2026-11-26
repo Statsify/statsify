@@ -77,7 +77,7 @@ export const RankingsProfile = ({
       <>
         <If condition={!game && originGame}>
           <box width="100%">
-            <text>§l{removeGameDash(originGame?.formatted as string)}</text>
+            <text>§l{removeGameDash(originGame!.formatted)}</text>
           </box>
         </If>
         <box width="remaining" direction="column">

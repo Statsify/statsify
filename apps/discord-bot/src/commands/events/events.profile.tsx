@@ -19,7 +19,7 @@ import {
 import { EVENT_COLORS } from "./event-colors.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Event, EventPeriod, EventType } from "@statsify/schemas";
+import type { Event, EventType } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 interface EventTableProps {
@@ -31,7 +31,7 @@ interface EventTableProps {
 const EventTable = ({ type, event, t }: EventTableProps) => {
   const { period, year } = type;
   const title = `${prettify(period)} ${year}`;
-  const color = EVENT_COLORS[period as EventPeriod];
+  const color = EVENT_COLORS[period];
 
   const levelling = [
     `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
