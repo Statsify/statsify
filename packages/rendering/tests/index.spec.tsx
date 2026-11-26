@@ -167,4 +167,14 @@ suite("FontRenderer", () => {
       expect.objectContaining({ text: " Player", bold: false }),
     ]);
   });
+
+  it("reads codes in either case and keeps the text after an unknown one", () => {
+    const renderer = new FontRenderer(false);
+
+    expect(renderer.lex("§Lbold§zstill bold§Rplain§")).toEqual([
+      expect.objectContaining({ text: "bold", bold: true }),
+      expect.objectContaining({ text: "still bold", bold: true }),
+      expect.objectContaining({ text: "plain", bold: false }),
+    ]);
+  });
 });
