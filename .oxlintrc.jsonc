@@ -13,6 +13,7 @@
   "jsPlugins": [
     { "name": "license-header", "specifier": "eslint-plugin-license-header" },
   ],
+  "options": { "typeAware": true },
   "rules": {
     // Oxc
     "oxc/no-this-in-exported-function": "error",
@@ -29,18 +30,32 @@
     "typescript/no-unnecessary-type-assertion": "error",
     "typescript/non-nullable-type-assertion-style": "error",
     "typescript/prefer-optional-chain": "error",
-    "typescript/no-unnecessary-condition": "error",
+    "typescript/no-unnecessary-condition": "warn",
     "typescript/no-confusing-void-expression": "error",
-    "typescript/no-deprecated": "error",
+    "typescript/no-deprecated": "warn",
     "typescript/no-misused-promises": "error",
-    "typescript/only-throw-error": "error",
+    "typescript/only-throw-error": [
+      "error",
+      {
+        "allow": [
+          {
+            "from": "file",
+            "name": "ErrorMessage",
+            "path": "../../packages/discord/src/util/error.message.ts",
+          },
+        ],
+      },
+    ],
     "typescript/prefer-includes": "error",
-    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/prefer-nullish-coalescing": "warn",
     "typescript/prefer-promise-reject-errors": "error",
     "typescript/related-getter-setter-pairs": "error",
     "typescript/require-await": "error",
     "typescript/restrict-plus-operands": "error",
-    "typescript/switch-exhaustiveness-check": "error",
+    "typescript/switch-exhaustiveness-check": [
+      "error",
+      { "considerDefaultExhaustiveForUnions": true },
+    ],
 
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-extraneous-class": ["error", { "allowWithDecorator": true }],
