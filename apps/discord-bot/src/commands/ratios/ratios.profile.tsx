@@ -9,7 +9,7 @@
 import { Container, Footer, Header, List, Table } from "#components";
 import { FormattedGame, type GameMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import { unroundedRatio } from "@statsify/math";
+import { estimateAtNextRatio, unroundedRatio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface RatioProps {
@@ -60,10 +60,7 @@ const Estimation = ({
   const ratioValue = unroundedRatio(numeratorValue, denominatorValue);
   const targetRatio = Math.floor(ratioValue) + 1;
 
-  const newNumerator = Math.ceil(
-    (1 + targetRatio / (targetRatio + 1) - ratioValue / targetRatio) * numeratorValue +
-    denominatorValue
-  );
+  const newNumerator = estimateAtNextRatio(numeratorValue, denominatorValue);
 
   return (
     <>
@@ -77,7 +74,7 @@ const Estimation = ({
         </text>
       </box>
       <box border={{ bottomLeft: 0, topLeft: 0, topRight: 4, bottomRight: 4 }}>
-        <text>§a{t(newNumerator === 0 ? 1 : newNumerator)}</text>
+        <text>§a{t(newNumerator)}</text>
       </box>
     </>
   );
