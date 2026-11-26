@@ -232,13 +232,7 @@ export class RatiosCommand {
           ]),
         };
 
-        const canvas = render(<RatiosProfile {...props} />, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
-
-        return {
-          files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
-          attachments: [],
-        };
+        return render(<RatiosProfile {...props} />, getTheme(user));
       },
     }));
 

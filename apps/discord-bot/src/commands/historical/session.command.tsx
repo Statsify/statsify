@@ -44,12 +44,15 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  type IMessage,
   type LocalizeFunction,
+  MediaGalleryBuilder,
   Page,
   paginate,
   PlayerArgument,
   SubCommand,
   SubPage,
+  TextDisplayBuilder,
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
@@ -423,11 +426,7 @@ export class SessionCommand {
           const canvas = render(profile, getTheme(user));
           const buffer = await canvas.toBuffer("png");
 
-          return {
-            content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
-            attachments: [],
-          };
+          return sessionPage(getContent(t), buffer);
         },
       };
 
@@ -461,11 +460,7 @@ export class SessionCommand {
           const canvas = render(profile, getTheme(user));
           const buffer = await canvas.toBuffer("png");
 
-          return {
-            content: getContent(t),
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
-            attachments: [],
-          };
+          return sessionPage(getContent(t), buffer);
         },
       }));
 
@@ -478,4 +473,14 @@ export class SessionCommand {
 
     return paginate(context, pages);
   }
+}
+
+function sessionPage(content: string | undefined, buffer: Buffer): IMessage {
+  const gallery = new MediaGalleryBuilder(["attachment://session.png"]);
+
+  return {
+    components: content ? [new TextDisplayBuilder(content), gallery] : [gallery],
+    files: [{ name: "session.png", data: buffer, type: "image/png" }],
+    attachments: [],
+  };
 }

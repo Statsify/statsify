@@ -8,14 +8,32 @@
 
 import {
   ApiService,
+  ButtonBuilder,
   Command,
   CommandContext,
-  EmbedBuilder,
+  ContainerBuilder,
   IMessage,
+  type LocalizeFunction,
   PlayerArgument,
+  SectionBuilder,
+  SeparatorBuilder,
+  TextDisplayBuilder,
+  ThumbnailBuilder,
 } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { minecraftHeadAttachment } from "#lib/minecraft-head";
+
+const SOCIALS = [
+  ["forums", "Forums"],
+  ["instagram", "Instagram"],
+  ["tiktok", "TikTok"],
+  ["twitch", "Twitch"],
+  ["twitter", "X"],
+  ["youtube", "YouTube"],
+] as const;
+
+const MAX_BUTTON_URL_LENGTH = 512;
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {
@@ -30,64 +48,65 @@ export class SocialsCommand {
     );
 
     const head = await minecraftHeadAttachment(this.apiService, uuid);
+    const discord = formatHandle(socials.discord);
 
-    const embed = new EmbedBuilder()
-      .title((t) => this.apiService.emojiDisplayName(t, displayName))
-      .author("Player Socials")
-      .thumbnail(`attachment://${head.name}`)
-      .color(STATUS_COLORS.info)
-      .field(
-        (t) => `${t("emojis:socials.embed.discord")} Discord`,
-        this.formatSocial(socials.discord, false)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.forums")} Forums`,
-        this.formatSocial(socials.forums)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.instagram")} Instagram`,
-        this.formatSocial(socials.instagram)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.tiktok")} TikTok`,
-        this.formatSocial(socials.tiktok)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.twitch")} Twitch`,
-        this.formatSocial(socials.twitch)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.twitter")} X`,
-        this.formatSocial(socials.twitter)
-      )
-      .field(
-        (t) => `${t("emojis:socials.embed.youtube")} YouTube`,
-        this.formatSocial(socials.youtube)
+    const container = new ContainerBuilder([
+      new SectionBuilder(
+        [
+          (t) => `-# ${t("embeds.socials.title")}\n## ${this.apiService.emojiDisplayName(t, displayName)}`,
+          (t) => `${t("emojis:socials.discord")} Discord ${discord ? `\`${discord}\`` : t("embeds.socials.notLinked")}`,
+        ],
+        new ThumbnailBuilder(`attachment://${head.name}`)
+      ),
+      new SeparatorBuilder(),
+    ]).accentColor(STATUS_COLORS.info);
+
+    const unlinked: string[] = [];
+
+    for (const [key, name] of SOCIALS) {
+      const handle = formatHandle(socials[key]);
+
+      if (!handle) {
+        unlinked.push(name);
+        continue;
+      }
+
+      const text = (t: LocalizeFunction) => `${t(`emojis:socials.${key}`)} **${name}**\n-# \`${handle}\``;
+      const url = parseSocialLink(handle);
+
+      if (url && url.length <= MAX_BUTTON_URL_LENGTH) {
+        const button = new ButtonBuilder()
+          .label((t) => t("embeds.socials.open"))
+          .style(ButtonStyle.Link)
+          .url(url);
+
+        container.component(new SectionBuilder([text], button));
+      } else {
+        container.component(new TextDisplayBuilder(text));
+      }
+    }
+
+    if (unlinked.length > 0)
+      container.component(
+        new TextDisplayBuilder((t) => `-# ${t("embeds.socials.notLinkedList", { socials: unlinked.join(", ") })}`)
       );
 
-    return { embeds: [embed], files: [head] };
-  }
-
-  private formatSocial(social?: string, link = true) {
-    const url = link && social ? parseSocialLink(social) : undefined;
-    if (url) return `[\`Here\`](${url})`;
-
-    const text = social?.replaceAll("`", "").trim();
-    return `\`${text || "N/A"}\``;
+    return { components: [container], files: [head] };
   }
 }
 
+function formatHandle(social?: string) {
+  return social?.replaceAll("`", "").trim();
+}
+
 /**
- * A player can input a social link without a scheme. 
- * So this returns the link with http(s) and makes sure the link can't escape markdown
+ * A player can input a social link without a scheme, so this returns the link with http(s)
  */
 function parseSocialLink(social: string) {
-  const value = social.trim();
-  const hasScheme = /^[a-z][\d+.a-z-]*:\/\//i.test(value);
-  const url = URL.parse(hasScheme ? value : `https://${value}`);
+  const hasScheme = /^[a-z][\d+.a-z-]*:\/\//i.test(social);
+  const url = URL.parse(hasScheme ? social : `https://${social}`);
 
   if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return;
 
-  // Parentheses would end the Markdown link early, and a backslash would escape the next character
-  return url.href.replaceAll("(", "%28").replaceAll(")", "%29").replaceAll("\\", "%5C");
+  return url.href;
 }

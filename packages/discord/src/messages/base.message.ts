@@ -6,8 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIAllowedMentions, APIAttachment } from "discord-api-types/v10";
-import { ActionRowBuilder } from "./components/index.js";
+import { type APIAllowedMentions, type APIAttachment, MessageFlags } from "discord-api-types/v10";
+import {
+  ActionRowBuilder,
+  type ContainerBuilder,
+  type ContainerComponent,
+  TextDisplayBuilder,
+} from "./components/index.js";
 import { EmbedBuilder } from "./embed.js";
 import { InteractionAttachment, InteractionContent } from "#interaction";
 import { LocalizationString, LocalizeFunction, translateField } from "./localize.js";
@@ -15,9 +20,17 @@ import type { RemoveMethods } from "@statsify/util";
 
 export type IMessage = RemoveMethods<Message>;
 
+export type MessageComponent = ContainerBuilder | ContainerComponent;
+
+// IS_COMPONENTS_V2 rejects `content` and `embeds`, and a message can't drop the flag once sent
+export const isComponentsV2 = (
+  message: IMessage
+): message is IMessage & { components: MessageComponent[] } =>
+  message.components?.some((component) => !(component instanceof ActionRowBuilder)) ?? false;
+
 export class Message {
   public attachments?: APIAttachment[];
-  public components?: ActionRowBuilder[];
+  public components?: MessageComponent[];
   public content?: LocalizationString;
   public embeds?: EmbedBuilder[];
   public ephemeral?: boolean;
@@ -45,14 +58,28 @@ export class Message {
   public toAPI(locale: LocalizeFunction) {
     const data = this.build(locale);
 
+    const v2 = isComponentsV2(this);
+
+    let flags = 0;
+    if (data.ephemeral) flags |= MessageFlags.Ephemeral;
+    if (v2) flags |= MessageFlags.IsComponentsV2;
+
+    let { content, components } = data;
+
+    if (v2 && content) {
+      components = [new TextDisplayBuilder(content).build(locale), ...(components ?? [])];
+      content = undefined;
+    }
+
     return {
-      content: data.content,
+      content,
       tts: data.tts,
-      flags: data.ephemeral ? 1 << 6 : undefined,
-      allowed_mentions: data.mentions,
+      flags: flags || undefined,
+      // Unlike embeds, text displays ping what they mention, and some show user input
+      allowed_mentions: data.mentions ?? (v2 ? { parse: [] } : undefined),
       embeds: data.embeds,
       attachments: data.attachments,
-      components: data.components,
+      components,
       files: data.files?.map(({ name, data, type }) => ({ name, data, contentType: type })),
     };
   }

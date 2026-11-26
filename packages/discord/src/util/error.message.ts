@@ -9,10 +9,13 @@
 import {
   ActionRowBuilder,
   ButtonBuilder,
-  EmbedBuilder,
-  IMessage,
+  ContainerBuilder,
   LocalizationString,
+  MediaGalleryBuilder,
   Message,
+  SectionBuilder,
+  ThumbnailBuilder,
+  translateField,
 } from "#messages";
 import { STATUS_COLORS } from "@statsify/logger";
 import { getLogoPath } from "@statsify/assets";
@@ -43,31 +46,31 @@ export class ErrorMessage extends Message {
       color = STATUS_COLORS.error,
     }: ErrorMessageOptions = {},
   ) {
-    const embed = new EmbedBuilder().color(color);
+    const title: LocalizationString = description ? titleOrKey : (t) => t(`${titleOrKey}.title`);
+    const body: LocalizationString = description ?? ((t) => t(`${titleOrKey}.description`));
 
-    if (description) {
-      embed.title(titleOrKey).description(description);
-    } else {
-      embed
-        .title((t) => t(`${titleOrKey}.title`))
-        .description((t) => t(`${titleOrKey}.description`));
-    }
+    const icon = thumbnail ?? {
+      name: "error.png",
+      data: readFileSync(getLogoPath("error", 52)),
+      type: "image/png",
+    };
 
-    const data: IMessage = { embeds: [embed] };
+    const files = [icon];
 
-    if (buttons.length > 0) data.components = [new ActionRowBuilder(buttons)];
+    const container = new ContainerBuilder([
+      new SectionBuilder(
+        [(t) => `### ${translateField(t, title)}`, body],
+        new ThumbnailBuilder(`attachment://${icon.name}`)
+      ),
+    ]).accentColor(color);
 
     if (image) {
-      data.files = [image];
-    } else if (thumbnail) {
-      data.files = [thumbnail];
-    } else {
-      const errorIcon = readFileSync(getLogoPath("error", 52));
-      data.files = [{ name: "error.png", data: errorIcon, type: "image/png" }];
+      files.push(image);
+      container.component(new MediaGalleryBuilder([`attachment://${image.name}`]));
     }
 
-    embed.thumbnail(`attachment://${data.files[0].name}`);
+    if (buttons.length > 0) container.component(new ActionRowBuilder(buttons));
 
-    super(data);
+    super({ components: [container], files });
   }
 }

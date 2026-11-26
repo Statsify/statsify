@@ -13,9 +13,11 @@ import {
   GuildArgument,
   IMessage,
   Interaction,
+  MediaGalleryBuilder,
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
   SubCommand,
+  withoutControls,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
@@ -97,6 +99,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     let page = 0;
     let modeIndex = 0;
+    let currentMessage: IMessage;
 
     const cache = new Map<string, Buffer>();
     const listener = CommandListener.getInstance();
@@ -112,7 +115,6 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
           const message = await this.getGuildTopPageMessage(
             cache,
-            components,
             props,
             mode[1],
             mode[0],
@@ -126,9 +128,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
             dropdown.activeOption(modeIndex);
 
-            context.reply(message);
+            currentMessage = message;
+            context.reply({ ...message, components: [...message.components, ...components] });
           } else {
-            interaction.sendFollowup({ ...message, components: [], ephemeral: true });
+            interaction.sendFollowup({ ...message, ephemeral: true });
           }
         };
 
@@ -151,7 +154,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     );
 
     setTimeout(() => {
-      context.reply({ components: [] });
+      context.reply(withoutControls(currentMessage));
       cache.clear();
 
       listener.removeHook(up.getCustomId());
@@ -161,7 +164,6 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const message = await this.getGuildTopPageMessage(
       cache,
-      components,
       props,
       modes[modeIndex][1],
       modes[modeIndex][0],
@@ -169,7 +171,9 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       theme
     );
 
-    return message;
+    currentMessage = message;
+
+    return { ...message, components: [...message.components, ...components] };
   }
 
   protected getGuild(context: CommandContext) {
@@ -182,13 +186,12 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
   private async getGuildTopPageMessage(
     cache: Map<string, Buffer>,
-    components: ActionRowBuilder[],
     props: BaseGuildTopProfileProps,
     title: string,
     key: GuildTopKey,
     page: number,
     theme?: Theme
-  ): Promise<IMessage> {
+  ) {
     const cacheKey = `${key}-${page}`;
 
     let image: Buffer;
@@ -201,9 +204,9 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     }
 
     return {
+      components: [new MediaGalleryBuilder(["attachment://guild-top.png"])],
       files: [{ name: "guild-top.png", data: image, type: "image/png" }],
       attachments: [],
-      components,
     };
   }
 

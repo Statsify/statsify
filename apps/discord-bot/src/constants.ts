@@ -68,7 +68,23 @@ import {
   WarlordsModes,
   WoolGamesModes,
 } from "@statsify/schemas";
+import { ButtonBuilder } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { noop, prettify } from "@statsify/util";
+
+const STATSIFY_LINKS = {
+  invite: "https://statsify.net/invite",
+  discord: "https://discord.com/invite/5VgxMQY",
+  premium: "https://statsify.net/premium",
+  website: "https://statsify.net/",
+  github: "https://github.com/Statsify/statsify",
+} as const;
+
+export const linkButton = (link: keyof typeof STATSIFY_LINKS, url: string = STATSIFY_LINKS[link]) =>
+  new ButtonBuilder()
+    .label((t) => t(`embeds.links.${link}`))
+    .style(ButtonStyle.Link)
+    .url(url);
 
 const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
   modes.getApiModes()[0];

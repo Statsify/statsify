@@ -16,9 +16,11 @@ import {
   type IMessage,
   type LocalizationString,
   type LocalizeFunction,
+  MediaGalleryBuilder,
   Message,
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
+  isComponentsV2,
 } from "#messages";
 import { Interaction } from "#interaction";
 import type {
@@ -91,6 +93,7 @@ export async function paginate(
 
   let currentIndex = 0;
   let currentSubIndex = 0;
+  let shown: Message | undefined;
 
   const mainController = new PageController(pages, currentIndex);
 
@@ -117,11 +120,7 @@ export async function paginate(
     // Send an ephemeral preview if the user is not the one who initiated the interaction
     if (interaction.getUserId() !== userId) {
       const message = await getMessage(index, subIndex);
-      return interaction.sendFollowup({
-        ...message,
-        components: [],
-        ephemeral: true,
-      });
+      return interaction.sendFollowup({ ...message, ephemeral: true });
     }
 
     if (index !== currentIndex) {
@@ -147,32 +146,27 @@ export async function paginate(
       currentSubIndex = subIndex;
     }
 
-    const message = await getMessage(index, subIndex);
+    shown = await getMessage(index, subIndex);
+    return context.reply(withControls(shown, getActionRows()));
+  }
 
-    message.components = [
-      mainController.getActionRow(),
-      subController?.getActionRow(),
-    ].filter((row) => row !== undefined);
-
-    return context.reply(message);
+  function getActionRows() {
+    return [mainController.getActionRow(), subController?.getActionRow()].filter(
+      (row) => row !== undefined
+    );
   }
 
   function onTimeout() {
     mainController.unregister(listener);
     subController?.unregister(listener);
     cache.clear();
-    return context.reply({ components: [] });
+    if (shown) context.reply(withoutControls(shown));
   }
 
   setTimeout(onTimeout, timeout);
 
-  const message = await getMessage(currentIndex, currentSubIndex);
-  message.components = [
-    mainController.getActionRow(),
-    subController?.getActionRow(),
-  ].filter((row) => row !== undefined);
-
-  return message;
+  shown = await getMessage(currentIndex, currentSubIndex);
+  return withControls(shown, getActionRows());
 }
 
 /**
@@ -195,6 +189,7 @@ export async function scrollingPagination(
   timeout = 300_000,
 ) {
   let currentIndex = startingIndex;
+  let shown: Message | undefined;
   const cache = new Map<number, Message>();
   const t = context.t();
 
@@ -239,15 +234,11 @@ export async function scrollingPagination(
 
       if (interaction.getUserId() === userId) {
         currentIndex = page;
-        message.components = [new ActionRowBuilder(controller)];
-        return context.reply(message);
+        shown = message;
+        return context.reply(withControls(message, [new ActionRowBuilder(controller)]));
       }
 
-      return interaction.sendFollowup({
-        ...message,
-        components: [],
-        ephemeral: true,
-      });
+      return interaction.sendFollowup({ ...message, ephemeral: true });
     });
   }
 
@@ -255,16 +246,24 @@ export async function scrollingPagination(
     for (const component of controller) {
       listener.removeHook(component.getCustomId());
     }
-    context.reply({ components: [] });
     cache.clear();
+    if (shown) context.reply(withoutControls(shown));
   }
 
   setTimeout(onTimeout, timeout);
 
-  const message = await getMessage(currentIndex);
-  message.components = [new ActionRowBuilder(controller)];
+  shown = await getMessage(currentIndex);
+  return withControls(shown, [new ActionRowBuilder(controller)]);
+}
 
-  return message;
+function withControls(message: Message, rows: ActionRowBuilder[]) {
+  return new Message({ ...message, components: [...(message.components ?? []), ...rows] });
+}
+
+// A v2 message is all components, so clearing them would also remove the page itself.
+// Leaving out files and attachments keeps the image already on the message instead of uploading it again
+export function withoutControls(message: IMessage): IMessage {
+  return isComponentsV2(message) ? { components: message.components } : { components: [] };
 }
 
 async function contentToMessage(
@@ -275,6 +274,7 @@ async function contentToMessage(
     return new Message({ embeds: [content] });
   if (content instanceof Canvas)
     return new Message({
+      components: [new MediaGalleryBuilder(["attachment://image.png"])],
       files: [
         {
           name: "image.png",
