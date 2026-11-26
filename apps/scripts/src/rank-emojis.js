@@ -50,7 +50,7 @@ export const ALPHABET = [
 
 const logger = new Logger("rank-emojis");
 
-const token = config("rankEmojis.botToken");
+const token = await config("rankEmojis.botToken");
 
 if (!token) {
   logger.error(
