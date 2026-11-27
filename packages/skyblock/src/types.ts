@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { z } from "zod";
+
 // On a section, `undefined` means it wasn't requested and `null` means the player's API setting hides it.
 
 export const RARITIES = [
@@ -999,34 +1001,44 @@ export type ItemTexture =
   | { kind: "item"; id: number; damage: number; color?: number } // 1.8 numeric id
   | { kind: "head"; skin: string }; // skin texture hash
 
-/** prismarine-nbt `simplify()` of one slot. */
-export interface RawItem {
-  id: number;
-  Count: number;
-  Damage: number;
-  tag?: {
-    display?: { Name?: string; Lore?: string[]; color?: number };
-    ExtraAttributes?: ItemAttributes;
-    SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
-    ench?: unknown[];
-  };
-}
-
 /** SkyBlock's own item data, an item's `ExtraAttributes`. */
-export interface ItemAttributes {
-  id?: string;
-  modifier?: string;
-  upgrade_level?: number;
-  dungeon_item_level?: number;
-  rarity_upgrades?: number;
-  enchantments?: Record<string, number>;
-  talisman_enrichment?: string;
-  runes?: Record<string, number>;
-  dye_item?: string;
-  skin?: string;
-  originTag?: string;
-  [key: string]: unknown;
-}
+export const ItemAttributes = z
+  .object({
+    id: z.string().optional(),
+    modifier: z.string().optional(),
+    upgrade_level: z.number().optional(),
+    // A few items store it as a long, which the decode leaves as `[high, low]`
+    dungeon_item_level: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+    rarity_upgrades: z.number().optional(),
+    enchantments: z.record(z.string(), z.number()).optional(),
+    talisman_enrichment: z.string().optional(),
+    runes: z.record(z.string(), z.number()).optional(),
+    dye_item: z.string().optional(),
+    skin: z.string().optional(),
+    originTag: z.string().optional(),
+  })
+  .catchall(z.unknown());
+export type ItemAttributes = z.infer<typeof ItemAttributes>;
+
+/** prismarine-nbt `simplify()` of one slot. */
+export const RawItem = z.object({
+  id: z.number(),
+  Count: z.number(),
+  Damage: z.number(),
+  tag: z
+    .object({
+      display: z
+        .object({ Name: z.string().optional(), Lore: z.array(z.string()).optional(), color: z.number().optional() })
+        .optional(),
+      ExtraAttributes: ItemAttributes.optional(),
+      SkullOwner: z
+        .object({ Properties: z.object({ textures: z.array(z.object({ Value: z.string() })).optional() }).optional() })
+        .optional(),
+      ench: z.array(z.unknown()).optional(),
+    })
+    .optional(),
+});
+export type RawItem = z.infer<typeof RawItem>;
 
 export interface ItemsResource {
   // API-internal, never sent to clients

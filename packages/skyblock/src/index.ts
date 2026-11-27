@@ -23,7 +23,7 @@ export {
   type MemberStats,
   toMemberStats,
 } from "./member-stats.js";
-export { parseItemsResource, toItemView } from "./items.js";
+export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
   SECTIONS,
