@@ -11,6 +11,6 @@ import { z } from "zod";
 
 export class AddKeyDto extends createZodDto(z.object({ name: z.string() })) {}
 
-export class KeyParamDto extends createZodDto(z.object({ key: z.string() })) {}
+export class KeyParamDto extends createZodDto(z.object({ key: z.string().optional() })) {}
 
 export class KeyHeaderDto extends createZodDto(z.object({ "x-api-key": z.string().optional() })) {}
