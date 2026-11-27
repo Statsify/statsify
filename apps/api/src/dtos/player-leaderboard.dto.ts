@@ -6,37 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
-import { Player, getLeaderboardFields } from "@statsify/schemas";
+import { Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto.js";
-import { Transform } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Player).map(([key]) => key);
+export class PlayerLeaderboardDto extends createZodDto(
+  z.object({
+    player: PlayerDto.schema.shape.player.nullish(),
+    field: leaderboardField(Player),
+    page: z.coerce.number().int().min(0).default(0),
+    position: z.coerce.number().int().min(1).optional(),
+  })
+) {}
 
-export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
-  @IsEnum(fields)
-  @ApiProperty({ enum: fields })
-  public field: string;
-
-  @Transform((params) => +params.value)
-  @IsInt()
-  @Min(0)
-  @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
-  public page = 0;
-
-  @Transform((params) => +params.value)
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @ApiProperty({ minimum: 1, type: () => Number, required: false })
-  public position?: number;
-}
-
-export class GuildMemberLeaderboardDto extends PlayerLeaderboardDto {
-  @IsString()
-  @MinLength(3)
-  @MaxLength(32)
-  @ApiProperty()
-  public guild: string;
-}
+export class GuildMemberLeaderboardDto extends createZodDto(
+  PlayerLeaderboardDto.schema.extend({ guild: z.string().min(3).max(32) })
+) {}

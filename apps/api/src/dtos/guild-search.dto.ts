@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class GuildSearchDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(32)
-  @ApiProperty({ required: false })
-  public query?: string;
-}
+export class GuildSearchDto extends createZodDto(z.object({ query: z.string().max(32).optional() })) {}
