@@ -30,7 +30,7 @@ export class InviteCommand {
     const container = new ContainerBuilder([
       new SectionBuilder(
         [(t) => `## ${t("embeds.invite.title")}`, (t) => t("embeds.invite.description")],
-        new ThumbnailBuilder("attachment://logo.png")
+        new ThumbnailBuilder("logo.png")
       ),
       new ActionRowBuilder([
         linkButton("invite", inviteUrl),

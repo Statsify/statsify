@@ -274,7 +274,7 @@ async function contentToMessage(
     return new Message({ embeds: [content] });
   if (content instanceof Canvas)
     return new Message({
-      components: [new MediaGalleryBuilder(["attachment://image.png"])],
+      components: [new MediaGalleryBuilder(["image.png"])],
       files: [
         {
           name: "image.png",

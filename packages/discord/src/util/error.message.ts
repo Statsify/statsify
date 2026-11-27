@@ -60,13 +60,13 @@ export class ErrorMessage extends Message {
     const container = new ContainerBuilder([
       new SectionBuilder(
         [(t) => `### ${translateField(t, title)}`, body],
-        new ThumbnailBuilder(`attachment://${icon.name}`)
+        new ThumbnailBuilder(icon.name)
       ),
     ]).accentColor(color);
 
     if (image) {
       files.push(image);
-      container.component(new MediaGalleryBuilder([`attachment://${image.name}`]));
+      container.component(new MediaGalleryBuilder([image.name]));
     }
 
     if (buttons.length > 0) container.component(new ActionRowBuilder(buttons));

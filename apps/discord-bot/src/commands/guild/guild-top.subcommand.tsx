@@ -204,7 +204,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     }
 
     return {
-      components: [new MediaGalleryBuilder(["attachment://guild-top.png"])],
+      components: [new MediaGalleryBuilder(["guild-top.png"])],
       files: [{ name: "guild-top.png", data: image, type: "image/png" }],
       attachments: [],
     };

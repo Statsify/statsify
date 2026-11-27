@@ -30,7 +30,7 @@ export class HelpCommand {
     const container = new ContainerBuilder([
       new SectionBuilder(
         [(t) => `## ${t("embeds.help.title")}`, (t) => t("embeds.help.description")],
-        new ThumbnailBuilder("attachment://logo.png")
+        new ThumbnailBuilder("logo.png")
       ),
       new SeparatorBuilder(),
       new TextDisplayBuilder((t) =>

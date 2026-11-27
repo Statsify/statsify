@@ -18,7 +18,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 export function previewMessage(content: LocalizationString, name: string, data: Buffer): IMessage {
   const container = new ContainerBuilder([
     new TextDisplayBuilder(content),
-    new MediaGalleryBuilder([`attachment://${name}`]),
+    new MediaGalleryBuilder([name]),
   ]).accentColor(STATUS_COLORS.info);
 
   return {

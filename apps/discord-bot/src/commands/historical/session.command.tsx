@@ -476,7 +476,7 @@ export class SessionCommand {
 }
 
 function sessionPage(content: string | undefined, buffer: Buffer): IMessage {
-  const gallery = new MediaGalleryBuilder(["attachment://session.png"]);
+  const gallery = new MediaGalleryBuilder(["session.png"]);
 
   return {
     components: content ? [new TextDisplayBuilder(content), gallery] : [gallery],

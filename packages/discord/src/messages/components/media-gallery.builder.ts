@@ -9,16 +9,16 @@
 import { type APIMediaGalleryComponent, ComponentType } from "discord-api-types/v10";
 
 export class MediaGalleryBuilder {
-  #urls: string[];
+  #names: string[];
 
-  public constructor(urls: string[]) {
-    this.#urls = urls;
+  public constructor(names: string[]) {
+    this.#names = names;
   }
 
   public build(): APIMediaGalleryComponent {
     return {
       type: ComponentType.MediaGallery,
-      items: this.#urls.map((url) => ({ media: { url } })),
+      items: this.#names.map((name) => ({ media: { url: `attachment://${name}` } })),
     };
   }
 }

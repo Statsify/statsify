@@ -56,7 +56,7 @@ export class SocialsCommand {
           (t) => `-# ${t("embeds.socials.title")}\n## ${this.apiService.emojiDisplayName(t, displayName)}`,
           (t) => `${t("emojis:socials.discord")} Discord ${discord ? `\`${discord}\`` : t("embeds.socials.notLinked")}`,
         ],
-        new ThumbnailBuilder(`attachment://${head.name}`)
+        new ThumbnailBuilder(head.name)
       ),
       new SeparatorBuilder(),
     ]).accentColor(STATUS_COLORS.info);

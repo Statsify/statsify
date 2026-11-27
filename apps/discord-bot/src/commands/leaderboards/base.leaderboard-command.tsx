@@ -331,7 +331,7 @@ export class BaseLeaderboardCommand {
     const buffer = await canvas.toBuffer("png");
 
     const message = {
-      components: [new MediaGalleryBuilder(["attachment://leaderboard.png"])],
+      components: [new MediaGalleryBuilder(["leaderboard.png"])],
       files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
       attachments: [],
     };

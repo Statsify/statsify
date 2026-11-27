@@ -9,16 +9,16 @@
 import { type APIThumbnailComponent, ComponentType } from "discord-api-types/v10";
 
 export class ThumbnailBuilder {
-  #url: string;
+  #name: string;
 
-  public constructor(url: string) {
-    this.#url = url;
+  public constructor(name: string) {
+    this.#name = name;
   }
 
   public build(): APIThumbnailComponent {
     return {
       type: ComponentType.Thumbnail,
-      media: { url: this.#url },
+      media: { url: `attachment://${this.#name}` },
     };
   }
 }
