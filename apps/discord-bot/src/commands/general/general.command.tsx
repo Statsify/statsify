@@ -26,7 +26,7 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
     super(GENERAL_MODES);
   }
 
-  public async getPreProfileData(player: Player): Promise<PreProfileData> {
+  public override async getPreProfileData(player: Player): Promise<PreProfileData> {
     const guild = await this.apiService
       .getGuild(player.uuid, GuildQuery.PLAYER)
       .catch(() => undefined);
@@ -36,7 +36,7 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
     };
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { data }: ProfileData<GeneralModes, PreProfileData>
   ): JSX.Element {

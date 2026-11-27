@@ -59,15 +59,15 @@ export class DuelsCommand extends BaseHypixelCommand<
     super(DUELS_MODES);
   }
 
-  public async getPreProfileData(): Promise<PreProfileData> {
+  public override async getPreProfileData(): Promise<PreProfileData> {
     return { modeIcons: await getModeIcons() };
   }
 
-  public getModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
+  public override getModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
     return getDuelsModeEmojis(modes);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode, data }: ProfileData<DuelsModes, PreProfileData>,
   ): JSX.Element {

@@ -68,6 +68,7 @@ export function scanCommands<T extends object>(
 }
 
 if (import.meta.vitest) {
+  /* oxlint-disable class-methods-use-this -- test @SubCommand handlers are called on the command instance */
   const { suite, it, expect } = import.meta.vitest;
 
   const { Command } = await import("./command.decorator.js");

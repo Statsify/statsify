@@ -128,6 +128,7 @@ export class Quests {
   })
   public dailyTotal: number;
 
+  // oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
   // TODO: add monthlyTotal
 
   @Field({ type: () => OverallQuests, leaderboard: { fieldName: "" } })

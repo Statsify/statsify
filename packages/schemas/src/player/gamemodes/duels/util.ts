@@ -82,7 +82,7 @@ export const getTitleAndProgression = ({
   data: APIData;
   titleRequirement: TitleRequirement;
 }) => {
-  mode = mode ? `${mode} ` : mode;
+  const modePrefix = mode ? `${mode} ` : mode;
 
   const titleScores = titleRequirementScores[titleRequirement];
   const prefixScores = prefixRequirementScores[titleRequirement];
@@ -102,7 +102,7 @@ export const getTitleAndProgression = ({
     SCHEME_MAP[schemeKey as keyof typeof SCHEME_MAP] :
     SCHEME_MAP.default;
 
-  const titleFormatted = scheme.title(icon, `${mode}${title}${division > 1 ? ` ${romanNumeral(division)}` : ""}`, bold, defaultColor);
+  const titleFormatted = scheme.title(icon, `${modePrefix}${title}${division > 1 ? ` ${romanNumeral(division)}` : ""}`, bold, defaultColor);
   const titleLevelFormatted = scheme.level(romanNumeral(division), bold, defaultColor);
 
   let nextDivision = division + 1;
@@ -199,9 +199,9 @@ const solidColorScheme = (color: string): Scheme => ({
 
 const gradientColorScheme = (colors: string[]): Scheme => ({
   title: (icon, title, bold) => {
-    icon = icon ? `${icon} ` : "";
-    const chunks = [...`${icon}${title}`];
-    if (bold) chunks[icon.length] = `§l${chunks[icon.length]}`;
+    const iconPrefix = icon ? `${icon} ` : "";
+    const chunks = [...`${iconPrefix}${title}`];
+    if (bold) chunks[iconPrefix.length] = `§l${chunks[iconPrefix.length]}`;
 
     const colorWidth = Math.floor(chunks.length / colors.length);
     let coloredTitleWithIcon = "";

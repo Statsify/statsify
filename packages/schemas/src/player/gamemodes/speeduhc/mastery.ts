@@ -30,12 +30,12 @@ export class SpeedUHCMastery {
   public kdr: number;
 
   public constructor(data: APIData, mastery: string) {
-    mastery = `_mastery_${mastery}`;
+    const suffix = `_mastery_${mastery}`;
 
-    this.wins = data[`wins${mastery}`];
-    this.losses = data[`losses${mastery}`];
-    this.kills = data[`kills${mastery}`];
-    this.deaths = data[`deaths${mastery}`];
+    this.wins = data[`wins${suffix}`];
+    this.losses = data[`losses${suffix}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
 
     this.wlr = ratio(this.wins, this.losses);
     this.kdr = ratio(this.kills, this.deaths);

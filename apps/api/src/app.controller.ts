@@ -21,6 +21,7 @@ export class AppController {
   /**
    * Redoc docs
    */
+  // oxlint-disable-next-line class-methods-use-this -- Nest calls route handlers on the controller instance
   public get() {
     return {
       data: {

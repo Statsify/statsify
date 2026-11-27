@@ -1267,10 +1267,10 @@ export class PixelPartyMode {
   public wlr: number;
 
   public constructor(data: APIData, mode?: string) {
-    mode = mode ? `_${mode}` : "";
+    const suffix = mode ? `_${mode}` : "";
 
-    this.wins = data.pixel_party?.[`wins${mode}`];
-    this.gamesPlayed = data.pixel_party?.[`games_played${mode}`];
+    this.wins = data.pixel_party?.[`wins${suffix}`];
+    this.gamesPlayed = data.pixel_party?.[`games_played${suffix}`];
     this.losses = sub(this.gamesPlayed, this.wins);
     PixelPartyMode.applyRatios(this);
   }

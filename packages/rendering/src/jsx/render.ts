@@ -27,11 +27,11 @@ const renderRecursive = (
   context: ComputedThemeContext,
   intrinsicElements: IntrinsicRenders,
   instruction: Instruction,
-  x: number,
-  y: number
+  startX: number,
+  startY: number
 ) => {
-  x += instruction.x.margin1;
-  y += instruction.y.margin1;
+  let x = startX + instruction.x.margin1;
+  let y = startY + instruction.y.margin1;
 
   const location = {
     x,

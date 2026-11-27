@@ -16,7 +16,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { QUEST_MODES, QuestTime } from "@statsify/schemas";
-import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
+import { QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
@@ -60,10 +60,6 @@ export class QuestsCommand {
     return this.run(context, QuestTime.Daily);
   }
 
-  private getProfile(props: QuestProfileProps): JSX.Element {
-    return <QuestsProfile {...props} />;
-  }
-
   private async run(context: CommandContext, time: QuestTime) {
     const user = context.getUser();
 
@@ -94,21 +90,22 @@ export class QuestsCommand {
         generator: async (t) => {
           const background = await getBackground(...mapBackground(this.modes, mode.api));
 
-          const profile = this.getProfile({
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time,
-            mode: { ...mode, submode: undefined },
-            gameIcons,
-            logos: [crossLogo, verifiedLogo],
-          });
-
-          return render(profile, getTheme(user));
+          return render(
+            <QuestsProfile
+              player={player}
+              skin={skin}
+              background={background}
+              logo={logo}
+              t={t}
+              user={user}
+              badge={badge}
+              time={time}
+              mode={{ ...mode, submode: undefined }}
+              gameIcons={gameIcons}
+              logos={[crossLogo, verifiedLogo]}
+            />,
+            getTheme(user)
+          );
         },
       }));
 

@@ -17,7 +17,7 @@ export class PaintballCommand extends BaseHypixelCommand<PaintballModes> {
     super(PAINTBALL_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <PaintballProfile {...base} />;
   }
 }

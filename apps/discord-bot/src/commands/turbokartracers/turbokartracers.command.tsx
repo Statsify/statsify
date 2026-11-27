@@ -17,7 +17,7 @@ export class TurboKartRacersCommand extends BaseHypixelCommand<TurboKartRacersMo
     super(TURBO_KART_RACERS_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
+  public override getProfile(base: BaseProfileProps): JSX.Element {
     return <TurboKartRacersProfile {...base} />;
   }
 }

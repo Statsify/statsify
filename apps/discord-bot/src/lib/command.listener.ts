@@ -91,7 +91,7 @@ export class CommandListener extends AbstractCommandListener {
     context.setUser(user);
 
     const preconditions = [
-      this.tierPrecondition.bind(this, command, user),
+      () => CommandListener.tierPrecondition(command, user),
       this.cooldownPrecondition.bind(this, parentCommand, user, id),
     ];
 
@@ -102,7 +102,7 @@ export class CommandListener extends AbstractCommandListener {
       command,
       context,
       preconditions,
-      message: this.getTipResponse(commandName, user),
+      message: getTipResponse(commandName, user),
     });
   }
 
@@ -158,24 +158,6 @@ export class CommandListener extends AbstractCommandListener {
     );
   }
 
-  private getTipResponse(commandName: string, user: User | null): IMessage | undefined {
-    const TIP_CHANCE = 0.2;
-
-    if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
-
-    // commandName is the full path, e.g. "session bedwars"
-    const [rootName] = commandName.split(" ");
-
-    const useableTips = tips.filter(
-      (t) => !t.disabled?.includes(rootName) && !t.uneligible?.(user)
-    );
-
-    if (useableTips.length === 0) return undefined;
-
-    const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
-    return tip.message;
-  }
-
   public static create(
     client: WebsocketShard | InteractionServer,
     rest: RestClient,
@@ -189,4 +171,22 @@ export class CommandListener extends AbstractCommandListener {
     if (!this.instance) throw new Error("CommandListener has not been initialized");
     return this.instance;
   }
+}
+
+function getTipResponse(commandName: string, user: User | null): IMessage | undefined {
+  const TIP_CHANCE = 0.2;
+
+  if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
+
+  // commandName is the full path, e.g. "session bedwars"
+  const [rootName] = commandName.split(" ");
+
+  const useableTips = tips.filter(
+    (t) => !t.disabled?.includes(rootName) && !t.uneligible?.(user)
+  );
+
+  if (useableTips.length === 0) return undefined;
+
+  const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
+  return tip.message;
 }

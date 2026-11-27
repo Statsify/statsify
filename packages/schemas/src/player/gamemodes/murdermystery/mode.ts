@@ -34,18 +34,18 @@ export class BaseMurderMysteryMode {
   public goldPickedUp: number;
 
   public constructor(data: APIData, mode: string) {
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.goldPickedUp = data[`coins_pickedup${mode}`];
+    this.goldPickedUp = data[`coins_pickedup${suffix}`];
 
-    this.wins = data[`wins${mode}`];
-    this.gamesPlayed = data[`games${mode}`];
+    this.wins = data[`wins${suffix}`];
+    this.gamesPlayed = data[`games${suffix}`];
 
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
+    this.kills = data[`kills${suffix}`];
+    this.deaths = data[`deaths${suffix}`];
     this.kdr = ratio(this.kills, this.deaths);
 
-    this.bowKills = data[`bow_kills${mode}`];
+    this.bowKills = data[`bow_kills${suffix}`];
   }
 }
 
@@ -73,16 +73,16 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
 
   public constructor(data: APIData, mode: string) {
     super(data, mode);
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
-    this.trapKills = data[`trap_kills${mode}`];
-    this.thrownKnifeKills = data[`thrown_knife_kills${mode}`];
-    this.heroKills = data[`was_hero${mode}`];
+    this.trapKills = data[`trap_kills${suffix}`];
+    this.thrownKnifeKills = data[`thrown_knife_kills${suffix}`];
+    this.heroKills = data[`was_hero${suffix}`];
 
-    this.detectiveWins = data[`detective_wins${mode}`];
-    this.murdererWins = data[`murderer_wins${mode}`];
-    this.killsAsMurderer = data[`kills_as_murderer${mode}`];
-    this.suicides = data[`suicides${mode}`];
+    this.detectiveWins = data[`detective_wins${suffix}`];
+    this.murdererWins = data[`murderer_wins${suffix}`];
+    this.killsAsMurderer = data[`kills_as_murderer${suffix}`];
+    this.suicides = data[`suicides${suffix}`];
   }
 }
 
@@ -111,12 +111,12 @@ export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
 
   public constructor(data: APIData, mode: string) {
     super(data, mode);
-    mode = mode ? `_${mode}` : mode;
+    const suffix = mode ? `_${mode}` : mode;
 
     this.fastestDetectiveWin =
-      (data[`quickest_detective_win_time_seconds${mode}`] ?? 0) * 1000;
+      (data[`quickest_detective_win_time_seconds${suffix}`] ?? 0) * 1000;
     this.fastestMurdererWin =
-      (data[`quickest_murderer_win_time_seconds${mode}`] ?? 0) * 1000;
+      (data[`quickest_murderer_win_time_seconds${suffix}`] ?? 0) * 1000;
   }
 }
 

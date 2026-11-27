@@ -42,6 +42,7 @@ interface ExtraData {
   timeout?: number;
 }
 
+// oxlint-disable-next-line no-warning-comments -- open question, kept on purpose
 // TODO: Move dtos in api to @statsify/api-client
 interface UpdateUser {
   serverMember?: boolean;

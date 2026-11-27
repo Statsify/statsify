@@ -42,9 +42,9 @@ export class GameCountsCommand {
           .color(STATUS_COLORS.info)
           .description(
             (t) =>
-              `${this.formatGameCount(t("stats.total"), t(players))}\n\n${list
+              `${formatGameCount(t("stats.total"), t(players))}\n\n${list
                 .map(([mode, players]) =>
-                  this.formatGameCount(mapGame(id, mode), t(players))
+                  formatGameCount(mapGame(id, mode), t(players))
                 )
                 .join("\n")}`
           );
@@ -61,7 +61,7 @@ export class GameCountsCommand {
     const list = gamecountEntries
       .toSorted((a, b) => (b[1].players ?? 0) - (a[1].players ?? 0))
       .map(([id, { players }]) =>
-        this.formatGameCount(
+        formatGameCount(
           removeFormatting(FormattedGame[id]),
           t(players),
           t(`emojis:games.${id}`)
@@ -73,7 +73,7 @@ export class GameCountsCommand {
       .title((t) => t("embeds.gameCounts.title"))
       .color(STATUS_COLORS.info)
       .description(
-        (t) => `${this.formatGameCount(t("stats.total"), t(total))}\n\n${list}`
+        (t) => `${formatGameCount(t("stats.total"), t(total))}\n\n${list}`
       );
 
     const pages: Page[] = [
@@ -86,8 +86,8 @@ export class GameCountsCommand {
 
     return paginate(context, pages);
   }
+}
 
-  private formatGameCount(name: string, count: string, emoji?: string) {
-    return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count || 0}\``;
-  }
+function formatGameCount(name: string, count: string, emoji?: string) {
+  return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count || 0}\``;
 }

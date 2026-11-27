@@ -34,6 +34,7 @@ const message = { embeds: [embed], files: [preview] };
 
 const args = [PlayerArgument];
 
+/* oxlint-disable class-methods-use-this -- @SubCommand handlers are called on the command instance */
 @Command({ description: "" })
 export class HistoricalBase {
   public constructor(private readonly time: HistoricalType) {}

@@ -21,7 +21,7 @@ export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {
     super(SMASH_HEROES_MODES);
   }
 
-  public getProfile(
+  public override getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SmashHeroesModes, never>
   ): JSX.Element {

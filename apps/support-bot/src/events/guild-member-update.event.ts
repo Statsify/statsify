@@ -91,7 +91,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     const memberId = data.user.id;
 
     const currentTier = this.findTier(memberId);
-    const currentRoleTier = this.findRoleTier(data.roles);
+    const currentRoleTier = findRoleTier(data.roles);
 
     const hasPatreonRole = data.roles.includes(PATREON_ROLE);
     const hasServerBoosterRole = data.roles.includes(NITRO_BOOSTER_ROLE);
@@ -133,10 +133,6 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
   private findTier(memberId: string) {
     return PREMIUM_TIERS.find((tier) => this.tiers[tier]!.has(memberId));
-  }
-
-  private findRoleTier(roles: string[]) {
-    return PREMIUM_TIERS.find((tier) => roles.includes(TIER_ROLES[tier]));
   }
 
   private async serverBoosterRemove(memberId: string) {
@@ -257,4 +253,8 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     this.messageService.send(PREMIUM_LOG_CHANNEL, { embeds: [embed] });
   }
+}
+
+function findRoleTier(roles: string[]) {
+  return PREMIUM_TIERS.find((tier) => roles.includes(TIER_ROLES[tier]));
 }
