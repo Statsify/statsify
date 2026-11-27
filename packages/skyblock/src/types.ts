@@ -180,6 +180,9 @@ export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "
 
 export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
+// Vampire's level stats are Rift Time, a Rift-only stat
+export const STAT_SLAYERS = SLAYER_BOSSES.filter((boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire");
+
 export interface SlayersSection {
   xp: number;
   bosses: Record<SlayerBoss, { level: Level; kills: number[] }>; // kills[tier - 1]
@@ -547,11 +550,7 @@ export const STAT_SOURCES = [
   "tuning",
   "pet",
   "skills",
-  "zombie",
-  "spider",
-  "wolf",
-  "enderman",
-  "blaze",
+  ...STAT_SLAYERS,
   "slayerTiers", // Combat Wisdom from each slayer boss tier killed
   "petScore",
   "essence",

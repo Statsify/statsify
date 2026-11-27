@@ -25,7 +25,7 @@ import sblevels from "./generated/sblevels.json" with { type: "json" };
 import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PowerStat, Rarity, Skill, Stats, TreeLayout } from "#types";
+import type { PowerStat, Rarity, Skill, SlayerBoss, Stats, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
@@ -106,7 +106,7 @@ export const GARDEN = garden as {
 export const STAT_TABLES = stats as {
   base: Stats;
   skills: Record<Skill, Stats[]>;
-  slayers: Record<"zombie" | "spider" | "wolf" | "enderman", Stats[]>;
+  slayers: Record<Exclude<SlayerBoss, "blaze" | "vampire">, Stats[]>;
   pet_score: Record<string, number>;
 };
 

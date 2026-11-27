@@ -14,8 +14,8 @@ import {
   type PlayerStat,
   SKILLS,
   SLAYER_BOSSES,
+  STAT_SLAYERS,
   STAT_SOURCES,
-  type SlayerBoss,
   type Slots,
   type StatSource,
   type StatTotal,
@@ -177,7 +177,7 @@ const PEPPER_HEALTH = 1;
 const neuHealth = (levels: Stats[]) => levels.map(({ health }) => (health ? { health } : {}));
 
 // Each boss's level stats, NEU's and the wiki's. NEU's Zombie, Spider and Enderman tables predate 0.19.2, so only their
-// Health (which matches the wiki's) is kept, and it has no Blaze table. Vampire's are Rift Time, a Rift-only stat.
+// Health (which matches the wiki's) is kept, and it has no Blaze table.
 const SLAYER_LEVELS = {
   zombie: { neu: neuHealth(STAT_TABLES.slayers.zombie), wiki: [{}, {}, {}, {}, {}, {}, {}, { health_regen: 30 }, {}] },
   spider: {
@@ -213,13 +213,11 @@ const SLAYER_LEVELS = {
       { health: 7 },
     ],
   },
-} satisfies Partial<Record<SlayerBoss, { neu: Stats[]; wiki: Stats[] }>>;
+} satisfies Record<(typeof STAT_SLAYERS)[number], { neu: Stats[]; wiki: Stats[] }>;
 
 // Combat Wisdom for each boss tier killed once: 1 for tiers I to III, 2 for IV and V, Vampire's too (the wiki's Combat
 // Wisdom page, an owner exception, unverified)
 const tierWisdom = (kills: number[]) => add(...kills.map((count, tier) => (count > 0 ? (tier < 3 ? 1 : 2) : 0)));
-
-const STAT_SLAYERS = Object.keys(SLAYER_LEVELS) as (keyof typeof SLAYER_LEVELS)[];
 
 // Anita's Extra Farming Fortune and Agatha's and Miria's log fortunes, per level (wiki: Farming, Fig, Mangrove and Helix
 // Fortune)
