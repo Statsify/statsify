@@ -14,7 +14,7 @@ export { describeKey, labelVariants, parseBazaar, toPriceView } from "./prices.j
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, gameModeOf, toProfileSummary, toProfilesView } from "./profiles.js";
-export { parseItemsResource, toItemView } from "./items.js";
+export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
   SECTIONS,
