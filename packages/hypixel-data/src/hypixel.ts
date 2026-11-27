@@ -8,7 +8,7 @@
 
 import { ARMOR, HOTBAR, hypixelItem } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
-import { type ItemStack, legacyBannerPattern, legacyDye, legacyEffect } from "@statsify/textures";
+import { type ItemStack, legacyBannerPattern, legacyDye, legacyEffect, namespaced } from "@statsify/textures";
 import { gunzipSync } from "fflate";
 
 const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
@@ -71,7 +71,7 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   return {
     ...item,
     // 1.8 colors a banner by its Base before its Damage
-    id: banner?.Base === undefined ? item.id : `minecraft:${legacyDye(banner.Base)}_banner`,
+    id: banner?.Base === undefined ? item.id : namespaced(`${legacyDye(banner.Base)}_banner`),
     patterns: patterns?.length ? patterns : undefined,
     count: Count,
     name: tag?.display?.Name,

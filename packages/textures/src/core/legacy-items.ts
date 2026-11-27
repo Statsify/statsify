@@ -86,7 +86,7 @@ export function legacyEffect(id: number) {
 export function legacyBannerPattern(code: string) {
   const name = BANNER_PATTERNS[code];
   if (!name) throw new Error(`No banner pattern ${code}`);
-  return `minecraft:${name}`;
+  return namespaced(name);
 }
 
 /** A dye color for a 1.8 banner's dye Damage value, the reverse of wool's */
