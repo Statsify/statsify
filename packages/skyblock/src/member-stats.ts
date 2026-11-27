@@ -21,7 +21,7 @@ import {
   type Skill,
   type SlayerBoss,
 } from "#types";
-import { BESTIARY, COLLECTIONS } from "#data";
+import { COLLECTIONS } from "#data";
 import { add } from "@statsify/math";
 import { bagAccessories } from "./sections/accessories.js";
 import { isMember, toProfileSummary } from "./profiles.js";
@@ -132,13 +132,14 @@ const slug = (text: string) => text.toLowerCase().replaceAll(/[^\da-z]+/g, "_").
 export const collectionBoards = (collections: { items: { id: string; name: string }[] }[]) =>
   collections.flatMap(({ items }) => items.map(({ id, name }) => ({ key: id.replace(":", "-"), id, name })));
 
+const bestiaryKey = (page: string, family: string) => `${slug(page)}_${slug(family)}`;
+
 export const bestiaryBoards = (bestiary: { pages: { name: string; families: { name: string }[] }[] }) =>
   bestiary.pages.flatMap((page) =>
-    page.families.map((family) => ({ key: `${slug(page.name)}_${slug(family.name)}`, name: `${family.name} (${page.name})` }))
+    page.families.map((family) => ({ key: bestiaryKey(page.name, family.name), name: `${family.name} (${page.name})` }))
   );
 
 const COLLECTION_BOARDS = collectionBoards(COLLECTIONS);
-const BESTIARY_BOARDS = bestiaryBoards(BESTIARY);
 
 /** A member's numbers at a fetch, as their profile page shows them, except for what a co-op shares. */
 export type MemberStats = Record<MemberStat, number> & {
@@ -260,8 +261,9 @@ export function toMemberStats(
   }
 
   if (bestiary) {
-    const kills = bestiary.pages.flatMap(({ families }) => families.map(({ kills }) => kills));
-    stats.bestiary = Object.fromEntries(BESTIARY_BOARDS.map(({ key }, index) => [key, kills[index]]));
+    stats.bestiary = Object.fromEntries(
+      bestiary.pages.flatMap((page) => page.families.map(({ name, kills }) => [bestiaryKey(page.name, name), kills] as const))
+    );
   }
 
   return stats;
