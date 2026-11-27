@@ -76,11 +76,15 @@ export class AutocompleteService {
   }
 
   public async record(type: AutocompleteType, id: string, name: string) {
-    const stored = await this.findStoredName(type, name);
+    const now = Date.now();
+
+    const [stored, entries] = await Promise.all([
+      this.findStoredName(type, name),
+      this.readHistory(type, id, now),
+    ]);
+
     if (!stored) return;
 
-    const now = Date.now();
-    const entries = await this.readHistory(type, id, now);
     const previous = entries.find((e) => e.name === stored)?.lookups ?? [];
     const recorded = { name: stored, lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY) };
     const others = sortByFrecency(entries.filter((e) => e.name !== stored), now);
