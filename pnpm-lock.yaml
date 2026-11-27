@@ -296,8 +296,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       toad-scheduler:
-        specifier: ^3.0.1
-        version: 3.1.0
+        specifier: ^4.2.0
+        version: 4.2.0
       zod:
         specifier: ^4.1.5
         version: 4.6.7
@@ -418,8 +418,8 @@ importers:
         specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
       toad-scheduler:
-        specifier: ^3.0.1
-        version: 3.1.0
+        specifier: ^4.2.0
+        version: 4.2.0
       zod:
         specifier: ^4.1.5
         version: 4.6.7
@@ -548,8 +548,8 @@ importers:
         specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
       toad-scheduler:
-        specifier: ^3.0.1
-        version: 3.1.0
+        specifier: ^4.2.0
+        version: 4.2.0
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -3573,12 +3573,12 @@ packages:
     resolution: {integrity: sha512-SL0cVuEdETEp7pN0FuZb01toc3vnODEfVUCooxG1SJN0yIirh7JMb9X9bvfCFf0vzzbT68RdbKDHYTiWy7a7iw==}
     engines: {node: '>=22'}
 
+  croner@10.0.1:
+    resolution: {integrity: sha512-ixNtAJndqh173VQ4KodSdJEI6nuioBWI0V1ITNKhZZsO0pEMoDxz539T4FTTbSZ/xIOSuDnzxLVRqBVSvPNE2g==}
+    engines: {node: '>=18.0'}
+
   croner@4.1.97:
     resolution: {integrity: sha512-/f6gpQuxDaqXu+1kwQYSckUglPaOrHdbIlBAu0YuW8/Cdb45XwXYNUBXg3r/9Mo6n540Kn/smKcZWko5x99KrQ==}
-
-  croner@8.1.2:
-    resolution: {integrity: sha512-ypfPFcAXHuAZRCzo3vJL6ltENzniTjwe/qsLleH1V2/7SRDjgvRQyrLmumFTLmjFax4IuSxfGXEn79fozXcJog==}
-    engines: {node: '>=18.0'}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -5408,8 +5408,8 @@ packages:
     resolution: {integrity: sha512-m1TdR/rvT7kgGJZhspNtXdsdYk0fddFpJJFlG5s+UkPFo6lkLoZ3YLOaovPYjq1R75NP5JfeTlSHaOsE09peCg==}
     engines: {node: '>=20'}
 
-  toad-scheduler@3.1.0:
-    resolution: {integrity: sha512-ZTwsGMWyKTOokgTmIvjPIvkT3ZiPFgkAi8L0OLONOcSc/BUDPRzNMOfVWZzugIAxyntvY0Nzy1etNk+31Q4FXQ==}
+  toad-scheduler@4.2.0:
+    resolution: {integrity: sha512-Jk3qwIHySLiutaSCN4RJIzg1UH5TrCiAxvZHFZAfHjIDUvfXs1V9RSlk2TNlEaadJgw/RXRWNFq2fjSkqRdYpg==}
 
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
@@ -7967,9 +7967,9 @@ snapshots:
 
   cookie@2.0.2: {}
 
-  croner@4.1.97: {}
+  croner@10.0.1: {}
 
-  croner@8.1.2: {}
+  croner@4.1.97: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -9857,9 +9857,9 @@ snapshots:
 
   toad-cache@3.7.4: {}
 
-  toad-scheduler@3.1.0:
+  toad-scheduler@4.2.0:
     dependencies:
-      croner: 8.1.2
+      croner: 10.0.1
 
   toidentifier@1.0.1: {}
 
