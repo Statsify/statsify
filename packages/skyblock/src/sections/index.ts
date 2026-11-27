@@ -111,11 +111,32 @@ const READS: { [K in SectionKey]: MemberKeys } = {
   rift: { currencies: true, player_stats: true, rift: true },
   skills: { jacobs_contest: true, pets_data: true, player_data: true, profile: true },
   slayers: { slayer: true },
+  stats: {
+    accessory_bag_storage: true,
+    bestiary: true,
+    currencies: true,
+    dungeons: true,
+    foraging_core: true,
+    glacite_player_data: true,
+    inventory: true,
+    jacobs_contest: true,
+    leveling: true,
+    mining_core: true,
+    nether_island_player_data: true,
+    pets_data: true,
+    player_data: true,
+    player_stats: true,
+    profile: true,
+    rift: true,
+    skill_tree: true,
+    slayer: true,
+  },
 };
 
 /** The keys a section reads of the co-op's other members, when it reads any. */
 const COOP_READS: { [K in SectionKey]?: MemberKeys } = {
   skills: { player_data: true, profile: true },
+  stats: { player_data: true, profile: true },
 };
 
 /**
