@@ -403,8 +403,9 @@ export const NEU_UNITS = {
     const trophyNames: Record<string, string> = {};
     const petItems: Record<string, NonNullable<ReturnType<typeof petItemEffect>>> = {};
     const itemModels: Record<string, string> = {};
-    const materials = new Map((await minecraftData("items")).map(({ id, name }) => [`minecraft:${name}`, id]));
-    const files = (await readdir(join(neu, "items"))).filter((file) => file.endsWith(".json"));
+    const [minecraftItems, names] = await Promise.all([minecraftData("items"), readdir(join(neu, "items"))]);
+    const materials = new Map(minecraftItems.map(({ id, name }) => [`minecraft:${name}`, id]));
+    const files = names.filter((file) => file.endsWith(".json"));
     const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
     for (const item of items) {

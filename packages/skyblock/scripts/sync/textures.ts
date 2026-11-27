@@ -271,12 +271,16 @@ const texturePath = (name: string, damage: number) => {
   return path && inPack(path) ? path : undefined;
 };
 
-export const minecraftData = async (file: "blocks" | "items") => {
+const downloadMinecraftData = async (file: "blocks" | "items") => {
   const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);
   return (await response.json()) as MinecraftItem[];
 };
+
+// The neu and textures units both read items.json, so a run downloads each file once
+const minecraftDownloads: Partial<Record<"blocks" | "items", Promise<MinecraftItem[]>>> = {};
+export const minecraftData = (file: "blocks" | "items") => (minecraftDownloads[file] ??= downloadMinecraftData(file));
 
 /** textures-1.8.json, from minecraft-data's 1.8 items and blocks and the 1.8 pack. */
 export const TEXTURE_UNITS = {
