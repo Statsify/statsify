@@ -150,6 +150,8 @@ const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: Co
 const eventStats = (years: FishingSeasonalYear[], events: readonly FishingEvent[]) =>
   years.flatMap((year) => events.flatMap((event) => FISHING_ENVIRONMENTS.map((environment) => year[event][environment])));
 
+const eventTotal = (years: FishingSeasonalYear[], event: FishingEvent) => add(...years.map((year) => year[event].total));
+
 const Overview = ({ t, fishing }: PageProps) => (
   <Table.table>
     <Table.ts title={`§b${t("stats.fishing.lifetimeCatches")}`}>
@@ -355,10 +357,8 @@ const Seasonal = ({ t, fishing }: PageProps) => (
         <Table.tr>
           {events.map((event) => {
             const stats = eventStats(fishing.seasonal, [event]);
-            const total = add(...fishing.seasonal.map((year) => year[event].total));
-
             return (
-              <Table.ts title={`${EVENT_COLORS[event]}${t(`stats.fishing.events.${event}`)} §7- §f${t(total)}`}>
+              <Table.ts title={`${EVENT_COLORS[event]}${t(`stats.fishing.events.${event}`)} §7- §f${t(eventTotal(fishing.seasonal, event))}`}>
                 <CatchTypeRow t={t} stats={stats} types={["fish", "junk", "treasure"]} />
                 <CatchTypeRow t={t} stats={stats} types={["plant", "creature", "mythical"]} />
               </Table.ts>
@@ -381,7 +381,7 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
             {FISHING_EVENTS.map((event) => (
               <Table.td
                 title={t(`stats.fishing.events.${event}`)}
-                value={t(add(...fishing.seasonal.map((year) => year[event].total)))}
+                value={t(eventTotal(fishing.seasonal, event))}
                 color={EVENT_COLORS[event]}
               />
             ))}
