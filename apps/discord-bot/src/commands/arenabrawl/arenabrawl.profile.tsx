@@ -78,6 +78,11 @@ export const ArenaBrawlProfile = ({
           <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
+        <Table.tr>
+          <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§b" />
+          <Table.td title={t("stats.damage")} value={t(stats.damage)} color="§c" />
+          <Table.td title={t("stats.healing")} value={t(stats.healing)} color="§a" />
+        </Table.tr>
         <Historical.exclude time={time}>
           <Table.ts title="§6Skills">
             <Table.tr>
