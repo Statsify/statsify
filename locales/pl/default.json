@@ -412,7 +412,7 @@
       "title": "Brak danych tablicy wyników na tej pozycji"
     },
     "leaderboardInvalidPosition": {
-      "description": "Wprowadzona pozycja tablicy wyników jest nieprawidłowa. Wprowadź liczbę większą niż 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Nieprawidłowa pozycja"
     },
     "leaderboardNotFound": {
