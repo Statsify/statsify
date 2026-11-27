@@ -250,8 +250,10 @@ function textureIds({ model, special }: ItemLayer) {
 /** A player head's skin PNG by its URL; undefined when it has none */
 export type SkinSource = (url: string) => Promise<Uint8Array | undefined>;
 
+const SKIN_TIMEOUT = 5000;
+
 const fetchSkin: SkinSource = async (url) => {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(SKIN_TIMEOUT) });
   if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 };
