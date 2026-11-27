@@ -74,20 +74,24 @@ export class SkinService {
     extruded: boolean,
     { yaw, pose, cape, armor = {} }: Omit<SkinRenderDto, "uuid">
   ): Promise<Buffer> {
-    const [skin, resolvedArmor] = await Promise.all([this.getSkin(uuid), this.resolveArmor(armor)]);
+    const enchanted = Object.values(armor).some((piece) => piece && "enchanted" in piece && piece.enchanted);
+
+    const [skin, resolvedArmor, glint] = await Promise.all([
+      this.getSkin(uuid),
+      this.resolveArmor(armor),
+      enchanted ? readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+    ]);
 
     const [{ skin: image }, capeImage] = await Promise.all([
       this.resolveSkin(skin.skinUrl, skin.slim),
       cape && skin.capeUrl ? loadTexture(skin.capeUrl) : undefined,
     ]);
 
-    const enchanted = Object.values(resolvedArmor).some((piece) => piece?.enchanted);
-
     return renderSkin(imageData(image), skin.slim ?? false, extruded, {
       yaw,
       pose,
       armor: resolvedArmor,
-      glint: enchanted ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+      glint,
       cape: capeImage && imageData(capeImage),
     });
   }
@@ -95,12 +99,13 @@ export class SkinService {
   public async getKartRender({ uuid, ...options }: KartRenderDto): Promise<Buffer> {
     const kart = resolveKart(options, uuid !== undefined);
 
-    const [library, player] = await Promise.all([
+    const [library, player, armor] = await Promise.all([
       this.getLibrary(KART_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
+      resolvePackArmor(KART_PACK, kart.suit),
     ]);
 
-    return renderKart(library, kart, { ...options, player });
+    return renderKart(library, kart, { ...options, player: player && { ...player, armor } });
   }
 
   public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
@@ -385,7 +390,7 @@ interface PlayerSkin {
 }
 
 export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: PlayerSkin;
+  player?: PlayerSkin & { armor: Armor };
 }
 
 async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
@@ -399,9 +404,9 @@ async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helm
   return { chestplate, leggings, boots };
 }
 
-export async function renderKart(
+export function renderKart(
   library: ModelLibrary,
-  { models, suit }: KartScene,
+  { models }: KartScene,
   {
     player,
     extruded = false,
@@ -415,9 +420,7 @@ export async function renderKart(
 
   if (!player) return renderScene(library, { models }, output);
 
-  const armor = await resolvePackArmor(KART_PACK, suit);
-
-  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output);
+  return renderScene(library, { player: { ...player, extruded, pose: "sit" }, models }, output);
 }
 
 export interface WarlordsScene {
