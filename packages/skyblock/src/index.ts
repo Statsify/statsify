@@ -7,7 +7,7 @@
  */
 
 export * from "./types.js";
-export type * from "./raw.js";
+export * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
