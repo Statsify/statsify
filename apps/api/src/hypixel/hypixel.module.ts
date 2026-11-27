@@ -12,6 +12,8 @@ import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
 import { config } from "@statsify/util";
 
+export const KEEP_ALIVE_AGENT_OPTIONS = { keepAlive: true, timeout: 30_000 };
+
 @Module({
   imports: [
     HttpModule.register({
@@ -20,7 +22,7 @@ import { config } from "@statsify/util";
         "API-Key": await config("hypixelApi.key"),
         "accept-encoding": "*",
       },
-      httpsAgent: new Agent({ keepAlive: true, timeout: 30_000 }),
+      httpsAgent: new Agent(KEEP_ALIVE_AGENT_OPTIONS),
       timeout: await config("hypixelApi.timeout", { default: 5000 }),
     }),
   ],

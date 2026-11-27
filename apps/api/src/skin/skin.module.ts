@@ -8,6 +8,7 @@
 
 import { Agent } from "node:https";
 import { HttpModule } from "@nestjs/axios";
+import { KEEP_ALIVE_AGENT_OPTIONS } from "#hypixel";
 import { Module } from "@nestjs/common";
 import { Skin } from "@statsify/schemas";
 import { SkinController } from "./skin.controller.js";
@@ -17,7 +18,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    HttpModule.register({ httpsAgent: new Agent({ keepAlive: true, timeout: 30_000 }) }),
+    HttpModule.register({ httpsAgent: new Agent(KEEP_ALIVE_AGENT_OPTIONS) }),
   ],
   controllers: [SkinController],
   providers: [SkinService],
