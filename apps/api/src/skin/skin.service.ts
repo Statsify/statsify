@@ -18,6 +18,9 @@ import { getMinecraftTexturePath } from "@statsify/assets";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+const REFRESH_AFTER = 1000 * 60 * 60 * 24;
+const RETRY_AFTER = 1000 * 60 * 60;
+
 @Injectable()
 export class SkinService {
   public constructor(
@@ -70,16 +73,34 @@ export class SkinService {
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
 
-    const skin = await this.requestSkin(uuid).catch((error) => {
-      if (cachedSkin?.uuid === uuid) return cachedSkin;
-      throw error;
-    });
+    if (cachedSkin?.uuid === uuid) {
+      this.refresh(cachedSkin);
+      return cachedSkin;
+    }
 
-    // Cache for 3 hours
-    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
+    const skin = await this.requestSkin(uuid);
 
-    await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
+    return this.save(skin);
+  }
 
+  private async refresh({ uuid, expiresAt }: Skin) {
+    const { modifiedCount } = await this.skinModel
+      .updateOne({ uuid, expiresAt }, { expiresAt: Date.now() + RETRY_AFTER })
+      .exec();
+
+    if (modifiedCount !== 1) return;
+
+    await this.requestSkin(uuid).then(
+      (skin) => this.save(skin),
+      async (error) => {
+        if (error instanceof PlayerNotFoundException) await this.skinModel.deleteOne({ uuid }).exec();
+      }
+    );
+  }
+
+  private async save(skin: Skin): Promise<Skin> {
+    skin.expiresAt = Date.now() + REFRESH_AFTER;
+    await this.skinModel.replaceOne({ uuid: skin.uuid }, skin, { upsert: true }).lean().exec();
     return skin;
   }
 
