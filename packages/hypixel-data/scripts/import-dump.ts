@@ -129,29 +129,33 @@ interface Screen {
 
 type Tokens = Record<string, ItemStack>;
 
-const paths = process.argv.slice(2);
-if (paths.length === 0) throw new Error("Pass the paths to StatsifyDump exports");
-
-const dumps = await Promise.all(
-  paths.map(async (path) => JSON.parse(await readFile(path, "utf8")) as { items: DumpItem[]; screens?: Screen[] }),
-);
-const items = dumps.flatMap((dump) => dump.items);
-const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
-
 interface LegacyName {
   id: number;
   displayName: string;
   variations?: { metadata: number; displayName: string }[];
 }
 
-const legacyItems = await fetchMinecraftData<(LegacyName & { name: string })[]>("1.8/items.json");
+const paths = process.argv.slice(2);
+if (paths.length === 0) throw new Error("Pass the paths to StatsifyDump exports");
+
+const [dumps, legacyItems, legacyBlocks, legacyEnchantments] = await Promise.all([
+  Promise.all(
+    paths.map(async (path) => JSON.parse(await readFile(path, "utf8")) as { items: DumpItem[]; screens?: Screen[] }),
+  ),
+  fetchMinecraftData<(LegacyName & { name: string })[]>("1.8/items.json"),
+  fetchMinecraftData<LegacyName[]>("1.8/blocks.json"),
+  fetchMinecraftData<{ id: number; displayName: string }[]>("1.8/enchantments.json"),
+]);
+const items = dumps.flatMap((dump) => dump.items);
+const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
+
 const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
 // 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
 // gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
 const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
-for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchMinecraftData<LegacyName[]>("1.8/blocks.json"))]) {
+for (const { id, displayName, variations = [] } of [...legacyItems, ...legacyBlocks]) {
   for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
     const known = legacyNames.get(name);
     const same = !legacyNames.has(name) || (known?.id === id && known.damage === damage);
@@ -418,9 +422,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   output.kits[mode] = kits;
 }
 
-const enchantmentIds = new Map(
-  (await fetchMinecraftData<{ id: number; displayName: string }[]>("1.8/enchantments.json")).map(({ id, displayName }) => [displayName, id]),
-);
+const enchantmentIds = new Map(legacyEnchantments.map(({ id, displayName }) => [displayName, id]));
 
 const POTION = 373;
 const SPLASH = 0x40_00;
