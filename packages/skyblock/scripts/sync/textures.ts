@@ -286,8 +286,8 @@ const minecraftData = async (file: "blocks" | "items") => {
 /** textures-1.8.json, from minecraft-data's 1.8 items and blocks and the 1.8 pack. */
 export const TEXTURE_UNITS = {
   async textures({ write }: SyncContext) {
+    const [minecraftItems, minecraftBlocks] = await Promise.all([minecraftData("items"), minecraftData("blocks")]);
     // "<id>:<damage>" per variant and "<id>" for damage 0; ./icons tries both.
-    const minecraftItems = await minecraftData("items");
     const textures: Record<string, string> = {};
     const unmapped: string[] = [];
 
@@ -305,7 +305,6 @@ export const TEXTURE_UNITS = {
     }
 
     // items.json repeats each block's item under the block's id, so those ids take the block's name.
-    const minecraftBlocks = await minecraftData("blocks");
     const blockIds = new Set(minecraftBlocks.map(({ id }) => id));
     const materials = Object.fromEntries([
       ...minecraftBlocks.map(({ id, name }) => [MATERIAL_NAMES.blocks[name] ?? name.toUpperCase(), id]),
