@@ -9,7 +9,7 @@
 // The price rebuild's thread, so decoding ~45K auctions never blocks the API's event loop.
 import { gzipSync } from "node:zlib";
 import { parentPort } from "node:worker_threads";
-import { type Bazaar, type ItemsResource, type RawAuctionsPage, type SeenIndex, buildPriceMap } from "@statsify/skyblock";
+import { type Bazaar, type ItemsResource, RawAuctionsPage, type SeenIndex, buildPriceMap } from "@statsify/skyblock";
 
 export interface RebuildRequest {
   timeout: number;
@@ -27,7 +27,7 @@ let seen: SeenIndex | undefined;
 async function getPage(page: number, timeout: number): Promise<RawAuctionsPage> {
   const response = await fetch(`${AUCTIONS_URL}?page=${page}`, { signal: AbortSignal.timeout(timeout) });
   if (!response.ok) throw new Error(`auctions page ${page} answered ${response.status}`);
-  return response.json() as Promise<RawAuctionsPage>;
+  return RawAuctionsPage.parse(await response.json());
 }
 
 async function* getPages(timeout: number): AsyncGenerator<RawAuctionsPage> {
