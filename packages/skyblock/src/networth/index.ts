@@ -158,7 +158,13 @@ const networth = {
 };
 
 // The library reads more of the member, from keys this package doesn't read or type
-export const NETWORTH = checkReads<"networth">(networth, { currencies: true, inventory: true, pets_data: true, profile: true });
+export const NETWORTH = checkReads<"networth">(networth, {
+  currencies: true,
+  inventory: true,
+  loadout: true,
+  pets_data: true,
+  profile: true,
+});
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
