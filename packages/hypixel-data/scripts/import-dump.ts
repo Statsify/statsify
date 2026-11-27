@@ -23,7 +23,14 @@ import {
   leatherColor,
   skinUrl,
 } from "@statsify/hypixel-data";
-import { type ItemStack, fetchMinecraftData, legacyItem, legacyMaterialId } from "@statsify/textures";
+import {
+  type ItemStack,
+  fetchMinecraftData,
+  legacyItem,
+  legacyMaterialId,
+  namespaced,
+  withoutNamespace,
+} from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 
@@ -198,7 +205,7 @@ function editor(title: string) {
 }
 
 function legacyId({ id }: DumpItem) {
-  const numeric = legacyIds.get(id.replace("minecraft:", ""));
+  const numeric = legacyIds.get(withoutNamespace(id));
   if (numeric === undefined) throw new Error(`No 1.8 id for ${id}`);
   return numeric;
 }
@@ -327,7 +334,7 @@ function pickerArmor(lore: string[], kit: string) {
     if (!match) continue;
     const material = match[1] === "Gold" ? "golden" : match[1].toLowerCase();
     const piece = match[2].toLowerCase() as keyof typeof ARMOR;
-    armor[ARMOR[piece]] = { id: `minecraft:${material}_${piece}`, color: leatherColor(text), enchanted };
+    armor[ARMOR[piece]] = { id: namespaced(`${material}_${piece}`), color: leatherColor(text), enchanted };
   }
 
   return Object.keys(armor).length > 0 ? armor : undefined;
