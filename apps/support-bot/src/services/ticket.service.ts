@@ -183,7 +183,7 @@ export class TicketService {
     channelIdOrOwnerId: string,
     type: "channel" | "owner",
     userId: string,
-    reason = "N/A"
+    reason?: string | null
   ) {
     const ticket = await this.ticketModel
       .findOneAndDelete()
@@ -230,7 +230,7 @@ export class TicketService {
           `Owner: <@${ticket.owner}>`,
           `Closer: <@${userId}>`,
           `Participants: ${[...participants].join(", ")}`,
-          `Reason: ${reason}`,
+          `Reason: ${reason ?? "N/A"}`,
         ]
           .map((m) => `\`•\` ${m}`)
           .join("\n")
