@@ -13,9 +13,9 @@ import {
   type MayorView,
   type PriceMap,
   type PriceView,
-  type RawBazaar,
+  RawBazaar,
   type RawBingoResource,
-  type RawElection,
+  RawElection,
   describeKey,
   labelVariants,
   parseBazaar,
@@ -101,7 +101,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   private getBazaar(): Promise<Bazaar | undefined> {
     return this.getCopy(BAZAAR_KEY, BAZAAR_REFRESH, async () =>
-      parseBazaar(await this.get<RawBazaar>("/v2/skyblock/bazaar"))
+      parseBazaar(RawBazaar.parse(await this.get("/v2/skyblock/bazaar")))
     );
   }
 
@@ -120,7 +120,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     return this.getCopy(
       ELECTION_KEY,
       ELECTION_REFRESH,
-      async () => toMayorView(await this.get<RawElection>("/v2/resources/skyblock/election")),
+      async () => toMayorView(RawElection.parse(await this.get("/v2/resources/skyblock/election"))),
       // Only a copy fetched inside its term goes out of date when the term ends, so one Hypixel sent after the end (the
       // new mayor not in yet) isn't refetched on every request
       ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
