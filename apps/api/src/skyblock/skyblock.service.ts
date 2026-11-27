@@ -51,7 +51,7 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import type { SkyBlockStatsRow } from "@statsify/schemas";
+import { type SkyBlockStatsRow, skyblockStatsId } from "@statsify/schemas";
 
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
@@ -310,7 +310,7 @@ export class SkyBlockService {
     const removed = ranked.flatMap((profile) =>
       Object.keys(profile.members)
         .filter((member) => !isMember(profile, member))
-        .map((member) => `${member}:${profile.profile_id}`)
+        .map((member) => skyblockStatsId(member, profile.profile_id))
     );
 
     const rows = await Promise.all(

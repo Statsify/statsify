@@ -232,6 +232,9 @@ export interface SkyBlockStatsRow {
   boards: Partial<SkyBlockBoards>;
 }
 
+export const skyblockStatsId = (uuid: string, profileId: string) => `${uuid}:${profileId}`;
+export const skyblockStatsUuid = (id: string) => id.split(":")[0];
+
 /** A member of a profile on the SkyBlock leaderboards: every profile is on `overall`, and a special mode's on its own too. */
 @ModelOptions({ schemaOptions: { collection: "skyblockstats", versionKey: false } })
 export class SkyBlockStats {
@@ -271,7 +274,7 @@ export class SkyBlockStats {
   public constructor(row?: SkyBlockStatsRow) {
     if (!row) return;
 
-    this.id = `${row.uuid}:${row.profileId}`;
+    this.id = skyblockStatsId(row.uuid, row.profileId);
     this.uuid = row.uuid;
     this.profileId = row.profileId;
     this.cuteName = row.cuteName;
