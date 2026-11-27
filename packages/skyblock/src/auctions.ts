@@ -27,7 +27,7 @@ const MIDAS_WEAPONS: Record<string, { maxBid: number; key: string }> = {
 const upper = (value: unknown) => String(value).toUpperCase();
 
 /** From the API's tier, without a Tier Boost. */
-const petKey = (pet: RawPet, level: number) =>
+export const petKey = (pet: Pick<RawPet, "tier" | "type" | "skin">, level: number) =>
   `LVL_${level}_${pet.tier}_${pet.type}${pet.skin ? `_SKINNED_${pet.skin}` : ""}`;
 
 function bookKeys(attributes: Attributes) {

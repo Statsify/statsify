@@ -23,7 +23,7 @@ import { EQUIPMENT_PIECES } from "../sections/gear.js";
 import { normalizeItemText } from "../lore.js";
 import { describeKey } from "#prices";
 import { add } from "@statsify/math";
-import { lookupKeys } from "#auctions";
+import { lookupKeys, petKey } from "#auctions";
 import { prettify } from "@statsify/util";
 import { resourceTexture, textureOf } from "#textures";
 import { toolkitItemView } from "#items";
@@ -223,7 +223,7 @@ function getMissingPets(member: SectionInput["member"], map: PriceMap, items: It
       const priced = (Object.keys(rarities) as Rarity[])
         .filter((rarity) => petScorePoints(rarity) > 0)
         .flatMap((rarity) => {
-          const entry = map.entries[`LVL_1_${rarity}_${type}`];
+          const entry = map.entries[petKey({ tier: rarity, type }, 1)];
           return entry ? [{ rarity, price: entry.coins }] : [];
         })
         .toSorted((a, b) => a.price - b.price)[0];
