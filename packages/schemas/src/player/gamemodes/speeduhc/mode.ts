@@ -7,7 +7,7 @@
  */
 
 import { Field } from "#metadata";
-import { ratio } from "@statsify/math";
+import { add, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class SpeedUHCMode {
@@ -30,6 +30,9 @@ export class SpeedUHCMode {
   public kdr: number;
 
   @Field()
+  public gamesPlayed: number;
+
+  @Field()
   public assists: number;
 
   public constructor(data: APIData, mode: string) {
@@ -39,6 +42,7 @@ export class SpeedUHCMode {
     this.losses = data[`losses${mode}`];
     this.kills = data[`kills${mode}`];
     this.deaths = data[`deaths${mode}`];
+    this.gamesPlayed = add(this.wins, this.losses);
     this.assists = data[`assists${mode}`];
 
     this.wlr = ratio(this.wins, this.losses);

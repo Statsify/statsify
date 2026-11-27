@@ -40,7 +40,7 @@ export const SpeedUHCProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(speeduhc.coins), "§6"],
     [t("stats.score"), t(speeduhc.score), "§b"],
-    [t("stats.gamesPlayed"), t(speeduhc.gamesPlayed), "§e"],
+    [t("stats.gamesPlayed"), t(speeduhc.overall.gamesPlayed), "§e"],
     [t("stats.title"), speeduhc.title, "§e"],
     [t("stats.mastery"), prettify(speeduhc.activeMastery), "§a"],
   ];
