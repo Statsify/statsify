@@ -41,7 +41,7 @@ export const SMASH_HEROES_MODES = new GameModes([
 
 export type SmashHeroesModes = ExtractGameModes<typeof SMASH_HEROES_MODES>;
 
-const SmashHeroesClass = {
+export const SmashHeroesClass = {
   BOTMUN: "Botmon",
   CAKE_MONSTER: "Cake Monster",
   DUSK_CRAWLER: "Void Crawler",
