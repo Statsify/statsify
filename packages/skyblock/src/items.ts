@@ -12,6 +12,7 @@ import { normalizeItemText } from "./lore.js";
 import { removeFormatting } from "@statsify/util";
 import { skinHash, textureOf } from "#textures";
 import type { RawNbt } from "#raw";
+import { z } from "zod";
 
 const RARITY_NAMES = new Map<string, Rarity>([
   ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
@@ -58,26 +59,36 @@ export function toItemView(item: RawItem): ItemView {
 
 export const decodeSlots = (blob: RawNbt): Slots => decodeInventory(blob).map((item) => item && toItemView(item));
 
-interface RawResourceItem {
-  id: string;
-  name: string;
-  material: string;
-  durability?: number;
-  tier?: string;
-  category?: string;
-  color?: string;
-  skin?: { value: string };
-  origin?: string;
-  rift_transferrable?: boolean;
-  npc_sell_price?: number;
-  glowing?: boolean;
-  museum_data?: { category?: string; donation_xp?: number; armor_set_donation_xp?: Record<string, number> };
-}
+const RawResourceItem = z.object({
+  id: z.string(),
+  name: z.string(),
+  material: z.string(),
+  durability: z.number().optional(),
+  tier: z.string().optional(),
+  category: z.string().optional(),
+  color: z.string().optional(),
+  skin: z.object({ value: z.string() }).optional(),
+  origin: z.string().optional(),
+  rift_transferrable: z.boolean().optional(),
+  npc_sell_price: z.number().optional(),
+  glowing: z.boolean().optional(),
+  museum_data: z
+    .object({
+      category: z.string().optional(),
+      donation_xp: z.number().optional(),
+      armor_set_donation_xp: z.record(z.string(), z.number()).optional(),
+    })
+    .optional(),
+});
+
+/** /v2/resources/skyblock/items */
+export const RawItemsResource = z.object({ lastUpdated: z.number(), items: z.array(RawResourceItem) });
+export type RawItemsResource = z.infer<typeof RawItemsResource>;
 
 // The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
 const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier));
 
-export function parseItemsResource(raw: { lastUpdated: number; items: RawResourceItem[] }): ItemsResource {
+export function parseItemsResource(raw: RawItemsResource): ItemsResource {
   // The museum keeps an armor set under the set's key, which each of its pieces names
   const museum: Record<string, string> = {};
   for (const { id, museum_data: data } of raw.items) {
