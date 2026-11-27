@@ -8,7 +8,7 @@
 
 import { Historical, Table } from "#components";
 import { ProfileTime } from "#commands/base.hypixel-command";
-import { formatRaceTime } from "@statsify/util";
+import { formatBestTime } from "#lib/format-best-time";
 import type { ArcadeModes, PartyGames, SubModeForMode } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
@@ -42,19 +42,19 @@ const PartyGamesOverallTable = ({ stats, t, time }: PartyGamesSubModeTableProps)
     <Historical.exclude time={time}>
       <Table.ts title="Best Times">
         <Table.tr>
-          <Table.td title="Anvil Spleef" value={stats.anvilSpleefBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.anvilSpleefBestTime)} color="§a" size="inline" />
-          <Table.td title="Lab Escape" value={stats.labEscapeBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.labEscapeBestTime)} color="§a" size="inline" />
-          <Table.td title="Jigsaw Rush" value={stats.jigsawRushBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.jigsawRushBestTime)} color="§a" size="inline" />
+          <Table.td title="Anvil Spleef" value={formatBestTime(t, stats.anvilSpleefBestTime)} color="§a" size="inline" />
+          <Table.td title="Lab Escape" value={formatBestTime(t, stats.labEscapeBestTime)} color="§a" size="inline" />
+          <Table.td title="Jigsaw Rush" value={formatBestTime(t, stats.jigsawRushBestTime)} color="§a" size="inline" />
         </Table.tr>
         <Table.tr>
-          <Table.td title="The Floor Is Lava" value={stats.theFloorIsLavaBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.theFloorIsLavaBestTime)} color="§a" size="inline" />
-          <Table.td title="Chicken Rings" value={stats.chickenRingsBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.chickenRingsBestTime)} color="§a" size="inline" />
-          <Table.td title="Jungle Jump" value={stats.jungleJumpBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.jungleJumpBestTime)} color="§a" size="inline" />
+          <Table.td title="The Floor Is Lava" value={formatBestTime(t, stats.theFloorIsLavaBestTime)} color="§a" size="inline" />
+          <Table.td title="Chicken Rings" value={formatBestTime(t, stats.chickenRingsBestTime)} color="§a" size="inline" />
+          <Table.td title="Jungle Jump" value={formatBestTime(t, stats.jungleJumpBestTime)} color="§a" size="inline" />
         </Table.tr>
         <Table.tr>
-          <Table.td title="Bombardment" value={stats.bombardmentBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.bombardmentBestTime)} color="§a" size="inline" />
-          <Table.td title="Minecart Racing" value={stats.minecartRacingBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.minecartRacingBestTime)} color="§a" size="inline" />
-          <Table.td title="Spider Maze" value={stats.spiderMazeBestTime === 0 ? `§7${t("stats.notAvailable")}` : formatRaceTime(stats.spiderMazeBestTime)} color="§a" size="inline" />
+          <Table.td title="Bombardment" value={formatBestTime(t, stats.bombardmentBestTime)} color="§a" size="inline" />
+          <Table.td title="Minecart Racing" value={formatBestTime(t, stats.minecartRacingBestTime)} color="§a" size="inline" />
+          <Table.td title="Spider Maze" value={formatBestTime(t, stats.spiderMazeBestTime)} color="§a" size="inline" />
         </Table.tr>
       </Table.ts>
       <Table.ts title="Best Scores">
