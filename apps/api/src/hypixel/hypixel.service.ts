@@ -23,8 +23,9 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import { Redis } from "ioredis";
 import { type APIData, config } from "@statsify/util";
-import type { RawGarden, RawMuseum, RawProfile } from "@statsify/skyblock";
+import { type RawGarden, RawMuseum, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
 import type { Span } from "@sentry/node";
+import type { ZodType } from "zod";
 
 const RATE_LIMIT_KEY = "hypixel:ratelimit";
 
@@ -188,22 +189,32 @@ export class HypixelService {
   }
 
   /** null when the player never played SkyBlock. */
-  public getSkyBlockProfiles(uuid: string): Promise<RawProfile[] | null> {
-    return lastValueFrom(
-      this.request<{ profiles?: RawProfile[] | null }>("/v2/skyblock/profiles", { uuid }, SKYBLOCK_TIMEOUT).pipe(
-        map((data) => data.profiles ?? null),
-        catchError((error) => throwError(() => toSkyBlockError(error)))
-      )
+  public async getSkyBlockProfiles(uuid: string): Promise<RawProfile[] | null> {
+    const { profiles } = await this.getSkyBlock<{ profiles?: RawProfile[] | null }>(
+      "/v2/skyblock/profiles",
+      { uuid },
+      RawProfilesResponse
     );
+
+    return profiles ?? null;
   }
 
-  public getSkyBlockMuseum(profileId: string): Promise<RawMuseum> {
-    return lastValueFrom(
-      this.request<RawMuseum>("/v2/skyblock/museum", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
-        map(({ members }) => ({ members })),
-        catchError((error) => throwError(() => toSkyBlockError(error)))
-      )
+  public async getSkyBlockMuseum(profileId: string): Promise<RawMuseum> {
+    const { members } = await this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", { profile: profileId }, RawMuseum);
+    return { members };
+  }
+
+  /**
+   * Checked outside the catch, so a reshaped response reaches Sentry instead of reading as Hypixel being down. Returns
+   * Hypixel's own object rather than the parsed copy, which drops the keys we don't read, since the API stores it.
+   */
+  private async getSkyBlock<T>(url: string, params: Record<string, unknown>, schema: ZodType): Promise<T> {
+    const data = await lastValueFrom(
+      this.request<T>(url, params, SKYBLOCK_TIMEOUT).pipe(catchError((error) => throwError(() => toSkyBlockError(error))))
     );
+
+    schema.parse(data);
+    return data;
   }
 
   /** null when the profile has no Garden, which Hypixel answers with a 404 ("No result was found"). */
