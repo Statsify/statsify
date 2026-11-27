@@ -103,17 +103,18 @@ export class CommandPoster {
 
   private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
     const file = await readFile("./commands.json", "utf8").catch(() => null);
-
     if (!file) return true;
 
     const parsed = JSON.parse(file);
 
-    if (parsed.guildId !== guildId) return true;
-    if (Object.keys(parsed.commands).length !== commands.size) return true;
+    if (parsed.guildId !== guildId || Object.keys(parsed.commands).length !== commands.size) {
+      return true;
+    }
 
     for (const [key, value] of commands) {
-      if (!parsed.commands[key]) return true;
-      if (!value.equals(parsed.commands[key])) return true;
+      if (!parsed.commands[key] || !value.equals(parsed.commands[key])) {
+        return true;
+      }
     }
 
     return false;
