@@ -13,7 +13,7 @@ import {
   HalloweenSimulator,
   ScubaSimulator,
 } from "./seasonal-mode.js";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
 
 export class BlockingDead {
@@ -67,7 +67,7 @@ export class BountyHunters {
 }
 
 export class CreeperAttack {
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxWave: number;
 
   public constructor(data: APIData) {
@@ -940,7 +940,7 @@ export class HoleInTheWall {
     leaderboard: {
       name: "Highest Score - Qualifications",
       fieldName: "Qualifiers PB",
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public highestScoreQualifications: number;
@@ -949,7 +949,7 @@ export class HoleInTheWall {
     leaderboard: {
       name: "Highest Score - Finals",
       fieldName: "Finals PB",
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public highestScoreFinals: number;
@@ -974,7 +974,7 @@ export class HypixelSaysMode {
   })
   public wins: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxScore: number;
 
   public constructor(data: APIData, mode: "simon" | "santa") {
@@ -997,7 +997,7 @@ export class HypixelSays {
   })
   public wins: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxScore: number;
 
   @Field()
@@ -1371,7 +1371,7 @@ export class ZombiesMapDifficulty {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.wins"],
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public fastestWin: number;

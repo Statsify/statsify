@@ -32,7 +32,7 @@ import {
   WoolGamesQuests,
 } from "./modes/index.js";
 import { ExtractGameModes, FormattedGame, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { QuestTime, createQuestsInstance } from "./util.js";
 
 export const QUEST_MODES = new GameModes([
@@ -103,7 +103,7 @@ export type GenericQuestInstance = {
 
 export class Quests {
   @Field({
-    leaderboard: { name: "Total Quests", fieldName: "Quests", limit: 50_000 },
+    leaderboard: { name: "Total Quests", fieldName: "Quests", limit: LARGE_LEADERBOARD_LIMIT },
   })
   public total: number;
 
@@ -112,7 +112,7 @@ export class Quests {
       name: "Weekly Quests",
       fieldName: "Quests",
       resetEvery: "friday",
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public weeklyTotal: number;
@@ -122,7 +122,7 @@ export class Quests {
       name: "Daily Quests",
       fieldName: "Quests",
       resetEvery: "day",
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public dailyTotal: number;

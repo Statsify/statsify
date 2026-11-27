@@ -7,7 +7,7 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { add, ratio, sub } from "@statsify/math";
 
 export class SkyWarsMini implements SkyWarsMode {
@@ -35,7 +35,9 @@ export class SkyWarsMini implements SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({
+    leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT },
+  })
   public playtime: number;
 
   // Kit gets applied in the main class
@@ -89,7 +91,9 @@ export class SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({
+    leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT },
+  })
   public playtime: number;
 
   // Kit gets applied in the main class

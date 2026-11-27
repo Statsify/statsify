@@ -8,7 +8,7 @@
 
 import { type APIData, formatTime } from "@statsify/util";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { Progression } from "#progression";
 import {
   FINAL_PRESTIGE_XP,
@@ -69,7 +69,7 @@ export class Pit {
   public progression: Progression;
 
   @Field({
-    leaderboard: { additionalFields: ["this.goldEarned"], limit: 50_000 },
+    leaderboard: { additionalFields: ["this.goldEarned"], limit: LARGE_LEADERBOARD_LIMIT },
   })
   public gold: number;
 
@@ -79,13 +79,13 @@ export class Pit {
   })
   public goldEarned: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public renown: number;
 
   @Field()
   public lifetimeRenown: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public bounty: number;
 
   @Field()
@@ -123,10 +123,10 @@ export class Pit {
   })
   public totalMysticsEnchanted: number;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({ leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT } })
   public playtime: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public highestStreak: number;
 
   @Field()

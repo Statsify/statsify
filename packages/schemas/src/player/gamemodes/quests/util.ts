@@ -13,7 +13,7 @@ import {
   removeFormatting,
 } from "@statsify/util";
 import { DateTime } from "luxon";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { FormattedGame } from "#game";
 
 interface Quest {
@@ -108,7 +108,7 @@ const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
     name: "Total",
     fieldName: `${removeFormatting(game)} Total`,
     enabled,
-    limit: 50_000,
+    limit: LARGE_LEADERBOARD_LIMIT,
   },
 });
 

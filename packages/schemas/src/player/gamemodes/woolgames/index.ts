@@ -9,7 +9,7 @@
 import { type APIData, formatTime } from "@statsify/util";
 import { CaptureTheWool } from "./capture-the-wool.js";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { Progression } from "#progression";
 import { SheepWars } from "./sheepwars.js";
 import { WoolWars } from "./woolwars.js";
@@ -73,7 +73,7 @@ export class WoolGames {
   @Field()
   public nextLevelFormatted: string;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({ leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT } })
   public playtime: number;
 
   @Field()
