@@ -26,14 +26,11 @@
     "@swc/helpers": "^0.5.24",
     "chalk": "^5.6.2",
     "discord-bot": "workspace:^",
-    "inquirer": "^10.2.2",
+    "inquirer": "^14.3.0",
     "ioredis": "^5.11.1",
     "skia-canvas": "4.0.1",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "toad-scheduler": "^3.1.0",
     "zod": "^4.6.7"
-  },
-  "devDependencies": {
-    "@types/inquirer": "^9.0.10"
   }
 }

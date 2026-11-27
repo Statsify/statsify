@@ -30,17 +30,17 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.24",
     "@typegoose/typegoose": "^12.21.1",
-    "class-transformer": "0.5.1",
-    "class-validator": "^0.15.1",
     "fastify": "^5.12.8",
     "handlebars": "^4.7.10",
     "ioredis": "5.11.1",
     "luxon": "^3.7.2",
     "mongoose": "~8.21.1",
+    "nestjs-zod": "^5.6.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "skia-canvas": "4.0.1",
-    "toad-scheduler": "^3.1.0"
+    "toad-scheduler": "^3.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.2.11",
