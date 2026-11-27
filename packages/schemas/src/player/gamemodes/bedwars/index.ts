@@ -29,6 +29,8 @@ import {
 } from "./util.js";
 import { findScore, type APIData } from "@statsify/util";
 
+const DREAMS_SUBMODES = [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] as const;
+
 export const BEDWARS_MODES = new GameModes([
   { api: "overall" },
   { api: "core" },
@@ -37,14 +39,14 @@ export const BEDWARS_MODES = new GameModes([
   { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
   { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
   { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
-  { api: "armed", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "armed", submodes: [...DREAMS_SUBMODES] },
   { api: "castle", hypixel: "BEDWARS_CASTLE" },
-  { api: "lucky", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
-  { api: "rush", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
-  { api: "swap", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
-  { api: "ultimate", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
-  { api: "underworld", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
-  { api: "voidless", submodes: [{ api: "overall" }, { api: "doubles" }, { api: "fours" }] },
+  { api: "lucky", submodes: [...DREAMS_SUBMODES] },
+  { api: "rush", submodes: [...DREAMS_SUBMODES] },
+  { api: "swap", submodes: [...DREAMS_SUBMODES] },
+  { api: "ultimate", submodes: [...DREAMS_SUBMODES] },
+  { api: "underworld", submodes: [...DREAMS_SUBMODES] },
+  { api: "voidless", submodes: [...DREAMS_SUBMODES] },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
   { api: "challenges" },
 
