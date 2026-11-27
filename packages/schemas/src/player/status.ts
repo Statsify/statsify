@@ -10,6 +10,10 @@ import { Field } from "#metadata";
 import { Game } from "#game";
 import type { APIData } from "@statsify/util";
 
+function lastHeadTime(heads: { timestamp: number }[]) {
+  return Math.max(0, ...heads.map((head) => head.timestamp));
+}
+
 function findLastAction(data: APIData): { action: string; time: number } {
   const actions: { action: string; time: number }[] = [];
 
@@ -87,14 +91,14 @@ function findLastAction(data: APIData): { action: string; time: number } {
     if (swHeads.recent) {
       actions.push({
         action: "SW_HEAD_RECENT",
-        time: swHeads.recent?.[swHeads.recent.length - 1]?.time ?? 0,
+        time: lastHeadTime(swHeads.recent),
       });
     }
 
     if (swHeads.prestigious) {
       actions.push({
         action: "SW_HEAD_PRESTIGIOUS",
-        time: swHeads.prestigious?.[swHeads.prestigious.length - 1]?.time ?? 0,
+        time: lastHeadTime(swHeads.prestigious),
       });
     }
   }
