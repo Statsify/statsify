@@ -216,13 +216,19 @@ export class ApiService {
   public getUser(tag: string) {
     return this.request<GetUserResponse>("/user", { tag })
       .then((data) => data.user ?? null)
-      .catch(() => null);
+      .catch((err) => {
+        if (axios.isAxiosError(err)) throw err;
+        return null;
+      });
   }
 
   public updateUser(tag: string, update: UpdateUser) {
     return this.request<GetUserResponse>("/user", { tag }, "PATCH", { body: update })
       .then((data) => data.user ?? null)
-      .catch(() => null);
+      .catch((err) => {
+        if (axios.isAxiosError(err)) throw err;
+        return null;
+      });
   }
 
   public getUserBadge(tag: string) {
@@ -247,13 +253,19 @@ export class ApiService {
       "PUT"
     )
       .then((data) => data.user ?? null)
-      .catch(() => null);
+      .catch((err) => {
+        if (axios.isAxiosError(err) && err.response?.status !== 404) throw err;
+        return null;
+      });
   }
 
   public unverifyUser(tag: string) {
     return this.request<GetUserResponse>("/user", { tag }, "DELETE")
       .then((data) => data.user ?? null)
-      .catch(() => null);
+      .catch((err) => {
+        if (axios.isAxiosError(err)) throw err;
+        return null;
+      });
   }
 
   public getCommandUsage() {
