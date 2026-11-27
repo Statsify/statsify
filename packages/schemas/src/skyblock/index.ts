@@ -354,9 +354,6 @@ export class SkyBlockBoards {
   @Field({ leaderboard: { fieldName: "Barbarian Reputation", limit: 50_000 } })
   public barbariansReputation: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
-  public kills: number;
-
   @Field({ leaderboard: { name: "" } })
   public floors: SkyBlockFloorsBoards;
 

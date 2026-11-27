@@ -78,7 +78,6 @@ export type MemberStat =
   | "hotmLevel"
   | `${Powder}Powder`
   | `${Faction}Reputation`
-  | "kills"
   | "accessoryPower"
   | "petScore"
   | "fairySouls"
@@ -264,8 +263,6 @@ export function toMemberStats(
     const kills = bestiary.pages.flatMap(({ families }) => families.map(({ kills }) => kills));
     stats.bestiary = Object.fromEntries(BESTIARY_BOARDS.map(({ key }, index) => [key, kills[index]]));
   }
-
-  stats.kills = member.player_stats?.kills?.total ?? 0;
 
   return stats;
 }
