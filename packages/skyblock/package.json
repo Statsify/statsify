@@ -26,7 +26,8 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "prismarine-nbt": "2.8.0",
-    "skyhelper-networth": "2.11.1"
+    "skyhelper-networth": "2.11.1",
+    "zod": "^4.1.5"
   },
   "imports": {
     "#types": {
