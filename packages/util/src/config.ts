@@ -6,12 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { existsSync } from "node:fs";
 import type { DeepFlatten } from "./flatten.js";
 import { pathToFileURL } from "node:url";
-
-const directory = import.meta.dirname;
 
 export interface Config {
   database: {
