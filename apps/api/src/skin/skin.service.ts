@@ -90,11 +90,12 @@ export class SkinService {
 
     if (modifiedCount !== 1) return;
 
-    await this.requestSkin(uuid)
-      .then((skin) => this.save(skin))
-      .catch(async (error) => {
+    await this.requestSkin(uuid).then(
+      (skin) => this.save(skin),
+      async (error) => {
         if (error instanceof PlayerNotFoundException) await this.skinModel.deleteOne({ uuid }).exec();
-      });
+      }
+    );
   }
 
   private async save(skin: Skin): Promise<Skin> {
