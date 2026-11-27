@@ -22,6 +22,7 @@ import { toLevelCosts } from "#leveling";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
+const SYNC_TIMEOUT = 60_000;
 
 const MINECRAFT_DATA = "PrismarineJS/minecraft-data";
 const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb"; // 3.117.0
@@ -442,13 +443,15 @@ const skullHash = (nbt: string) => {
 };
 
 try {
-  const response = await fetch(`https://codeload.github.com/${REPO}/tar.gz/${sha}`);
+  // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
+  const [response, skillsResponse] = await Promise.all([
+    fetch(`https://codeload.github.com/${REPO}/tar.gz/${sha}`, { signal: AbortSignal.timeout(SYNC_TIMEOUT) }),
+    fetch(HYPIXEL_SKILLS, { signal: AbortSignal.timeout(SYNC_TIMEOUT) }),
+  ]);
   if (!response.ok) throw new Error(`codeload answered ${response.status}`);
   await writeFile(join(dir, "repo.tar.gz"), Buffer.from(await response.arrayBuffer()));
   execFileSync("tar", ["-xzf", "repo.tar.gz", "--strip-components=1"], { cwd: dir });
 
-  // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
-  const skillsResponse = await fetch(HYPIXEL_SKILLS);
   if (!skillsResponse.ok) throw new Error(`${HYPIXEL_SKILLS} answered ${skillsResponse.status}`);
   const { skills, version: skillsVersion } = (await skillsResponse.json()) as {
     skills: Record<string, HypixelSkill>;
@@ -458,9 +461,10 @@ try {
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const sblevels = await readJson<{ sblevel_colours: Record<string, string>; core_task: Record<string, unknown> }>(
-    "constants/sblevels.json"
-  );
+  const { core_task, sblevel_colours } = await readJson<{
+    core_task: Record<string, unknown>;
+    sblevel_colours: Record<string, string>;
+  }>("constants/sblevels.json");
   await write("leveling.json", {
     catacombs: leveling.catacombs,
     HOTF: leveling.HOTF,
@@ -469,7 +473,7 @@ try {
     leveling_xp: xpTable("COMBAT"),
     max_levels: Object.fromEntries(Object.entries(skills).map(([id, { maxLevel }]) => [id.toLowerCase(), maxLevel])),
     runecrafting_xp: xpTable("RUNECRAFTING"),
-    sblevel_colours: sblevels.sblevel_colours,
+    sblevel_colours,
     // NEU copies Revenant's 15 XP for Tarantula level 2; the game asks 25.
     slayer_xp: { ...slayerXp, spider: slayerXp.spider.with(1, 25) },
     slayer_to_highest_tier: leveling.slayer_to_highest_tier,
@@ -478,8 +482,8 @@ try {
 
   await write("sblevels.json", {
     core_task: {
-      accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
-      pet_score_xp: sblevels.core_task.pet_score_xp,
+      accessory_bag_xp: core_task.accessory_bag_xp,
+      pet_score_xp: core_task.pet_score_xp,
     },
   });
 
@@ -741,13 +745,13 @@ try {
 
   const minecraftData = async (file: "blocks" | "items") => {
     const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(SYNC_TIMEOUT) });
     if (!response.ok) throw new Error(`${url} answered ${response.status}`);
     return (await response.json()) as MinecraftItem[];
   };
 
   // "<id>:<damage>" per variant and "<id>" for damage 0; ./icons tries both.
-  const minecraftItems = await minecraftData("items");
+  const [minecraftItems, minecraftBlocks] = await Promise.all([minecraftData("items"), minecraftData("blocks")]);
   const textures: Record<string, string> = {};
   const unmapped: string[] = [];
 
@@ -765,7 +769,6 @@ try {
   }
 
   // items.json repeats each block's item under the block's id, so those ids take the block's name.
-  const minecraftBlocks = await minecraftData("blocks");
   const blockIds = new Set(minecraftBlocks.map(({ id }) => id));
   const materials = Object.fromEntries([
     ...minecraftBlocks.map(({ id, name }) => [MATERIAL_NAMES.blocks[name] ?? name.toUpperCase(), id]),
