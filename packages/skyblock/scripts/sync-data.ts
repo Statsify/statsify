@@ -19,6 +19,7 @@ import { toLevelCosts } from "#leveling";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
+const SYNC_TIMEOUT = 60_000;
 
 const sha = process.argv[2] ?? "";
 if (!/^[\da-f]{40}$/.test(sha)) throw new Error("usage: node scripts/sync-data.ts <full commit sha>");
@@ -61,13 +62,15 @@ const skullHash = (nbt: string) => {
 };
 
 try {
-  const response = await fetch(`https://codeload.github.com/${REPO}/tar.gz/${sha}`);
+  // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
+  const [response, skillsResponse] = await Promise.all([
+    fetch(`https://codeload.github.com/${REPO}/tar.gz/${sha}`, { signal: AbortSignal.timeout(SYNC_TIMEOUT) }),
+    fetch(HYPIXEL_SKILLS, { signal: AbortSignal.timeout(SYNC_TIMEOUT) }),
+  ]);
   if (!response.ok) throw new Error(`codeload answered ${response.status}`);
   await writeFile(join(dir, "repo.tar.gz"), Buffer.from(await response.arrayBuffer()));
   execFileSync("tar", ["-xzf", "repo.tar.gz", "--strip-components=1"], { cwd: dir });
 
-  // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
-  const skillsResponse = await fetch(HYPIXEL_SKILLS);
   if (!skillsResponse.ok) throw new Error(`${HYPIXEL_SKILLS} answered ${skillsResponse.status}`);
   const { skills, version: skillsVersion } = (await skillsResponse.json()) as {
     skills: Record<string, HypixelSkill>;
@@ -77,7 +80,10 @@ try {
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const { sblevel_colours } = await readJson<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
+  const { core_task, sblevel_colours } = await readJson<{
+    core_task: Record<string, unknown>;
+    sblevel_colours: Record<string, string>;
+  }>("constants/sblevels.json");
   await write("leveling.json", {
     catacombs: leveling.catacombs,
     HOTM: leveling.HOTM,
@@ -102,11 +108,10 @@ try {
     pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
   });
 
-  const sblevels = await readJson<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
   await write("sblevels.json", {
     core_task: {
-      accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
-      pet_score_xp: sblevels.core_task.pet_score_xp,
+      accessory_bag_xp: core_task.accessory_bag_xp,
+      pet_score_xp: core_task.pet_score_xp,
     },
   });
 
