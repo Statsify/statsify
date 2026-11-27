@@ -110,8 +110,8 @@
     "invite": "Invite Statsify",
     "language": "Change the language you see responses in",
     "last-day": "$t(commands.yesterday)",
-    "last-month": "View your stats from last month's in various games",
-    "last-week": "View your stats from last week's in various games",
+    "last-month": "View your stats from last month in various games",
+    "last-week": "View your stats from last week in various games",
     "leaderboard-arcade": "$t(commands.leaderboard-command, { \"name\": \"Arcade\" })",
     "leaderboard-arenabrawl": "$t(commands.leaderboard-command, { \"name\": \"Arena Brawl\" })",
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
@@ -333,7 +333,7 @@
         "title": "Successfully Deleted"
       },
       "rename": {
-        "description": "`The tag {{originalName}}` has been renamed to `{{newName}}`!",
+        "description": "The tag `{{originalName}}` has been renamed to `{{newName}}`!",
         "title": "Successfully Renamed"
       }
     }
