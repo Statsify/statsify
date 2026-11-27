@@ -8,6 +8,7 @@
 
 import { add } from "@statsify/math";
 import { coopMembers } from "../profiles.js";
+import { stepsReached } from "#leveling";
 import { resourceTexture } from "#textures";
 import type { ItemsResource, MinionsSection } from "#types";
 import type { RawProfile } from "#raw";
@@ -17,7 +18,7 @@ const SLOT_CRAFTS = [5, 15, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 
 
 /** The minion slots unique crafts give, and the unique crafts the next one needs. */
 export function craftedSlots(unique: number) {
-  const reached = SLOT_CRAFTS.filter((crafts) => unique >= crafts).length;
+  const reached = stepsReached(unique, SLOT_CRAFTS);
   return { slots: 5 + reached, next: SLOT_CRAFTS[reached] };
 }
 

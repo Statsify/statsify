@@ -18,6 +18,8 @@ import {
   getLeaderboardField,
   getLeaderboardFields,
   serialize,
+  skyblockStatsId,
+  skyblockStatsUuid,
 } from "@statsify/schemas";
 import { type LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { PlayerService } from "#player";
@@ -28,6 +30,8 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 /** A row's name: "Name (Profile)", the profile in its colors and with its mode's badge. */
 export const memberName = (displayName: string, row: Pick<SkyBlockStatsRow, "cuteName" | "gameMode">) =>
   `${displayName}§r §7(${formatProfileName(row)}§7)`;
+
+const boardKey = (field: string) => `skyblockstats.${field}`;
 
 const BOARDS = getLeaderboardFields(SkyBlockStats).map(([field]) => ({
   field,
@@ -64,7 +68,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   public async addMembers(uuid: string, profileIds: string[], rows: SkyBlockStatsRow[], removed: string[]) {
     const [stored, gone] = await Promise.all([
       this.statsModel
-        .find({ id: { $in: rows.map((row) => `${row.uuid}:${row.profileId}`) } })
+        .find({ id: { $in: rows.map((row) => skyblockStatsId(row.uuid, row.profileId)) } })
         .select({ id: true, overall: true, networthAsOf: true })
         .lean()
         .exec(),
@@ -78,7 +82,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const storedById = new Map(stored.map((row) => [row.id, row]));
 
     const members = rows.map((row) => {
-      const old = storedById.get(`${row.uuid}:${row.profileId}`);
+      const old = storedById.get(skyblockStatsId(row.uuid, row.profileId));
       const boards = { ...old?.overall, ...row.boards };
       return flatten(new SkyBlockStats({ ...row, networthAsOf: row.networthAsOf ?? old?.networthAsOf, boards }));
     });
@@ -108,16 +112,18 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   /** Tied rows share a rank, unlike on the player and guild boards. */
   public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
     const leaderboard = await super.getLeaderboard(constructor, field, input, type);
-    if (leaderboard.data.length === 0) return leaderboard;
+    // A board can keep a member whose record is gone, and nothing is left to name the row
+    const data = leaderboard.data.filter((row) => row.name);
+    if (data.length === 0) return { ...leaderboard, data };
 
-    const scores = await this.redis.zmscore(`skyblockstats.${field}`, leaderboard.data.map(({ id }) => id));
+    const scores = await this.redis.zmscore(boardKey(field), data.map(({ id }) => id));
     const ranks = await this.sharedRanks(field, scores.map(Number));
-    return { ...leaderboard, data: leaderboard.data.map((row, index) => ({ ...row, position: ranks[index] })) };
+    return { ...leaderboard, data: data.map((row, index) => ({ ...row, position: ranks[index] })) };
   }
 
   /** Each score's rank, 1 plus the members ahead of it on the board, so tied rows share one (1, 2, 2, 4). */
   public async sharedRanks(field: string, scores: number[]): Promise<number[]> {
-    const key = `skyblockstats.${field}`;
+    const key = boardKey(field);
     const ascending = getLeaderboardField(SkyBlockStats, field).sort === "ASC";
     const distinct = [...new Set(scores)];
 
@@ -131,7 +137,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   /** The player's best rank on a board over their profiles, counted from 0, or undefined when none is on it. */
   public async bestRank(uuid: string, field: string): Promise<number | undefined> {
     const rows = await this.statsModel.find({ uuid }).select({ id: true }).lean().exec();
-    const key = `skyblockstats.${field}`;
+    const key = boardKey(field);
     const ascending = getLeaderboardField(SkyBlockStats, field).sort === "ASC";
 
     const ranks = await Promise.all(rows.map(({ id }) => (ascending ? this.redis.zrank(key, id) : this.redis.zrevrank(key, id))));
@@ -161,7 +167,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     });
 
     const scores = this.redis.pipeline();
-    for (const { board, ids } of boards) scores.zmscore(`skyblockstats.${board.field}`, ids);
+    for (const { board, ids } of boards) scores.zmscore(boardKey(board.field), ids);
     const scored = (await scores.exec()) ?? [];
 
     const best = boards.flatMap(({ board, ids }, index) => {
@@ -177,7 +183,7 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
 
     const places = this.redis.pipeline();
     for (const { field, sort, score, id } of best) {
-      const key = `skyblockstats.${field}`;
+      const key = boardKey(field);
       if (sort === "ASC") places.zcount(key, "-inf", `(${score}`).zrank(key, id);
       else places.zcount(key, `(${score}`, "+inf").zrevrank(key, id);
     }
@@ -216,13 +222,14 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const selector: Record<string, boolean> = { id: true, uuid: true, cuteName: true, gameMode: true };
     for (const field of fields) selector[field] = true;
 
-    const rows = await this.statsModel.find({ id: { $in: ids } }).select(selector).lean().exec();
-
-    const players = await this.playerModel
-      .find({ uuid: { $in: rows.map((row) => row.uuid) } })
-      .select({ uuid: true, displayName: true })
-      .lean()
-      .exec();
+    const [rows, players] = await Promise.all([
+      this.statsModel.find({ id: { $in: ids } }).select(selector).lean().exec(),
+      this.playerModel
+        .find({ uuid: { $in: ids.map(skyblockStatsUuid) } })
+        .select({ uuid: true, displayName: true })
+        .lean()
+        .exec(),
+    ]);
 
     const rowsById = new Map(rows.map((row) => [row.id, row]));
     const namesByUuid = new Map(players.map((player) => [player.uuid, player.displayName]));

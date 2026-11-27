@@ -7,10 +7,10 @@
  */
 
 import { GARDEN } from "#data";
-import { type GardenSection, type GardenView, type ItemsResource, RARITIES, type Rarity } from "#types";
+import { type GardenSection, type GardenView, type ItemsResource, type Rarity, rarityRank } from "#types";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
-import { resourceTexture } from "#textures";
+import { resourceItem } from "#textures";
 import type { RawGarden, RawMember } from "#raw";
 
 // The composter menu's order; the synced table's keys are sorted
@@ -51,12 +51,7 @@ const VISITOR_NAMES: Record<string, string> = {
 };
 
 const byName = <T extends { name: string }>(a: T, b: T) => a.name.localeCompare(b.name);
-const rank = (rarity?: Rarity) => (rarity ? RARITIES.indexOf(rarity) : -1);
-
-function itemOf(items: ItemsResource, id: string) {
-  const found = items.items[id];
-  return { name: found?.name ?? prettify(id), texture: found && resourceTexture(found) };
-}
+const rank = (rarity?: Rarity) => (rarity ? rarityRank(rarity) : -1);
 
 // Hypixel lists greenhouse skins as barn skins too. A skin's item is `<ID>_BARN_SKIN` or `<ID>_GREENHOUSE_SKIN`; the ones
 // without one are named here, from the wiki's Barn Skins and Greenhouse Skins pages
@@ -104,7 +99,7 @@ function toGardenView(garden: RawGarden, items: ItemsResource): GardenView {
         const collected = garden.resources_collected?.[id] ?? 0;
         return {
           id,
-          ...itemOf(items, id),
+          ...resourceItem(items, id),
           collected,
           milestone: getLevel(collected, tiers, tiers.length),
           upgrade: { level: garden.crop_upgrade_levels?.[id] ?? 0, maxLevel: GARDEN.crop_upgrades },

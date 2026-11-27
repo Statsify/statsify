@@ -23,10 +23,10 @@ import { EQUIPMENT_PIECES } from "../sections/gear.js";
 import { normalizeItemText } from "../lore.js";
 import { describeKey } from "#prices";
 import { add } from "@statsify/math";
-import { lookupKeys } from "#auctions";
+import { lookupKeys, petKey } from "#auctions";
 import { prettify } from "@statsify/util";
 import { resourceTexture, textureOf } from "#textures";
-import { toolkitItemView } from "#items";
+import { toolkitView } from "#items";
 import type {
   ItemTexture,
   ItemsResource,
@@ -223,7 +223,7 @@ function getMissingPets(member: SectionInput["member"], map: PriceMap, items: It
       const priced = (Object.keys(rarities) as Rarity[])
         .filter((rarity) => petScorePoints(rarity) > 0)
         .flatMap((rarity) => {
-          const entry = map.entries[`LVL_1_${rarity}_${type}`];
+          const entry = map.entries[petKey({ tier: rarity, type }, 1)];
           return entry ? [{ rarity, price: entry.coins }] : [];
         })
         .toSorted((a, b) => a.price - b.price)[0];
@@ -235,8 +235,9 @@ function getMissingPets(member: SectionInput["member"], map: PriceMap, items: It
 
 /** A toolkit tool is bare ExtraAttributes, so the library gets it as one item named from the resource. */
 function toolkitItem(blob: RawNbt, items: ItemsResource): RawItem | null {
-  const view = toolkitItemView(blob, items);
-  return view && { id: 0, Count: 1, Damage: 0, tag: { display: { Name: view.name }, ExtraAttributes: decodeAttributes(blob) } };
+  const attributes = decodeAttributes(blob);
+  const view = toolkitView(attributes, items);
+  return view && { id: 0, Count: 1, Damage: 0, tag: { display: { Name: view.name }, ExtraAttributes: attributes } };
 }
 
 type InventoryValues = NonNullable<ValuesSection["inventories"]>;
