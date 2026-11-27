@@ -1,5 +1,7 @@
 use cgmath::{Deg, Matrix4, Vector3};
 
+use crate::UNITS_PER_BLOCK;
+
 /// A model's `display` transforms for the contexts scenes draw, as 1.8 names them.
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Display {
@@ -61,7 +63,9 @@ impl Transform {
 
   /// Translation in blocks and scale, clamped as 1.8 clamps them when it reads a model.
   fn clamped(&self) -> ([f32; 3], [f32; 3]) {
-    let translation = self.translation.map(|t| (t / 16.0).clamp(-1.5, 1.5));
+    let translation = self
+      .translation
+      .map(|t| (t / UNITS_PER_BLOCK).clamp(-1.5, 1.5));
     let scale = self.scale.map(|s| s.clamp(-4.0, 4.0));
     (translation, scale)
   }
