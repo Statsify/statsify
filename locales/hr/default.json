@@ -412,7 +412,7 @@
       "title": "No Leaderboard Data At This Position"
     },
     "leaderboardInvalidPosition": {
-      "description": "Unesena pozicija na ljestvici je nevažeća. Unesite broj veći od 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Nevažeća pozicija"
     },
     "leaderboardNotFound": {
