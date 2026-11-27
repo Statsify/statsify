@@ -16,7 +16,7 @@ import {
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
-import { type CustomId, Interaction, type InteractionAttachment, parseCustomId } from "#interaction";
+import { COMPONENT_LIFETIME, type CustomId, Interaction, type InteractionAttachment, parseCustomId } from "#interaction";
 import { LRUCache } from "lru-cache";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
@@ -53,7 +53,7 @@ export abstract class AbstractCommandListener {
   protected routes = new Map<string, ComponentRoute>();
   private rerunCache = new LRUCache<string, { message: IMessage | Message; locale: string }>({
     max: 50,
-    ttl: 300_000,
+    ttl: COMPONENT_LIFETIME,
   });
   protected readonly logger = new Logger("CommandListener");
 

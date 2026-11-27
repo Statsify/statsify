@@ -8,6 +8,8 @@
 
 const MAX_CUSTOM_ID_LENGTH = 100;
 
+export const COMPONENT_LIFETIME = 300_000;
+
 export interface CustomId {
   route: string;
   ownerId: string;
