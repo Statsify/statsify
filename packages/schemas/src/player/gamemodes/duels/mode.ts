@@ -9,7 +9,7 @@
 import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { DUELS_TITLES, type DuelsTitle, getTitleAndProgression } from "./util.js";
+import { DUELS_TITLES, type DuelsTitle, getTitleAndProgression, getTitleStat } from "./util.js";
 import { add, deepAdd, ratio } from "@statsify/math";
 
 export class BaseDuelsGameMode {
@@ -254,7 +254,6 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
     data: APIData,
     title: DuelsTitle,
     mode: string,
-    titleStat: "wins" | "kills" = "wins",
   ) {
     super(data, mode);
 
@@ -264,7 +263,7 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
       nextTitleLevelFormatted,
       progression,
     } = getTitleAndProgression({
-      score: this[titleStat],
+      score: this[getTitleStat(title)],
       data,
       ...DUELS_TITLES[title],
     });
@@ -334,7 +333,7 @@ export class ArenaDuels extends SinglePVPDuelsGameMode {
   public shotsFired: number;
 
   public constructor(data: APIData) {
-    super(data, "arena", "duel_arena", "kills");
+    super(data, "arena", "duel_arena");
     this.shotsFired = data[`duel_arena_bow_shots`];
   }
 }

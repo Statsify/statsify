@@ -6,7 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DUELS_TITLES, type Duels, type DuelsTitle, getTitleAndProgression } from "@statsify/schemas";
+import {
+  DUELS_TITLES,
+  type Duels,
+  type DuelsTitle,
+  compareTitleScores,
+  getTitleAndProgression,
+  getTitleStat,
+} from "@statsify/schemas";
 import { arrayGroup } from "@statsify/util";
 import type { DuelsModeIcons } from "../duels.command.js";
 import type { Image } from "skia-canvas";
@@ -26,9 +33,6 @@ interface ModeScore {
 const defaultColorTitle = ({ mode, score }: ModeScore) =>
   getTitleAndProgression({ score, data: {}, ...DUELS_TITLES[mode] }).titleFormatted;
 
-const normalizedScore = ({ mode, score }: ModeScore) =>
-  DUELS_TITLES[mode].titleRequirement === "half" ? score * 2 : score;
-
 function ModeTitle({ icon, title, score, t }: { icon: Image; title: string; score: number; t: LocalizeFunction }) {
   return (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
@@ -46,7 +50,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
   const overall: ModeScore = { mode: "overall", score: duels.overall.wins };
 
   const games: ModeScore[] = [
-    { mode: "arena", score: duels.arena.kills },
+    { mode: "arena", score: duels.arena[getTitleStat("arena")] },
     { mode: "bedwars", score: duels.bedwars.overall.wins },
     { mode: "blitzsg", score: duels.blitzsg.wins },
     { mode: "bow", score: duels.bow.wins },
@@ -65,7 +69,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
     { mode: "uhc", score: duels.uhc.overall.wins },
   ];
 
-  games.sort((a, b) => normalizedScore(b) - normalizedScore(a));
+  games.sort(compareTitleScores);
   const rows = arrayGroup(games, 2);
 
   return (

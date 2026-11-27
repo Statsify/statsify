@@ -236,4 +236,4 @@ export class Duels {
 }
 
 export * from "./mode.js";
-export { DUELS_TITLES, type DuelsTitle, getTitleAndProgression } from "./util.js";
+export { DUELS_TITLES, type DuelsTitle, compareTitleScores, getTitleAndProgression, getTitleStat } from "./util.js";

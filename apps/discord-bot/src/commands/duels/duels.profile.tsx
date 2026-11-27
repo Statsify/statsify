@@ -14,10 +14,15 @@ import {
   TitlesTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
-import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { DuelsModes, FormattedGame, type GameMode, getTitleStat } from "@statsify/schemas";
 import { formatRecordTime, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
+
+const TITLE_STAT_LABELS = {
+  wins: "stats.progression.win",
+  kills: "stats.progression.kill",
+} as const;
 
 export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;
@@ -131,7 +136,7 @@ export const DuelsProfile = <T extends ProfileTime>({
             duels[mode.api].titleFormatted
           }\n${formatProgression({
             t,
-            label: t(mode.api === "arena" ? "stats.progression.kill" : "stats.progression.win"),
+            label: t(TITLE_STAT_LABELS[getTitleStat(mode.api)]),
             progression: duels[mode.api].progression,
             currentLevel: duels[mode.api].titleLevelFormatted,
             nextLevel: duels[mode.api].nextTitleLevelFormatted,
