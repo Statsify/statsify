@@ -92,6 +92,7 @@ const ENCHANTS = [
 ] as const satisfies [keyof Fishing["enchants"], string][];
 
 const DEFAULT_ROD: FishingRod = "fishing_rod_3000";
+const SPECIALS_PER_PAGE = 24;
 
 const rodName = (id: string) => prettify(id.replace(/^fishing_rod_|_fishing_rod$/, ""));
 const hookTrailName = (id: string) => prettify(id.replace("mainlobby_fishing_", ""));
@@ -420,8 +421,8 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
 const PAGE_CONTENT: Record<FishingPage, (props: PageProps) => JSX.Element> = {
   overview: Overview,
   mythicals: Mythicals,
-  specialsOne: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(0, 24)} />,
-  specialsTwo: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(24)} />,
+  specialsOne: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(0, SPECIALS_PER_PAGE)} />,
+  specialsTwo: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(SPECIALS_PER_PAGE)} />,
   collections: Collections,
   catchesOne: (props) => <Catches {...props} types={["fish", "plant", "creature"]} />,
   catchesTwo: (props) => <Catches {...props} types={["treasure", "junk"]} />,
