@@ -178,7 +178,7 @@ export class ApiService extends StatsifyApiService {
         );
       }
 
-      if (error.message === "player") throw this.missingPlayer(playerType, input);
+      if (error.message === "player") throw this.missingPlayer(playerType, tag);
 
       throw this.unknownError();
     });
