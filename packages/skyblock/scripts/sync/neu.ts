@@ -398,6 +398,8 @@ export const NEU_UNITS = {
     const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
     const trophyNames: Record<string, string> = {};
     const petItems: Record<string, NonNullable<ReturnType<typeof petItemEffect>>> = {};
+    const essenceTextures: Record<string, string> = {};
+    const headlessEssence: string[] = [];
     const files = (await readdir(join(neu, "items"))).filter((file) => file.endsWith(".json"));
     const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
 
@@ -431,6 +433,13 @@ export const NEU_UNITS = {
       // "§a§lUNCOMMON PET ITEM"
       const petItem = removeFormatting(item.lore?.at(-1) ?? "").endsWith("PET ITEM") && petItemEffect(item.lore ?? []);
       if (petItem) petItems[item.internalname] = petItem;
+
+      // Every essence item at the pin, not the essence shops' types, which leave some out
+      if (/^ESSENCE_\w+$/.test(item.internalname)) {
+        const essence = skullHash(item.nbttag);
+        if (essence) essenceTextures[item.internalname] = essence;
+        else headlessEssence.push(item.internalname);
+      }
 
       // A power stone lists its Power's stats, some negative, at a set Accessory Power: "§7At §6250 Accessory Power§7:",
       // then lines like "§c+80.99<glyph> Strength". Most then list a "Unique Power Bonus:", which doesn't scale.
@@ -467,6 +476,8 @@ export const NEU_UNITS = {
     await write("kuudra-keys.json", kuudraKeys);
     await write("trophyfish.json", trophyNames);
     await write("pet-items.json", petItems);
+    if (headlessEssence.length > 0) throw new Error(`no essence head for ${headlessEssence.join(", ")}`);
+    await write("essence-textures.json", essenceTextures);
 
     const pets = await readJson<Record<string, unknown>>("constants/pets.json");
     const offsets = pets.pet_rarity_offset as Record<string, number>;
@@ -533,14 +544,5 @@ export const NEU_UNITS = {
         ])
       )
     );
-  },
-
-  // Every essence item at the pin, not the essence shops' types, which leave some out
-  async essence({ neu, readJson, write }: SyncContext) {
-    const files = (await readdir(join(neu, "items"))).filter((file) => /^ESSENCE_\w+\.json$/.test(file));
-    const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
-    const headless = items.filter(({ nbttag }) => !skullHash(nbttag)).map(({ internalname }) => internalname);
-    if (headless.length > 0) throw new Error(`no essence head for ${headless.join(", ")}`);
-    await write("essence-textures.json", Object.fromEntries(items.map(({ internalname, nbttag }) => [internalname, skullHash(nbttag)])));
   },
 };
