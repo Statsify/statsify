@@ -67,4 +67,4 @@ jobs:
 
       - name: Test
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
-        run: pnpm test:coverage --changed=$TURBO_SCM_BASE
+        run: pnpm test:coverage
