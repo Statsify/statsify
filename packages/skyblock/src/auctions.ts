@@ -16,6 +16,11 @@ import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
 type Attributes = NonNullable<NonNullable<RawItem["tag"]>["ExtraAttributes"]>;
 
 const COLOR_HATS = new Set(["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025"]);
+const SLOTH_HAT = "PARTY_HAT_SLOTH";
+const RUNES = new Set(["RUNE", "UNIQUE_RUNE"]);
+const NEW_YEAR_CAKE = "NEW_YEAR_CAKE";
+const ENCHANTED_BOOK = "ENCHANTED_BOOK";
+const PRICED_PET_LEVELS = [1, 100, 200] as const;
 
 const MIDAS_WEAPONS: Record<string, { maxBid: number; key: string }> = {
   MIDAS_SWORD: { maxBid: 50_000_000, key: "MIDAS_SWORD_50M" },
@@ -45,11 +50,11 @@ function runeKey(attributes: Attributes) {
   return rune && upper(`RUNE_${rune[0]}_${rune[1]}`);
 }
 
-const cakeKey = (attributes: Attributes) => `NEW_YEAR_CAKE_${attributes.new_years_cake}`;
+const cakeKey = (attributes: Attributes) => `${NEW_YEAR_CAKE}_${attributes.new_years_cake}`;
 
 function hatKey(id: string, attributes: Attributes): string | undefined {
   if (COLOR_HATS.has(id) && attributes.party_hat_color) return `${id}_${upper(attributes.party_hat_color)}`;
-  return id === "PARTY_HAT_SLOTH" && attributes.party_hat_emoji ? `${id}_${upper(attributes.party_hat_emoji)}` : undefined;
+  return id === SLOTH_HAT && attributes.party_hat_emoji ? `${id}_${upper(attributes.party_hat_emoji)}` : undefined;
 }
 
 function editionKey(id: string, attributes: Attributes): string | undefined {
@@ -85,14 +90,14 @@ export function listingKey(item: RawItem): string | undefined {
   const pet = petOf(attributes);
   if (pet) {
     const { level } = getPetLevel(pet);
-    return level === 1 || level === 100 || level === 200 ? petKey(pet, level) : undefined;
+    return PRICED_PET_LEVELS.some((priced) => priced === level) ? petKey(pet, level) : undefined;
   }
 
   const id = attributes?.id;
   if (!attributes || id === undefined) return;
-  if (id === "ENCHANTED_BOOK") return bookKey(attributes);
-  if (id === "RUNE" || id === "UNIQUE_RUNE") return runeKey(attributes);
-  if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
+  if (id === ENCHANTED_BOOK) return bookKey(attributes);
+  if (RUNES.has(id)) return runeKey(attributes);
+  if (id === NEW_YEAR_CAKE) return cakeKey(attributes);
   if (id === "CROWN_OF_AVARICE") return crownKey(attributes);
   if (id in MIDAS_WEAPONS) return midasKey(id, attributes);
   if (attributes.skin) return skinnedKey(id, attributes);
@@ -110,11 +115,11 @@ function networthId(id: string, attributes: Attributes, map: PriceMap) {
     return skinnedKey(id, attributes);
   }
 
-  const sloth = id === "PARTY_HAT_SLOTH" ? hatKey(id, attributes) : undefined;
+  const sloth = id === SLOTH_HAT ? hatKey(id, attributes) : undefined;
   if (sloth && price(sloth)) return sloth;
-  const rune = (id === "RUNE" || id === "UNIQUE_RUNE") && runeKey(attributes);
+  const rune = RUNES.has(id) && runeKey(attributes);
   if (rune) return rune;
-  if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
+  if (id === NEW_YEAR_CAKE) return cakeKey(attributes);
   const variant = (COLOR_HATS.has(id) && hatKey(id, attributes)) || editionKey(id, attributes);
   if (variant) return variant;
   if (attributes.is_shiny && price(shinyKey(id))) return shinyKey(id);
@@ -131,8 +136,9 @@ function petLookupKeys(pet: RawPet, map: PriceMap) {
     const skinned = petKey(pet, lvl);
     return map.entries[plain] || !map.entries[skinned] ? plain : skinned;
   };
-  if (level < 100) return [at(1), at(100)];
-  return level === 100 ? [at(100)] : [at(100), at(200)];
+  const [low, mid, high] = PRICED_PET_LEVELS;
+  if (level < mid) return [at(low), at(mid)];
+  return level === mid ? [at(mid)] : [at(mid), at(high)];
 }
 
 /** The keys read for an item's or pet's base price; modifiers aren't included, and vanilla items have none. */
@@ -146,7 +152,7 @@ export function lookupKeys(thing: RawItem | RawPet, map: PriceMap): string[] {
   const id = attributes?.id;
   if (!attributes || id === undefined) return [];
 
-  const books = id === "ENCHANTED_BOOK" ? bookKeys(attributes) : [];
+  const books = id === ENCHANTED_BOOK ? bookKeys(attributes) : [];
   if (books.length > 0) return books;
 
   if (Number(attributes.collected_coins ?? 0) > 0) {
