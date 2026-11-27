@@ -22,7 +22,7 @@ use crate::attachment::{
 use crate::error::Error;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::mount::{Mount, SceneMount};
-use crate::native::renderer;
+use crate::native::{narrow, renderer};
 use crate::pose::{Held, Pose};
 
 // Of the output's shorter side, left clear on each side of the scene
@@ -297,16 +297,8 @@ fn draw_scene(
   let limit = renderer.device().limits().max_texture_dimension_2d;
   let (width, height) = (pixels(output.width, limit)?, pixels(output.height, limit)?);
 
-  // Checked after narrowing, since a huge f64 becomes an f32 infinity
-  let (yaw, pitch) = (output.yaw as f32, output.pitch as f32);
-
-  if !yaw.is_finite() {
-    return Err(Error::InvalidYaw.into());
-  }
-
-  if !pitch.is_finite() {
-    return Err(Error::InvalidPitch.into());
-  }
+  let yaw = narrow(output.yaw).ok_or(Error::InvalidYaw)?;
+  let pitch = narrow(output.pitch).ok_or(Error::InvalidPitch)?;
 
   let player = match &scene.player {
     Some(player) => {
@@ -364,18 +356,16 @@ fn draw_scene(
       (_, None) => return Err(Error::MissingPlayer.into()),
     };
 
-    let translation = instance
-      .translation
-      .map_or(Vector3::new(0.0, 0.0, 0.0), |(x, y, z)| {
-        Vector3::new(x as f32, y as f32, z as f32)
-      });
-
     let invalid = || Error::InvalidTransform(instance.model.clone());
 
-    // Checked after narrowing, since a huge f64 becomes an f32 infinity
-    if !translation.is_finite() {
-      return Err(invalid().into());
-    }
+    let translation = match instance.translation {
+      Some((x, y, z)) => Vector3::new(
+        narrow(x).ok_or_else(invalid)?,
+        narrow(y).ok_or_else(invalid)?,
+        narrow(z).ok_or_else(invalid)?,
+      ),
+      None => Vector3::new(0.0, 0.0, 0.0),
+    };
 
     let model = library.model(renderer, &instance.model)?;
 

@@ -6,19 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { queryAngle } from "./skin-render.dto.js";
 import { z } from "zod";
 
 const MIN_SIZE = 64;
 const MAX_SIZE = 1024;
-
-// An empty value keeps the default angle, where z.coerce.number() would read "" as 0.
-// The default sits on the number because the OpenAPI schema drops one set on the transform
-const angle = (limit: number, fallback: number) =>
-  z
-    .literal("")
-    .transform(() => undefined)
-    .or(z.coerce.number().min(-limit).max(limit).meta({ default: fallback }))
-    .optional();
 
 const size = (fallback: number) => z.coerce.number().int().min(MIN_SIZE).max(MAX_SIZE).optional().meta({ default: fallback });
 
@@ -27,8 +19,8 @@ export const sceneCamera = (
   descriptions: { yaw?: string; pitch?: string; height?: string } = {}
 ) =>
   z.object({
-    yaw: angle(Math.PI * 2, camera.yaw).describe(descriptions.yaw ?? "Camera angle around the scene in radians: 0 faces the front, π the back"),
-    pitch: angle(Math.PI / 2, camera.pitch).describe(descriptions.pitch ?? "Camera angle above the horizon in radians"),
+    yaw: queryAngle(Math.PI * 2, camera.yaw).describe(descriptions.yaw ?? "Camera angle around the scene in radians: 0 faces the front, π the back"),
+    pitch: queryAngle(Math.PI / 2, camera.pitch).describe(descriptions.pitch ?? "Camera angle above the horizon in radians"),
     width: size(camera.width),
     height: size(camera.height).meta({ description: descriptions.height }),
   });

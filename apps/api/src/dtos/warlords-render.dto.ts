@@ -8,6 +8,7 @@
 
 import { UuidDto } from "./uuid.dto.js";
 import { createZodDto } from "nestjs-zod";
+import { queryBoolean } from "./skin-render.dto.js";
 import { sceneCamera } from "./scene-camera.dto.js";
 import { z } from "zod";
 
@@ -37,11 +38,6 @@ export class WarlordsRenderDto extends createZodDto(
       .string()
       .optional()
       .describe("The player's stored selected_mount, such as noble_steed, which the player rides. Without a uuid, the mount is drawn alone"),
-    extruded: z
-      .enum(["true", "false"])
-      .meta({ default: "false" })
-      .transform((value) => value === "true")
-      .optional()
-      .describe("Draw the skin's outer layer in 3D"),
+    extruded: queryBoolean("false").optional().describe("Draw the skin's outer layer in 3D"),
   })
 ) {}

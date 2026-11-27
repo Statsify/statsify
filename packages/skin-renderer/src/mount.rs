@@ -4,12 +4,12 @@ use cgmath::{EuclideanSpace, Matrix4, Point3, Rad, Transform as _, Vector3};
 use image::{imageops, DynamicImage, RgbaImage};
 use napi::bindgen_prelude::Uint8Array;
 use napi_derive::napi;
-use statsify_minecraft_models::ALPHA_CUTOFF;
+use statsify_minecraft_models::{ALPHA_CUTOFF, UNITS_PER_BLOCK};
 use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
 use statsify_render_core::renderer::{Backend, DrawItem, Pipeline, Renderer};
 
-use crate::attachment::{FEET, MODEL_HEIGHT, PIXELS_PER_BLOCK, PLAYER_SCALE};
+use crate::attachment::{FEET, MODEL_HEIGHT, PLAYER_SCALE};
 use crate::error::{Error, Result};
 use crate::geometry::{axis_angle, BoxGeometry, Geometry, Rotation, TextureRegion};
 
@@ -217,7 +217,7 @@ impl MountEntity {
 fn placement(scale: f32) -> Matrix4<f32> {
   // The game seats every rider at a horse's height, above a smaller mount's saddle, so a smaller
   // mount stands higher to meet it
-  let seat = SEAT * PIXELS_PER_BLOCK - (1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
+  let seat = SEAT * UNITS_PER_BLOCK - (1.0 - scale) * (MODEL_HEIGHT - SADDLE_TOP);
   let feet = FEET.y - seat / PLAYER_SCALE;
   let size = scale / PLAYER_SCALE;
 

@@ -13,6 +13,7 @@ use crate::geometry::{
 use crate::pose::{Held, PartPose, Pose};
 use crate::skin_loader::{
   load_cape_from_memory, load_skin_from_memory, load_skull_from_memory, load_texture_from_memory,
+  CAPE_SIZE,
 };
 
 pub enum ModelKind {
@@ -555,7 +556,7 @@ impl Model {
       dimensions,
       texture_region: TextureRegion {
         location: (0, 0),
-        texture_size: (64, 32),
+        texture_size: CAPE_SIZE,
         mirror: false,
       },
       rotation: Some(Rotation {

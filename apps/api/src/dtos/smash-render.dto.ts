@@ -8,6 +8,7 @@
 
 import { WARLORDS_CAMERA } from "./warlords-render.dto.js";
 import { createZodDto } from "nestjs-zod";
+import { queryBoolean } from "./skin-render.dto.js";
 import { sceneCamera } from "./scene-camera.dto.js";
 import { z } from "zod";
 
@@ -16,11 +17,6 @@ export const SMASH_CAMERA = WARLORDS_CAMERA.player;
 export class SmashRenderDto extends createZodDto(
   sceneCamera(SMASH_CAMERA).extend({
     hero: z.string().describe("The player's stored active_class, such as GENERAL_CLUCK"),
-    master: z
-      .enum(["true", "false"])
-      .meta({ default: "false" })
-      .transform((value) => value === "true")
-      .optional()
-      .describe("Draw the hero's Master Skin, the player's stored masterArmor_<hero>"),
+    master: queryBoolean("false").optional().describe("Draw the hero's Master Skin, the player's stored masterArmor_<hero>"),
   })
 ) {}

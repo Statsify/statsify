@@ -1,12 +1,10 @@
 use cgmath::{Deg, Matrix4, SquareMatrix, Vector3};
 use napi_derive::napi;
-use statsify_minecraft_models::{Display, Transform};
+use statsify_minecraft_models::{Display, Transform, UNITS_PER_BLOCK};
 
 use crate::geometry::axis_angle;
 use crate::model::{ModelKind, Part};
 use crate::pose::{Held, Pose};
-
-pub(crate) const PIXELS_PER_BLOCK: f32 = 16.0;
 
 // Where the game draws a held item from: below the shoulder joint, at the hand. 1.8 starts a pixel
 // out from its arm pivot, at the middle of a classic arm, where this renderer's joint is.
@@ -25,7 +23,7 @@ const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
 pub(crate) const PLAYER_SCALE: f32 = 0.9375;
 
 // The game draws an entity's model origin 1.5078125 blocks above its feet, times its scale
-pub(crate) const MODEL_HEIGHT: f32 = 1.5078125 * PIXELS_PER_BLOCK;
+pub(crate) const MODEL_HEIGHT: f32 = 1.5078125 * UNITS_PER_BLOCK;
 
 // The player's feet, below its model origin at this renderer's neck
 pub(crate) const FEET: Vector3<f32> = Vector3::new(0.0, 7.0 - MODEL_HEIGHT, 0.0);
@@ -123,7 +121,7 @@ pub fn root_transform(display: Option<DisplayContext>) -> Matrix4<f32> {
 // y down and z back, so each chain is turned into this renderer's axes.
 pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matrix4<f32> {
   let Some(context) = display else {
-    return Matrix4::from_scale(PIXELS_PER_BLOCK);
+    return Matrix4::from_scale(UNITS_PER_BLOCK);
   };
 
   // The item renderer doubles every worn or held item, applies its display entry, then
@@ -139,12 +137,12 @@ pub fn item_transform(display: Option<DisplayContext>, model: &Display) -> Matri
     DisplayContext::Head => {
       Matrix4::from_translation(Vector3::new(0.0, 4.0, 0.0))
         * Matrix4::from(axis_angle(Vector3::unit_y(), Deg(180.0)))
-        * Matrix4::from_scale(0.625 * PIXELS_PER_BLOCK)
+        * Matrix4::from_scale(0.625 * UNITS_PER_BLOCK)
         * worn
     }
     DisplayContext::Thirdperson => {
       Matrix4::from(axis_angle(Vector3::unit_x(), Deg(180.0)))
-        * Matrix4::from_scale(PIXELS_PER_BLOCK)
+        * Matrix4::from_scale(UNITS_PER_BLOCK)
         * worn
     }
   }

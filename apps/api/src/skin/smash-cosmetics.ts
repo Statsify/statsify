@@ -7,6 +7,7 @@
  */
 
 import type { ArmorPieceDto } from "#dtos";
+import type { SmashHeroesClass } from "@statsify/schemas";
 import { lookup } from "./kart-cosmetics.js";
 
 export interface SmashHero {
@@ -214,7 +215,7 @@ export const SMASH_HEROES = {
       boots: leather(0xFF_44_36),
     },
   },
-} as const satisfies Record<string, SmashHero>;
+} as const satisfies Record<keyof typeof SmashHeroesClass, SmashHero>;
 
 export function getSmashHero(hero: string, master: boolean): Omit<SmashHero, "master"> {
   const { master: masterSkin, ...base }: SmashHero = lookup(SMASH_HEROES, hero, `Unknown hero ${hero}`);
