@@ -46,6 +46,7 @@ const READS: { [K in SectionKey]: MemberKeys } = {
   accessories: { accessory_bag_storage: true, inventory: true, nether_island_player_data: true, rift: true },
   dungeons: { dungeons: true },
   hotm: { mining_core: true, skill_tree: true },
+  level: { accessory_bag_storage: true, inventory: true, leveling: true, nether_island_player_data: true, pets_data: true, rift: true },
   pets: { pets_data: true },
   skills: { jacobs_contest: true, pets_data: true, player_data: true, profile: true },
   slayers: { slayer: true },
