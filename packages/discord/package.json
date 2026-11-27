@@ -27,7 +27,8 @@
     "i18next-fs-backend": "^2.3.2",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "4.0.0",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "undici": "^6.29.1"
   },
   "devDependencies": {
     "@types/i18next-fs-backend": "^1.1.5"

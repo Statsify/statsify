@@ -8,11 +8,11 @@
 
 import * as Sentry from "@sentry/node";
 import { API } from "@discordjs/core/http-only";
-import { Agent } from "undici";
 import { CommandListener } from "#lib";
 import {
   CommandPoster,
   I18nLoaderService,
+  createDiscordApi,
   loadCommands,
   loadEvents,
 } from "@statsify/discord";
@@ -25,7 +25,6 @@ import {
 } from "#services";
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
-import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -55,9 +54,7 @@ if (sentryDsn) {
 }
 
 const token = await config("supportBot.token");
-// Below Discord's idle close, since a request sent on a socket it closed isn't retried
-const rest = new REST({ agent: new Agent({ keepAliveTimeout: 30_000 }) });
-const api = new API(rest.setToken(token));
+const api = createDiscordApi(token);
 Container.set(API, api);
 
 await Promise.all(

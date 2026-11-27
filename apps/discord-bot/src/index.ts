@@ -8,19 +8,18 @@
 
 import * as Sentry from "@sentry/node";
 import { API } from "@discordjs/core/http-only";
-import { Agent } from "undici";
 import { CommandListener } from "#lib/command.listener";
 import {
   CommandPoster,
   I18nLoaderService,
   InteractionServer,
+  createDiscordApi,
   loadCommands,
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
-import { REST } from "@discordjs/rest";
 import { WebSocketManager } from "@discordjs/ws";
 import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
@@ -51,13 +50,7 @@ await Promise.all(
 );
 
 const token = await config("discordBot.token");
-const rest = new REST({
-  timeout: 60 * 1000,
-  // Below Discord's idle close, since a request sent on a socket it closed isn't retried
-  agent: new Agent({ keepAliveTimeout: 30_000 }),
-});
-
-const api = new API(rest.setToken(token));
+const api = createDiscordApi(token, { timeout: 60 * 1000 });
 Container.set(API, api);
 
 const commands = await loadCommands(join(directory, "./commands"));

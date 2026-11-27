@@ -314,9 +314,6 @@ importers:
       '@discordjs/core':
         specifier: ^2.7.0
         version: 2.7.0
-      '@discordjs/rest':
-        specifier: ^2.6.3
-        version: 2.6.3
       '@discordjs/ws':
         specifier: ^2.0.4
         version: 2.0.4
@@ -377,9 +374,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-      undici:
-        specifier: ^6.29.1
-        version: 6.29.1
     devDependencies:
       '@types/luxon':
         specifier: ^3.4.2
@@ -512,9 +506,6 @@ importers:
       '@discordjs/core':
         specifier: ^2.7.0
         version: 2.7.0
-      '@discordjs/rest':
-        specifier: ^2.6.3
-        version: 2.6.3
       '@discordjs/ws':
         specifier: ^2.0.4
         version: 2.0.4
@@ -572,9 +563,6 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
-      undici:
-        specifier: ^6.29.1
-        version: 6.29.1
     devDependencies:
       '@types/luxon':
         specifier: ^3.4.2
@@ -708,6 +696,9 @@ importers:
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
+      undici:
+        specifier: ^6.29.1
+        version: 6.29.1
     devDependencies:
       '@types/i18next-fs-backend':
         specifier: ^1.1.5
