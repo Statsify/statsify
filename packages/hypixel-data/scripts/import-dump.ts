@@ -23,17 +23,16 @@ import {
   leatherColor,
   skinUrl,
 } from "@statsify/hypixel-data";
-import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
+import {
+  type ItemStack,
+  fetchMinecraftData,
+  legacyItem,
+  legacyMaterialId,
+  namespaced,
+  withoutNamespace,
+} from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
-
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
 
 // Each single-kit editor's mode, as its layout_<mode>_layout key names it, and its tokens
 // without copy numbers (wood_1 is wood) by the slot the editor shows the default layout in
@@ -137,29 +136,33 @@ interface Screen {
 
 type Tokens = Record<string, ItemStack>;
 
-const paths = process.argv.slice(2);
-if (paths.length === 0) throw new Error("Pass the paths to StatsifyDump exports");
-
-const dumps = await Promise.all(
-  paths.map(async (path) => JSON.parse(await readFile(path, "utf8")) as { items: DumpItem[]; screens?: Screen[] }),
-);
-const items = dumps.flatMap((dump) => dump.items);
-const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
-
 interface LegacyName {
   id: number;
   displayName: string;
   variations?: { metadata: number; displayName: string }[];
 }
 
-const legacyItems = await fetchJson<(LegacyName & { name: string })[]>("1.8/items.json");
+const paths = process.argv.slice(2);
+if (paths.length === 0) throw new Error("Pass the paths to StatsifyDump exports");
+
+const [dumps, legacyItems, legacyBlocks, legacyEnchantments] = await Promise.all([
+  Promise.all(
+    paths.map(async (path) => JSON.parse(await readFile(path, "utf8")) as { items: DumpItem[]; screens?: Screen[] }),
+  ),
+  fetchMinecraftData<(LegacyName & { name: string })[]>("1.8/items.json"),
+  fetchMinecraftData<LegacyName[]>("1.8/blocks.json"),
+  fetchMinecraftData<{ id: number; displayName: string }[]>("1.8/enchantments.json"),
+]);
+const items = dumps.flatMap((dump) => dump.items);
+const screens = dumps.flatMap((dump) => dump.screens ?? []).toSorted((a, b) => a.capturedAt.localeCompare(b.capturedAt));
+
 const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
 // 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
 // gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
 const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
-for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchJson<LegacyName[]>("1.8/blocks.json"))]) {
+for (const { id, displayName, variations = [] } of [...legacyItems, ...legacyBlocks]) {
   for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
     const known = legacyNames.get(name);
     const same = !legacyNames.has(name) || (known?.id === id && known.damage === damage);
@@ -202,7 +205,7 @@ function editor(title: string) {
 }
 
 function legacyId({ id }: DumpItem) {
-  const numeric = legacyIds.get(id.replace("minecraft:", ""));
+  const numeric = legacyIds.get(withoutNamespace(id));
   if (numeric === undefined) throw new Error(`No 1.8 id for ${id}`);
   return numeric;
 }
@@ -331,7 +334,7 @@ function pickerArmor(lore: string[], kit: string) {
     if (!match) continue;
     const material = match[1] === "Gold" ? "golden" : match[1].toLowerCase();
     const piece = match[2].toLowerCase() as keyof typeof ARMOR;
-    armor[ARMOR[piece]] = { id: `minecraft:${material}_${piece}`, color: leatherColor(text), enchanted };
+    armor[ARMOR[piece]] = { id: namespaced(`${material}_${piece}`), color: leatherColor(text), enchanted };
   }
 
   return Object.keys(armor).length > 0 ? armor : undefined;
@@ -426,9 +429,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   output.kits[mode] = kits;
 }
 
-const enchantmentIds = new Map(
-  (await fetchJson<{ id: number; displayName: string }[]>("1.8/enchantments.json")).map(({ id, displayName }) => [displayName, id]),
-);
+const enchantmentIds = new Map(legacyEnchantments.map(({ id, displayName }) => [displayName, id]));
 
 const POTION = 373;
 const SPLASH = 0x40_00;
@@ -779,8 +780,11 @@ function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
 
   for (const line of dumped.lore) {
     const text = plain(line).trim();
-    dropping = MENU_STATUS.test(text) || (dropping && /^\s/.test(plain(line)) && text !== "");
-    if (dropping || (blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!)))) continue;
+    const continuesStatus: boolean = dropping && /^\s/.test(plain(line)) && text !== "";
+    dropping = MENU_STATUS.test(text) || continuesStatus;
+
+    const extraBlank = blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!));
+    if (dropping || extraBlank) continue;
     tooltip.push(line);
   }
   while (tooltip.length > 0 && blank(tooltip.at(-1)!)) tooltip.pop();
@@ -971,14 +975,16 @@ async function writeData(file: string, found: boolean, value: unknown) {
   if (found) await writeFile(new URL(`../data/${file}`, import.meta.url), `${JSON.stringify(value, null, 2)}\n`);
 }
 
-await writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output);
-await writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames);
-await writeData("legacy-kits.json", count(legacyKits) > 0, { ...legacyKits, blitzArmor });
-await writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits);
-await writeData("quake.json", count(quake) > 0, quake);
-await writeData("arena.json", count(arena) > 0, arena);
-await writeData("turbo-kart-racers.json", count(kart) > 0, kart);
-await writeData("speed-uhc.json", count(speedUhc) > 0, speedUhc);
+await Promise.all([
+  writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output),
+  writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames),
+  writeData("legacy-kits.json", count(legacyKits) > 0, { ...legacyKits, blitzArmor }),
+  writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits),
+  writeData("quake.json", count(quake) > 0, quake),
+  writeData("arena.json", count(arena) > 0, arena),
+  writeData("turbo-kart-racers.json", count(kart) > 0, kart),
+  writeData("speed-uhc.json", count(speedUhc) > 0, speedUhc),
+]);
 
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)

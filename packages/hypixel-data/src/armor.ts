@@ -8,6 +8,7 @@
 
 import { ARMOR } from "./kits.js";
 import type { ItemStack } from "@statsify/textures";
+import { SKIN_HOST } from "./hypixel.js";
 
 type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
@@ -38,7 +39,7 @@ const SKULLS: Record<string, Skull | undefined> = {
 };
 
 const PIECE = /^minecraft:(\w+?)_(helmet|chestplate|leggings|boots)$/;
-const SKIN_HASH = /^https:\/\/textures\.minecraft\.net\/texture\/([\da-f]+)$/;
+const SKIN_HASH = new RegExp(`^https://${SKIN_HOST.replaceAll(".", "\\.")}/texture/([\\da-f]+)$`);
 
 /**
  * The armor among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the

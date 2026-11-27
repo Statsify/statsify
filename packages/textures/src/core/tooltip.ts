@@ -8,7 +8,7 @@
 
 import type { TextComponent, TextRenderer } from "./text.js";
 import type { ItemStack } from "./item-stack.js";
-import type { PackStack } from "./pack.js";
+import { type PackStack, withoutNamespace } from "./pack.js";
 import { context, createCanvas } from "./canvas.js";
 import { legacyName } from "./legacy-items.js";
 
@@ -35,7 +35,7 @@ function plainName(item: ItemStack, names: Record<string, string>) {
   // 1.8 makes only common items aqua when enchanted
   if (legacy) return item.enchanted && legacy.startsWith("§f") ? `§b${legacy.slice(2)}` : legacy;
 
-  const path = item.id.replace(/^minecraft:/, "");
+  const path = withoutNamespace(item.id);
   const name = names[`item.minecraft.${path}`] ?? names[`block.minecraft.${path}`];
   if (name === undefined) throw new Error(`The pack has no English name for ${item.id}`);
   return `${item.enchanted ? "§b" : ""}${name}`;
