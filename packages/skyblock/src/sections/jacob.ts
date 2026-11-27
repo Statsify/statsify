@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemsResource, JACOB_BRACKETS, type JacobSection } from "#types";
-import { prettify } from "@statsify/util";
-import { resourceTexture } from "#textures";
+import { type ItemsResource, JACOB_BRACKETS, JACOB_MEDALS, type JacobSection } from "#types";
+import { resourceItem } from "#textures";
 import type { RawMember } from "#raw";
 
 /** null before the member's first contest. The crops are the ones with a bracket or a personal best. */
@@ -23,19 +22,15 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
   if (!jacob || (contests === 0 && crops.size === 0)) return null;
 
   return {
-    medals: { bronze: jacob.medals_inv?.bronze ?? 0, silver: jacob.medals_inv?.silver ?? 0, gold: jacob.medals_inv?.gold ?? 0 },
+    medals: Object.fromEntries(JACOB_MEDALS.map((medal) => [medal, jacob.medals_inv?.[medal] ?? 0])) as JacobSection["medals"],
     contests,
     crops: [...crops]
-      .map((id) => {
-        const item = items?.items[id];
-        return {
-          id,
-          name: item?.name ?? prettify(id),
-          texture: item && resourceTexture(item),
-          bracket: JACOB_BRACKETS.findLast((bracket) => brackets[bracket]?.includes(id)),
-          personalBest: bests[id],
-        };
-      })
+      .map((id) => ({
+        id,
+        ...resourceItem(items, id),
+        bracket: JACOB_BRACKETS.findLast((bracket) => brackets[bracket]?.includes(id)),
+        personalBest: bests[id],
+      }))
       .toSorted((a, b) => a.name.localeCompare(b.name)),
     perks: {
       // double_drops counts Anita's Extra Farming Fortune tiers, 4 each (the wiki's Anita page)
