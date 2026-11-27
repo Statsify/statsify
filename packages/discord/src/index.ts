@@ -15,4 +15,5 @@ export * from "./messages/index.js";
 export * from "./services/index.js";
 export * from "./util/discord-api.js";
 export * from "./util/error.message.js";
+export * from "./util/links.js";
 export * from "./event/index.js";

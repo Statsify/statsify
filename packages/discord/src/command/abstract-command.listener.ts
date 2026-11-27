@@ -15,6 +15,7 @@ import {
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
+import { STATSIFY_LINKS } from "#util/links";
 import {
   ButtonBuilder,
   type IMessage,
@@ -233,7 +234,7 @@ export abstract class AbstractCommandListener {
               .label((t) => t("errors.premiumRequired.button"))
               .emoji((t) => t(`emojis:logos.${tierName}`))
               .style(ButtonStyle.Link)
-              .url("https://statsify.net/premium"),
+              .url(STATSIFY_LINKS.premium),
           ] :
           [];
 
