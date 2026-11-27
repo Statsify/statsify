@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemsResource, JACOB_BRACKETS, type JacobSection } from "#types";
+import { type ItemsResource, JACOB_BRACKETS, JACOB_MEDALS, type JacobSection } from "#types";
 import { resourceItem } from "#textures";
 import type { RawMember } from "#raw";
 
@@ -22,7 +22,7 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
   if (!jacob || (contests === 0 && crops.size === 0)) return null;
 
   return {
-    medals: { bronze: jacob.medals_inv?.bronze ?? 0, silver: jacob.medals_inv?.silver ?? 0, gold: jacob.medals_inv?.gold ?? 0 },
+    medals: Object.fromEntries(JACOB_MEDALS.map((medal) => [medal, jacob.medals_inv?.[medal] ?? 0])) as JacobSection["medals"],
     contests,
     crops: [...crops]
       .map((id) => ({

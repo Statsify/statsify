@@ -20,17 +20,15 @@ import {
   parseItemsResource,
   toPriceView,
 } from "@statsify/skyblock";
-import { HttpService } from "@nestjs/axios";
+import { HypixelService, SKYBLOCK_TIMEOUT } from "#hypixel";
 import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
-import { SKYBLOCK_TIMEOUT } from "#hypixel";
 import { SkyBlockNotFoundException, SkyBlockUnavailableException } from "@statsify/api-client";
 import { Singleflight } from "./singleflight.js";
 import { Worker } from "node:worker_threads";
 import { arrayGroup, config } from "@statsify/util";
-import { lastValueFrom } from "rxjs";
 import { unzip, zip } from "./zip.js";
 import type { RebuildRequest, RebuildResult } from "./skyblock-prices.worker.js";
 
@@ -66,7 +64,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   private worker?: Worker;
 
   public constructor(
-    private readonly httpService: HttpService,
+    private readonly hypixelService: HypixelService,
     @InjectRedis() private readonly redis: Redis
   ) {}
 
@@ -89,13 +87,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   private getBazaar(): Promise<Bazaar | undefined> {
     return this.getCopy(BAZAAR_KEY, BAZAAR_REFRESH, async () =>
-      parseBazaar(RawBazaar.parse(await this.get("/v2/skyblock/bazaar")))
+      parseBazaar(RawBazaar.parse(await this.hypixelService.getSkyBlockKeyless("/v2/skyblock/bazaar")))
     );
   }
 
   public async getItems(): Promise<ItemsResource | undefined> {
     const raw = await this.getCopy(ITEMS_KEY, ITEMS_REFRESH, async () => {
-      const resource = await this.get<RawItemsResource>("/v2/resources/skyblock/items");
+      const resource = await this.hypixelService.getSkyBlockKeyless<RawItemsResource>("/v2/resources/skyblock/items");
       RawItemsResource.parse(resource);
       return resource;
     });
@@ -116,24 +114,16 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async searchItems(query: string): Promise<ItemMatch[]> {
-    try {
-      const reply = (await this.redis.call(
-        "FT.SUGGET",
-        AUTOCOMPLETE_KEY,
-        query,
-        "FUZZY",
-        "MAX",
-        String(MAX_MATCHES),
-        "WITHPAYLOADS"
-      )) as string[] | null;
+    const reply = (await this.redis
+      .call("FT.SUGGET", AUTOCOMPLETE_KEY, query, "FUZZY", "MAX", String(MAX_MATCHES), "WITHPAYLOADS")
+      .catch((error) => {
+        this.logger.error(error);
+        throw new SkyBlockUnavailableException("market");
+      })) as string[] | null;
 
-      return arrayGroup(reply ?? [], 2)
-        .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
-        .slice(0, MAX_MATCHES);
-    } catch (error) {
-      this.logger.error(error);
-      throw new SkyBlockUnavailableException("market");
-    }
+    return arrayGroup(reply ?? [], 2)
+      .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
+      .slice(0, MAX_MATCHES);
   }
 
   private async rebuild() {
@@ -236,9 +226,5 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       this.logger.error(error);
       return undefined;
     }
-  }
-
-  private get<T>(url: string) {
-    return lastValueFrom(this.httpService.get<T>(url)).then((response) => response.data);
   }
 }
