@@ -8,7 +8,7 @@
 
 import { PETS, PET_ITEMS, PET_STATS, PET_TEXTURES } from "#data";
 import { RARITY_COLORS } from "../display.js";
-import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type PlayerStat, type Rarity } from "#types";
+import { PET_SKIN_PREFIX, RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type PlayerStat, type Rarity } from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
@@ -46,7 +46,7 @@ export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
 
 /** The items resource covers skins newer than the NEU pin; a type falls back to its nearest rarity's head. */
 export function petTexture(type: string, rarity: Rarity, skin?: string | null, items?: ItemsResource): ItemTexture {
-  const skinned = skin && (PET_TEXTURES.skins[skin] ?? items?.items[`PET_SKIN_${skin}`]?.skin);
+  const skinned = skin && (PET_TEXTURES.skins[skin] ?? items?.items[`${PET_SKIN_PREFIX}${skin}`]?.skin);
   if (skinned) return { kind: "head", skin: skinned };
 
   const textures = PET_TEXTURES.pets[type] ?? {};
@@ -59,7 +59,7 @@ export function petTexture(type: string, rarity: Rarity, skin?: string | null, i
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
   const heldResource = pet.heldItem ? items?.items[pet.heldItem] : undefined;
-  const skinTier = pet.skin ? items?.items[`PET_SKIN_${pet.skin}`]?.tier : undefined;
+  const skinTier = pet.skin ? items?.items[`${PET_SKIN_PREFIX}${pet.skin}`]?.tier : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,

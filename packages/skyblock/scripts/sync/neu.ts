@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { KUUDRA_TIERS, type PlayerStat, type PowerStat, RARITIES, type StatValue } from "#types";
+import { KUUDRA_TIERS, PET_SKIN_PREFIX, type PlayerStat, type PowerStat, RARITIES, type StatValue } from "#types";
 import { normalizeItemText, statNamed, statRewards } from "#lore";
 import { add, roundTo } from "@statsify/math";
 import { prettify, removeFormatting } from "@statsify/util";
@@ -425,10 +425,10 @@ export const NEU_UNITS = {
       if (trophy && trophyFish.has(trophy[1])) trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(/ BRONZE$/, "");
 
       // A skin's name takes its rarity's color, Ultimate (§4) included, and so does the ✦ after a pet that wears it
-      const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
-      if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
+      const skin = item.internalname.startsWith(PET_SKIN_PREFIX) && skullHash(item.nbttag);
+      if (skin) skinTextures[item.internalname.slice(PET_SKIN_PREFIX.length)] = skin;
       const skinColor = skin && /^§./.exec(item.displayname)?.[0];
-      if (skinColor) skinColors[item.internalname.slice("PET_SKIN_".length)] = skinColor;
+      if (skinColor) skinColors[item.internalname.slice(PET_SKIN_PREFIX.length)] = skinColor;
 
       // "§a§lUNCOMMON PET ITEM"
       const petItem = removeFormatting(item.lore?.at(-1) ?? "").endsWith("PET ITEM") && petItemEffect(item.lore ?? []);

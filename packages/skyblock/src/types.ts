@@ -866,6 +866,8 @@ export interface Consumable {
   max: number;
 }
 
+export const PET_SKIN_PREFIX = "PET_SKIN_";
+
 export interface PetsSection {
   score: number;
   active?: PetView;
