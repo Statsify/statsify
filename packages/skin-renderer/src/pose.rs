@@ -1,8 +1,8 @@
-use cgmath::{Deg, Quaternion, Rotation3, Vector3, Zero};
+use cgmath::{Deg, Vector3, Zero};
 #[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
-use crate::geometry::{Geometry, Rotation};
+use crate::geometry::{axis_angle, Geometry, Rotation};
 use crate::model::Part;
 
 const SNEAK_DROP: f32 = 3.2;
@@ -89,7 +89,7 @@ impl Pose {
     match self {
       Pose::Sneak => geometry.translate(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
       Pose::Swim | Pose::Fly => geometry.rotate_around(Rotation {
-        quaternion: Quaternion::from_angle_x(Deg(90.0)),
+        quaternion: axis_angle(Vector3::unit_x(), Deg(90.0)),
         pivot: Vector3::zero(),
       }),
       Pose::Standing | Pose::Punch | Pose::Jump => {}

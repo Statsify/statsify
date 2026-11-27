@@ -1,16 +1,17 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Rotation3, Vector3};
+use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Vector3};
 use image::DynamicImage;
 
 use crate::armor::Armor;
 use crate::error::Result;
 use crate::geometry::coordinate::Coordinate;
-use crate::geometry::{BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion};
+use crate::geometry::{
+  axis_angle, BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion,
+};
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
 use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory};
-use crate::texture::Texture;
 
 pub enum ModelKind {
   Classic,
@@ -46,7 +47,6 @@ struct Placement {
   position: Vector3<f32>,
   dimensions: Vector3<f32>,
   rotation: Option<CenterRotation>,
-  posed: bool,
 }
 
 impl Placement {
@@ -121,14 +121,14 @@ impl Part {
     let quaternion = match part_pose {
       // Even a turn by nothing would round the body's vertices and shift every render
       None if self == Part::Body => None,
-      None => Some(Quaternion::from_angle_z(Deg(rest_angle))),
+      None => Some(axis_angle(Vector3::unit_z(), Deg(rest_angle))),
       Some(PartPose { rotation, offset }) => {
         position += offset;
 
         Some(
-          Quaternion::from_angle_z(Deg(rest_angle + rotation.z))
-            * Quaternion::from_angle_y(Deg(rotation.y))
-            * Quaternion::from_angle_x(Deg(rotation.x)),
+          axis_angle(Vector3::unit_z(), Deg(rest_angle + rotation.z))
+            * axis_angle(Vector3::unit_y(), Deg(rotation.y))
+            * axis_angle(Vector3::unit_x(), Deg(rotation.x)),
         )
       }
     };
@@ -140,7 +140,6 @@ impl Part {
         quaternion,
         pivot_delta: Vector3::unit_y() * pivot_height,
       }),
-      posed: part_pose.is_some(),
     }
   }
 
@@ -244,18 +243,11 @@ impl<'a> BodyPart<'a> {
           extrude: false,
         }
         .create();
-
-        // In Minecraft the outer layer is scaled up 12.5%. Unposed parts keep scale_around, so
-        // standing renders stay the same.
-        match rotation {
-          Some(rotation) if self.placement.posed => {
-            let turned_center =
-              rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot;
-            layer.grow_around(1.125, turned_center);
-          }
-          _ => layer.scale_around(1.125, position),
-        }
-
+        // In Minecraft the outer layer is scaled up 12.5%
+        let center = rotation.map_or(position, |rotation| {
+          rotation.quaternion.rotate_vector(position - rotation.pivot) + rotation.pivot
+        });
+        layer.scale_around(1.125, center);
         layer
       }
     };
@@ -308,6 +300,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     image: DynamicImage,
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
@@ -344,8 +337,7 @@ impl Model {
       .map(|geometry| mesh_with_points(device, geometry, &mut points))
       .collect();
 
-    let texture = Texture::from_image(device, queue, &image)?;
-    let material = Material::new(device, texture, layout);
+    let material = Material::new(device, queue, layout, sampler, &image)?;
 
     let mut model = Self {
       material,
@@ -357,7 +349,7 @@ impl Model {
       points,
     };
 
-    model.attach_armor(device, queue, layout, armor)?;
+    model.attach_armor(device, queue, layout, sampler, armor)?;
     Ok(model)
   }
 
@@ -382,6 +374,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     armor: &Armor,
   ) -> Result<()> {
     for (piece, layer, parts) in armor.pieces() {
@@ -431,7 +424,7 @@ impl Model {
           .create();
 
           if skull {
-            box_geometry.grow_around(1.1875, neck);
+            box_geometry.scale_around(1.1875, neck);
           } else {
             box_geometry.scale_around(part.z_fighting_scale(), position);
           }
@@ -440,7 +433,8 @@ impl Model {
         }
       }
 
-      self.attach(device, queue, layout, &texture, geometry, piece.enchanted)?;
+      let material = Material::new(device, queue, layout, sampler, &texture)?;
+      self.attach(device, material, geometry, piece.enchanted);
     }
 
     Ok(())
@@ -451,22 +445,10 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     glint: &DynamicImage,
   ) -> Result<()> {
-    let texture = Texture::from_image_with_sampler(
-      device,
-      queue,
-      glint,
-      &wgpu::SamplerDescriptor {
-        address_mode_u: wgpu::AddressMode::Repeat,
-        address_mode_v: wgpu::AddressMode::Repeat,
-        mag_filter: wgpu::FilterMode::Linear,
-        min_filter: wgpu::FilterMode::Linear,
-        ..Default::default()
-      },
-    )?;
-
-    self.glint = Some(Material::new(device, texture, layout));
+    self.glint = Some(Material::new(device, queue, layout, sampler, glint)?);
     Ok(())
   }
 
@@ -479,6 +461,7 @@ impl Model {
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
+    sampler: &wgpu::Sampler,
     cape: &DynamicImage,
     chestplate: bool,
   ) -> Result<()> {
@@ -504,7 +487,7 @@ impl Model {
         mirror: false,
       },
       rotation: Some(Rotation {
-        quaternion: Quaternion::from_angle_y(Deg(180.0)),
+        quaternion: axis_angle(Vector3::unit_y(), Deg(180.0)),
         pivot: position,
       }),
       inflation: 0.0,
@@ -515,39 +498,35 @@ impl Model {
 
     geometry.rotate_around(Rotation {
       // A standing player's cape swings 6 degrees out from the back
-      quaternion: Quaternion::from_angle_x(Deg(6.0 + rotation.x)),
+      quaternion: axis_angle(Vector3::unit_x(), Deg(6.0 + rotation.x)),
       pivot: Vector3::new(0.0, top, back),
     });
     geometry.translate(offset);
 
-    self.attach(device, queue, layout, cape, geometry, false)
+    let material = Material::new(device, queue, layout, sampler, cape)?;
+    self.attach(device, material, geometry, false);
+    Ok(())
   }
 
   fn attach(
     &mut self,
     device: &wgpu::Device,
-    queue: &wgpu::Queue,
-    layout: &wgpu::BindGroupLayout,
-    texture: &DynamicImage,
+    material: Material,
     mut geometry: Geometry,
     enchanted: bool,
-  ) -> Result<()> {
+  ) {
     self.pose.place(&mut geometry);
 
-    let texture = Texture::from_image(device, queue, texture)?;
-
     self.attachments.push(Attachment {
-      material: Material::new(device, texture, layout),
+      material,
       mesh: mesh_with_points(device, geometry, &mut self.points),
       enchanted,
     });
-
-    Ok(())
   }
 
   pub fn to_raw() -> InstanceRaw {
     let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = Quaternion::from_axis_angle(Vector3::unit_y(), Deg(0.0));
+    let rotation = axis_angle(Vector3::unit_y(), Deg(0.0));
 
     InstanceRaw {
       model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),

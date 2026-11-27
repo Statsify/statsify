@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import type { RenderOptions } from "@statsify/skin-renderer";
-import { IsBoolean, IsEmpty, IsIn, IsInt, IsNumber, IsObject, IsOptional, Matches, Max, Min, ValidateIf, ValidateNested } from "class-validator";
-import { Transform, Type, plainToInstance } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 const POSES = ["standing", "punch", "sneak", "jump", "swim", "fly"] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
 
@@ -18,113 +17,63 @@ const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as c
 
 export const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const;
 
-// IsOptional also lets null through, which the renderer rejects with a 500
-const isSet = (_: unknown, value: unknown) => value !== undefined;
-
-export class ArmorPieceDto {
-  @IsIn(ARMOR_MATERIALS)
-  public material: (typeof ARMOR_MATERIALS)[number];
-
-  @ValidateIf(isSet)
-  @IsInt()
-  @Min(0)
-  @Max(0xFF_FF_FF)
-  public color?: number;
-
-  @ValidateIf(isSet)
-  @IsBoolean()
-  public enchanted?: boolean;
-}
-
-// Older textures have hashes with fewer than 64 digits
+// The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
 const TEXTURE_HASH = /^[\da-f]{1,64}$/;
 
-class PlayerHeadDto {
-  @Matches(TEXTURE_HASH)
-  public head: string;
+const armorPiece = z.object({
+  material: z.enum(ARMOR_MATERIALS),
+  color: z.number().int().min(0).max(0xFF_FF_FF).optional(),
+  enchanted: z.boolean().optional(),
+});
 
-  @IsEmpty()
-  public material?: undefined;
+// z.undefined() would make the key required
+const unset = z.never().optional();
 
-  @IsEmpty()
-  public skull?: undefined;
-}
+// A helmet is exactly one of a material, a head or a skull
+const helmet = z.union([
+  armorPiece.extend({ head: unset, skull: unset }),
+  z.object({ head: z.string().regex(TEXTURE_HASH), material: unset, skull: unset }),
+  z.object({ skull: z.enum(SKULLS), material: unset, head: unset }),
+]);
 
-class SkullDto {
-  @IsIn(SKULLS)
-  public skull: (typeof SKULLS)[number];
+const armor = z.object({
+  helmet: helmet.optional(),
+  chestplate: armorPiece.optional(),
+  leggings: armorPiece.optional(),
+  boots: armorPiece.optional(),
+});
 
-  @IsEmpty()
-  public material?: undefined;
-}
+export type ArmorPieceDto = z.infer<typeof armorPiece>;
+export type ArmorDto = z.infer<typeof armor>;
 
-export class ArmorDto {
-  @ValidateIf(isSet)
-  @IsObject()
-  @ValidateNested()
-  @Type((options) => {
-    const helmet = options?.object.helmet;
-    if (helmet?.head !== undefined) return PlayerHeadDto;
-    if (helmet?.skull !== undefined) return SkullDto;
-    return ArmorPieceDto;
+export class SkinRenderDto extends createZodDto(
+  UuidDto.schema.extend({
+    // An empty ?yaw= keeps the default angle, where z.coerce.number() would read "" as 0, the front
+    yaw: z
+      .literal("")
+      .transform(() => undefined)
+      .or(z.coerce.number().min(-Math.PI * 2).max(Math.PI * 2))
+      .optional()
+      .describe("Camera angle around the player in radians: 0 faces the front, π the back"),
+    pose: z.enum(POSES).optional(),
+    cape: z
+      .enum(["true", "false"])
+      .transform((value) => value === "true")
+      .optional()
+      .describe("Draw the player's cape, if they have one"),
+    // Bad JSON is an issue so it answers 400, where a throw here would be a 500
+    armor: z
+      .string()
+      .transform((value, ctx) => {
+        try {
+          return JSON.parse(value);
+        } catch {
+          ctx.issues.push({ code: "custom", message: "Invalid JSON", input: value });
+          return z.NEVER;
+        }
+      })
+      .pipe(armor)
+      .optional()
+      .describe("JSON, e.g. {\"helmet\":{\"head\":\"5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74\"},\"chestplate\":{\"material\":\"leather\",\"color\":16711680,\"enchanted\":true}}"),
   })
-  public helmet?: ArmorPieceDto | PlayerHeadDto | SkullDto;
-
-  @ValidateIf(isSet)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => ArmorPieceDto)
-  public chestplate?: ArmorPieceDto;
-
-  @ValidateIf(isSet)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => ArmorPieceDto)
-  public leggings?: ArmorPieceDto;
-
-  @ValidateIf(isSet)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => ArmorPieceDto)
-  public boots?: ArmorPieceDto;
-}
-
-export class SkinRenderDto extends UuidDto {
-  // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
-  @IsOptional()
-  @Transform(({ value }) => (value === "" ? undefined : +value))
-  @IsNumber()
-  @Min(-Math.PI * 2)
-  @Max(Math.PI * 2)
-  @ApiProperty({ required: false, description: "Camera angle around the player in radians: 0 faces the front, π the back" })
-  public yaw?: number;
-
-  @IsOptional()
-  @IsIn(POSES)
-  @ApiProperty({ required: false, enum: POSES })
-  public pose?: (typeof POSES)[number];
-
-  @IsOptional()
-  @Transform(({ value }) => (value === "true" || value === "false" ? value === "true" : value))
-  @IsBoolean()
-  @ApiProperty({ required: false, description: "Draw the player's cape, if they have one" })
-  public cape?: boolean;
-
-  // Bad JSON passes through unparsed so validation answers 400, where a throw here would be a 500
-  @ValidateIf(isSet)
-  @Transform(({ value }) => {
-    try {
-      return plainToInstance(ArmorDto, JSON.parse(value));
-    } catch {
-      return value;
-    }
-  })
-  @IsObject()
-  @ValidateNested()
-  @ApiProperty({
-    required: false,
-    type: String,
-    description: "JSON, e.g. {\"helmet\":{\"head\":\"5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74\"},\"chestplate\":{\"material\":\"leather\",\"color\":16711680,\"enchanted\":true}}",
-  })
-  public armor?: ArmorDto;
-}
+) {}
