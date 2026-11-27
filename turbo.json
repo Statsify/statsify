@@ -2,14 +2,34 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalDependencies": ["pnpm-lock.yaml", "tsconfig.base.json", ".swcrc"],
   "ui": "tui",
+  "futureFlags": {
+    "pruneIncludesGlobalFiles": true
+  },
+  "globalPassThroughEnv": [
+    "RUSTUP_HOME",
+    "CARGO_HOME",
+    "CARGO_TARGET_DIR"
+  ],
   "tasks": {
     "build": {
       "env": ["API_URL", "API_KEY"],
       "outputs": ["dist/**", ".next/**"],
       "dependsOn": ["^build"]
     },
-    "@statsify/skin-renderer#build": {
-      "outputs": ["pkg/**", "*.node"]
+    "@statsify/skin-renderer#build:napi": {
+      "outputs": ["*.node", "index.cjs", "index.d.ts"]
+    },
+    "@statsify/skin-renderer#build:wasm": {
+      "outputs": ["pkg/**"]
+    },
+    "api#build": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build", "@statsify/skin-renderer#build:napi"]
+    },
+    "site#build": {
+      "env": ["API_URL", "API_KEY"],
+      "outputs": [".next/**"],
+      "dependsOn": ["^build", "@statsify/skin-renderer#build:wasm"]
     },
     "typecheck": {
       "outputs": [],
