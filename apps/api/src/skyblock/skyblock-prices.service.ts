@@ -13,6 +13,7 @@ import {
   type PriceMap,
   type PriceView,
   RawBazaar,
+  RawItemsResource,
   describeKey,
   labelVariants,
   parseBazaar,
@@ -47,8 +48,6 @@ const ITEMS_REFRESH = 12 * 60 * 60_000;
 // Outlives the slowest rebuild, and holds the next pull back as long after each one, so a feed whose lastUpdated
 // stops moving isn't pulled back to back
 const LOCK_MS = 300_000;
-
-type RawItemsResource = Parameters<typeof parseItemsResource>[0];
 
 const binCount = (map?: PriceMap) => Object.values(map?.entries ?? {}).filter(({ source }) => source === "bin").length;
 
@@ -95,9 +94,11 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async getItems(): Promise<ItemsResource | undefined> {
-    const raw = await this.getCopy(ITEMS_KEY, ITEMS_REFRESH, () =>
-      this.get<RawItemsResource>("/v2/resources/skyblock/items")
-    );
+    const raw = await this.getCopy(ITEMS_KEY, ITEMS_REFRESH, async () => {
+      const resource = await this.get<RawItemsResource>("/v2/resources/skyblock/items");
+      RawItemsResource.parse(resource);
+      return resource;
+    });
 
     if (!raw) return;
     if (raw.lastUpdated !== this.items?.lastUpdated) this.items = parseItemsResource(raw);
