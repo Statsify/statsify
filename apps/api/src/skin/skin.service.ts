@@ -122,13 +122,14 @@ export class SkinService {
     const warlords = resolveWarlords(options, uuid !== undefined);
     const { armor: piece } = warlords;
 
-    const [library, player, armor] = await Promise.all([
+    const [library, player, armor, mount] = await Promise.all([
       this.getLibrary(WARLORDS_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
       resolvePackArmor(WARLORDS_PACK, { chestplate: piece, leggings: piece, boots: piece }),
+      warlords.mount && loadMount(warlords.mount),
     ]);
 
-    return renderWarlords(library, warlords, { ...options, player: player && { ...player, armor } });
+    return renderWarlords(library, warlords, { ...options, player: player && { ...player, armor }, mount });
   }
 
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
@@ -495,6 +496,7 @@ export function resolveWarlords(
 
 export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
+  mount?: SceneMount;
 }
 
 async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMount> {
@@ -507,10 +509,10 @@ async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMoun
   return { entity, textures: layers };
 }
 
-export async function renderWarlords(
+export function renderWarlords(
   library: ModelLibrary,
-  { models, mount }: WarlordsScene,
-  { player, extruded = false, ...camera }: WarlordsRenderOptions
+  { models }: WarlordsScene,
+  { player, mount, extruded = false, ...camera }: WarlordsRenderOptions
 ): Promise<Buffer> {
   const defaults = mount ? WARLORDS_CAMERA.mount : player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
 
@@ -521,7 +523,7 @@ export async function renderWarlords(
     pitch: camera.pitch ?? defaults.pitch,
   };
 
-  const scene = { models, mount: mount && await loadMount(mount) };
+  const scene = { models, mount };
 
   if (!player) return renderScene(library, scene, output);
 
