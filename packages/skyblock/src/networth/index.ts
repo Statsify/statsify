@@ -160,6 +160,7 @@ const networth = {
 // The library reads more of the member, from keys this package doesn't read or type
 export const NETWORTH = checkReads<"networth">(networth, {
   currencies: true,
+  foraging: true,
   garden_player_data: true,
   inventory: true,
   loadout: true,
