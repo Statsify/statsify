@@ -6,22 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsOptional, IsString } from "class-validator";
-import { SceneCameraDto } from "./scene-camera.dto.js";
-import { Transform } from "class-transformer";
 import { WARLORDS_CAMERA } from "./warlords-render.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { sceneCamera } from "./scene-camera.dto.js";
+import { z } from "zod";
 
 export const SMASH_CAMERA = WARLORDS_CAMERA.player;
 
-export class SmashRenderDto extends SceneCameraDto(SMASH_CAMERA) {
-  @IsString()
-  @ApiProperty({ description: "The player's stored active_class, such as GENERAL_CLUCK" })
-  public hero: string;
-
-  @IsOptional()
-  @Transform(({ value }) => (value === "true" || value === "false" ? value === "true" : value))
-  @IsBoolean()
-  @ApiProperty({ required: false, default: false, description: "Draw the hero's Master Skin, the player's stored masterArmor_<hero>" })
-  public master?: boolean;
-}
+export class SmashRenderDto extends createZodDto(
+  sceneCamera(SMASH_CAMERA).extend({
+    hero: z.string().describe("The player's stored active_class, such as GENERAL_CLUCK"),
+    master: z
+      .enum(["true", "false"])
+      .meta({ default: "false" })
+      .transform((value) => value === "true")
+      .optional()
+      .describe("Draw the hero's Master Skin, the player's stored masterArmor_<hero>"),
+  })
+) {}

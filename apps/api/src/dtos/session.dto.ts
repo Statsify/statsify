@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { IsOptional, IsString } from "class-validator";
 import { PlayerDto } from "./player.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class SessionDto extends PlayerDto {
-  @IsOptional()
-  @IsString()
-  public userUuid?: string;
-}
+export class SessionDto extends createZodDto(
+  PlayerDto.schema.extend({ userUuid: z.string().optional() })
+) {}
