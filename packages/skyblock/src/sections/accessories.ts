@@ -7,7 +7,7 @@
  */
 
 import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } from "#data";
-import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { skyblockLevel } from "../profiles.js";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
 import { PLAYER_STATS, RARITIES, rarityRank } from "#types";
@@ -135,7 +135,7 @@ const IN_PLACE: Record<string, InPlaceUpgrade> = {
   BOOK_OF_PROGRESSION: {
     unit: "level",
     tiers: { UNCOMMON: 100, RARE: 200, EPIC: 300, LEGENDARY: 400, MYTHIC: 500 },
-    progress: (_, member) => Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL),
+    progress: (_, member) => skyblockLevel(member.leveling?.experience ?? 0),
   },
   // Every saved Codex fits the milestone claimed, which can lag the bestiary's
   BEASTSLAYERS_CODEX: {
