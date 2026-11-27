@@ -93,13 +93,16 @@ type MemberKeys = { [K in keyof RawMember]?: true };
 /** The member's keys each section reads. */
 const READS: { [K in SectionKey]: MemberKeys } = {
   accessories: { accessory_bag_storage: true, inventory: true, nether_island_player_data: true, rift: true },
+  attributes: { attributes: true, shards: true },
+  bestiary: { bestiary: true },
   chocolate: { events: true },
+  collections: { collection: true, player_data: true, profile: true },
   crimson: { bestiary: true, nether_island_player_data: true },
   dungeons: { currencies: true, dungeons: true, glacite_player_data: true, player_data: true },
   experiments: { experimentation: true },
   fishing: { bestiary: true, player_stats: true, trophy_fish: true },
   garden: { garden_player_data: true },
-  gear: { inventory: true, loadout: true },
+  gear: { accessory_bag_storage: true, inventory: true, loadout: true },
   hotf: { foraging_core: true, skill_tree: true },
   hotm: { glacite_player_data: true, mining_core: true, skill_tree: true },
   inventories: { inventory: true },
@@ -113,7 +116,8 @@ const READS: { [K in SectionKey]: MemberKeys } = {
     player_stats: true,
     rift: true,
   },
-  misc: { item_data: true, player_stats: true },
+  minions: { player_data: true, profile: true },
+  misc: { bestiary: true, item_data: true, player_stats: true },
   museum: {},
   pets: { pets_data: true, player_stats: true, rift: true },
   rift: { currencies: true, player_stats: true, rift: true },
@@ -121,6 +125,7 @@ const READS: { [K in SectionKey]: MemberKeys } = {
   slayers: { slayer: true },
   stats: {
     accessory_bag_storage: true,
+    attributes: true,
     bestiary: true,
     currencies: true,
     dungeons: true,
@@ -143,6 +148,8 @@ const READS: { [K in SectionKey]: MemberKeys } = {
 
 /** The keys a section reads of the co-op's other members, when it reads any. */
 const COOP_READS: { [K in SectionKey]?: MemberKeys } = {
+  collections: { collection: true, profile: true },
+  minions: { player_data: true, profile: true },
   skills: { player_data: true, profile: true },
   stats: { player_data: true, profile: true },
 };
