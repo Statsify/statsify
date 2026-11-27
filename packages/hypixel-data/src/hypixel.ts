@@ -80,7 +80,7 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
 export function fromHypixelNBT({ data }: { data: number[] }): (ItemStack | undefined)[] {
   const root = readNbt(gunzipSync(Uint8Array.from(data)));
   const items = root.i;
-  if (!Array.isArray(items)) throw new Error("Hypixel's inventory NBT should have an i list");
+  if (!Array.isArray(items)) throw new TypeError("Hypixel's inventory NBT should have an i list");
 
   return (items as LegacyItem[]).map(itemStack);
 }
