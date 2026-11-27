@@ -44,13 +44,14 @@ export class I18nLoaderService {
       ns: this.namespaces,
       load: "all",
       preload: this.languages,
-      initImmediate: false,
+      initAsync: false,
       defaultNS: "default",
       interpolation: {
-        format,
         escapeValue: false,
       },
     });
+
+    i18next.services.formatter!.add("number", formatNumber);
   }
 }
 
@@ -72,20 +73,14 @@ function getNumberFormat(lng: string | undefined, digits: number) {
   return numberFormat;
 }
 
-function format(value: any, format?: string | undefined, lng?: string): string {
-  switch (format) {
-    case "number": {
-      const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-      const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
+function formatNumber(value: number, lng: string | undefined): string {
+  const hasDecimals = value >= 1_000_000 || !Number.isInteger(value);
+  const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
 
-      if ((value as number) >= 1_000_000) {
-        const [number, suffix] = abbreviationNumber(value);
-        return `${numberFormat.format(number)}${suffix}`;
-      }
-
-      return numberFormat.format(value as number);
-    }
+  if (value >= 1_000_000) {
+    const [number, suffix] = abbreviationNumber(value);
+    return `${numberFormat.format(number)}${suffix}`;
   }
 
-  return value;
+  return numberFormat.format(value);
 }
