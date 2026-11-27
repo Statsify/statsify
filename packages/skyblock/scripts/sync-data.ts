@@ -444,13 +444,13 @@ try {
 
   const minecraftData = async (file: "blocks" | "items") => {
     const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(SYNC_TIMEOUT) });
     if (!response.ok) throw new Error(`${url} answered ${response.status}`);
     return (await response.json()) as MinecraftItem[];
   };
 
   // "<id>:<damage>" per variant and "<id>" for damage 0; ./icons tries both.
-  const minecraftItems = await minecraftData("items");
+  const [minecraftItems, minecraftBlocks] = await Promise.all([minecraftData("items"), minecraftData("blocks")]);
   const textures: Record<string, string> = {};
   const unmapped: string[] = [];
 
@@ -468,7 +468,6 @@ try {
   }
 
   // items.json repeats each block's item under the block's id, so those ids take the block's name.
-  const minecraftBlocks = await minecraftData("blocks");
   const blockIds = new Set(minecraftBlocks.map(({ id }) => id));
   const materials = Object.fromEntries([
     ...minecraftBlocks.map(({ id, name }) => [MATERIAL_NAMES.blocks[name] ?? name.toUpperCase(), id]),
