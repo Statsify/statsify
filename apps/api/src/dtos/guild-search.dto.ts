@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class GuildSearchDto extends createZodDto(z.object({ query: z.string().max(32) })) {}
+export class GuildSearchDto extends createZodDto(
+  z.object({ query: z.string().max(MAX_AUTOCOMPLETE_NAME_LENGTH) })
+) {}

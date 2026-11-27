@@ -10,6 +10,7 @@ import {
   CacheLevel,
   GuildNotFoundException,
   GuildQuery,
+  MAX_AUTOCOMPLETE_CHOICES,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
@@ -160,7 +161,7 @@ export class GuildService {
     return this.guildModel
       .find({ nameToLower: { $gte: prefix, $lt: `${prefix}\uffff` } })
       .sort({ nameToLower: 1 })
-      .limit(25)
+      .limit(MAX_AUTOCOMPLETE_CHOICES)
       .select({ _id: false, name: true, nameFormatted: true })
       .lean()
       .exec();

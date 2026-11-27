@@ -12,12 +12,12 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
-import { AutocompleteType, GuildQuery } from "@statsify/api-client";
+import { AutocompleteType, GuildQuery, MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { ChoiceArgument } from "./choice.argument.js";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { LocalizationString } from "#messages";
-import { PlayerArgument } from "./player.argument.js";
+import { PlayerArgument, autocompleteNames } from "./player.argument.js";
 
 const apiClient = Container.get(ApiService);
 
@@ -44,26 +44,10 @@ class GuildQueryArgument extends AbstractArgument {
     if (type === GuildQuery.ID) return [];
 
     const query = context.option<string>(this.name, "");
-    const searched = { name: query, value: query };
 
-    // Discord rejects the whole list when a choice is over 100 characters
-    if (query.length > 100) return [];
-    if (query.length > 32) return [searched];
-
-    const guilds = await apiClient.getAutocomplete(
-      AutocompleteType.GUILD,
-      context.getInteraction().getUserId(),
-      query
+    return autocompleteNames(query, MAX_AUTOCOMPLETE_NAME_LENGTH, () =>
+      apiClient.getAutocomplete(AutocompleteType.GUILD, context.getInteraction().getUserId(), query)
     );
-
-    let results = guilds.map((g) => ({ name: g, value: g }));
-
-    if (query && !guilds.some((g) => g.toLowerCase() === query.toLowerCase())) {
-      results = results.slice(0, 24);
-      results.push(searched);
-    }
-
-    return results;
   }
 
   public autocompleteType(context: CommandContext) {

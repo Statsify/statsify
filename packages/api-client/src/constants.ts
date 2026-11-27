@@ -52,6 +52,10 @@ export const LeaderboardQuery = {
 
 export type LeaderboardQuery = (typeof LeaderboardQuery)[keyof typeof LeaderboardQuery];
 
+export const MAX_AUTOCOMPLETE_NAME_LENGTH = 32;
+
+export const MAX_AUTOCOMPLETE_CHOICES = 25;
+
 export const AutocompleteType = {
   PLAYER: "player",
   GUILD: "guild",
