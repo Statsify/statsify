@@ -7,16 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { config } from "@statsify/util";
-
-const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
+import { sentryOptions } from "@statsify/logger/sentry";
 
 // Init even without a DSN: nothing gets sent, but withIsolationScope then forks instead of sharing one scope
-Sentry.init({
-  dsn: sentryDsn,
-  // Sentry 11 collects all of these by default
-  dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
-  normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
-  environment: await config("environment"),
-});
+Sentry.init(await sentryOptions("sentry.verifyServerDsn"));
