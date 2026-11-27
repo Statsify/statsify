@@ -412,7 +412,7 @@
       "title": "Nem Találhatóak Toplista Adatok Ennél A Pozíciónál"
     },
     "leaderboardInvalidPosition": {
-      "description": "Az általad megadott toplista pozíció érvénytelen. Írj be egy 1-nél nagyobb számot.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Érvénytelen Pozíció"
     },
     "leaderboardNotFound": {
