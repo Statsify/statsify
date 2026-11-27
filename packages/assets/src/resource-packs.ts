@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ItemRenderer, PackStack, loadPack, setCanvasBackend } from "@statsify/textures";
+import { DOWNLOAD_TIMEOUT, ItemRenderer, PackStack, loadPack, setCanvasBackend } from "@statsify/textures";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
@@ -79,7 +79,7 @@ async function settle(promises: Promise<unknown>[]) {
 }
 
 async function get(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
   if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 }
