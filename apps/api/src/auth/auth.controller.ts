@@ -33,7 +33,7 @@ export class AuthController {
     @Query() { key }: KeyParamDto,
     @Headers() { "x-api-key": keyHeader }: KeyHeaderDto
   ) {
-    const keyData = await this.authService.getKey(key ?? keyHeader);
+    const keyData = await this.authService.getKey((key ?? keyHeader)!);
 
     return {
       success: !!keyData,

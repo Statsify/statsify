@@ -32,12 +32,13 @@ import {
 } from "#responses";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { loadImage } from "@statsify/rendering";
+import { IMAGE_DOWNLOAD_TIMEOUT, loadImage } from "@statsify/rendering";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
   body?: Record<string, any> | Buffer | string;
   responseType?: ResponseType;
+  timeout?: number;
 }
 
 // TODO: Move dtos in api to @statsify/api-client
@@ -285,7 +286,7 @@ export class ApiService {
     url: string,
     params: Record<string, unknown> | undefined,
     method: Method = "GET",
-    { body, headers, responseType }: ExtraData = {}
+    { body, headers, responseType, timeout }: ExtraData = {}
   ): Promise<T> {
     const { data } = await this.axios.request({
       url,
@@ -294,6 +295,7 @@ export class ApiService {
       headers,
       data: body,
       responseType,
+      timeout,
     });
 
     if (data.success === false) throw new Error("API request was unsuccessful");
@@ -302,9 +304,11 @@ export class ApiService {
   }
 
   private async requestImage(url: string, params?: Record<string, unknown>) {
-    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
-    const image = await loadImage(uri);
+    const buffer = await this.request<Buffer>(url, params, "GET", {
+      responseType: "arraybuffer",
+      timeout: IMAGE_DOWNLOAD_TIMEOUT,
+    });
 
-    return image;
+    return loadImage(buffer);
   }
 }
