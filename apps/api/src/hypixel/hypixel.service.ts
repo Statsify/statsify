@@ -55,10 +55,15 @@ export class HypixelThrottledError extends Error {
   }
 }
 
-function toSkyBlockError(error: Error) {
+function responseOf(error: Error) {
   const { response } = (error.cause ?? {}) as {
     response?: { status: number; headers: Record<string, unknown>; data?: { global?: boolean } };
   };
+  return response;
+}
+
+function toSkyBlockError(error: Error) {
+  const response = responseOf(error);
   if (response?.status !== 429) return new HypixelUnavailableError(error);
 
   const reset = Number(response.headers["ratelimit-reset"]);
@@ -221,10 +226,7 @@ export class HypixelService {
   public async getSkyBlockGarden(profileId: string): Promise<RawGarden | null> {
     const data = await lastValueFrom(
       this.request<{ garden: RawGarden }>("/v2/skyblock/garden", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
-        catchError((error: Error) => {
-          const { response } = (error.cause ?? {}) as { response?: { status: number } };
-          return response?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error));
-        })
+        catchError((error: Error) => (responseOf(error)?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error))))
       )
     );
 
