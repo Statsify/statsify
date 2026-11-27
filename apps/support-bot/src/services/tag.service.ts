@@ -126,9 +126,10 @@ export class TagService {
       .exec();
 
     if (!tag) throw new ErrorMessage("errors.tagNotFound");
+    if (newName === originalName) return;
 
-    await this.delete(originalName);
     await this.create(newName, tag.content, tag.attachment);
+    await this.delete(originalName);
   }
 
   private validateName(name: string) {
