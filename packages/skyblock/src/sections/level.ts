@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { costOf, parsePetKey } from "#prices";
+import { costOf } from "#prices";
+import { parsePetKey } from "#auctions";
 import { PET_RARITIES, getPets, petMaxLevel, petName, petScorePoints, petTexture } from "./pets.js";
 import { PET_TEXTURES, SKYBLOCK_XP } from "#data";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";

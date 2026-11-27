@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { RARITIES, type Bazaar, type ItemsResource, type PriceEntry, type PriceMap, type RawItem } from "#types";
+import { getPetLevel, petName } from "./sections/pets.js";
 import { decodeInventory } from "#nbt";
-import { getPetLevel } from "./sections/pets.js";
-import type { Bazaar, ItemsResource, PriceEntry, PriceMap, RawItem } from "#types";
+import { prettify } from "@statsify/util";
 import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
 
 // The networth library looks prices up by exact key, so each function below turns an item into one of its key formats.
@@ -26,9 +27,22 @@ const MIDAS_WEAPONS: Record<string, { maxBid: number; key: string }> = {
 
 const upper = (value: unknown) => String(value).toUpperCase();
 
+const SKINNED = "_SKINNED_";
+
 /** From the API's tier, without a Tier Boost. */
 const petKey = (pet: RawPet, level: number) =>
-  `LVL_${level}_${pet.tier}_${pet.type}${pet.skin ? `_SKINNED_${pet.skin}` : ""}`;
+  `LVL_${level}_${pet.tier}_${pet.type}${pet.skin ? `${SKINNED}${pet.skin}` : ""}`;
+
+const PET_KEY = /^LVL_(\d+)_(VERY_SPECIAL|[A-Z]+)_(.+)$/;
+
+export function parsePetKey(key: string) {
+  const [, level, tier, type] = PET_KEY.exec(key) ?? [];
+  const rarity = RARITIES.find((candidate) => candidate === tier);
+  if (!rarity || key.includes(SKINNED)) return;
+  return { type, rarity, level: Number(level), name: `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}` };
+}
+
+export const BOOK_KEY = /^ENCHANTMENT_(.+)_(\d{1,2})$/;
 
 function bookKeys(attributes: Attributes) {
   const enchantments = Object.entries(attributes.enchantments ?? {});
@@ -72,7 +86,7 @@ function midasKey(id: string, attributes: Attributes) {
   return Number(attributes.winning_bid ?? 0) + Number(attributes.additional_coins ?? 0) >= maxBid ? key : id;
 }
 
-const skinnedKey = (id: string, attributes: Attributes) => `${id}_SKINNED_${attributes.skin}`;
+const skinnedKey = (id: string, attributes: Attributes) => `${id}${SKINNED}${attributes.skin}`;
 
 const shinyKey = (id: string) => `${id}_SHINY`;
 
