@@ -65,7 +65,10 @@ const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
 
-const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
+function isReady(name: SkyBlockSection, { prices, items }: Pick<SectionInput, "prices" | "items">) {
+  const built: Record<SectionNeed, boolean> = { museum: true, garden: true, prices: !!prices, items: !!items };
+  return DEFINITIONS[name].needs.every((need) => built[need]);
+}
 
 interface Stored<T> {
   value: T;
@@ -177,8 +180,7 @@ export class SkyBlockService {
       needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
 
-    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = sections.filter((name) => isReady(name, built));
+    const ready = sections.filter((name) => isReady(name, { prices, items }));
     const marketDown = sections.filter((name) => !ready.includes(name));
     if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
 
@@ -304,8 +306,7 @@ export class SkyBlockService {
       Promise.all(ranked.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
     ]);
 
-    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, built));
+    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, { prices, items }));
 
     const removed = ranked.flatMap((profile) =>
       Object.keys(profile.members)
@@ -321,13 +322,12 @@ export class SkyBlockService {
             const museum = museums[index]?.value.members?.[member];
             const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items };
             const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
-            const summary = toProfileSummary(profile, member);
 
             return {
               uuid: member,
               profileId: profile.profile_id,
-              cuteName: summary.cuteName,
-              gameMode: summary.gameMode,
+              cuteName: profile.cute_name,
+              gameMode: gameModeOf(profile),
               fetchedAt,
               networthAsOf: view.networth?.pricesAsOf,
               boards: toMemberStats(input, view),
