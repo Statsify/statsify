@@ -18,6 +18,8 @@ import { tintColor } from "./tints.js";
 
 const SIZE = 16;
 
+export const MS_PER_TICK = 50;
+
 const CACHE_LIMIT = 2000;
 
 function promiseCache<T extends NonNullable<unknown>>() {
@@ -80,13 +82,13 @@ interface Glint {
 }
 
 function modernGlint(tick: number): Glint {
-  const time = tick * 50 * 0.5 * 8;
+  const time = tick * MS_PER_TICK * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
   return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
 }
 
 function legacyGlint(tick: number): Glint {
-  const ms = tick * 50;
+  const ms = tick * MS_PER_TICK;
   return {
     passes: [
       { angle: (-5 * Math.PI) / 18, scrollU: (ms % 3000) / 3000, scrollV: 0 },
