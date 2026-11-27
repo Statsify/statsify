@@ -6,17 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DOWNLOAD_TIMEOUT, type LegacyTexture, resolveTextures, withoutNamespace } from "@statsify/textures";
+import {
+  DOWNLOAD_TIMEOUT,
+  type LegacyTexture,
+  fetchMinecraftData,
+  resolveTextures,
+  withoutNamespace,
+} from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
-
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
 
 // Bukkit's 1.8 Material enum, which Hypixel's kit layouts name items by, like GOLD_CHESTPLATE
 const BUKKIT_MATERIALS =
@@ -237,12 +235,12 @@ const [modernAssets, legacyAssets] = await Promise.all([readAssets(path), readAs
 if (!legacyAssets.textures.has("items/diamond_sword")) throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
 
 const [legacy, items, blocks, entities, effects, modernItems] = await Promise.all([
-  fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
-  fetchJson<LegacyItem[]>("1.8/items.json"),
-  fetchJson<LegacyItem[]>("1.8/blocks.json"),
-  fetchJson<LegacyEntity[]>("1.8/entities.json"),
-  fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
-  fetchJson<ModernItem[]>("26.1/items.json"),
+  fetchMinecraftData<{ items: Record<string, string | null> }>("common/legacy.json"),
+  fetchMinecraftData<LegacyItem[]>("1.8/items.json"),
+  fetchMinecraftData<LegacyItem[]>("1.8/blocks.json"),
+  fetchMinecraftData<LegacyEntity[]>("1.8/entities.json"),
+  fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
+  fetchMinecraftData<ModernItem[]>("26.1/items.json"),
 ]);
 
 const missing: string[] = [];

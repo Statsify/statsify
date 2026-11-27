@@ -23,17 +23,9 @@ import {
   leatherColor,
   skinUrl,
 } from "@statsify/hypixel-data";
-import { type ItemStack, legacyItem, legacyMaterialId } from "@statsify/textures";
+import { type ItemStack, fetchMinecraftData, legacyItem, legacyMaterialId } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
-
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
 
 // Each single-kit editor's mode, as its layout_<mode>_layout key names it, and its tokens
 // without copy numbers (wood_1 is wood) by the slot the editor shows the default layout in
@@ -152,14 +144,14 @@ interface LegacyName {
   variations?: { metadata: number; displayName: string }[];
 }
 
-const legacyItems = await fetchJson<(LegacyName & { name: string })[]>("1.8/items.json");
+const legacyItems = await fetchMinecraftData<(LegacyName & { name: string })[]>("1.8/items.json");
 const legacyIds = new Map(legacyItems.map(({ id, name }) => [name, id]));
 const materials = new Map(Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]));
 
 // 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
 // gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
 const legacyNames = new Map<string, { id: number; damage: number } | undefined>();
-for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchJson<LegacyName[]>("1.8/blocks.json"))]) {
+for (const { id, displayName, variations = [] } of [...legacyItems, ...(await fetchMinecraftData<LegacyName[]>("1.8/blocks.json"))]) {
   for (const { metadata: damage, displayName: name } of [{ metadata: 0, displayName }, ...variations]) {
     const known = legacyNames.get(name);
     const same = !legacyNames.has(name) || (known?.id === id && known.damage === damage);
@@ -427,7 +419,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
 }
 
 const enchantmentIds = new Map(
-  (await fetchJson<{ id: number; displayName: string }[]>("1.8/enchantments.json")).map(({ id, displayName }) => [displayName, id]),
+  (await fetchMinecraftData<{ id: number; displayName: string }[]>("1.8/enchantments.json")).map(({ id, displayName }) => [displayName, id]),
 );
 
 const POTION = 373;

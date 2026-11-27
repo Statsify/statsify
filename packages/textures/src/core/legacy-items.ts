@@ -8,13 +8,22 @@
 
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import type { ItemStack } from "./item-stack.js";
-import { namespaced, withoutNamespace } from "./pack.js";
+import { DOWNLOAD_TIMEOUT, namespaced, withoutNamespace } from "./pack.js";
 
 const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
 const effects: Record<string, string | undefined> = data.effects;
 const materials: Record<string, number | undefined> = data.materials;
 const names: Record<string, string | undefined> = data.legacyNames;
+
+const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+
+/** A file from the minecraft-data release these tables are built from, like "1.8/items.json" */
+export async function fetchMinecraftData<T>(path: string): Promise<T> {
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
+  if (!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json() as Promise<T>;
+}
 
 const POTION = 373;
 
