@@ -105,7 +105,7 @@ fn draw_skin(
 }
 
 // Checked after narrowing, since a huge f64 becomes an f32 infinity
-fn narrow(value: f64) -> Option<f32> {
+pub(crate) fn narrow(value: f64) -> Option<f32> {
   let value = value as f32;
   value.is_finite().then_some(value)
 }
