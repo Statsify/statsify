@@ -25,6 +25,7 @@ export const RARITIES = [
 ] as const;
 
 export type Rarity = (typeof RARITIES)[number];
+export const rarityRank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 export type GameMode = "normal" | "ironman" | "stranded" | "bingo";
 
 export interface Freshness {

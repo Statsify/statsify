@@ -7,7 +7,7 @@
  */
 
 import { GARDEN } from "#data";
-import { type GardenSection, type GardenView, type ItemsResource, RARITIES, type Rarity } from "#types";
+import { type GardenSection, type GardenView, type ItemsResource, type Rarity, rarityRank } from "#types";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import { resourceTexture } from "#textures";
@@ -51,7 +51,7 @@ const VISITOR_NAMES: Record<string, string> = {
 };
 
 const byName = <T extends { name: string }>(a: T, b: T) => a.name.localeCompare(b.name);
-const rank = (rarity?: Rarity) => (rarity ? RARITIES.indexOf(rarity) : -1);
+const rank = (rarity?: Rarity) => (rarity ? rarityRank(rarity) : -1);
 
 function itemOf(items: ItemsResource, id: string) {
   const found = items.items[id];
