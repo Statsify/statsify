@@ -30,7 +30,8 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
     if (input.length <= 16) {
-      const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
+      // Not CACHE_ONLY: a stored name whose owner renamed is only noticed on a refresh
+      const player = await this.playerService.get(input, CacheLevel.CACHE, {
         uuid: true,
       });
 
