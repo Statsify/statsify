@@ -112,7 +112,7 @@ export class CommandListener extends AbstractCommandListener {
     for (const arg of command.args) {
       const type = arg.autocompleteType?.(context);
       const name = context.option<string>(arg.name);
-      if (!type || !name || name.length > 32) continue;
+      if (!type || !name || name.length > MAX_AUTOCOMPLETE_NAME_LENGTH) continue;
 
       this.apiService.addAutocompleteHistory(type, userId, name).catch(() => null);
     }

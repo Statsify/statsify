@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AutocompleteType } from "@statsify/api-client";
+import { AutocompleteType, MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
 import { Guild, Player, User } from "@statsify/schemas";
 import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -20,7 +20,6 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 const HISTORY_MS = 14 * 86_400_000;
 const HALF_LIFE_MS = 3 * 86_400_000;
 const LOOKUPS_PER_ENTRY = 10;
-const MAX_CHOICES = 25;
 
 interface HistoryEntry {
   name: string;
@@ -51,7 +50,7 @@ const blend = (query: string, personal: string[], global: string[]) => {
   const exact = names.findIndex((name) => name.toLowerCase() === prefix);
   if (exact > 0) names.unshift(...names.splice(exact, 1));
 
-  return names.slice(0, MAX_CHOICES);
+  return names.slice(0, MAX_AUTOCOMPLETE_CHOICES);
 };
 
 const historyKey = (type: AutocompleteType, id: string) => `autocomplete:history:${type}:${id}`;
@@ -90,7 +89,7 @@ export class AutocompleteService {
     const others = sortByFrecency(entries.filter((e) => e.name !== stored), now);
 
     // A new name can score below a full history's names, so it goes in ahead of the cut
-    const kept = [recorded, ...others.slice(0, MAX_CHOICES - 1)];
+    const kept = [recorded, ...others.slice(0, MAX_AUTOCOMPLETE_CHOICES - 1)];
     await this.redis.set(historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
   }
 
