@@ -10,6 +10,7 @@ import { ApiService, CommandContext } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
 import { Service } from "typedi";
 import { getBackground } from "@statsify/assets";
+import { skyblockStatsUuid } from "@statsify/schemas";
 
 /** `/leaderboard skyblock` and `/skyblock leaderboard`: a row is one member of a profile, `<uuid>:<profile id>`. */
 @Service()
@@ -28,7 +29,7 @@ export class SkyBlockLeaderboardSubCommand extends BaseLeaderboardCommand {
       field,
       getLeaderboard: this.apiService.getSkyBlockLeaderboard.bind(this.apiService),
       type: "player",
-      getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(id.split(":")[0], 24),
+      getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(skyblockStatsUuid(id), 24),
     });
   }
 }

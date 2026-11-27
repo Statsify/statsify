@@ -53,11 +53,13 @@ export class PlayerService {
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
+   * @param beforeFetch (optional) Runs just before the player is fetched from Hypixel, and can throw to stop it
    */
   public async get(
     tag: string,
     cacheLevel: CacheLevel,
-    selector?: Record<string, boolean>
+    selector?: Record<string, boolean>,
+    beforeFetch?: () => Promise<void>
   ): Promise<Player | null> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
@@ -76,6 +78,8 @@ export class PlayerService {
     ) {
       return deserialize(Player, mongoPlayer);
     }
+
+    await beforeFetch?.();
 
     const player = await this.hypixelService.getPlayer(
       mongoPlayer?.uuid ?? tag

@@ -9,12 +9,10 @@
 import { COLLECTIONS } from "#data";
 import { add } from "@statsify/math";
 import { coopMembers } from "../profiles.js";
+import { stepsReached } from "#leveling";
 import { resourceTexture } from "#textures";
 import { type BossCollection, type CollectionsSection, type ItemsResource, KUUDRA_TIERS } from "#types";
 import type { RawMember, RawProfile } from "#raw";
-
-/** The tiers reached at an amount, out of each tier's amount needed. */
-export const collectionTier = (amount: number, tiers: number[]) => tiers.filter((needed) => amount >= needed).length;
 
 // Each boss's tiers, from its wiki page's Collection section, fit every saved member. Owner exceptions (unverified):
 // a Master Mode completion counts twice, and Kuudra's tiers count 1 to 5; the wiki gives only Basic 1 and Infernal 5.
@@ -32,7 +30,7 @@ const FLOOR_BOSSES = [
 const KUUDRA_COLLECTION = [10, 100, 500, 2000, 5000];
 
 const bossCollection = (boss: string, amount: number, tiers: number[]): BossCollection => {
-  const tier = collectionTier(amount, tiers);
+  const tier = stepsReached(amount, tiers);
   return { boss, amount, tier, maxTier: tiers.length, next: tiers[tier] };
 };
 
@@ -83,7 +81,7 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
         .toSorted((a, b) => b.amount - a.amount);
       const amount = add(...parts.map(({ amount }) => amount));
       // The list can name tiers the resource no longer has (Redstone at 16 of 9)
-      const tier = Math.max(collectionTier(amount, tiers), Math.min(reached.get(id) ?? 0, tiers.length));
+      const tier = Math.max(stepsReached(amount, tiers), Math.min(reached.get(id) ?? 0, tiers.length));
       const item = items?.items[id];
 
       return {
@@ -111,13 +109,6 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
-
-  test("collectionTier counts the tiers an amount reaches", () => {
-    expect(collectionTier(0, [50, 100, 250])).toBe(0);
-    expect(collectionTier(99, [50, 100, 250])).toBe(1);
-    expect(collectionTier(100, [50, 100, 250])).toBe(2);
-    expect(collectionTier(1e9, [50, 100, 250])).toBe(3);
-  });
 
   // A co-op of two, the other member with the Collections API off
   const tierOf = (amount: number, unlocked: string[]) => {

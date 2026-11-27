@@ -36,7 +36,6 @@ import {
   toProfilesView,
 } from "@statsify/skyblock";
 import { Singleflight } from "./singleflight.js";
-import { unflatten } from "@statsify/util";
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import { SkyBlockGarden, SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SKYBLOCK_FAILED_FOR, SkyBlockPricesService } from "./skyblock-prices.service.js";
@@ -54,7 +53,7 @@ import type {
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import type { Player, SkyBlockStatsRow } from "@statsify/schemas";
+import { type SkyBlockStatsRow, skyblockStatsId } from "@statsify/schemas";
 
 /** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
 export const SKYBLOCK_FRESH_FOR = 300_000;
@@ -66,7 +65,10 @@ const MAX_DOCUMENT = 15 * 1024 * 1024;
 
 const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<SkyBlockSection, { needs: readonly SectionNeed[] }>;
 
-const isReady = (name: SkyBlockSection, built: Record<SectionNeed, boolean>) => DEFINITIONS[name].needs.every((need) => built[need]);
+function isReady(name: SkyBlockSection, { prices, items }: Pick<SectionInput, "prices" | "items">) {
+  const built: Record<SectionNeed, boolean> = { museum: true, garden: true, prices: !!prices, items: !!items };
+  return DEFINITIONS[name].needs.every((need) => built[need]);
+}
 
 // Mongo leaves out the default rank, so a stored player without one has none
 const isRanked = (rank: string | undefined) => rank !== undefined && rank !== "DEFAULT";
@@ -166,14 +168,22 @@ export class SkyBlockService {
     profileName?: string,
     { requireGarden = false } = {}
   ): Promise<SkyBlockProfileView> {
-    const { profiles, fetchedAt, stale } = await this.getPlayerProfiles(player, cache);
+    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
+    const [{ profiles, fetchedAt, stale }, prices, items] = await Promise.all([
+      this.getPlayerProfiles(player, cache),
+      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
+      needs.has("items") ? this.pricesService.getItems() : undefined,
+    ]);
 
     const profile = findProfile(profiles, player.uuid, profileName);
     if (!profile) throw new SkyBlockNotFoundException("profile");
     const member = profile.members[player.uuid];
 
-    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
-    const [museum, garden, prices, items] = await Promise.all([
+    const ready = sections.filter((name) => isReady(name, { prices, items }));
+    const marketDown = sections.filter((name) => !ready.includes(name));
+    if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
+
+    const [museum, garden] = await Promise.all([
       // The player's row ranked when these profiles were stored went without the museum a refetch here stores. A copy
       // served stale is older than the row a co-op partner's newer copy may have written, so it isn't ranked again
       needs.has("museum") && hasMuseum(gameModeOf(profile)) ?
@@ -184,14 +194,7 @@ export class SkyBlockService {
         ) :
         undefined,
       needs.has("garden") ? this.getStoredGarden(profile.profile_id, cache, requireGarden) : undefined,
-      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
-      needs.has("items") ? this.pricesService.getItems() : undefined,
     ]);
-
-    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = sections.filter((name) => isReady(name, built));
-    const marketDown = sections.filter((name) => !ready.includes(name));
-    if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
 
     const input: SectionInput = {
       uuid: player.uuid,
@@ -223,22 +226,21 @@ export class SkyBlockService {
   }
 
   /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
-  public async nextRefetchAt(uuid: string): Promise<number | undefined> {
-    const document = await this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec();
-    return this.nextRefetchOf(`profiles:${uuid}`, document?.fetchedAt);
+  public nextRefetchAt(uuid: string): Promise<number | undefined> {
+    return this.nextRefetchOf(`profiles:${uuid}`, this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec());
   }
 
   /** The same for a profile's Garden, which only a lookup that needs it fetches. */
-  public async nextGardenRefetchAt(profileId: string): Promise<number | undefined> {
-    const document = await this.gardenModel.findOne({ profileId }, { fetchedAt: true }).exec();
-    return this.nextRefetchOf(`garden:${profileId}`, document?.fetchedAt);
+  public nextGardenRefetchAt(profileId: string): Promise<number | undefined> {
+    return this.nextRefetchOf(`garden:${profileId}`, this.gardenModel.findOne({ profileId }, { fetchedAt: true }).exec());
   }
 
-  private async nextRefetchOf(key: string, fetchedAt?: number) {
-    if (fetchedAt === undefined) return undefined;
-    if (isFresh(fetchedAt, CacheLevel.CACHE)) return fetchedAt + SKYBLOCK_FRESH_FOR;
+  private async nextRefetchOf(key: string, stored: Promise<{ fetchedAt: number } | null>) {
+    const [document, failedFor] = await Promise.all([stored, this.redis.pttl(failedKey(key))]);
 
-    const failedFor = await this.redis.pttl(failedKey(key));
+    if (!document) return undefined;
+    if (isFresh(document.fetchedAt, CacheLevel.CACHE)) return document.fetchedAt + SKYBLOCK_FRESH_FOR;
+
     return failedFor > 0 ? Date.now() + failedFor : undefined;
   }
 
@@ -251,18 +253,13 @@ export class SkyBlockService {
 
   private async getPlayer(tag: string): Promise<SkyBlockPlayer> {
     const selector = { uuid: true, username: true, displayName: true, rank: true, skyblock: true };
-    const document = await this.playerService.findMongoDocument(tag, selector);
-    let player = document && unflatten<Player>(document);
-
-    if (!player) {
-      await this.budgetService.take().catch((error) => {
+    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector, () =>
+      this.budgetService.take().catch((error) => {
         if (!(error instanceof BudgetError)) throw error;
         this.logger.warn(`Couldn't look up ${tag}: ${error.message}`);
         throw toUnavailable(error);
-      });
-
-      player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector);
-    }
+      })
+    );
 
     if (!player) throw new PlayerNotFoundException();
     return {
@@ -325,13 +322,12 @@ export class SkyBlockService {
       Promise.all(ranked.map((profile) => this.getStoredMuseum(profile.profile_id, CacheLevel.CACHE_ONLY))),
     ]);
 
-    const built = { museum: true, garden: true, prices: !!prices, items: !!items };
-    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, built));
+    const ready = MEMBER_STATS_SECTIONS.filter((name) => isReady(name, { prices, items }));
 
     const removed = ranked.flatMap((profile) =>
       Object.keys(profile.members)
         .filter((member) => !isMember(profile, member))
-        .map((member) => `${member}:${profile.profile_id}`)
+        .map((member) => skyblockStatsId(member, profile.profile_id))
     );
 
     const rows = await Promise.all(
@@ -342,13 +338,12 @@ export class SkyBlockService {
             const museum = museums[index]?.value.members?.[member];
             const input: SectionInput = { uuid: member, profile, member: raw, museum, prices, items, ranked: isRanked(players.get(member)) };
             const view = await toMemberView(input, ready, (name) => DEFINITIONS[name].compute(input));
-            const summary = toProfileSummary(profile, member);
 
             return {
               uuid: member,
               profileId: profile.profile_id,
-              cuteName: summary.cuteName,
-              gameMode: summary.gameMode,
+              cuteName: profile.cute_name,
+              gameMode: gameModeOf(profile),
               fetchedAt,
               networthAsOf: view.networth?.pricesAsOf,
               boards: toMemberStats(input, view),

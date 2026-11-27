@@ -12,6 +12,7 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { FUSE_OPTIONS } from "./player-leaderboard.argument.js";
 import { SkyBlockStats, getLeaderboardFields } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
@@ -22,14 +23,7 @@ const list = getLeaderboardFields(SkyBlockStats).map(
   })
 );
 
-const fuse = new Fuse(list, {
-  keys: ["name", "key"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-});
+const fuse = new Fuse(list, FUSE_OPTIONS);
 
 export class SkyBlockLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";

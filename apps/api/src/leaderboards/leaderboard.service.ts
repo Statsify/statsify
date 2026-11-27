@@ -143,11 +143,8 @@ export abstract class LeaderboardService {
       ]
     );
 
-    const data = leaderboard.flatMap((doc, index) => {
+    const data = leaderboard.map((doc, index) => {
       const stats = additionalStats[index];
-
-      // A board can keep a member whose record is gone, and nothing is left to name the row
-      if (!stats.name) return [];
 
       if (extraDisplay) {
         const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
@@ -171,13 +168,13 @@ export abstract class LeaderboardService {
       if (!hidden) fields.push(field);
       fields.push(...additionalValues);
 
-      return [{
+      return {
         id: doc.id,
         fields,
         name: stats.name,
         position: doc.index + 1,
         highlight: doc.index === highlight,
-      }];
+      };
     });
 
     const fields = [];

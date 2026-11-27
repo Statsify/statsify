@@ -23,6 +23,8 @@ import type { RawMember, RawProfile } from "#raw";
 
 export const SKYBLOCK_XP_PER_LEVEL = 100;
 
+export const skyblockLevel = (xp: number) => Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+
 const GAME_MODES: Record<string, GameMode> = { normal: "normal", ironman: "ironman", island: "stranded", bingo: "bingo" };
 
 export const gameModeOf = ({ game_mode }: RawProfile): GameMode => GAME_MODES[game_mode ?? "normal"] ?? "normal";
@@ -59,7 +61,7 @@ function levelColor(level: number) {
 export function toProfileSummary(profile: RawProfile, uuid: string): ProfileSummary {
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
-  const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+  const level = skyblockLevel(xp);
   const gameMode = gameModeOf(profile);
 
   return {
