@@ -7,7 +7,7 @@
  */
 
 export * from "./types.js";
-export type * from "./raw.js";
+export * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { type BingoGoal, type BingoView, toBingoView } from "./bingo.js";
 export { type MayorView, type Perk, toMayorView } from "./election.js";
