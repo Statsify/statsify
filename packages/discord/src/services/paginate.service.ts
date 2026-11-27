@@ -294,7 +294,7 @@ export async function scrollingPagination(
     cache.clear();
   }
 
-  setTimeout(onTimeout, 300_000);
+  setTimeout(onTimeout, COMPONENT_LIFETIME);
 
   const message = await getMessage(currentIndex);
   message.components = [new ActionRowBuilder(controller)];
