@@ -95,9 +95,13 @@ export class GuildService {
       }
 
       // Merge the exp history from hypixel and the cached guild
-      const combinedExpHistory: Record<string, number> = {
-        ...Object.fromEntries(
-          cacheMember?.expHistoryDays?.map((day, index) => [day, cacheMember.expHistory[index]]) ?? []
+      const combinedExpHistory = {
+        ...cacheMember?.expHistoryDays?.reduce(
+          (acc, day, index) => { 
+            acc[day] = cacheMember.expHistory[index];
+            return acc; 
+          },
+          {} as Record<string, number> 
         ),
         ...Object.fromEntries(
           member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])
