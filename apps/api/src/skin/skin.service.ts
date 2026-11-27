@@ -89,14 +89,15 @@ export class SkinService {
   public async getKartRender({ uuid, ...options }: KartRenderDto): Promise<Buffer> {
     const kart = resolveKart(options, uuid !== undefined);
 
-    const [library, player] = await Promise.all([
+    const [library, player, armor] = await Promise.all([
       this.getKartLibrary(),
       uuid ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim)) : undefined,
+      resolvePackArmor(KART_PACK, kart.suit),
     ]);
 
     return renderKart(library, kart, {
       ...options,
-      player: player && { skin: imageData(player.skin), slim: player.slim },
+      player: player && { skin: imageData(player.skin), slim: player.slim, armor },
     });
   }
 
@@ -342,7 +343,7 @@ export function resolveKart(
 }
 
 export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: { skin: Uint8Array; slim: boolean };
+  player?: { skin: Uint8Array; slim: boolean; armor: Armor };
 }
 
 async function resolvePackArmor(pack: string, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
@@ -356,9 +357,9 @@ async function resolvePackArmor(pack: string, pieces: Omit<ArmorDto, "helmet">):
   return { chestplate, leggings, boots };
 }
 
-export async function renderKart(
+export function renderKart(
   library: ModelLibrary,
-  { models, suit }: KartScene,
+  { models }: KartScene,
   {
     player,
     extruded = false,
@@ -372,9 +373,7 @@ export async function renderKart(
 
   if (!player) return renderScene(library, { models }, output);
 
-  const armor = await resolvePackArmor(KART_PACK, suit);
-
-  return renderScene(library, { player: { ...player, extruded, armor, pose: "sit" }, models }, output);
+  return renderScene(library, { player: { ...player, extruded, pose: "sit" }, models }, output);
 }
 
 interface MojangProfile {
