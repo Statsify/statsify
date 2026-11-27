@@ -6,22 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { Guild, getLeaderboardFields } from "@statsify/schemas";
-import { IsArray, IsString, MaxLength, MinLength } from "class-validator";
-import { IsLeaderboardField } from "./leaderboard-field.decorator.js";
+import { Guild } from "@statsify/schemas";
+import { createZodDto } from "nestjs-zod";
+import { leaderboardField } from "./leaderboard-field.js";
+import { z } from "zod";
 
-const fields = getLeaderboardFields(Guild).map(([key]) => key);
-
-export class GuildRankingDto {
-  @ApiProperty({ enum: fields, type: [String] })
-  @IsArray()
-  @IsLeaderboardField(fields, { each: true })
-  public fields: string[];
-
-  @IsString()
-  @MinLength(24)
-  @MaxLength(24)
-  @ApiProperty()
-  public id: string;
-}
+export class GuildRankingDto extends createZodDto(
+  z.object({
+    fields: z.array(leaderboardField(Guild)),
+    id: z.string().length(24),
+  })
+) {}
