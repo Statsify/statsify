@@ -8,6 +8,7 @@
 
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import type { ItemStack } from "./item-stack.js";
+import { namespaced, withoutNamespace } from "./pack.js";
 
 const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
@@ -26,7 +27,7 @@ const SPLASH = 0x40_00;
 /** A 26.3 effect id for a 1.8 numeric effect id */
 export function legacyEffect(id: number) {
   const name = effects[id];
-  return name ? `minecraft:${name}` : undefined;
+  return name ? namespaced(name) : undefined;
 }
 
 /**
@@ -46,7 +47,7 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   const name = items[`${id}:${damage}`] ?? items[id];
   if (!name) return;
 
-  return { id: `minecraft:${name}`, damage: durability[name] && damage > 0 ? damage : undefined };
+  return { id: namespaced(name), damage: durability[name] && damage > 0 ? damage : undefined };
 }
 
 /** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
@@ -59,7 +60,7 @@ export function legacyMaterial(name: string, damage = 0) {
 }
 
 /** How much wear a 26.3 item takes before it breaks */
-export const maxDamage = (id: string) => durability[id.replace("minecraft:", "")];
+export const maxDamage = (id: string) => durability[withoutNamespace(id)];
 
 /** 1.8's English name for a 26.3 item, after its rarity color, like "§bGolden Apple" */
-export const legacyName = (id: string) => names[id.replace("minecraft:", "")];
+export const legacyName = (id: string) => names[withoutNamespace(id)];

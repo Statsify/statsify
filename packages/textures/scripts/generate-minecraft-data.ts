@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { LegacyTexture } from "../src/core/pack.js";
+import { DOWNLOAD_TIMEOUT, type LegacyTexture, resolveTextures, withoutNamespace } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
 const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
 
 const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
   if (!response.ok) throw new Error(`${path}: ${response.status}`);
   return response.json() as Promise<T>;
 };
@@ -205,34 +205,18 @@ async function readAssets(source: string) {
   return { models, textures };
 }
 
-const stripNamespace = (id: string) => id.replace("minecraft:", "");
-
 /** A model's textures with its parents' merged in and #references followed */
 function modelTextures(models: Map<string, ModelFile>, id: string) {
-  const merged: Record<string, string> = {};
   const chain: ModelFile[] = [];
 
   for (let next: string | undefined = id; next && models.has(next); ) {
     const model: ModelFile = models.get(next)!;
     chain.push(model);
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
-  for (const model of chain.toReversed()) {
-    for (const [key, value] of Object.entries(model.textures ?? {})) {
-      merged[key] = stripNamespace(typeof value === "string" ? value : value.sprite);
-    }
-  }
-
-  const resolved: Record<string, string> = {};
-
-  for (const key of Object.keys(merged)) {
-    let value: string | undefined = merged[key];
-    while (value?.startsWith("#")) value = merged[value.slice(1)];
-    if (value && !value.startsWith("#")) resolved[key] = value;
-  }
-
-  return resolved;
+  const textures = resolveTextures(Object.assign({}, ...chain.toReversed().map((model) => model.textures)));
+  return Object.fromEntries(Object.entries(textures).map(([key, texture]) => [key, withoutNamespace(texture)]));
 }
 
 unzipSync(await readFile(path), {
@@ -319,7 +303,7 @@ for (const [id, entries] of variants) {
     if (!name) continue;
 
     const key = entries.length === 1 ? `${id}` : `${id}:${damage}`;
-    const modern = modernName(key, name.replace("minecraft:", ""));
+    const modern = modernName(key, withoutNamespace(name));
     if (modern) output.items[key] = modern;
   }
 }
@@ -434,7 +418,7 @@ function isTemplate(models: Map<string, ModelFile>, id: string) {
   for (let next: string | undefined = id; next && models.has(next) && !elements; ) {
     const model: ModelFile = models.get(next)!;
     elements = model.elements;
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
   return (elements ?? []).some((element) =>
