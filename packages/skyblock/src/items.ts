@@ -9,6 +9,7 @@
 import { RARITIES, type ItemView, type ItemsResource, type Rarity, type RawItem } from "#types";
 import { removeFormatting } from "@statsify/util";
 import { skinHash, textureOf } from "#textures";
+import { z } from "zod";
 
 // Longest first, so "VERY SPECIAL" wins over "SPECIAL" and "UNCOMMON" over "COMMON". Shiny items say "SHINY MYTHIC …".
 const RARITY_LINE = new RegExp(
@@ -21,6 +22,13 @@ const RARITY_LINE = new RegExp(
 function rarityOf(lore: readonly string[]): Rarity | undefined {
   const rarity = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1];
   return rarity?.replace(" ", "_") as Rarity | undefined;
+}
+
+/** An NBT long, which the decode leaves as `[high, low]` (low signed), as a number; an int as it is. */
+function nbtNumber(value: unknown): number | undefined {
+  if (typeof value === "number") return value;
+  if (Array.isArray(value) && value.length === 2 && value.every(Number.isInteger)) return value[0] * 2 ** 32 + (value[1] >>> 0);
+  return undefined;
 }
 
 export function toItemView(item: RawItem): ItemView {
@@ -38,30 +46,34 @@ export function toItemView(item: RawItem): ItemView {
     glint: item.tag?.ench !== undefined,
     texture: textureOf(item),
     reforge: attributes.modifier,
-    stars: attributes.upgrade_level ?? attributes.dungeon_item_level,
+    stars: nbtNumber(attributes.upgrade_level ?? attributes.dungeon_item_level),
     recombobulated: Boolean(attributes.rarity_upgrades),
     enchantments: attributes.enchantments,
   };
 }
 
-interface RawResourceItem {
-  id: string;
-  name: string;
-  material: string;
-  durability?: number;
-  tier?: string;
-  category?: string;
-  color?: string;
-  skin?: { value: string };
-  origin?: string;
-  rift_transferrable?: boolean;
-  npc_sell_price?: number;
-}
+const RawResourceItem = z.object({
+  id: z.string(),
+  name: z.string(),
+  material: z.string(),
+  durability: z.number().optional(),
+  tier: z.string().optional(),
+  category: z.string().optional(),
+  color: z.string().optional(),
+  skin: z.object({ value: z.string() }).optional(),
+  origin: z.string().optional(),
+  rift_transferrable: z.boolean().optional(),
+  npc_sell_price: z.number().optional(),
+});
+
+/** /v2/resources/skyblock/items */
+export const RawItemsResource = z.object({ lastUpdated: z.number(), items: z.array(RawResourceItem) });
+export type RawItemsResource = z.infer<typeof RawItemsResource>;
 
 // The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
 const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier));
 
-export function parseItemsResource(raw: { lastUpdated: number; items: RawResourceItem[] }): ItemsResource {
+export function parseItemsResource(raw: RawItemsResource): ItemsResource {
   return {
     lastUpdated: raw.lastUpdated,
     items: Object.fromEntries(
@@ -94,5 +106,13 @@ if (import.meta.vitest) {
     expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
     expect(rarityOf(["§7A rare find"])).toBeUndefined();
     expect(rarityOf([])).toBeUndefined();
+  });
+
+  test("nbtNumber joins a long's halves", () => {
+    expect(nbtNumber(5)).toBe(5);
+    expect(nbtNumber([0, 7])).toBe(7);
+    expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
+    expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
+    expect(nbtNumber("5")).toBeUndefined();
   });
 }
