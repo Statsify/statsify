@@ -23,9 +23,7 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
   if (!jacob || (contests === 0 && crops.size === 0)) return null;
 
   return {
-    medals: Object.fromEntries(
-      JACOB_MEDALS.toReversed().map((medal) => [medal, jacob.medals_inv?.[medal] ?? 0])
-    ) as JacobSection["medals"],
+    medals: Object.fromEntries(JACOB_MEDALS.map((medal) => [medal, jacob.medals_inv?.[medal] ?? 0])) as JacobSection["medals"],
     contests,
     crops: [...crops]
       .map((id) => {
