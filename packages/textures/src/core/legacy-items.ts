@@ -62,12 +62,6 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
 /** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
 export const legacyMaterialId = (name: string) => materials[name];
 
-/** The 26.3 item for a 1.8 Bukkit material name and Damage value */
-export function legacyMaterial(name: string, damage = 0) {
-  const id = legacyMaterialId(name);
-  return id === undefined ? undefined : legacyItem(id, damage);
-}
-
 /** How much wear a 26.3 item takes before it breaks */
 export const maxDamage = (id: string) => durability[withoutNamespace(id)];
 
