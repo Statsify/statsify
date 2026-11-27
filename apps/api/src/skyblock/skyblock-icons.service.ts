@@ -61,22 +61,21 @@ export class SkyBlockIconsService implements OnModuleInit {
       if (stored) return stored;
       if (failed) return undefined;
 
-      try {
-        const response = await lastValueFrom(
-          this.httpService.get<ArrayBuffer>(`https://textures.minecraft.net/texture/${hash}`, {
-            responseType: "arraybuffer",
-            timeout: HEAD_TIMEOUT,
-          })
-        );
-
-        const skin = Buffer.from(response.data);
-        await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
-        return skin;
-      } catch (error) {
+      const response = await lastValueFrom(
+        this.httpService.get<ArrayBuffer>(`https://textures.minecraft.net/texture/${hash}`, {
+          responseType: "arraybuffer",
+          timeout: HEAD_TIMEOUT,
+        })
+      ).catch(async (error) => {
         this.logger.warn(`Couldn't load the head ${hash}: ${String(error)}`);
         await this.redis.set(failedHeadKey(hash), "1", "EX", FAILED_HEAD_SECONDS);
         return undefined;
-      }
+      });
+      if (!response) return undefined;
+
+      const skin = Buffer.from(response.data);
+      await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
+      return skin;
     });
   }
 }
