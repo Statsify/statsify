@@ -6,48 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNumber, IsOptional, Max, Min } from "class-validator";
-import { Transform } from "class-transformer";
+import { z } from "zod";
 
 const MIN_SIZE = 64;
 const MAX_SIZE = 1024;
 
-export function SceneCameraDto(camera: { yaw: number; pitch: number; width: number; height: number }) {
-  class SceneCamera {
-    // An empty ?yaw= keeps the default angle, where +"" would turn it to the front
-    @IsOptional()
-    @Transform(({ value }) => (value === "" ? undefined : +value))
-    @IsNumber()
-    @Min(-Math.PI * 2)
-    @Max(Math.PI * 2)
-    @ApiProperty({ required: false, default: camera.yaw, description: "Camera angle around the scene in radians: 0 faces the front, π the back" })
-    public yaw?: number;
+// An empty value keeps the default angle, where z.coerce.number() would read "" as 0.
+// The default sits on the number because the OpenAPI schema drops one set on the transform
+const angle = (limit: number, fallback: number) =>
+  z
+    .literal("")
+    .transform(() => undefined)
+    .or(z.coerce.number().min(-limit).max(limit).meta({ default: fallback }))
+    .optional();
 
-    @IsOptional()
-    @Transform(({ value }) => (value === "" ? undefined : +value))
-    @IsNumber()
-    @Min(-Math.PI / 2)
-    @Max(Math.PI / 2)
-    @ApiProperty({ required: false, default: camera.pitch, description: "Camera angle above the horizon in radians" })
-    public pitch?: number;
+const size = (fallback: number) => z.coerce.number().int().min(MIN_SIZE).max(MAX_SIZE).optional().meta({ default: fallback });
 
-    @IsOptional()
-    @Transform(({ value }) => +value)
-    @IsInt()
-    @Min(MIN_SIZE)
-    @Max(MAX_SIZE)
-    @ApiProperty({ required: false, default: camera.width, minimum: MIN_SIZE, maximum: MAX_SIZE })
-    public width?: number;
-
-    @IsOptional()
-    @Transform(({ value }) => +value)
-    @IsInt()
-    @Min(MIN_SIZE)
-    @Max(MAX_SIZE)
-    @ApiProperty({ required: false, default: camera.height, minimum: MIN_SIZE, maximum: MAX_SIZE })
-    public height?: number;
-  }
-
-  return SceneCamera;
-}
+export const sceneCamera = (camera: { yaw: number; pitch: number; width: number; height: number }) =>
+  z.object({
+    yaw: angle(Math.PI * 2, camera.yaw).describe("Camera angle around the scene in radians: 0 faces the front, π the back"),
+    pitch: angle(Math.PI / 2, camera.pitch).describe("Camera angle above the horizon in radians"),
+    width: size(camera.width),
+    height: size(camera.height),
+  });
