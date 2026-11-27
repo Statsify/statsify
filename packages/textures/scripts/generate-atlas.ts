@@ -20,6 +20,7 @@ import {
   type ItemStack,
   LEGACY_GLINT,
   ModelResolver,
+  PATTERN_FOLDERS,
   PackStack,
   assetPath,
   loadNames,
@@ -46,13 +47,10 @@ const ITEM_FILE = /^assets\/([^/]+)\/items\/(.+)\.json$/;
 
 // Tints and models that read the stack, so these items are drawn in the browser from their models
 const STACK_TINTS = new Set(["minecraft:dye", "minecraft:potion"]);
-const STACK_MODELS = new Set(["minecraft:player_head", "minecraft:banner", "minecraft:shield"]);
+const STACK_MODELS = new Set(["minecraft:player_head", ...Object.keys(PATTERN_FOLDERS)]);
 
 // Banners and shields draw any of their folder's patterns over their base
-const PATTERN_FOLDERS: Record<string, string> = {
-  "minecraft:banner": "assets/minecraft/textures/entity/banner/",
-  "minecraft:shield": "assets/minecraft/textures/entity/shield/",
-};
+const patternFolders: Record<string, string | undefined> = PATTERN_FOLDERS;
 
 setCanvasBackend(skiaCanvas);
 
@@ -112,11 +110,13 @@ for (const result of drawn) {
   for (const { model, special } of variants.flat()) {
     if (!special) for (const texture of Object.values(model.textures)) textureIds.add(namespaced(texture));
 
-    const folder = special && PATTERN_FOLDERS[special.type];
+    const folder = special && patternFolders[special.type];
     if (!folder) continue;
 
+    const patterns = assetPath(`entity/${folder}/`, "textures", "");
+
     for (const path of files) {
-      if (path.startsWith(folder) && path.endsWith(".png")) {
+      if (path.startsWith(patterns) && path.endsWith(".png")) {
         textureIds.add(`minecraft:${path.slice("assets/minecraft/textures/".length, -".png".length)}`);
       }
     }
