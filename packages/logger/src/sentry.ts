@@ -32,7 +32,7 @@ export const redactInteractionTokens = {
   },
 } satisfies NodeOptions;
 
-export const sentryOptions = async (dsnKey: SentryDsnKey) => {
+export const sentryOptions = async (dsnKey: SentryDsnKey, { tracing = true } = {}) => {
   const dsn = await config(dsnKey, { required: false });
 
   return {
@@ -40,7 +40,9 @@ export const sentryOptions = async (dsnKey: SentryDsnKey) => {
     // Sentry 11 collects all of these by default
     dataCollection: { userInfo: false, cookies: false, httpBodies: [], databaseQueryData: false },
     normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate", { required: dsn !== undefined }),
+    tracesSampleRate: tracing
+      ? await config("sentry.tracesSampleRate", { required: dsn !== undefined })
+      : undefined,
     environment: await config("environment"),
   } satisfies NodeOptions;
 };
