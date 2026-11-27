@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type LegacyTexture, resolveTextures, withoutNamespace } from "@statsify/textures";
+import { DOWNLOAD_TIMEOUT, type LegacyTexture, resolveTextures, withoutNamespace } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
 const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
 
 const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
   if (!response.ok) throw new Error(`${path}: ${response.status}`);
   return response.json() as Promise<T>;
 };

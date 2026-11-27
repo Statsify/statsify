@@ -206,9 +206,11 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
   return upgraded;
 }
 
+export const DOWNLOAD_TIMEOUT = 60_000;
+
 async function readSource(source: PackSource): Promise<Uint8Array> {
   if (typeof source === "string") {
-    const response = await fetch(source, { signal: AbortSignal.timeout(60_000) });
+    const response = await fetch(source, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
     if (!response.ok) throw new Error(`${source}: ${response.status} ${response.statusText}`);
     return new Uint8Array(await response.arrayBuffer());
   }
