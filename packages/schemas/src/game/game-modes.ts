@@ -8,6 +8,12 @@
 
 import { prettify } from "@statsify/util";
 
+type ModeMetadata = {
+  aliases?: readonly string[];
+  description?: string;
+  emoji?: string;
+};
+
 export type GameMode<Modes extends Mode[]> = {
   [Key in ApiModeFromGameModes<Modes>]: {
     api: Key;
@@ -23,10 +29,10 @@ export type GameModeWithSubModes<Modes extends Mode[]> = {
     formatted: string;
     hypixel?: string;
     submodes: SubModeForMode<Modes, Key>[];
-  }
+  } & ModeMetadata
 }[ApiModeFromGameModes<Modes>];
 
-export type Mode = {
+export type Mode = ({
   hypixel: string;
   formatted: string;
 } | {
@@ -34,9 +40,9 @@ export type Mode = {
   api: string;
   formatted?: string;
   submodes?: SubMode[];
-};
+}) & ModeMetadata;
 
-type SubMode = { api: string; formatted?: string };
+type SubMode = { api: string; formatted?: string } & ModeMetadata;
 
 export class GameModes<Modes extends Mode[]> {
   private modes: GameModeWithSubModes<Modes>[];
@@ -44,10 +50,9 @@ export class GameModes<Modes extends Mode[]> {
 
   public constructor(modes: Modes) {
     this.modes = modes.filter((m) => "api" in m).map((m) => ({
-      hypixel: m.hypixel,
-      api: m.api,
+      ...m,
       formatted: m.formatted ?? prettify(m.api),
-      submodes: m.submodes?.map((sm) => ({ api: sm.api, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
+      submodes: m.submodes?.map((sm) => ({ ...sm, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
     })) as GameModeWithSubModes<Modes>[];
 
     this.hypixelModes = Object.fromEntries(
@@ -86,7 +91,7 @@ type ExtractSubModes<T extends Mode[], M extends ApiModeFromGameModes<T>> = Extr
 export type SubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> =
   [ExtractSubModes<T, M>] extends [never] ?
     never :
-    ExtractSubModes<T, M> & { formatted: string };
+    ExtractSubModes<T, M> & ModeMetadata & { formatted: string };
 
 export type ApiSubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = NeverToUndefined<ExtractSubModes<T, M>["api"]>;
 

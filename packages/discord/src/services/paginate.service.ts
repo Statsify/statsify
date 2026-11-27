@@ -44,6 +44,7 @@ export type SubPage = PageInput & {
 
 interface PageInput {
   label: LocalizationString;
+  description?: LocalizationString;
   emoji?: LocalizationString | false;
 }
 
@@ -299,6 +300,7 @@ class PageController {
         const option = new SelectMenuOptionBuilder()
           .label(page.label)
           .value(`${index}`);
+        if (page.description) option.description(page.description);
         if (page.emoji) option.emoji(page.emoji);
         menu.option(option);
       }

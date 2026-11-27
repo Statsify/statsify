@@ -14,18 +14,21 @@ import {
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import {
   ClassMetadata,
+  type GameModes,
   METADATA_KEY,
   PlayerStats,
   getLeaderboardFields,
 } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
+type LeaderboardChoice = APIApplicationCommandOptionChoice<string> & { aliases?: string[] };
+
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
 
 const FUSE_OPTIONS = {
-  keys: ["name", "key"],
+  keys: ["name", "aliases"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
@@ -42,7 +45,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   acc[prefix as keyof PlayerStats] = [fuse, list];
 
   return acc;
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice<string>>, APIApplicationCommandOptionChoice[]]>);
+}, {} as Record<keyof PlayerStats, [Fuse<LeaderboardChoice>, LeaderboardChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
@@ -51,23 +54,54 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  public constructor(private prefix: keyof PlayerStats) {
+  private fuse: Fuse<LeaderboardChoice>;
+  private list: LeaderboardChoice[];
+
+  public constructor(prefix: keyof PlayerStats, modes?: GameModes<any>) {
     super();
     this.description = (t) => t("arguments.player-leaderboard");
+
+    [this.fuse, this.list] = fields[prefix];
+
+    if (modes) {
+      this.list = this.list.map((choice) => ({ ...choice, aliases: this.getAliases(choice.value, modes) }));
+      this.fuse = new Fuse(this.list, FUSE_OPTIONS);
+    }
   }
 
   public autocompleteHandler(
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, "").toLowerCase();
+    const words = context.option<string>(this.name, "").toLowerCase().split(/\s+/).filter(Boolean);
+    let choices = this.list;
 
-    const [fuse, list] = fields[this.prefix];
+    while (words.length > 0) {
+      const aliased = choices.filter((choice) => choice.aliases?.some((alias) => alias.toLowerCase() === words[0]));
+      if (aliased.length === 0) break;
 
-    if (!currentValue) return list.slice(0, 25);
+      choices = aliased;
+      words.shift();
+    }
 
-    return fuse
-      .search(currentValue)
-      .map((result) => result.item)
-      .slice(0, 25);
+    const query = words.join(" ");
+
+    if (query) {
+      const fuse = choices === this.list ? this.fuse : new Fuse(choices, FUSE_OPTIONS);
+      choices = fuse.search(query).map((result) => result.item);
+    }
+
+    return this.toChoices(choices.slice(0, 25));
+  }
+
+  private getAliases(key: string, modes: GameModes<any>): string[] {
+    const [modeKey, submodeKey] = key.split(".");
+    const mode = modes.getModes().find(({ api }) => api === modeKey);
+    const submode = mode?.submodes.find(({ api }) => api === submodeKey);
+
+    return [...mode?.aliases ?? [], ...submode?.aliases ?? []];
+  }
+
+  private toChoices(choices: LeaderboardChoice[]): APIApplicationCommandOptionChoice[] {
+    return choices.map(({ name, value }) => ({ name, value }));
   }
 }
