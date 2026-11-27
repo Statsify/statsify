@@ -46,12 +46,9 @@ export const getDefaultSkin = (uuid: string) => {
   const alex =
     [7, 15, 23, 31].map((index) => Number.parseInt(hex[index], 16)).reduce((a, b) => a ^ b) % 2 === 1;
 
-  const name = alex ? "alex" : "steve";
-
   return {
     slim: alex,
-    texture: getAssetPath(`skins/${name}.png`),
-    render: getAssetPath(`skins/${name}-render.png`),
+    texture: getMinecraftTexturePath(`textures/entity/${alex ? "alex" : "steve"}.png`),
   };
 };
 

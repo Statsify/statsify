@@ -28,6 +28,8 @@ import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 import { loadImage, renderHead } from "@statsify/rendering";
 import { getDefaultSkin } from "@statsify/assets";
+import { readFile } from "node:fs/promises";
+import { renderSkin } from "@statsify/skin-renderer";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -212,9 +214,11 @@ export class ApiService extends StatsifyApiService {
   }
 
   public override getPlayerSkin(uuid: string, user: User | null) {
-    return super.getPlayerSkin(uuid, user).catch((err) => {
+    return super.getPlayerSkin(uuid, user).catch(async (err) => {
       this.logger.error(err);
-      return loadImage(getDefaultSkin(uuid).render);
+      const { texture, slim } = getDefaultSkin(uuid);
+      const render = await renderSkin(await readFile(texture), slim, User.hasExtrudedSkins(user));
+      return loadImage(render);
     });
   }
 
