@@ -12,6 +12,8 @@ import { createZodDto } from "nestjs-zod";
 import { leaderboardField } from "./leaderboard-field.js";
 import { z } from "zod";
 
+const field = leaderboardField(Player);
+
 export class PlayerRankingsDto extends createZodDto(
-  UuidDto.schema.extend({ fields: z.array(leaderboardField(Player)) })
+  UuidDto.schema.extend({ fields: z.array(field).max(field.options.length) })
 ) {}
