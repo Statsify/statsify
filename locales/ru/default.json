@@ -412,7 +412,7 @@
       "title": "Нет данных таблицы лидеров на этой позиции"
     },
     "leaderboardInvalidPosition": {
-      "description": "Введенная вами позиция лидеров неверна. Введите число, больше 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Неверная позиция"
     },
     "leaderboardNotFound": {
