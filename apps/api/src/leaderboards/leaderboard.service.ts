@@ -39,6 +39,9 @@ export const toLeaderboardQuery = (
   return { input: page, type: LeaderboardQuery.PAGE };
 };
 
+export const isRankedScore = (value: unknown): value is number =>
+  typeof value === "number" && value !== 0 && !Number.isNaN(value);
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
@@ -63,10 +66,10 @@ export abstract class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     for (const [field, metadata] of fields) {
-      const value = instance[field] as unknown as number;
+      const value = instance[field];
       const key = `${name}.${String(field)}`;
 
-      if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
+      if (remove || !isRankedScore(value)) {
         pipeline.zrem(key, id);
         continue;
       }
