@@ -412,7 +412,7 @@
       "title": "ไม่มีข้อมูลกระดานผู้นำ ณ จุดนี้"
     },
     "leaderboardInvalidPosition": {
-      "description": "ตำแหน่งกระดานผู้นำที่คุณป้อนไม่ถูกต้อง. ป้อนตัวเลขที่มากกว่า 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "ตำแหน่งไม่ถูกต้อง"
     },
     "leaderboardNotFound": {

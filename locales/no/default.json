@@ -412,7 +412,7 @@
       "title": "Ingen topplistedata for denne posisjonen"
     },
     "leaderboardInvalidPosition": {
-      "description": "Topplisteposisjonen du skrev inn er ugyldig. Skriv inn et tall større enn 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Ugyldig posisjon"
     },
     "leaderboardNotFound": {

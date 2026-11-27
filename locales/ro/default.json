@@ -412,7 +412,7 @@
       "title": "Nu există date în Clasament la această poziție"
     },
     "leaderboardInvalidPosition": {
-      "description": "Poziția clasamentului introdusă nu este validă. Introduceți un număr mai mare de 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Poziție invalidă"
     },
     "leaderboardNotFound": {

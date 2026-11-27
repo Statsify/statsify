@@ -412,7 +412,7 @@
       "title": "此位置目前没有排行榜数据"
     },
     "leaderboardInvalidPosition": {
-      "description": "你输入的排行榜位置是无效的。输入一个大于1的数字。",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "无效的位置"
     },
     "leaderboardNotFound": {

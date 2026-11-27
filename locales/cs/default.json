@@ -412,7 +412,7 @@
       "title": "Žádná data v žebříčku na této pozici"
     },
     "leaderboardInvalidPosition": {
-      "description": "Zadaná pozice žebříčku je neplatná. Zadej číslo větší než 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Neplatná pozice"
     },
     "leaderboardNotFound": {

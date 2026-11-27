@@ -412,7 +412,7 @@
       "title": "Bu Pozisyonda Leaderboard Verisi Yok"
     },
     "leaderboardInvalidPosition": {
-      "description": "Girdiğiniz leaderboard pozisyonu geçersiz. 1'den büyük bir sayı girin.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Geçersiz Pozisyon"
     },
     "leaderboardNotFound": {

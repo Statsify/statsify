@@ -412,7 +412,7 @@
       "title": "Geen Leaderboard Gegevens Op Deze Positie"
     },
     "leaderboardInvalidPosition": {
-      "description": "De leaderboard positie die je hebt opgegeven is ongeldig. Voer een getal in dat groter is dan 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Ongeldige Positie"
     },
     "leaderboardNotFound": {

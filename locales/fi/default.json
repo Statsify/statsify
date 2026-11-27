@@ -412,7 +412,7 @@
       "title": "Tällä sijoituksella ei ole dataa"
     },
     "leaderboardInvalidPosition": {
-      "description": "Syöttämäsi tulostaulukon sijoitus on virheellinen. Syötä numero, joka on suurempi kuin 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Virheellinen sijoitus"
     },
     "leaderboardNotFound": {

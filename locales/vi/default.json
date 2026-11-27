@@ -412,7 +412,7 @@
       "title": "Không có dữ liệu bảng danh sách nào ở thời điểm này"
     },
     "leaderboardInvalidPosition": {
-      "description": "Vị trị trong bảng xếp hạng mà bạn nhập không hợp lệ. Hãy nhập một số lớn hơn 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Vị trí không hợp lệ"
     },
     "leaderboardNotFound": {

@@ -412,7 +412,7 @@
       "title": "Aucune donnée pour le classement à cette position"
     },
     "leaderboardInvalidPosition": {
-      "description": "La position dans le classement que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Position invalide"
     },
     "leaderboardNotFound": {

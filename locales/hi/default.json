@@ -412,7 +412,7 @@
       "title": "No Leaderboard Data At This Position"
     },
     "leaderboardInvalidPosition": {
-      "description": "आपके द्वारा इंटर की गई लीडरबोर्ड पोजीशन अमान्य है। 1 से बड़ी संख्या इंटर करें।",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "अमान्य पोज़िशन"
     },
     "leaderboardNotFound": {
