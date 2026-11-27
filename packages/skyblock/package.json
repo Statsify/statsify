@@ -31,6 +31,7 @@
     "@statsify/rendering": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
+    "lru-cache": "^11.5.3",
     "prismarine-nbt": "2.8.0",
     "skia-canvas": "4.0.0",
     "skyhelper-networth": "2.11.1",

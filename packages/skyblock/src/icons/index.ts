@@ -8,6 +8,7 @@
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import textures from "../generated/textures-1.8.json" with { type: "json" };
+import { LRUCache } from "lru-cache";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
@@ -222,7 +223,7 @@ async function drawBase(plan: Plan, key: string) {
   return canvas;
 }
 
-const icons = new Map<string, Promise<Canvas | undefined>>();
+const icons = new LRUCache<string, Promise<Canvas | undefined>>({ max: CACHE_SIZE });
 
 const cacheKey = (texture: ItemTexture, size: number) =>
   `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}`;
@@ -245,14 +246,11 @@ export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE }: IconOpti
   const key = cacheKey(texture, size);
   let icon = icons.get(key);
 
-  if (icon) {
-    icons.delete(key);
-  } else {
+  if (!icon) {
     icon = drawIcon(texture, size, key);
     icon.catch(() => icons.delete(key));
+    icons.set(key, icon);
   }
 
-  icons.set(key, icon);
-  if (icons.size > CACHE_SIZE) icons.delete(icons.keys().next().value!);
   return icon;
 }
