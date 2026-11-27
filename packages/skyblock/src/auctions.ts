@@ -16,10 +16,7 @@ import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
 type Attributes = NonNullable<NonNullable<RawItem["tag"]>["ExtraAttributes"]>;
 
 const COLOR_HATS = new Set(["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025"]);
-const SLOTH_HAT = "PARTY_HAT_SLOTH";
 const RUNES = new Set(["RUNE", "UNIQUE_RUNE"]);
-const NEW_YEAR_CAKE = "NEW_YEAR_CAKE";
-const ENCHANTED_BOOK = "ENCHANTED_BOOK";
 const PRICED_PET_LEVELS = [1, 100, 200] as const;
 
 const MIDAS_WEAPONS: Record<string, { maxBid: number; key: string }> = {
@@ -50,11 +47,11 @@ function runeKey(attributes: Attributes) {
   return rune && upper(`RUNE_${rune[0]}_${rune[1]}`);
 }
 
-const cakeKey = (attributes: Attributes) => `${NEW_YEAR_CAKE}_${attributes.new_years_cake}`;
+const cakeKey = (attributes: Attributes) => `NEW_YEAR_CAKE_${attributes.new_years_cake}`;
 
 function hatKey(id: string, attributes: Attributes): string | undefined {
   if (COLOR_HATS.has(id) && attributes.party_hat_color) return `${id}_${upper(attributes.party_hat_color)}`;
-  return id === SLOTH_HAT && attributes.party_hat_emoji ? `${id}_${upper(attributes.party_hat_emoji)}` : undefined;
+  return id === "PARTY_HAT_SLOTH" && attributes.party_hat_emoji ? `${id}_${upper(attributes.party_hat_emoji)}` : undefined;
 }
 
 function editionKey(id: string, attributes: Attributes): string | undefined {
@@ -95,9 +92,9 @@ export function listingKey(item: RawItem): string | undefined {
 
   const id = attributes?.id;
   if (!attributes || id === undefined) return;
-  if (id === ENCHANTED_BOOK) return bookKey(attributes);
+  if (id === "ENCHANTED_BOOK") return bookKey(attributes);
   if (RUNES.has(id)) return runeKey(attributes);
-  if (id === NEW_YEAR_CAKE) return cakeKey(attributes);
+  if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
   if (id === "CROWN_OF_AVARICE") return crownKey(attributes);
   if (id in MIDAS_WEAPONS) return midasKey(id, attributes);
   if (attributes.skin) return skinnedKey(id, attributes);
@@ -115,11 +112,11 @@ function networthId(id: string, attributes: Attributes, map: PriceMap) {
     return skinnedKey(id, attributes);
   }
 
-  const sloth = id === SLOTH_HAT ? hatKey(id, attributes) : undefined;
+  const sloth = id === "PARTY_HAT_SLOTH" ? hatKey(id, attributes) : undefined;
   if (sloth && price(sloth)) return sloth;
   const rune = RUNES.has(id) && runeKey(attributes);
   if (rune) return rune;
-  if (id === NEW_YEAR_CAKE) return cakeKey(attributes);
+  if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
   const variant = (COLOR_HATS.has(id) && hatKey(id, attributes)) || editionKey(id, attributes);
   if (variant) return variant;
   if (attributes.is_shiny && price(shinyKey(id))) return shinyKey(id);
@@ -152,7 +149,7 @@ export function lookupKeys(thing: RawItem | RawPet, map: PriceMap): string[] {
   const id = attributes?.id;
   if (!attributes || id === undefined) return [];
 
-  const books = id === ENCHANTED_BOOK ? bookKeys(attributes) : [];
+  const books = id === "ENCHANTED_BOOK" ? bookKeys(attributes) : [];
   if (books.length > 0) return books;
 
   if (Number(attributes.collected_coins ?? 0) > 0) {
