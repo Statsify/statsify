@@ -11,7 +11,7 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player, SkyBlockStats, type SkyBlockStatsRow, getLeaderboardField, serialize, skyblockStatsId } from "@statsify/schemas";
+import { Player, SkyBlockStats, type SkyBlockStatsRow, getLeaderboardField, serialize, skyblockStatsId, skyblockStatsUuid } from "@statsify/schemas";
 import { type LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
@@ -139,13 +139,14 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const selector: Record<string, boolean> = { id: true, uuid: true, cuteName: true, gameMode: true };
     for (const field of fields) selector[field] = true;
 
-    const rows = await this.statsModel.find({ id: { $in: ids } }).select(selector).lean().exec();
-
-    const players = await this.playerModel
-      .find({ uuid: { $in: rows.map((row) => row.uuid) } })
-      .select({ uuid: true, displayName: true })
-      .lean()
-      .exec();
+    const [rows, players] = await Promise.all([
+      this.statsModel.find({ id: { $in: ids } }).select(selector).lean().exec(),
+      this.playerModel
+        .find({ uuid: { $in: ids.map(skyblockStatsUuid) } })
+        .select({ uuid: true, displayName: true })
+        .lean()
+        .exec(),
+    ]);
 
     const rowsById = new Map(rows.map((row) => [row.id, row]));
     const namesByUuid = new Map(players.map((player) => [player.uuid, player.displayName]));
