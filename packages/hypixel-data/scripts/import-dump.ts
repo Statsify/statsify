@@ -965,14 +965,16 @@ async function writeData(file: string, found: boolean, value: unknown) {
   if (found) await writeFile(new URL(`../data/${file}`, import.meta.url), `${JSON.stringify(value, null, 2)}\n`);
 }
 
-await writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output);
-await writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames);
-await writeData("legacy-kits.json", count(legacyKits) > 0, { ...legacyKits, blitzArmor });
-await writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits);
-await writeData("quake.json", count(quake) > 0, quake);
-await writeData("arena.json", count(arena) > 0, arena);
-await writeData("turbo-kart-racers.json", count(kart) > 0, kart);
-await writeData("speed-uhc.json", count(speedUhc) > 0, speedUhc);
+await Promise.all([
+  writeData("duels-modes.json", Object.keys(output.modes).length > 0 || Object.keys(output.kits).length > 0, output),
+  writeData("tnt-games.json", Object.keys(tntGames).length > 0, tntGames),
+  writeData("legacy-kits.json", count(legacyKits) > 0, { ...legacyKits, blitzArmor }),
+  writeData("skywars-kits.json", Object.keys(skyWarsKits).length > 0, skyWarsKits),
+  writeData("quake.json", count(quake) > 0, quake),
+  writeData("arena.json", count(arena) > 0, arena),
+  writeData("turbo-kart-racers.json", count(kart) > 0, kart),
+  writeData("speed-uhc.json", count(speedUhc) > 0, speedUhc),
+]);
 
 console.log(
   `${Object.keys(output.modes).length} Duels modes, ${Object.keys(tntGames).length} TNT Games modes; kits: ${Object.entries(output.kits)
