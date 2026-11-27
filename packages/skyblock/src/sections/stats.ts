@@ -28,7 +28,7 @@ import { HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } f
 import { add, roundTo } from "@statsify/math";
 import { bagAccessories, heldAccessories, highestTiers, powerScale, stonePowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
-import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { skyblockLevel } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
@@ -265,7 +265,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const perks = member.player_data?.perks ?? {};
   const essence = essenceStats(perks);
   const catacombs = getDungeons(member).catacombs.level;
-  const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
+  const level = skyblockLevel(member.leveling?.experience ?? 0);
   const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
   const slayerTiers = add(...SLAYER_BOSSES.map((boss) => tierWisdom(slayers[boss].kills)));
 
