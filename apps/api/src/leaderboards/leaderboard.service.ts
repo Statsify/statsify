@@ -29,6 +29,16 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 export const PAGE_SIZE = 10;
 
+export const toLeaderboardQuery = (
+  search: string | null | undefined,
+  position: number | undefined,
+  page: number
+): { input: number | string; type: LeaderboardQuery } => {
+  if (search) return { input: search, type: LeaderboardQuery.INPUT };
+  if (position) return { input: position, type: LeaderboardQuery.POSITION };
+  return { input: page, type: LeaderboardQuery.PAGE };
+};
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}

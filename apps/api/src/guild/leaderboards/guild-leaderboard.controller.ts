@@ -20,7 +20,6 @@ import {
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
-  LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
@@ -29,6 +28,7 @@ import { GuildLeaderboardDto, GuildMemberLeaderboardDto, GuildRankingDto } from 
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
 import { GuildService } from "../guild.service.js";
 import { PlayerLeaderboardService } from "#player";
+import { toLeaderboardQuery } from "#leaderboards";
 
 @Controller("/guild/leaderboards")
 export class GuildLeaderboardController {
@@ -46,19 +46,7 @@ export class GuildLeaderboardController {
   public async getGuildLeaderboard(
     @Body() { field, page, guild, position }: GuildLeaderboardDto
   ) {
-    let input: number | string;
-    let type: LeaderboardQuery;
-
-    if (guild) {
-      input = guild;
-      type = LeaderboardQuery.INPUT;
-    } else if (position) {
-      input = position;
-      type = LeaderboardQuery.POSITION;
-    } else {
-      input = page;
-      type = LeaderboardQuery.PAGE;
-    }
+    const { input, type } = toLeaderboardQuery(guild, position, page);
 
     const leaderboard = await this.guildLeaderboardService.getLeaderboard(
       Guild,
@@ -79,19 +67,7 @@ export class GuildLeaderboardController {
   public async getMemberLeaderboard(
     @Body() { field, guild: tag, page, player, position }: GuildMemberLeaderboardDto
   ) {
-    let input: number | string;
-    let type: LeaderboardQuery;
-
-    if (player) {
-      input = player;
-      type = LeaderboardQuery.INPUT;
-    } else if (position) {
-      input = position;
-      type = LeaderboardQuery.POSITION;
-    } else {
-      input = page;
-      type = LeaderboardQuery.PAGE;
-    }
+    const { input, type } = toLeaderboardQuery(player, position, page);
 
     const guild = await this.guildService.get(
       tag,
