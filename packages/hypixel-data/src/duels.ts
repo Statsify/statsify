@@ -46,7 +46,8 @@ const SHARED = Object.fromEntries(
 );
 
 // Modes with a layout per kit, like layout_mw_duel_herobrine
-const KIT_MODES = /^(mw_duel|blitz_duel|sw_duel)_(.+)$/;
+const KIT_MODES = ["mw_duel", "blitz_duel", "sw_duel"] as const;
+const KIT_MODE_KEY = new RegExp(`^(${KIT_MODES.join("|")})_(.+)$`);
 
 // Their look depends on a Damage value the token doesn't carry
 const DAMAGE_DEPENDENT = new Set(["potion", "monster_egg"]);
@@ -54,7 +55,7 @@ const DAMAGE_DEPENDENT = new Set(["potion", "monster_egg"]);
 /** A layout key's mode and, for modes with one layout per kit, its kit */
 function duelsMode(key: string) {
   const name = key.replace(/^layout_/, "");
-  const kit = KIT_MODES.exec(name);
+  const kit = KIT_MODE_KEY.exec(name);
   return kit ? { mode: kit[1], kit: kit[2] } : { mode: name.replace(/_layout$/, "") };
 }
 
@@ -84,7 +85,7 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
  * The armor a Duels kit's picker lists, by mode and kit as its layout_<mode>_<kit> key names them
  * (sw_duel and kit_mini_solo_scout), undefined for a kit the picker lists none for (every Mega Walls Duel class)
  */
-export function duelsKitArmor(mode: "blitz_duel" | "mw_duel" | "sw_duel", kit: string) {
+export function duelsKitArmor(mode: (typeof KIT_MODES)[number], kit: string) {
   const armor = duelsKit(mode, kit)?.armor;
   return armor && armorOf(Object.values(armor));
 }

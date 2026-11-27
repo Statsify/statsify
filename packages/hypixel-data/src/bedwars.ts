@@ -22,7 +22,7 @@ import {
   UPGRADABLE,
 } from "./bedwars-shop.js";
 import { HOTBAR } from "./kits.js";
-import type { ItemStack } from "@statsify/textures";
+import { type ItemStack, namespaced } from "@statsify/textures";
 
 const SHOP_ROWS = 6;
 const SHOP_COLUMNS = 9;
@@ -82,7 +82,7 @@ export function fromBedwarsQuickBuy(favorites: string | null | undefined): (Item
     if (!item) throw new Error(`No BedWars shop item ${token}`);
 
     slots[slot] = {
-      id: `minecraft:${item.id ?? token}`,
+      id: namespaced(item.id ?? token),
       count: item.count,
       effects: item.effects,
       enchanted: item.enchanted,
