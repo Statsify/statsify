@@ -412,7 +412,7 @@
       "title": "Keine Bestenlistendaten an dieser Position"
     },
     "leaderboardInvalidPosition": {
-      "description": "Die von dir eingegebene Bestenlistenposition ist ungültig. Gebe eine Zahl größer als 1 ein.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Ungültige Position"
     },
     "leaderboardNotFound": {
