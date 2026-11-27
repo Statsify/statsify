@@ -10,6 +10,7 @@ import { collectionBoards } from "@statsify/skyblock";
 import { neuBeforeRemoval, neuStats, statTotals } from "./neu.ts";
 import { normalizeItemText, statRewards } from "#lore";
 import type { SyncContext } from "../sync-data.ts";
+import { fetchOk } from "./textures.ts";
 import { toLevelCosts } from "#leveling";
 
 export const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
@@ -27,9 +28,7 @@ interface HypixelCollections {
 
 /** One of Hypixel's keyless SkyBlock resources. */
 async function hypixelResource<T>(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
-  return (await response.json()) as T & { version: string };
+  return (await (await fetchOk(url)).json()) as T & { version: string };
 }
 
 // NEU's bonus tables: a slayer level gives the stats of the highest level key at or under it

@@ -9,7 +9,7 @@
 // Builds and the runtime never fetch src/generated/, so run this by hand and commit the output. Units or sources (neu,
 // hypixel, textures) after the sha resync only those: node scripts/sync-data.ts <full NEU-REPO commit sha> [unit…]
 import { HYPIXEL_UNITS } from "./sync/hypixel.ts";
-import { MINECRAFT_DATA, MINECRAFT_DATA_SHA, TEXTURE_UNITS } from "./sync/textures.ts";
+import { MINECRAFT_DATA, MINECRAFT_DATA_SHA, TEXTURE_UNITS, fetchOk } from "./sync/textures.ts";
 import { NEU_BEFORE_REMOVAL, NEU_REPO, NEU_UNITS } from "./sync/neu.ts";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
@@ -98,8 +98,7 @@ const dir = await mkdtemp(join(tmpdir(), "neu-repo-"));
 
 try {
   if ([...picked].some((name) => !Object.hasOwn(TEXTURE_UNITS, name))) {
-    const response = await fetch(`https://codeload.github.com/${NEU_REPO}/tar.gz/${sha}`);
-    if (!response.ok) throw new Error(`codeload answered ${response.status}`);
+    const response = await fetchOk(`https://codeload.github.com/${NEU_REPO}/tar.gz/${sha}`);
     await writeFile(join(dir, "repo.tar.gz"), Buffer.from(await response.arrayBuffer()));
     execFileSync("tar", ["-xzf", "repo.tar.gz", "--strip-components=1"], { cwd: dir });
   }

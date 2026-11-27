@@ -12,6 +12,7 @@ import { add, roundTo } from "@statsify/math";
 import { prettify, removeFormatting } from "@statsify/util";
 import type { SyncContext } from "../sync-data.ts";
 import { bestiaryBoards } from "@statsify/skyblock";
+import { fetchOk } from "./textures.ts";
 import { join } from "node:path";
 import { readdir } from "node:fs/promises";
 import { skinHash } from "#textures";
@@ -22,8 +23,7 @@ export const NEU_REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 export const NEU_BEFORE_REMOVAL = "5a5e9866a8578c8a36891acc508fc1e46e41eb31";
 
 export async function neuBeforeRemoval<T>(path: string) {
-  const response = await fetch(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
-  if (!response.ok) throw new Error(`${path} at ${NEU_BEFORE_REMOVAL} answered ${response.status}`);
+  const response = await fetchOk(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
   return (await response.json()) as T;
 }
 
