@@ -8,7 +8,7 @@
 
 import nbt from "prismarine-nbt";
 import { gunzipSync } from "node:zlib";
-import type { ItemAttributes, RawItem } from "#types";
+import { ItemAttributes, RawItem } from "#types";
 
 // An empty slot simplifies to {}.
 const isItem = (slot: RawItem | Record<string, never>): slot is RawItem => "id" in slot;
@@ -19,7 +19,11 @@ function parseItems(buffer: Buffer): (RawItem | null)[] {
   const { i } = nbt.simplify(parsed) as { i?: (RawItem | Record<string, never>)[] };
   // Garden and hunting toolkit blobs are one bare ExtraAttributes compound each, not a list of slots.
   if (!i) throw new TypeError("not an inventory blob: its NBT has no item list");
-  return i.map((slot) => (isItem(slot) ? slot : null));
+  return i.map((slot) => {
+    if (!isItem(slot)) return null;
+    RawItem.parse(slot);
+    return slot;
+  });
 }
 
 /** A New Year Cake Bag also gets `new_year_cake_bag_years` from the cakes inside it, as the networth library expects. */
@@ -38,8 +42,9 @@ export function decodeInventory(data: string | { data: string }): (RawItem | nul
 
 /** A toolkit's tool, which Hypixel keeps as its bare ExtraAttributes compound: no slot, name or lore. */
 export const decodeAttributes = (data: string | { data: string }) =>
-  nbt.simplify(nbt.parseUncompressed(gunzipSync(Buffer.from(typeof data === "string" ? data : data.data, "base64")), "big")) as
-    ItemAttributes;
+  ItemAttributes.parse(
+    nbt.simplify(nbt.parseUncompressed(gunzipSync(Buffer.from(typeof data === "string" ? data : data.data, "base64")), "big"))
+  );
 
 /** The items inside a nested blob, an ExtraAttributes `*_data` byte array (cake bags, backpacks, pouches). */
 const decodeNested = (bytes: number[]) => parseItems(Buffer.from(Int8Array.from(bytes).buffer));
