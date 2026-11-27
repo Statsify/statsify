@@ -773,8 +773,11 @@ function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
 
   for (const line of dumped.lore) {
     const text = plain(line).trim();
-    dropping = MENU_STATUS.test(text) || (dropping && /^\s/.test(plain(line)) && text !== "");
-    if (dropping || (blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!)))) continue;
+    const continuesStatus = dropping && /^\s/.test(plain(line)) && text !== "";
+    dropping = MENU_STATUS.test(text) || continuesStatus;
+
+    const extraBlank = blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!));
+    if (dropping || extraBlank) continue;
     tooltip.push(line);
   }
   while (tooltip.length > 0 && blank(tooltip.at(-1)!)) tooltip.pop();
