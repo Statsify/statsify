@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { z } from "zod";
+
 // On a section, `undefined` means it wasn't requested and `null` means the player's API setting hides it.
 
 export const RARITIES = [
@@ -332,27 +334,37 @@ export type ItemTexture =
   | { kind: "head"; skin: string }; // skin texture hash
 
 /** prismarine-nbt `simplify()` of one slot. */
-export interface RawItem {
-  id: number;
-  Count: number;
-  Damage: number;
-  tag?: {
-    display?: { Name?: string; Lore?: string[]; color?: number };
-    ExtraAttributes?: {
-      id?: string;
-      uuid?: string;
-      modifier?: string;
-      upgrade_level?: number;
-      dungeon_item_level?: number;
-      rarity_upgrades?: number;
-      enchantments?: Record<string, number>;
-      talisman_enrichment?: string;
-      [key: string]: unknown;
-    };
-    SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
-    ench?: unknown[];
-  };
-}
+export const RawItem = z.object({
+  id: z.number(),
+  Count: z.number(),
+  Damage: z.number(),
+  tag: z
+    .object({
+      display: z
+        .object({ Name: z.string().optional(), Lore: z.array(z.string()).optional(), color: z.number().optional() })
+        .optional(),
+      ExtraAttributes: z
+        .object({
+          id: z.string().optional(),
+          uuid: z.string().optional(),
+          modifier: z.string().optional(),
+          upgrade_level: z.number().optional(),
+          // A few items store it as a long, which the decode leaves as `[high, low]`
+          dungeon_item_level: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+          rarity_upgrades: z.number().optional(),
+          enchantments: z.record(z.string(), z.number()).optional(),
+          talisman_enrichment: z.string().optional(),
+        })
+        .catchall(z.unknown())
+        .optional(),
+      SkullOwner: z
+        .object({ Properties: z.object({ textures: z.array(z.object({ Value: z.string() })).optional() }).optional() })
+        .optional(),
+      ench: z.array(z.unknown()).optional(),
+    })
+    .optional(),
+});
+export type RawItem = z.infer<typeof RawItem>;
 
 export interface ItemsResource {
   // API-internal, never sent to clients
