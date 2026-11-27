@@ -166,17 +166,13 @@ export class SkyBlockService {
 
   private async getPlayer(tag: string): Promise<PlayerRef> {
     const selector = { uuid: true, username: true, displayName: true };
-    let player = await this.playerService.findMongoDocument(tag, selector);
-
-    if (!player) {
-      await this.budgetService.take().catch((error) => {
+    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector, () =>
+      this.budgetService.take().catch((error) => {
         if (!(error instanceof BudgetError)) throw error;
         this.logger.warn(`Couldn't look up ${tag}: ${error.message}`);
         throw toUnavailable(error);
-      });
-
-      player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector);
-    }
+      })
+    );
 
     if (!player) throw new PlayerNotFoundException();
     return { uuid: player.uuid, username: player.username, displayName: player.displayName };
