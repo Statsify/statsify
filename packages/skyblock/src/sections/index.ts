@@ -61,7 +61,11 @@ interface Section<K extends keyof MemberView> {
 /** Ironman, stranded and bingo profiles can't use the Auction House or the Bazaar. */
 const hasMarket = (profile: RawProfile) => gameModeOf(profile) === "normal";
 
+<<<<<<< HEAD
 export type SectionKey = Exclude<keyof MemberView, "apiSettings" | "networth">;
+=======
+export type SectionKey = Exclude<SkyBlockSection, "networth">;
+>>>>>>> rp/card-details
 
 type MemberKeys = { [K in keyof RawMember]?: true };
 
