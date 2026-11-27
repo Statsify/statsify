@@ -412,7 +412,7 @@
       "title": "Sem dados de pódio nesta posição"
     },
     "leaderboardInvalidPosition": {
-      "description": "A posição do pódio que você inseriu é inválida. Insira um número maior que 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Posição inválida"
     },
     "leaderboardNotFound": {
