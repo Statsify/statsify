@@ -27,6 +27,8 @@ type MemberName = Pick<Player, "username" | "displayName" | "guildId">;
 const isNameCached = (cachedMember?: GuildMember): cachedMember is GuildMember =>
   !!cachedMember && Date.now() < cachedMember.expiresAt;
 
+const byDayDescending = ([a]: [string, number], [b]: [string, number]) => (a < b ? 1 : -1);
+
 @Injectable()
 export class GuildService {
   private readonly logger = new Logger("GuildService");
@@ -93,10 +95,13 @@ export class GuildService {
       }
 
       // Merge the exp history from hypixel and the cached guild
-      const combinedExpHistory: Record<string, number> = {
+      const combinedExpHistory = {
         ...cacheMember?.expHistoryDays?.reduce(
-          (acc, day, index) => ({ ...acc, [day]: cacheMember.expHistory[index] }),
-          {}
+          (acc, day, index) => { 
+            acc[day] = cacheMember.expHistory[index];
+            return acc; 
+          },
+          {} as Record<string, number> 
         ),
         ...Object.fromEntries(
           member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])
@@ -104,7 +109,7 @@ export class GuildService {
       };
 
       // Add all the days to the guild total exp history
-      for (const [index, [day, exp]] of Object.entries(combinedExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
+      for (const [index, [day, exp]] of Object.entries(combinedExpHistory).toSorted(byDayDescending).slice(0, 30).entries()) {
         member.expHistory[index] = exp;
         member.expHistoryDays[index] = day;
         guildExpHistory[day] = guildExpHistory[day] ? guildExpHistory[day] + exp : exp;
@@ -124,7 +129,7 @@ export class GuildService {
       .exec();
 
     // Get scaled gexp
-   for (const [index, [day, exp]] of Object.entries(guildExpHistory).toSorted().toReversed().slice(0, 30).entries()) {
+    for (const [index, [day, exp]] of Object.entries(guildExpHistory).toSorted(byDayDescending).slice(0, 30).entries()) {
       const scaled = this.scaleGexp(exp);
     
       guild.expHistory[index] = exp;
