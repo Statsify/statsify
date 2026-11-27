@@ -113,22 +113,14 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async searchItems(query: string): Promise<ItemMatch[]> {
-    try {
-      const reply = (await this.redis.call(
-        "FT.SUGGET",
-        AUTOCOMPLETE_KEY,
-        query,
-        "FUZZY",
-        "MAX",
-        "25",
-        "WITHPAYLOADS"
-      )) as string[] | null;
+    const reply = (await this.redis
+      .call("FT.SUGGET", AUTOCOMPLETE_KEY, query, "FUZZY", "MAX", "25", "WITHPAYLOADS")
+      .catch((error) => {
+        this.logger.error(error);
+        throw new SkyBlockUnavailableException("market");
+      })) as string[] | null;
 
-      return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({ name, ...JSON.parse(payload) }));
-    } catch (error) {
-      this.logger.error(error);
-      throw new SkyBlockUnavailableException("market");
-    }
+    return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({ name, ...JSON.parse(payload) }));
   }
 
   private async rebuild() {
