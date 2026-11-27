@@ -11,7 +11,7 @@ use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
-use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory};
+use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory, CAPE_SIZE};
 use crate::texture::Texture;
 
 pub enum ModelKind {
@@ -493,7 +493,7 @@ impl Model {
       dimensions,
       texture_region: TextureRegion {
         location: (0, 0),
-        texture_size: (64, 32),
+        texture_size: CAPE_SIZE,
         mirror: false,
       },
       rotation: Some(Rotation {
