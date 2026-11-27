@@ -56,7 +56,7 @@ export class AvailableCommand {
         .field((t) => t("minecraft.uuid"), `\`${uuid}\``)
         .field(
           "NameMC",
-          `[\`Here\`](https://namemc.com/profile/${uuid})`
+          (t) => `[\`${t("here")}\`](https://namemc.com/profile/${uuid})`
         )
         .field(
           (t) => t("stats.status"),
@@ -69,7 +69,7 @@ export class AvailableCommand {
     }
 
     base
-      .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
+      .field("NameMC", (t) => `[\`${t("here")}\`](https://namemc.com/profile/${name})`)
       .field(
         (t) => t("stats.status"),
         (t) => `\`${t("minecraft.available")}*\``

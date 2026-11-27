@@ -67,15 +67,15 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
     const modes: [GuildTopKey, string][] = [
-      ["daily", "Today"],
-      ["weekly", "This Week"],
-      ["monthly", "This Month"],
-      [1, "Yesterday"],
-      [2, "2 days ago"],
-      [3, "3 days ago"],
-      [4, "4 days ago"],
-      [5, "5 days ago"],
-      [6, "6 days ago"],
+      ["daily", t("stats.guild.today")],
+      ["weekly", t("stats.guild.thisWeek")],
+      ["monthly", t("stats.guild.thisMonth")],
+      [1, t("stats.guild.yesterday")],
+      [2, t("stats.guild.daysAgo", { days: t(2) })],
+      [3, t("stats.guild.daysAgo", { days: t(3) })],
+      [4, t("stats.guild.daysAgo", { days: t(4) })],
+      [5, t("stats.guild.daysAgo", { days: t(5) })],
+      [6, t("stats.guild.daysAgo", { days: t(6) })],
     ];
 
     const dropdown = new SelectMenuBuilder();

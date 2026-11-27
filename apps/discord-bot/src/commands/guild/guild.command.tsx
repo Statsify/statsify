@@ -68,21 +68,21 @@ export class GuildCommand extends GuildTopSubCommand {
 
     return paginate(context, [
       {
-        label: "Overall",
+        label: t("overall"),
         generator: () =>
           render(<GuildProfile {...props} page="overall" />, getTheme(user)),
       },
       {
-        label: "GEXP",
+        label: t("stats.guild.gexp"),
         generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user)),
       },
       {
-        label: "GEXP Per Game",
+        label: t("stats.guild.gexpPerGame"),
         generator: () =>
           render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
       },
       {
-        label: "Misc",
+        label: t("stats.guild.misc"),
         generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
       },
     ]);
