@@ -87,7 +87,7 @@ const purge = async () => {
 
   const { method } = await inquirer.prompt([
     {
-      type: "list",
+      type: "select",
       name: "method",
       message: "Purge Action?",
       choices: ["node_modules", ".turbo", "dist", "coverage", ".swc", "ALL"],
