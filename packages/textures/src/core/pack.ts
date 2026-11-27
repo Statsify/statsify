@@ -178,7 +178,7 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
 
     if (model) {
       const upgradedModel = upgradeModel(file, layoutUpgrade);
-      if (upgradedModel) upgraded.set(`assets/minecraft/models/${models[model[1]] ?? model[1]}.json`, upgradedModel);
+      if (upgradedModel) upgraded.set(assetPath(models[model[1]] ?? model[1], "models", ".json"), upgradedModel);
       continue;
     }
 
@@ -192,14 +192,14 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
     const target = texture[1] in textures ? textures[texture[1]] : texture[1];
 
     if (typeof target === "string") {
-      upgraded.set(`assets/minecraft/textures/${target}.png${texture[2] ?? ""}`, file);
+      upgraded.set(assetPath(target, "textures", `.png${texture[2] ?? ""}`), file);
     } else if (target && !texture[2]) {
       // The strip's own mcmeta played every frame; this one holds the frame a slot shows
       const { width, height } = pngSize(file);
       const frames = Math.max(1, Math.floor(height / width));
       const animation = { animation: { frames: [Math.floor(target.position * frames)] } };
-      upgraded.set(`assets/minecraft/textures/${target.texture}.png`, file);
-      upgraded.set(`assets/minecraft/textures/${target.texture}.png.mcmeta`, encoder.encode(JSON.stringify(animation)));
+      upgraded.set(assetPath(target.texture, "textures", ".png"), file);
+      upgraded.set(assetPath(target.texture, "textures", ".png.mcmeta"), encoder.encode(JSON.stringify(animation)));
     }
   }
 
