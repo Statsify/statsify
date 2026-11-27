@@ -12,7 +12,7 @@ import { type Guild, Player, getLeaderboardField } from "@statsify/schemas";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
+import { LeaderboardAdditionalStats, LeaderboardService, PAGE_SIZE } from "#leaderboards";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -34,8 +34,6 @@ export class PlayerLeaderboardService extends LeaderboardService {
     input: number | string,
     type: LeaderboardQuery
   ) {
-    const PAGE_SIZE = 10;
-
     const { sort } = getLeaderboardField(Player, field);
 
     const memberIds = guild.members.map(({ uuid }) => uuid);

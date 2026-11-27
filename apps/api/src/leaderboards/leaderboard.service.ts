@@ -27,6 +27,8 @@ const DAYS_IN_WEEK = {
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
+export const PAGE_SIZE = 10;
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
@@ -78,8 +80,6 @@ export abstract class LeaderboardService {
     input: number | string,
     type: LeaderboardQuery
   ) {
-    const PAGE_SIZE = 10;
-
     const { sort } = getLeaderboardField(constructor, field);
 
     let top: number;
