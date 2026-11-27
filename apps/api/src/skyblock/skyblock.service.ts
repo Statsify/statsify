@@ -133,23 +133,23 @@ export class SkyBlockService {
     cache: CacheLevel,
     profileName?: string
   ): Promise<SkyBlockProfileView> {
-    const { profiles, fetchedAt, stale } = await this.getPlayerProfiles(player, cache);
+    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
+    const [{ profiles, fetchedAt, stale }, prices, items] = await Promise.all([
+      this.getPlayerProfiles(player, cache),
+      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
+      needs.has("items") ? this.pricesService.getItems() : undefined,
+    ]);
 
     const profile = findProfile(profiles, player.uuid, profileName);
     if (!profile) throw new SkyBlockNotFoundException("profile");
     const member = profile.members[player.uuid];
 
-    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
-    const [museum, prices, items] = await Promise.all([
-      needs.has("museum") ? this.getStoredMuseum(profile.profile_id, cache) : undefined,
-      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
-      needs.has("items") ? this.pricesService.getItems() : undefined,
-    ]);
-
     const built = { museum: true, prices: !!prices, items: !!items };
     const ready = sections.filter((name) => DEFINITIONS[name].needs.every((need) => built[need]));
     const marketDown = sections.filter((name) => !ready.includes(name));
     if (ready.length === 0 && marketDown.length > 0) throw new SkyBlockUnavailableException("market");
+
+    const museum = needs.has("museum") ? await this.getStoredMuseum(profile.profile_id, cache) : undefined;
 
     const input: SectionInput = {
       uuid: player.uuid,
@@ -178,11 +178,14 @@ export class SkyBlockService {
 
   /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
   public async nextRefetchAt(uuid: string): Promise<number | undefined> {
-    const document = await this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec();
+    const [document, failedFor] = await Promise.all([
+      this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec(),
+      this.redis.pttl(failedKey(`profiles:${uuid}`)),
+    ]);
+
     if (!document) return undefined;
     if (isFresh(document.fetchedAt, CacheLevel.CACHE)) return document.fetchedAt + SKYBLOCK_FRESH_FOR;
 
-    const failedFor = await this.redis.pttl(failedKey(`profiles:${uuid}`));
     return failedFor > 0 ? Date.now() + failedFor : undefined;
   }
 
@@ -195,17 +198,13 @@ export class SkyBlockService {
 
   private async getPlayer(tag: string): Promise<PlayerRef> {
     const selector = { uuid: true, username: true, displayName: true };
-    let player = await this.playerService.findMongoDocument(tag, selector);
-
-    if (!player) {
-      await this.budgetService.take().catch((error) => {
+    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector, () =>
+      this.budgetService.take().catch((error) => {
         if (!(error instanceof BudgetError)) throw error;
         this.logger.warn(`Couldn't look up ${tag}: ${error.message}`);
         throw toUnavailable(error);
-      });
-
-      player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, selector);
-    }
+      })
+    );
 
     if (!player) throw new PlayerNotFoundException();
     return { uuid: player.uuid, username: player.username, displayName: player.displayName };
