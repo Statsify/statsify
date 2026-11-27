@@ -263,7 +263,7 @@ export const RawMember = z.object({
     .optional(),
   accessory_bag_storage: z
     .object({
-      tuning: z.object({ slot_0: numbers.optional() }).optional(),
+      tuning: z.object({ slot_0: numbers.optional() }).catchall(z.unknown()).optional(),
       selected_power: z.string().optional(),
       highest_magical_power: z.number().optional(),
     })
