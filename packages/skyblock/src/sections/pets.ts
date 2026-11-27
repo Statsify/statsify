@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PETS, PET_TEXTURES } from "#data";
+import { PETS, PET_ITEMS, PET_STATS, PET_TEXTURES } from "#data";
 import { RARITY_COLORS } from "../display.js";
-import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type Rarity } from "#types";
+import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type PlayerStat, type Rarity } from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import { resourceTexture } from "#textures";
+import { sumStats } from "#lore";
 import type { RawMember, RawPet } from "#raw";
 
 export const PET_RARITIES = RARITIES.slice(0, 6);
@@ -80,6 +81,26 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 /** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
 
+/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
+function petStats(pet: PetView | undefined): Partial<Record<PlayerStat, number>> | undefined {
+  if (!pet) return undefined;
+
+  const table = PET_STATS[pet.type]?.[pet.rarity];
+  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
+  const [from, to] = table?.levels ?? [1, 100];
+  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
+
+  // A dragon below its table's first level is still an egg, with no stats of its own
+  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
+    const stat = key as PlayerStat;
+    const first = table?.first[stat] ?? 0;
+    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
+    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
+  });
+
+  return sumStats([...own, item?.stats ?? {}]);
+}
+
 /**
  * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
  * Montezuma (the Rift's dead_cats, whose active means summoned there) is listed but doesn't score, as the game doesn't.
@@ -108,13 +129,16 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
     (a, b) => Number(b.active) - Number(a.active) || rank(b.rarity) - rank(a.rarity) || b.level.xp - a.level.xp
   );
 
+  const active = pets.find((pet) => pet.active);
+
   return {
     score: add(...Array.from(best.values(), ({ points, level }) => points + Number(level.level === level.maxLevel))),
-    active: pets.find((pet) => pet.active),
+    active,
     pets,
     totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
     skinned: views.filter(({ skin }) => skin).length,
     candyUsed: add(...views.map(({ candyUsed }) => candyUsed)),
+    activeStats: petStats(active),
   };
 }
 

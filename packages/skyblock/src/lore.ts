@@ -8,6 +8,7 @@
 
 import { PLAYER_STATS, type PlayerStat, type StatValue } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
+import { add } from "@statsify/math";
 
 // Newer item text draws stats with the SkyBlock pack's private-use glyphs, which the 1.8 font doesn't have.
 // Each glyph maps to the symbol Hypixel's older lore puts in front of the same stat.
@@ -93,6 +94,16 @@ const STAT_NAMES = new Map<string, PlayerStat>(
 
 /** The stat lore calls `name` ("Crit Damage", or an older name such as "Bonus Attack Speed"). */
 export const statNamed = (name: string) => STAT_NAMES.get(name);
+
+type Stats = Partial<Record<PlayerStat, number>>;
+
+export const sumStats = (all: Iterable<Stats>): Stats => {
+  const sum: Stats = {};
+  for (const stats of all) {
+    for (const [stat, value] of Object.entries(stats) as [PlayerStat, number][]) sum[stat] = add(sum[stat] ?? 0, value);
+  }
+  return sum;
+};
 
 const amount = (text: string) => Number(text.replaceAll(",", ""));
 

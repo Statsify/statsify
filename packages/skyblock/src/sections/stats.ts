@@ -10,7 +10,6 @@ import {
   type ItemView,
   type ItemsResource,
   PLAYER_STATS,
-  type PetView,
   type PlayerStat,
   SKILLS,
   SLAYER_BOSSES,
@@ -23,7 +22,7 @@ import {
   type TreeLayout,
   type TreeNode,
 } from "#types";
-import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, STAT_TABLES } from "#data";
+import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { attributeLevel } from "./attributes.js";
 import { TUNING, bagAccessories, heldAccessories, highestTiers, selectedPowerStats } from "./accessories.js";
@@ -36,18 +35,10 @@ import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import { isWeapon } from "./gear.js";
-import { parsePieceBonuses, parseStatLine, statNamed } from "../lore.js";
+import { parsePieceBonuses, parseStatLine, statNamed, sumStats } from "../lore.js";
 import type { RawMember, RawProfile } from "#raw";
 
 type Stats = Partial<Record<PlayerStat, number>>;
-
-const sumStats = (all: Iterable<Stats>): Stats => {
-  const sum: Stats = {};
-  for (const stats of all) {
-    for (const [stat, value] of Object.entries(stats) as [PlayerStat, number][]) sum[stat] = add(sum[stat] ?? 0, value);
-  }
-  return sum;
-};
 
 /** The stat lines in the items' lore, which already count each item's reforge, gems, enchantments and stars. */
 const loreStats = (items: Slots): Stats =>
@@ -83,26 +74,6 @@ const tuningStats = (points: Record<string, number>): Stats =>
       return tuned && count > 0 ? [{ [tuned[0]]: count * tuned[1] }] : [];
     })
   );
-
-/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
-export function petStats(pet: PetView | undefined): Stats | undefined {
-  if (!pet) return undefined;
-
-  const table = PET_STATS[pet.type]?.[pet.rarity];
-  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
-  const [from, to] = table?.levels ?? [1, 100];
-  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
-
-  // A dragon below its table's first level is still an egg, with no stats of its own
-  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
-    const stat = key as PlayerStat;
-    const first = table?.first[stat] ?? 0;
-    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
-    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
-  });
-
-  return sumStats([...own, item?.stats ?? {}]);
-}
 
 // Essence shop perks that count everywhere, per level (wiki: Essence Shops' pages). The Catacombs perks count only in
 // dungeons, and the rest only on an island or against some mobs.
@@ -286,7 +257,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
     ...Object.fromEntries(slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])])),
     slayerTiers: { combat_wisdom: slayerTiers },
-    pet: petStats(pets.active),
+    pet: pets.activeStats,
     petScore: { magic_find: petScoreMagicFind(pets.score) },
     essence,
     hotm: treeStats(getHotm(member).nodes, HOTM_LAYOUT),
