@@ -8,19 +8,21 @@
 
 import { Field } from "#metadata";
 
-export enum UserLogo {
-  DEFAULT = 0,
-  IRON = 100,
-  GOLD = 200,
-  DIAMOND = 300,
-  EMERALD = 400,
-  VENOM = 401,
-  PINK = 402,
-  AMETHYST = 420,
-  SCULK = 421,
-  NETHERITE = 422,
-  RUBY = 423
-}
+export const UserLogo = {
+  DEFAULT: 0,
+  IRON: 100,
+  GOLD: 200,
+  DIAMOND: 300,
+  EMERALD: 400,
+  VENOM: 401,
+  PINK: 402,
+  AMETHYST: 420,
+  SCULK: 421,
+  NETHERITE: 422,
+  RUBY: 423,
+} as const;
+
+export type UserLogo = (typeof UserLogo)[keyof typeof UserLogo];
 
 export class UserFooter {
   @Field({ store: { required: false }, type: () => String })
