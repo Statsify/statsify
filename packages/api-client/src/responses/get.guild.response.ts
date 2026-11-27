@@ -8,15 +8,13 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Guild } from "@statsify/schemas";
+import { HYPIXEL_UNAVAILABLE_PROPERTY } from "./get.player.response.js";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetGuildResponse extends SuccessResponse {
   @ApiProperty()
   public guild: Guild;
 
-  @ApiProperty({
-    required: false,
-    description: "True when Hypixel failed or rate limited Statsify, so cached data was returned instead",
-  })
+  @ApiProperty(HYPIXEL_UNAVAILABLE_PROPERTY)
   public hypixelUnavailable?: boolean;
 }
