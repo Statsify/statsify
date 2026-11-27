@@ -128,15 +128,10 @@ export abstract class LeaderboardService {
       }
     }
 
-    await this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]);
-
-    const leaderboard = await this.getLeaderboardFromRedis(
-      constructor,
-      field,
-      top,
-      bottom - 1,
-      sort
-    );
+    const [leaderboard] = await Promise.all([
+      this.getLeaderboardFromRedis(constructor, field, top, bottom - 1, sort),
+      this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]),
+    ]);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       getLeaderboardField(constructor, k, false)
