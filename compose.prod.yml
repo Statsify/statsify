@@ -53,6 +53,8 @@ services:
     build:
       context: .
       target: verify-server
+    ports:
+      - "25565:25565"
     volumes:
       - ./config.js:/app/config.js:ro
       - ./assets:/app/assets
