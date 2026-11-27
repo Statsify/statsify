@@ -81,6 +81,7 @@ type MemberKeys = { [K in keyof RawMember]?: true };
 /** The member's keys each section reads. */
 const READS: { [K in SectionKey]: MemberKeys } = {
   accessories: { accessory_bag_storage: true, inventory: true, nether_island_player_data: true, rift: true },
+  armor: { inventory: true },
   chocolate: { events: true },
   crimson: { bestiary: true, nether_island_player_data: true },
   dungeons: { currencies: true, dungeons: true, glacite_player_data: true, player_data: true },
