@@ -77,7 +77,10 @@ try {
 
   const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const { sblevel_colours } = await readJson<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
+  const { core_task, sblevel_colours } = await readJson<{
+    core_task: Record<string, unknown>;
+    sblevel_colours: Record<string, string>;
+  }>("constants/sblevels.json");
   await write("leveling.json", {
     catacombs: leveling.catacombs,
     HOTM: leveling.HOTM,
@@ -102,11 +105,10 @@ try {
     pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
   });
 
-  const sblevels = await readJson<{ core_task: Record<string, unknown> }>("constants/sblevels.json");
   await write("sblevels.json", {
     core_task: {
-      accessory_bag_xp: sblevels.core_task.accessory_bag_xp,
-      pet_score_xp: sblevels.core_task.pet_score_xp,
+      accessory_bag_xp: core_task.accessory_bag_xp,
+      pet_score_xp: core_task.pet_score_xp,
     },
   });
 
