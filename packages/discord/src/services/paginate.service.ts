@@ -20,7 +20,7 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
 } from "#messages";
-import { Interaction, parseCustomId } from "#interaction";
+import { COMPONENT_LIFETIME, Interaction, parseCustomId } from "#interaction";
 import type {
   AbstractCommandListener,
   CommandContext,
@@ -184,7 +184,7 @@ export async function paginate(
     return context.reply({ components: [] });
   }
 
-  setTimeout(onTimeout, 300_000);
+  setTimeout(onTimeout, COMPONENT_LIFETIME);
 
   const message = await getMessage(currentIndex, currentSubIndex);
   message.components = [
