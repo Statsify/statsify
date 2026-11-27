@@ -9,7 +9,7 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, gridRows } from "./components/ItemGrid.js";
+import { ItemGrid, gridRows, outOf } from "./components/ItemGrid.js";
 import { MUSEUM_MILESTONES } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { GearSection, ItemView, MemberView, Slots } from "@statsify/skyblock";
@@ -64,12 +64,12 @@ export const SkyBlockMuseumProfile = ({ profile, t, ...card }: SkyBlockProfilePr
     [t("skyblock.itemsDonated"), t(museum.items.length), "§a"],
     [t("skyblock.specialItems"), t(museum.special.length), "§d"],
     [t("skyblock.appraised"), t(museum.appraisal ? "skyblock.yes" : "skyblock.no"), museum.appraisal ? "§a" : "§c"],
-    [t("skyblock.museumXp"), `${t(museum.xp)}§7/§b${t(museum.maxXp)}`, "§b"],
-    [t("skyblock.museumMilestone"), `${t(museum.milestone)}§7/§e${t(MUSEUM_MILESTONES)}`, "§e"],
+    [t("skyblock.museumXp"), outOf(t, museum.xp, museum.maxXp, "§b"), "§b"],
+    [t("skyblock.museumMilestone"), outOf(t, museum.milestone, MUSEUM_MILESTONES, "§e"), "§e"],
   ];
 
   const categories = museum.donated.map(({ category, count, total }) => (
-    <Table.td title={prettify(category)} value={`${t(count)}§7/§a${t(total)}`} color="§a" size="small" />
+    <Table.td title={prettify(category)} value={outOf(t, count, total, "§a")} color="§a" size="small" />
   ));
 
   return (

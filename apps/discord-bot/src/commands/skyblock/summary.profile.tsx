@@ -10,6 +10,7 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { DateTime } from "luxon";
 import { prettify } from "@statsify/util";
+import { outOf } from "./components/ItemGrid.js";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
@@ -23,7 +24,7 @@ export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileP
   const bank =
     profile.bank === undefined ?
       missing("§6") :
-      { value: `${t(Math.floor(profile.bank))}§7/§6${t(profile.bankLimit)}`, color: "§6" };
+      { value: outOf(t, Math.floor(profile.bank), profile.bankLimit, "§6"), color: "§6" };
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.level"), t(profile.level), profile.levelColor],
@@ -32,7 +33,7 @@ export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileP
   ];
 
   if (profile.personalBank !== undefined && profile.personalBankLimit !== undefined)
-    sidebar.push([t("skyblock.personalBank"), `${t(Math.floor(profile.personalBank))}§7/§6${t(profile.personalBankLimit)}`, "§6"]);
+    sidebar.push([t("skyblock.personalBank"), outOf(t, Math.floor(profile.personalBank), profile.personalBankLimit, "§6"), "§6"]);
 
   sidebar.push([t("skyblock.bankTier"), prettify(profile.bankTier), "§6"]);
 
