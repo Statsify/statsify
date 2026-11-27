@@ -39,7 +39,10 @@ const FLAG_POSE: Transformation = {
   translation: [0, -44 / 16, 0],
 };
 
-const PATTERNED = new Set(["minecraft:banner", "minecraft:shield"]);
+/** The entity texture folder each patterned special model draws its patterns from */
+export const PATTERN_FOLDERS = { "minecraft:banner": "banner", "minecraft:shield": "shield" } as const;
+
+const PATTERNED = new Set(Object.keys(PATTERN_FOLDERS));
 
 const entityTexture = (folder: string, id: string) => {
   const [namespace, name] = namespaced(id).split(":");
@@ -488,7 +491,7 @@ export class ItemRenderer {
   // Each pattern is its own pass, since at its part's exact depth it would lose depth ties and stripe
   private async patternPasses(
     part: (texture: ImageData) => Quad[],
-    folder: "banner" | "shield",
+    folder: (typeof PATTERN_FOLDERS)[keyof typeof PATTERN_FOLDERS],
     base: string,
     patterns: BannerLayer[],
   ) {
