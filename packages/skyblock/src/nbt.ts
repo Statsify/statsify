@@ -8,7 +8,7 @@
 
 import nbt from "prismarine-nbt";
 import { gunzipSync } from "node:zlib";
-import type { ItemAttributes, RawItem } from "#types";
+import { type ItemAttributes, RawItem } from "#types";
 
 // An empty slot simplifies to {}.
 const isItem = (slot: RawItem | Record<string, never>): slot is RawItem => "id" in slot;
@@ -19,7 +19,11 @@ function parseItems(buffer: Buffer): (RawItem | null)[] {
   const { i } = nbt.simplify(parsed) as { i?: (RawItem | Record<string, never>)[] };
   // Garden and hunting toolkit blobs are one bare ExtraAttributes compound each, not a list of slots.
   if (!i) throw new TypeError("not an inventory blob: its NBT has no item list");
-  return i.map((slot) => (isItem(slot) ? slot : null));
+  return i.map((slot) => {
+    if (!isItem(slot)) return null;
+    RawItem.parse(slot);
+    return slot;
+  });
 }
 
 /** A New Year Cake Bag also gets `new_year_cake_bag_years` from the cakes inside it, as the networth library expects. */

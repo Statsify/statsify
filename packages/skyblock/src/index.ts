@@ -16,7 +16,7 @@ export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, gameModeOf, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
 export { MEMBER_STATS_SECTIONS, type MemberStat, type MemberStats, toMemberStats } from "./member-stats.js";
-export { parseItemsResource, toItemView } from "./items.js";
+export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
   SECTIONS,
