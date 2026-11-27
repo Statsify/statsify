@@ -46,9 +46,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const guild = await this.getGuild(context);
-
-    const [logo, background] = await Promise.all([
+    const [guild, logo, background] = await Promise.all([
+      this.getGuild(context),
       getLogo(user),
       getBackground("hypixel", "overall"),
     ]);

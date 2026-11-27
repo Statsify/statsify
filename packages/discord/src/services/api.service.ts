@@ -226,6 +226,12 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  public override getPlayerSkin(uuid: string, user: User | null) {
+    return super.getPlayerSkin(uuid, user).catch(() => {
+      throw this.unknownError();
+    });
+  }
+
   public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
     return super.deletePlayerSession(id).catch(() => {
       throw new ErrorMessage("verification.requiredVerification");
@@ -270,6 +276,10 @@ export class ApiService extends StatsifyApiService {
     if (this.isDiscordId(tag)) return [tag.replaceAll(/<@|!|>/g, ""), "discordId"];
 
     throw new ErrorMessage("errors.invalidSearch");
+  }
+
+  public selfUuid(tag: string, user: User | null) {
+    return tag ? undefined : user?.uuid;
   }
 
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
