@@ -15,6 +15,7 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
   SubCommand,
+  getScrollTargets,
   getScrolledPage,
   parseCustomId,
 } from "@statsify/discord";
@@ -91,6 +92,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const components = [new ActionRowBuilder().component(dropdown)];
 
+    const [prevTarget, nextTarget] = getScrollTargets(page);
+
     if (pageCount > 1)
       components.push(
         new ActionRowBuilder()
@@ -98,13 +101,13 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
             new ButtonBuilder()
               .emoji(t("emojis:up"))
               .style(ButtonStyle.Success)
-              .customId(getCustomId(key, `prev.${page}`))
+              .customId(getCustomId(key, prevTarget))
           )
           .component(
             new ButtonBuilder()
               .emoji(t("emojis:down"))
               .style(ButtonStyle.Danger)
-              .customId(getCustomId(key, `next.${page}`))
+              .customId(getCustomId(key, nextTarget))
           )
       );
 

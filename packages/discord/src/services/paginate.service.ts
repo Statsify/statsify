@@ -20,7 +20,7 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
 } from "#messages";
-import { Interaction, parseCustomId } from "#interaction";
+import { COMPONENT_LIFETIME, Interaction, parseCustomId } from "#interaction";
 import type {
   AbstractCommandListener,
   CommandContext,
@@ -184,7 +184,7 @@ export async function paginate(
     return context.reply({ components: [] });
   }
 
-  setTimeout(onTimeout, 300_000);
+  setTimeout(onTimeout, COMPONENT_LIFETIME);
 
   const message = await getMessage(currentIndex, currentSubIndex);
   message.components = [
@@ -243,8 +243,9 @@ export async function scrollingPagination(
       getScrolledPage(parseCustomId(interaction.getCustomId()).values.at(-1)!, pages.length) :
       0;
 
-    controller[0].customId(getCustomId(`prev.${index}`));
-    controller[1].customId(getCustomId(`next.${index}`));
+    const [prevTarget, nextTarget] = getScrollTargets(index);
+    controller[0].customId(getCustomId(prevTarget));
+    controller[1].customId(getCustomId(nextTarget));
 
     const message = await getMessage(index);
     message.components = [new ActionRowBuilder(controller)];
@@ -293,7 +294,7 @@ export async function scrollingPagination(
     cache.clear();
   }
 
-  setTimeout(onTimeout, 300_000);
+  setTimeout(onTimeout, COMPONENT_LIFETIME);
 
   const message = await getMessage(currentIndex);
   message.components = [new ActionRowBuilder(controller)];
@@ -302,6 +303,10 @@ export async function scrollingPagination(
 }
 
 /** Ids hold the current page, since with two pages both buttons would target the same one */
+export function getScrollTargets(page: number) {
+  return [`prev.${page}`, `next.${page}`] as const;
+}
+
 export function getScrolledPage(target: string, pageCount: number) {
   const [direction, page] = target.split(".");
   return (Number(page) + (direction === "prev" ? pageCount - 1 : 1)) % pageCount;
