@@ -2,7 +2,7 @@ use cgmath::{Deg, ElementWise, Matrix3, SquareMatrix, Vector3, Zero};
 
 use crate::display::Display;
 use crate::model::{Axis, Direction, Element, ElementRotation, Model};
-use crate::{Error, Pack};
+use crate::{Error, Pack, UNITS_PER_BLOCK};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vertex {
@@ -92,7 +92,7 @@ pub fn bake_model(pack: &Pack, name: &str) -> Result<BakedModel, Error> {
 
       for (corner, sides) in CORNERS[direction].iter().enumerate() {
         let point = Vector3::from(std::array::from_fn(|axis| bounds[sides[axis]][axis]));
-        let position = rotation.apply(point) / 16.0 - Vector3::new(0.5, 0.5, 0.5);
+        let position = rotation.apply(point) / UNITS_PER_BLOCK - Vector3::new(0.5, 0.5, 0.5);
 
         let uv = match (corner + face.quarter_turns) % 4 {
           0 => [u0, v0],
