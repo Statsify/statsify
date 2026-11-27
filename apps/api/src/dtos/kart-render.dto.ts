@@ -8,6 +8,7 @@
 
 import { UuidDto } from "./uuid.dto.js";
 import { createZodDto } from "nestjs-zod";
+import { queryBoolean } from "./skin-render.dto.js";
 import { sceneCamera } from "./scene-camera.dto.js";
 import { z } from "zod";
 
@@ -21,11 +22,6 @@ export class KartRenderDto extends createZodDto(
     jacket: z.string().optional().describe("The player's stored jacket_active, such as GOLD_JACKET, LEATHER_JACKET:RED or NO_JACKET"),
     pants: z.string().optional().describe("The player's stored pants_active, such as GOLD_PANTS or NO_PANTS"),
     shoes: z.string().optional().describe("The player's stored shoes_active, such as GOLD_SHOES or NO_SHOES"),
-    extruded: z
-      .enum(["true", "false"])
-      .meta({ default: "false" })
-      .transform((value) => value === "true")
-      .optional()
-      .describe("Draw the skin's outer layer in 3D"),
+    extruded: queryBoolean("false").optional().describe("Draw the skin's outer layer in 3D"),
   })
 ) {}
