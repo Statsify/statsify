@@ -42,7 +42,6 @@ import {
 import {
   ApiService,
   ButtonBuilder,
-  Choice,
   Command,
   CommandContext,
   ErrorMessage,
@@ -61,9 +60,6 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 const fields = getLeaderboardFields(Player).map(([key]) => key);
-
-const choices = games.map((g) => [g.name, g.key] as Choice);
-choices.unshift(["All", "all"]);
 
 const options: Partial<SubCommandOptions> = {
   args: [PlayerArgument],
