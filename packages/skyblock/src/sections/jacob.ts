@@ -6,9 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemsResource, JACOB_BRACKETS, type JacobBracket, type JacobContest, type JacobSection } from "#types";
-import { prettify } from "@statsify/util";
-import { resourceTexture } from "#textures";
+import {
+  type ItemsResource,
+  JACOB_BRACKETS,
+  JACOB_MEDALS,
+  type JacobBracket,
+  type JacobContest,
+  type JacobSection,
+} from "#types";
+import { resourceItem } from "#textures";
 import { skyblockTime } from "../calendar.js";
 import type { RawContest, RawMember } from "#raw";
 
@@ -48,20 +54,16 @@ export function getJacob(member: RawMember, items?: ItemsResource): JacobSection
   const gold = JACOB_BRACKETS.indexOf("gold");
 
   const cropViews = [...crops]
-    .map((id) => {
-      const item = items?.items[id];
-      return {
-        id,
-        name: item?.name ?? prettify(id),
-        texture: item && resourceTexture(item),
-        bracket: JACOB_BRACKETS.findLast((bracket) => brackets[bracket]?.includes(id)),
-        personalBest: bests[id],
-      };
-    })
+    .map((id) => ({
+      id,
+      ...resourceItem(items, id),
+      bracket: JACOB_BRACKETS.findLast((bracket) => brackets[bracket]?.includes(id)),
+      personalBest: bests[id],
+    }))
     .toSorted((a, b) => a.name.localeCompare(b.name));
 
   return {
-    medals: { bronze: jacob.medals_inv?.bronze ?? 0, silver: jacob.medals_inv?.silver ?? 0, gold: jacob.medals_inv?.gold ?? 0 },
+    medals: Object.fromEntries(JACOB_MEDALS.map((medal) => [medal, jacob.medals_inv?.[medal] ?? 0])) as JacobSection["medals"],
     medalsEarned,
     contests,
     uniqueGolds: cropViews.filter(({ bracket }) => bracket && JACOB_BRACKETS.indexOf(bracket) >= gold).length,

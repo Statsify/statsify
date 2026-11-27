@@ -10,7 +10,7 @@ import { HOTF_LAYOUT, LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { treeNodes } from "./hotm.js";
-import type { HotfSection, Whisper } from "#types";
+import { type HotfSection, type Whisper, WHISPERS } from "#types";
 import type { RawMember } from "#raw";
 
 // Tokens of the Forest per HOTF tier, and the total Center of the Forest gives by its level (1 at levels 1 and 5): 17
@@ -52,7 +52,7 @@ export function getHotf(member: RawMember): HotfSection | null {
       total: add(CENTER_TOKENS[centerLevel], ...TIER_TOKENS.slice(0, level.level)),
     },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
-    whispers: { forest: whispers("forest"), desert: whispers("desert") },
+    whispers: Object.fromEntries(WHISPERS.map((type) => [type, whispers(type)])) as HotfSection["whispers"],
     nodes: treeNodes(HOTF_LAYOUT, nodes),
   };
 }

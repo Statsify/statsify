@@ -12,7 +12,7 @@ import { Injectable, type OnModuleInit } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
 import { Singleflight } from "./singleflight.js";
-import { getItemIcon, setHeadSource } from "@statsify/skyblock/icons";
+import { SKIN_URL, getItemIcon, setHeadSource } from "@statsify/skyblock/icons";
 import { lastValueFrom } from "rxjs";
 import type { IconSize } from "@statsify/skyblock/icon-key";
 import type { ItemTexture } from "@statsify/skyblock";
@@ -20,7 +20,6 @@ import type { ItemTexture } from "@statsify/skyblock";
 const HEAD_SECONDS = 30 * 24 * 60 * 60;
 /** A head that didn't load draws Steve for this long before its skin is asked for again. */
 export const FAILED_HEAD_SECONDS = 60 * 60;
-const HEAD_TIMEOUT = 5000;
 
 const headKey = (hash: string) => `skyblock:head:${hash}`;
 const failedHeadKey = (hash: string) => `skyblock:head:failed:${hash}`;
@@ -48,11 +47,16 @@ export class SkyBlockIconsService implements OnModuleInit {
 
   /** undefined when the 1.8 pack has no texture for the item. */
   public async getIcon(texture: ItemTexture, size: IconSize, glint: boolean): Promise<Icon | undefined> {
-    const standIn = texture.kind === "head" && !(await this.getHead(texture.skin));
     const icon = await getItemIcon(texture, { size, glint });
     if (!icon) return undefined;
 
-    return { png: await icon.toBuffer("png"), standIn };
+    // Only after drawing: it loads the head, which marks a failed load
+    const [png, failed] = await Promise.all([
+      icon.toBuffer("png"),
+      texture.kind === "head" ? this.redis.exists(failedHeadKey(texture.skin)) : 0,
+    ]);
+
+    return { png, standIn: failed > 0 };
   }
 
   private getHead(hash: string): Promise<Buffer | undefined> {
@@ -61,22 +65,18 @@ export class SkyBlockIconsService implements OnModuleInit {
       if (stored) return stored;
       if (failed) return undefined;
 
-      try {
-        const response = await lastValueFrom(
-          this.httpService.get<ArrayBuffer>(`https://textures.minecraft.net/texture/${hash}`, {
-            responseType: "arraybuffer",
-            timeout: HEAD_TIMEOUT,
-          })
-        );
-
-        const skin = Buffer.from(response.data);
-        await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
-        return skin;
-      } catch (error) {
+      const response = await lastValueFrom(
+        this.httpService.get<ArrayBuffer>(`${SKIN_URL}${hash}`, { responseType: "arraybuffer" })
+      ).catch(async (error) => {
         this.logger.warn(`Couldn't load the head ${hash}: ${String(error)}`);
         await this.redis.set(failedHeadKey(hash), "1", "EX", FAILED_HEAD_SECONDS);
         return undefined;
-      }
+      });
+      if (!response) return undefined;
+
+      const skin = Buffer.from(response.data);
+      await this.redis.set(headKey(hash), skin, "EX", HEAD_SECONDS);
+      return skin;
     });
   }
 }

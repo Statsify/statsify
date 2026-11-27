@@ -6,20 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { minecraftColors } from "@statsify/util";
+import { Color } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { TreeNode } from "@statsify/skyblock";
-
-const fill = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
 
 // Both hearts' trees as their menus lay them out: 7 columns, the top tier first
 const TREE_WIDTH = 7;
 const PERK_SIZE = 14;
 
 const perkColor = ({ level, maxLevel, enabled }: TreeNode) => {
-  if (level === 0) return fill("§8");
-  if (!enabled) return fill("§c");
-  return fill(level === maxLevel ? "§a" : "§e");
+  if (level === 0) return new Color("§8").hex;
+  if (!enabled) return new Color("§c").hex;
+  return new Color(level === maxLevel ? "§a" : "§e").hex;
 };
 
 export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {

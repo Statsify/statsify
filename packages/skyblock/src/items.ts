@@ -139,8 +139,7 @@ export function toItemView(item: RawItem): ItemView {
  * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. null for
  * an id the resource can't draw.
  */
-export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | null {
-  const attributes = decodeAttributes(blob);
+export function toolkitView(attributes: ItemAttributes, items: ItemsResource): ItemView | null {
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;
@@ -157,6 +156,8 @@ export function toolkitItemView(blob: RawNbt, items: ItemsResource): ItemView | 
     ...attributeDetails(attributes),
   };
 }
+
+export const toolkitItemView = (blob: RawNbt, items: ItemsResource) => toolkitView(decodeAttributes(blob), items);
 
 export const decodeSlots = (blob: RawNbt): Slots => decodeInventory(blob).map((item) => item && toItemView(item));
 

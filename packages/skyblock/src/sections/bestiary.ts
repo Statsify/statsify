@@ -8,13 +8,14 @@
 
 import { BESTIARY } from "#data";
 import { add } from "@statsify/math";
+import { stepsReached } from "#leveling";
 import type { BestiarySection } from "#types";
 import type { RawMember } from "#raw";
 
 /** A family's tier at its kills: each of its bracket's kills reached, up to its cap, past which kills don't count. */
 export function bestiaryTier(kills: number, cap: number, bracket: number[]) {
   const steps = bracket.filter((needed) => needed <= cap);
-  const tier = steps.filter((needed) => kills >= needed).length;
+  const tier = stepsReached(kills, steps);
   return { tier, maxTier: steps.length, next: steps[tier] };
 }
 
