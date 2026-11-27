@@ -23,7 +23,7 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import { Redis } from "ioredis";
 import { type APIData, config } from "@statsify/util";
-import { RawGarden, RawMuseum, type RawPlayerBingo, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
+import { RawGarden, RawMuseum, RawPlayerBingo, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
 import type { Span } from "@sentry/node";
 import type { ZodType } from "zod";
 
@@ -239,13 +239,15 @@ export class HypixelService {
   }
 
   /** null when the player never played Bingo. */
-  public getSkyBlockBingo(uuid: string): Promise<RawPlayerBingo | null> {
-    return lastValueFrom(
-      this.request<RawPlayerBingo>("/v2/skyblock/bingo", { uuid }, SKYBLOCK_TIMEOUT).pipe(
-        map(({ events }) => ({ events })),
-        nullWhenNotFound
-      )
+  public async getSkyBlockBingo(uuid: string): Promise<RawPlayerBingo | null> {
+    const data = await lastValueFrom(
+      this.request<RawPlayerBingo>("/v2/skyblock/bingo", { uuid }, SKYBLOCK_TIMEOUT).pipe(nullWhenNotFound)
     );
+
+    if (!data) return null;
+    // Outside the catch, as in getSkyBlock
+    RawPlayerBingo.parse(data);
+    return { events: data.events };
   }
 
   public async getRateLimit(): Promise<RateLimit | undefined> {

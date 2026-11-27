@@ -14,7 +14,7 @@ import {
   type PriceMap,
   type PriceView,
   RawBazaar,
-  type RawBingoResource,
+  RawBingoResource,
   RawElection,
   describeKey,
   labelVariants,
@@ -129,7 +129,11 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   /** This month's Bingo card, from the keyless bingo resource. */
   public getBingo(): Promise<RawBingoResource | undefined> {
-    return this.getCopy(BINGO_KEY, BINGO_REFRESH, () => this.get<RawBingoResource>("/v2/resources/skyblock/bingo"));
+    return this.getCopy(BINGO_KEY, BINGO_REFRESH, async () => {
+      const bingo = await this.get<RawBingoResource>("/v2/resources/skyblock/bingo");
+      RawBingoResource.parse(bingo);
+      return bingo;
+    });
   }
 
   public async getPrice(id: string): Promise<PriceView> {
