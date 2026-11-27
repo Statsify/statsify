@@ -26,7 +26,7 @@ export {
   type SkyBlockSection,
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
-export { getDungeons } from "./sections/dungeons.js";
+export { DUNGEON_CLASSES, getDungeons } from "./sections/dungeons.js";
 export { getHotm } from "./sections/hotm.js";
 export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";

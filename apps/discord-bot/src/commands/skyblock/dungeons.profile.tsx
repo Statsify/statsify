@@ -7,13 +7,14 @@
  */
 
 import { Card } from "./components/Card.js";
+import { DUNGEON_CLASSES } from "@statsify/skyblock";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-const CLASSES = {
+const CLASS_COLORS: Record<(typeof DUNGEON_CLASSES)[number], string> = {
   healer: "§d",
   mage: "§b",
   berserk: "§c",
@@ -40,8 +41,8 @@ export const SkyBlockDungeonsProfile = ({ profile, t, mode, ...card }: SkyBlockD
     [t("skyblock.highestFloor"), highest === undefined ? none : floorName(highest), "§c"],
   ];
 
-  const classes = Object.entries(CLASSES).map(([name, color]) => (
-    <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={color} t={t} />
+  const classes = DUNGEON_CLASSES.map((name) => (
+    <LevelBar title={prettify(name)} level={dungeons.classes[name]} color={CLASS_COLORS[name]} t={t} />
   ));
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
