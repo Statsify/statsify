@@ -39,7 +39,7 @@ import type {
   ValuesSection,
 } from "#types";
 import type { RawNbt, RawPet } from "#raw";
-import { type SectionInput, hasMarket } from "../sections/index.js";
+import { type SectionInput, checkReads, hasMarket } from "../sections/index.js";
 
 const TOP_ITEMS = 10;
 
@@ -136,7 +136,7 @@ function useItems(items: ItemsResource) {
  * Kept out of SECTIONS so the main entry, which the price worker loads under a 128 MB heap cap, never loads the networth
  * library.
  */
-export const NETWORTH = {
+const networth = {
   needs: ["museum", "prices", "items"] as const,
   async compute({ profile, member, museum, prices, items }: SectionInput): Promise<NetworthSection> {
     if (!prices || !items) throw new TypeError("networth needs prices and items");
@@ -178,6 +178,17 @@ export const NETWORTH = {
     };
   },
 };
+
+// The library reads more of the member, from keys this package doesn't read or type
+export const NETWORTH = checkReads<"networth">(networth, {
+  currencies: true,
+  foraging: true,
+  garden_player_data: true,
+  inventory: true,
+  loadout: true,
+  pets_data: true,
+  profile: true,
+});
 
 /**
  * Each pet type the member has none of: at the cheapest rarity a level 1 sells for, or, on a profile without the market,
@@ -313,7 +324,7 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
 }
 
 /** Beside NETWORTH for the same reason: it prices each item with the networth library. */
-export const VALUES = {
+const values = {
   needs: ["prices", "items"] as const,
   async compute({ profile, member, prices, items }: SectionInput): Promise<ValuesSection> {
     if (!prices || !items) throw new TypeError("values needs prices and items");
@@ -326,6 +337,15 @@ export const VALUES = {
     };
   },
 };
+
+export const VALUES = checkReads<"values">(values, {
+  foraging: true,
+  garden_player_data: true,
+  inventory: true,
+  loadout: true,
+  pets_data: true,
+  rift: true,
+});
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
