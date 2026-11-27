@@ -6,18 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  RARITIES,
-  type Bazaar,
-  type ItemCost,
-  type ItemsResource,
-  type PriceEntry,
-  type PriceMap,
-  type PriceView,
-} from "#types";
-import { petName, petTexture } from "./sections/pets.js";
+import { BOOK_KEY, parsePetKey } from "#auctions";
 import { prettify, removeFormatting, romanNumeral } from "@statsify/util";
+import { petTexture } from "./sections/pets.js";
 import { resourceTexture } from "#textures";
+import type { Bazaar, ItemCost, ItemsResource, PriceEntry, PriceMap, PriceView } from "#types";
 import type { RawBazaar } from "#raw";
 
 export function parseBazaar(raw: RawBazaar): Bazaar {
@@ -39,9 +32,6 @@ export function parseBazaar(raw: RawBazaar): Bazaar {
     ),
   };
 }
-
-const BOOK_KEY = /^ENCHANTMENT_(.+)_(\d{1,2})$/;
-const PET_KEY = /^LVL_(\d+)_(VERY_SPECIAL|[A-Z]+)_(.+)$/;
 
 // Typed /price names reach these lookups, so "constructor" or "__proto__" mustn't read Object.prototype.
 const own = <T>(record: Record<string, T>, key: string) => (Object.hasOwn(record, key) ? record[key] : undefined);
@@ -73,13 +63,6 @@ export function describeKey(key: string, items: ItemsResource): Omit<PriceView, 
 
   const pet = parsePetKey(key);
   return pet && { id: key, name: pet.name, rarity: pet.rarity, texture: petTexture(pet.type, pet.rarity) };
-}
-
-export function parsePetKey(key: string) {
-  const [, level, tier, type] = PET_KEY.exec(key) ?? [];
-  const rarity = RARITIES.find((candidate) => candidate === tier);
-  if (!rarity || key.includes("_SKINNED_")) return;
-  return { type, rarity, level: Number(level), name: `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}` };
 }
 
 /** undefined when search can't name the key or no source prices it. */
