@@ -120,7 +120,7 @@ export const ArcadeProfile = ({
       break;
 
     case "hypixelSays":
-      table = <HypixelSaysTable stats={arcade[api]} t={t} />;
+      table = <HypixelSaysTable stats={arcade[api]} t={t} time={time} />;
       break;
 
     case "miniWalls":
