@@ -23,15 +23,16 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Container } from "typedi";
-import { FormattedGame, type User } from "@statsify/schemas";
 import {
   SKYBLOCK_CARDS,
   type SkyBlockCard,
   type SkyBlockCardName,
   type SkyBlockProfile,
   getSkyBlockBackground,
+  skyBlockHeading,
   skyBlockTitle,
 } from "./cards.js";
+import type { User } from "@statsify/schemas";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
@@ -256,7 +257,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.ranks")}`}
+        title={skyBlockHeading(t, "ranks")}
       />,
       getTheme(user)
     );
@@ -283,7 +284,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.calendar")}`}
+        title={skyBlockHeading(t, "calendar")}
       />,
       getTheme(user)
     );
@@ -314,7 +315,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={`§l${FormattedGame.SKYBLOCK} §f${t("skyblock.titles.bingo")} §r(§e${bingo.name}§r)`}
+        title={`${skyBlockHeading(t, "bingo")} §r(§e${bingo.name}§r)`}
       />,
       getTheme(user)
     );

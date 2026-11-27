@@ -221,9 +221,12 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
+export const skyBlockHeading = (t: LocalizeFunction, name: SkyBlockCardName | "bingo" | "calendar" | "ranks") =>
+  `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
+
 export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
   // The Header moves the profile onto its own line where that narrows the card
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}\n§r(${formatProfileName(profile)}§r)`;
+  return `${skyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {
