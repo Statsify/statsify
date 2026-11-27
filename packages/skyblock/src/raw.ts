@@ -142,6 +142,31 @@ export const RawProfile = z.object({
 });
 export type RawProfile = z.infer<typeof RawProfile>;
 
+/**
+ * /v2/skyblock/profiles, checked on arrival for what every lookup reads: each profile's own fields, and what finding a
+ * profile, its summary and the API settings read of its members. Each section checks the rest as it reads it.
+ */
+export const RawProfilesResponse = z.object({
+  profiles: z
+    .array(
+      RawProfile.extend({
+        members: z.record(
+          z.string(),
+          RawMember.pick({
+            collection: true,
+            currencies: true,
+            inventory: true,
+            leveling: true,
+            player_data: true,
+            player_id: true,
+            profile: true,
+          })
+        ),
+      })
+    )
+    .nullish(),
+});
+
 const RawDonation = z.object({ donated_time: z.number().optional(), items: RawNbt.optional() });
 
 export const RawMuseumMember = z.object({
