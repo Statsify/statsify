@@ -7,6 +7,7 @@
  */
 
 import textures from "./generated/textures-1.8.json" with { type: "json" };
+import { prettify } from "@statsify/util";
 import type { ItemTexture, ItemsResource, RawItem } from "#types";
 
 /** The texture hash in a base64 skin value (`{"textures":{"SKIN":{"url":…}}}`). */
@@ -41,6 +42,11 @@ export function resourceTexture({ skin, material, durability, color }: ItemsReso
 
   const [red, green, blue] = color.split(",").map(Number);
   return { kind: "item", id, damage, color: (red << 16) | (green << 8) | blue };
+}
+
+export function resourceItem(items: ItemsResource | undefined, id: string) {
+  const found = items?.items[id];
+  return { name: found?.name ?? prettify(id), texture: found && resourceTexture(found) };
 }
 
 if (import.meta.vitest) {

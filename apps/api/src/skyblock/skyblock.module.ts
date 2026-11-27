@@ -7,7 +7,8 @@
  */
 
 import { HttpModule } from "@nestjs/axios";
-import { HypixelModule, SKYBLOCK_TIMEOUT } from "#hypixel";
+import { HypixelModule } from "#hypixel";
+import { IMAGE_DOWNLOAD_TIMEOUT } from "@statsify/rendering";
 import { Module } from "@nestjs/common";
 import { Player, SkyBlockStats } from "@statsify/schemas";
 import { PlayerModule } from "#player";
@@ -26,11 +27,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     HypixelModule,
     PlayerModule,
     TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum, SkyBlockGarden, SkyBlockStats, Player]),
-    // HypixelModule's client sends the key on every request; the bazaar and items resource take none.
-    HttpModule.register({
-      baseURL: "https://api.hypixel.net/",
-      timeout: SKYBLOCK_TIMEOUT,
-    }),
+    HttpModule.register({ timeout: IMAGE_DOWNLOAD_TIMEOUT }),
   ],
   controllers: [SkyBlockController, SkyBlockLeaderboardController],
   providers: [

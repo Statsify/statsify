@@ -40,6 +40,9 @@ export const fractionalLevel = ({ level, progress, xpForNext }: Level) => level 
 export const toLevelCosts = (thresholds: readonly number[]) =>
   thresholds.map((threshold, i) => threshold - (thresholds[i - 1] ?? 0));
 
+/** The steps reached at an amount, out of each step's amount needed. */
+export const stepsReached = (amount: number, steps: readonly number[]) => steps.filter((needed) => amount >= needed).length;
+
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
@@ -54,5 +57,12 @@ if (import.meta.vitest) {
     expect(toLevelCosts([5, 15, 200])).toEqual([5, 10, 185]);
     expect(fractionalLevel(getLevel(274, table, 3))).toBe(2.495);
     expect(fractionalLevel(getLevel(10_000, table, 3))).toBe(3);
+  });
+
+  test("stepsReached counts the steps an amount reaches", () => {
+    expect(stepsReached(0, [50, 100, 250])).toBe(0);
+    expect(stepsReached(99, [50, 100, 250])).toBe(1);
+    expect(stepsReached(100, [50, 100, 250])).toBe(2);
+    expect(stepsReached(1e9, [50, 100, 250])).toBe(3);
   });
 }
