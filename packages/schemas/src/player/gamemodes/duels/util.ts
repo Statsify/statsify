@@ -34,19 +34,70 @@ export const defaultTitleScores: Title[] = [
   { req: 100_000, step: 10_000, max: 50, title: "ASCENDED", defaultColor: "§c", bold: true },
 ];
 
-const overallTitleScores = defaultTitleScores.map((data) => ({
-  ...data,
-  req: data.req * 2,
-  step: data.step * 2,
-}));
-
-const halfTitleScores = defaultTitleScores.map((data) => ({
-  ...data,
-  req: data.req / 2,
-  step: data.step / 2,
-}));
-
 export type TitleRequirement = "overall" | "default" | "half";
+
+const TITLE_REQUIREMENT_SCALES: Record<TitleRequirement, number> = {
+  default: 1,
+  overall: 2,
+  half: 0.5,
+};
+
+const scaleTitleScores = (scale: number) =>
+  defaultTitleScores.map((data) => ({
+    ...data,
+    req: data.req * scale,
+    step: data.step * scale,
+  }));
+
+const overallTitleScores = scaleTitleScores(TITLE_REQUIREMENT_SCALES.overall);
+const halfTitleScores = scaleTitleScores(TITLE_REQUIREMENT_SCALES.half);
+
+type TitleStat = "wins" | "kills";
+
+interface DuelsTitleOptions {
+  mode: string;
+  titleRequirement: TitleRequirement;
+  titleStat?: TitleStat;
+}
+
+export const DUELS_TITLES = {
+  overall: { mode: "", titleRequirement: "overall" },
+  arena: { mode: "Arena", titleRequirement: "default", titleStat: "kills" },
+  bedwars: { mode: "Bed Wars", titleRequirement: "default" },
+  blitzsg: { mode: "Blitz", titleRequirement: "default" },
+  bow: { mode: "Bow", titleRequirement: "default" },
+  boxing: { mode: "Boxing", titleRequirement: "half" },
+  bridge: { mode: "Bridge", titleRequirement: "half" },
+  classic: { mode: "Classic", titleRequirement: "default" },
+  combo: { mode: "Combo", titleRequirement: "default" },
+  megawalls: { mode: "Mega Walls", titleRequirement: "half" },
+  nodebuff: { mode: "NoDebuff", titleRequirement: "half" },
+  op: { mode: "OP", titleRequirement: "default" },
+  quake: { mode: "Quakecraft", titleRequirement: "default" },
+  parkour: { mode: "Parkour", titleRequirement: "half" },
+  skywars: { mode: "SkyWars", titleRequirement: "default" },
+  spleef: { mode: "Spleef", titleRequirement: "default" },
+  sumo: { mode: "Sumo", titleRequirement: "default" },
+  uhc: { mode: "UHC", titleRequirement: "default" },
+} as const satisfies Record<string, DuelsTitleOptions>;
+
+export type DuelsTitle = keyof typeof DUELS_TITLES;
+
+export const getTitleStat = (title: DuelsTitle): TitleStat => {
+  const options: DuelsTitleOptions = DUELS_TITLES[title];
+  return options.titleStat ?? "wins";
+};
+
+interface DuelsTitleScore {
+  mode: DuelsTitle;
+  score: number;
+}
+
+const scaledTitleScore = ({ mode, score }: DuelsTitleScore) =>
+  score / TITLE_REQUIREMENT_SCALES[DUELS_TITLES[mode].titleRequirement];
+
+export const compareTitleScores = (a: DuelsTitleScore, b: DuelsTitleScore) =>
+  scaledTitleScore(b) - scaledTitleScore(a);
 
 const titleRequirementScores: Record<TitleRequirement, Title[]> = {
   default: defaultTitleScores,
