@@ -20,6 +20,8 @@ pub use display::{Display, Transform};
 pub use error::Error;
 pub use texture::{load_texture, Texture, ALPHA_CUTOFF};
 
+pub const UNITS_PER_BLOCK: f32 = 16.0;
+
 /// The parts of a resource pack a caller has read, keyed by path under `assets/minecraft/models` or
 /// `assets/minecraft/textures` without the extension (`block/furnace`, `blocks/stone`). A texture's
 /// `.mcmeta` goes under the texture's name.
