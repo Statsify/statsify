@@ -6,22 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
-import { Transform } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class HeadDto extends UuidDto {
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(8)
-  @Max(800)
-  @ApiProperty({
-    description: "The size of the head",
-    default: 160,
-    minimum: 8,
-    maximum: 800,
+export class HeadDto extends createZodDto(
+  UuidDto.schema.extend({
+    size: z.coerce.number().int().min(8).max(800).default(160).describe("The size of the head"),
   })
-  public size = 160;
-}
+) {}
