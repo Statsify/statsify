@@ -71,7 +71,7 @@ export class LinkedRolesService {
       .findOneAndUpdate(
         { id },
         { id, uuid: user.uuid, pushedAt: Date.now(), pushedBody: "", ...encryptTokens(tokens) },
-        { upsert: true, new: true }
+        { upsert: true, returnDocument: "after" }
       )
       .lean()
       .exec();
@@ -132,7 +132,11 @@ export class LinkedRolesService {
       await Promise.all(others.map((connection) => this.disconnect(connection)));
 
       const connection = await this.roleConnectionModel
-        .findOneAndUpdate({ id }, { $set: { uuid, pushedAt: Date.now() } }, { new: true })
+        .findOneAndUpdate(
+          { id },
+          { $set: { uuid, pushedAt: Date.now() } },
+          { returnDocument: "after" }
+        )
         .lean()
         .exec();
 
