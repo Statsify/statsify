@@ -93,11 +93,13 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   /** Tied rows share a rank, unlike on the player and guild boards. */
   public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
     const leaderboard = await super.getLeaderboard(constructor, field, input, type);
-    if (leaderboard.data.length === 0) return leaderboard;
+    // A board can keep a member whose record is gone, and nothing is left to name the row
+    const data = leaderboard.data.filter((row) => row.name);
+    if (data.length === 0) return { ...leaderboard, data };
 
-    const scores = await this.redis.zmscore(boardKey(field), leaderboard.data.map(({ id }) => id));
+    const scores = await this.redis.zmscore(boardKey(field), data.map(({ id }) => id));
     const ranks = await this.sharedRanks(field, scores.map(Number));
-    return { ...leaderboard, data: leaderboard.data.map((row, index) => ({ ...row, position: ranks[index] })) };
+    return { ...leaderboard, data: data.map((row, index) => ({ ...row, position: ranks[index] })) };
   }
 
   /** Each score's rank, 1 plus the members ahead of it on the board, so tied rows share one (1, 2, 2, 4). */
