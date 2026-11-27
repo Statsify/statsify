@@ -17,7 +17,7 @@ import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { GuildQuery } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
-import { PlayerArgument } from "./player.argument.js";
+import { PlayerArgument, autocompleteNames } from "./player.argument.js";
 
 const apiClient = Container.get(ApiService);
 
@@ -46,22 +46,7 @@ class GuildQueryArgument extends AbstractArgument {
     const query = context.option<string>(this.name);
     if (!query) return [];
 
-    const searched = { name: query, value: query };
-
-    // Discord rejects the whole list when a choice is over 100 characters
-    if (query.length > 100) return [];
-    if (query.length > 32) return [searched];
-
-    const guilds = await apiClient.getGuildAutocomplete(query);
-
-    let results = guilds.map((g) => ({ name: g, value: g }));
-
-    if (!guilds.some((g) => g.toLowerCase() === query.toLowerCase())) {
-      results = results.slice(0, 24);
-      results.push(searched);
-    }
-
-    return results;
+    return autocompleteNames(query, 32, () => apiClient.getGuildAutocomplete(query));
   }
 }
 
