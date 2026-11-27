@@ -8,7 +8,7 @@
 
 import { writeFileSync } from "node:fs";
 
-const response = await fetch("https://api.hypixel.net/v2/resources/quests");
+const response = await fetch("https://api.hypixel.net/v2/resources/quests", { signal: AbortSignal.timeout(30_000) });
 if (!response.ok) throw new Error(`Failed to fetch quests: ${response.status}`);
 
 const { quests } = await response.json();
