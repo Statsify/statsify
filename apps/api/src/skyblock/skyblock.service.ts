@@ -115,22 +115,22 @@ export class SkyBlockService {
     cache: CacheLevel,
     profileName?: string
   ): Promise<SkyBlockProfileView> {
-    const { player, profiles, fetchedAt, stale } = await this.getPlayerProfiles(tag, cache);
+    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
+    const [{ player, profiles, fetchedAt, stale }, prices, items] = await Promise.all([
+      this.getPlayerProfiles(tag, cache),
+      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
+      needs.has("items") ? this.pricesService.getItems() : undefined,
+    ]);
 
     const profile = findProfile(profiles, player.uuid, profileName);
     if (!profile) throw new SkyBlockNotFoundException("profile");
     const member = profile.members[player.uuid];
 
-    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
-    const [museum, prices, items] = await Promise.all([
-      needs.has("museum") ? this.getStoredMuseum(profile.profile_id, cache) : undefined,
-      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
-      needs.has("items") ? this.pricesService.getItems() : undefined,
-    ]);
-
     if ((needs.has("prices") && !prices) || (needs.has("items") && !items)) {
       throw new SkyBlockUnavailableException("market");
     }
+
+    const museum = needs.has("museum") ? await this.getStoredMuseum(profile.profile_id, cache) : undefined;
 
     const input: SectionInput = {
       uuid: player.uuid,
