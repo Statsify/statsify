@@ -26,6 +26,7 @@ import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 const GUILD_CACHE_TIME_MS = 600_000;
+const guildlessKey = (uuid: string) => `guildless:${uuid}`;
 
 @Injectable()
 export class GuildService {
@@ -59,7 +60,7 @@ export class GuildService {
       type === GuildQuery.PLAYER &&
       !cachedGuild &&
       cache !== CacheLevel.LIVE &&
-      await this.redis.exists(`guildless:${tag}`)
+      await this.redis.exists(guildlessKey(tag))
     ) {
       throw new GuildNotFoundException(displayName);
     }
@@ -77,7 +78,7 @@ export class GuildService {
     }
 
     if (!guild) {
-      if (type === GuildQuery.PLAYER) await this.redis.set(`guildless:${tag}`, 1, "PX", GUILD_CACHE_TIME_MS);
+      if (type === GuildQuery.PLAYER) await this.redis.set(guildlessKey(tag), 1, "PX", GUILD_CACHE_TIME_MS);
       await this.handleGuildNotFound(cachedGuild, tag, type);
       throw new GuildNotFoundException(displayName);
     }
