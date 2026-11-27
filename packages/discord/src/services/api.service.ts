@@ -25,6 +25,8 @@ import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
+import { getDefaultSkin } from "@statsify/assets";
+import { loadImage } from "skia-canvas";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -204,6 +206,14 @@ export class ApiService extends StatsifyApiService {
       if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
+  }
+
+  /**
+   * Draws the player's default skin instead when the render is slow or fails, so the command
+   * still replies
+   */
+  public override getPlayerSkin(uuid: string, user: User | null) {
+    return super.getPlayerSkin(uuid, user).catch(() => loadImage(getDefaultSkin(uuid).render));
   }
 
   /**
