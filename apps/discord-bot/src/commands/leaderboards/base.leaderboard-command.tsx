@@ -197,7 +197,7 @@ export class BaseLeaderboardCommand {
       data: positionModal.build(t),
     }));
 
-    listener.addHook(documentModal.getCustomId(), async (interaction) => {
+    listener.addHook(documentModal.getCustomId(), (interaction) => {
       const data = interaction.getData();
       const documentInput = data.components[0].components[0].value;
       changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(

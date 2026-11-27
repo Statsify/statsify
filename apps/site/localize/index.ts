@@ -12,7 +12,7 @@ export function t(number: number): string {
 
 // Taken from @statsify/discord - i18n-loader.service.ts
 function formatNumber(value: number, language?: string) {
-  const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+  const hasDecimals = value >= 1_000_000 || !Number.isInteger(value);
   const digits = hasDecimals ? 2 : 0;
 
   const formatOptions = {
@@ -20,12 +20,12 @@ function formatNumber(value: number, language?: string) {
     minimumFractionDigits: digits,
   };
 
-  if ((value as number) >= 1_000_000) {
+  if (value >= 1_000_000) {
     const [number, suffix] = abbreviationNumber(value);
     return `${Intl.NumberFormat(language, formatOptions).format(number)}${suffix}`;
   }
 
-  return Intl.NumberFormat(language, formatOptions).format(value as number);
+  return Intl.NumberFormat(language, formatOptions).format(value);
 }
 
 // Taken from @statsify/util

@@ -118,7 +118,7 @@ export class AuthService {
 
     const [keydata, requests] = pipelineResult;
 
-    const [name, lifetimeRequests, limit] = keydata[1] as [string, number, number];
+    const [name, lifetimeRequests, limit] = keydata[1] as [string, string, string];
 
     const recentRequests = (requests[1] as string[])
       .filter((_, i) => i % 2 === 0)
@@ -127,7 +127,7 @@ export class AuthService {
     const time = Date.now();
 
     const resetTime =
-      60_000 - (time - Number((requests[1] as [Error | null, number])[1]));
+      60_000 - (time - Number((requests[1] as string[])[1]));
 
     return {
       name,

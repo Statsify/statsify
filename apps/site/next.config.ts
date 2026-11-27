@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
       { pathname: "/api/skin/render" },
     ],
   },
-  redirects: async () => [
+  redirects: () => Promise.resolve([
     {
       source: "/invite",
       destination: "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
@@ -86,7 +86,7 @@ const nextConfig: NextConfig = {
       destination: "https://crowdin.com/project/statsify",
       permanent: true,
     },
-  ],
+  ]),
 };
 
 export default nextConfig;

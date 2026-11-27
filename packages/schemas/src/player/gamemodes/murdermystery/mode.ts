@@ -236,9 +236,7 @@ export class MurderMysteryKnife {
     if (this.kind === "random_cosmetic") {
       let max;
 
-      const knifes = Object.entries(
-        data?.knifeSkinPrestiges?.xp ?? ({} as Record<string, number>)
-      ) as [string, number][];
+      const knifes = Object.entries<number>(data?.knifeSkinPrestiges?.xp ?? {});
 
       for (const knife of knifes) {
         const value = knife[1];

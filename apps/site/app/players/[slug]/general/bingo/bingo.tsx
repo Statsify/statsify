@@ -259,13 +259,13 @@ function TaskCard({ task, finished, complete }: { task: Task; finished: number; 
       <p className="text-mc-gray">
         Progress:{" "}
         <span
-          className={`${
+          className={
             finished > 0 && finished < task.progress ?
               "text-mc-yellow" :
               (finished >= task.progress ?
                 "text-mc-green" :
                 "text-mc-red")
-          }`}
+          }
         >
           {finished}
         </span>

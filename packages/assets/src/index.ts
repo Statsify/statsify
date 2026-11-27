@@ -78,7 +78,7 @@ export function getLogo(
   userOrLogoOrPath: User | UserLogo | string | null,
   size?: number
 ): Promise<Image> {
-  return loadImage(getLogoPath(userOrLogoOrPath as User, size));
+  return loadImage(getLogoPath(userOrLogoOrPath, size));
 }
 
 export function getLogoPath(
@@ -97,7 +97,7 @@ export function getLogoPath(
       logo = User.getLogo(userOrLogoOrPath);
       break;
 
-    case "number":
+    default:
       logo = userOrLogoOrPath;
       break;
   }
@@ -145,6 +145,9 @@ export function getLogoPath(
 
     case UserLogo.DEFAULT:
       path = "";
+      break;
+
+    case undefined:
       break;
   }
 

@@ -24,7 +24,7 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<BedWarsModes, never>,
+    { mode }: ProfileData<BedWarsModes>,
   ): JSX.Element {
     if (mode.api === "challenges") {
       return <BedWarsChallengesProfile {...base} />;

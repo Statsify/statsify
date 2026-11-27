@@ -164,7 +164,7 @@ export async function paginate(
     return context.reply({ components: [] });
   }
 
-  setTimeout(onTimeout, timeout);
+  setTimeout(() => void onTimeout(), timeout);
 
   const message = await getMessage(currentIndex, currentSubIndex);
   message.components = [
@@ -342,10 +342,11 @@ class PageController {
     ) => ReturnType<InteractionHook>,
   ) {
     if (this.#menu instanceof SelectMenuBuilder) {
-      return listener.addHook(this.#menu.getCustomId(), (interaction) => {
+      listener.addHook(this.#menu.getCustomId(), (interaction) => {
         const index = Number(interaction.getData().values[0]);
         return handler(interaction, index);
       });
+      return;
     }
 
     for (const [index, button] of this.#menu.entries()) {

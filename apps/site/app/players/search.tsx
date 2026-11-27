@@ -130,7 +130,7 @@ export function Search({
           spellCheck={false}
           autoComplete="off"
           disabled={disabled}
-          onFocus={() => setFocused(true)}
+          onFocus={() => { setFocused(true); }}
           aria-label="Search players"
         />
       </div>

@@ -82,10 +82,10 @@ server.on("login", async (client) => {
 
     const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
 
-    if (previousVerifyCode)
-      return client.end(
-        codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
-      );
+    if (previousVerifyCode) {
+      client.end(codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt));
+      return;
+    }
 
     const code = await generateCode(verifyCodesModel);
     const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));

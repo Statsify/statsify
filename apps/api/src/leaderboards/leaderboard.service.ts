@@ -48,11 +48,11 @@ export abstract class LeaderboardService {
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 
-    const id = instance[idField] as unknown as string;
+    const id = instance[idField] as string;
 
     for (const [field, metadata] of fields) {
       const value = instance[field] as unknown as number;
-      const key = `${name}.${String(field)}`;
+      const key = `${name}.${field}`;
 
       if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
         pipeline.zrem(key, id);
@@ -88,10 +88,7 @@ export abstract class LeaderboardService {
       sort,
       name,
       hidden,
-    } = getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+    } = getLeaderboardField(constructor, field);
 
     let top: number;
     let bottom: number;

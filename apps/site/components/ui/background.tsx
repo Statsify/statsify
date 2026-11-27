@@ -51,7 +51,7 @@ export function Background({
     opacity.jump(1);
     oldBackground.current = background;
     const controls = animate(opacity, 0, { duration: 0.4 });
-    return () => controls.stop();
+    return () => { controls.stop(); };
   }, [background, opacity]);
 
   return (

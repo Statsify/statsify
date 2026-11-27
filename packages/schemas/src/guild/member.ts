@@ -71,6 +71,6 @@ export class GuildMember {
   }
 
   public static isGuildMaster(member: GuildMember): boolean {
-    return !!/^guild\s*master$/i.test(member.rank);
+    return /^guild\s*master$/i.test(member.rank);
   }
 }

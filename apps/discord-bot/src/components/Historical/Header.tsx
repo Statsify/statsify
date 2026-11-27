@@ -66,6 +66,8 @@ export const HistoricalHeader = ({
       start = now.minus({ months: 1, days: now.day - 2 });
       end = now.minus({ days: now.day });
       break;
+    case HistoricalTimes.SESSION:
+      break;
   }
 
   if (startTime) start = startTime;
@@ -82,7 +84,7 @@ export const HistoricalHeader = ({
               `Started ${sessionReset?.toFormat(
                 DATE_FORMAT
               )} (${sessionReset?.toRelative()})` :
-              `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
+              `${start.toFormat(DATE_FORMAT)} ➡ ${end.toFormat(DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">

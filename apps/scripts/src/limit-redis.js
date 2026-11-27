@@ -10,7 +10,7 @@ import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
-import { SimpleIntervalJob, Task } from "toad-scheduler";
+import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
@@ -82,6 +82,8 @@ const limit = async () => {
   ]);
 };
 
-const task = new Task("leaderboard limiting", limit);
+const task = new AsyncTask("leaderboard limiting", limit, (error) => {
+  logger.error(error);
+});
 const job = new SimpleIntervalJob({ minutes: 10, runImmediately: true }, task);
 job.start();

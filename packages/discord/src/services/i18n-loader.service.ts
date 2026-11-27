@@ -73,18 +73,16 @@ function getNumberFormat(lng: string | undefined, digits: number) {
 }
 
 function format(value: any, format?: string | undefined, lng?: string): string {
-  switch (format) {
-    case "number": {
-      const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-      const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
+  if (format === "number") {
+    const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+    const numberFormat = getNumberFormat(lng, hasDecimals ? 2 : 0);
 
-      if ((value as number) >= 1_000_000) {
-        const [number, suffix] = abbreviationNumber(value);
-        return `${numberFormat.format(number)}${suffix}`;
-      }
-
-      return numberFormat.format(value as number);
+    if ((value as number) >= 1_000_000) {
+      const [number, suffix] = abbreviationNumber(value);
+      return `${numberFormat.format(number)}${suffix}`;
     }
+
+    return numberFormat.format(value as number);
   }
 
   return value;

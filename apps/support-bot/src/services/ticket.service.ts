@@ -82,7 +82,7 @@ export class TicketService {
       const username = data.components[0].components[0].value;
       const issue = data.components[1].components[0].value;
 
-      await this.create(interaction.getGuildId() as string, user, username, issue);
+      await this.create(interaction.getGuildId()!, user, username, issue);
     });
 
     // Add hooks for all tickets in the database since they may have been created before the bot was started

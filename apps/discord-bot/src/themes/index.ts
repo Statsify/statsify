@@ -43,8 +43,10 @@ export const getTheme = (user: User | null): Theme | undefined => {
         box(ctx, props, location, theme);
       },
       img(ctx, props, location, theme, component) {
-        if (component !== Background.name)
-          return Image.render(ctx, props, location, theme, component);
+        if (component !== Background.name) {
+          Image.render(ctx, props, location, theme, component);
+          return;
+        }
 
         if (colorPalette?.background === null) return;
 

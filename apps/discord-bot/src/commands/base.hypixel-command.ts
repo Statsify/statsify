@@ -93,7 +93,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
       const submodeEmojis = this.getSubModeEmojis?.(
         mode.api,
-        filteredSubmodes as SubModeForMode<T, (typeof mode)["api"]>[]
+        filteredSubmodes
       ) ?? [];
 
       if (filteredSubmodes.length === 0) {

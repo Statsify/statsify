@@ -153,7 +153,7 @@ export class FontRenderer {
 
       const effect = token?.effect(
         part,
-        matches as RegExpMatchArray,
+        matches,
         defaultState
       );
       let text = effect?.text ?? part;

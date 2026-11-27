@@ -23,7 +23,7 @@ export class MurderMysteryCommand extends BaseHypixelCommand<MurderMysteryModes>
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<MurderMysteryModes, never>
+    { mode }: ProfileData<MurderMysteryModes>
   ): JSX.Element {
     return <MurderMysteryProfile {...base} mode={mode} />;
   }

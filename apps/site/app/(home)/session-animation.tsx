@@ -43,7 +43,7 @@ export function SessionAnimation() {
         [daysBack, 7, { duration: 2.5, ease: cubicBezier(0.21, 0.73, 0.63, 0.89) }],
       ]);
 
-      return () => controls.cancel();
+      return () => { controls.cancel(); };
     }
     
     const controls = animate([
@@ -55,7 +55,7 @@ export function SessionAnimation() {
         [daysBack, 0, { duration: 0 }],
       ]);
 
-    return () => controls.cancel();
+    return () => { controls.cancel(); };
   }, [inView, animate, daysBack]);
 
   return (

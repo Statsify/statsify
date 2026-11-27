@@ -111,7 +111,7 @@ export class SessionService {
       .lean()
       .exec();
 
-    if (!user || !user.uuid) throw new UnauthorizedException();
+    if (!user?.uuid) throw new UnauthorizedException();
 
     await this.sessionModel
       .deleteOne()

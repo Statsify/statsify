@@ -74,7 +74,7 @@ export const SpeedUHCProfile = ({
           <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
           <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-          <If condition={Boolean("assists" in stats)}>
+          <If condition={"assists" in stats}>
             <Table.td
               title={t("stats.assists")}
               value={t((stats as SpeedUHCMode).assists ?? 0)}

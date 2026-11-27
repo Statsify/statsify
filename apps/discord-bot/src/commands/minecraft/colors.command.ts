@@ -13,7 +13,7 @@ import { minecraftColors } from "@statsify/util";
 
 @Command({ description: (t) => t("commands.colors") })
 export class ColorsCommand {
-  public async run() {
+  public run() {
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.colors.title"))
       .description((t) => {

@@ -38,8 +38,8 @@ export const BedWarsChallengesProfile = ({
   const { challenges } = player.stats.bedwars;
 
   const sidebar: SidebarItem[] = [
-    ["Total Completions", t(challenges.totalChallenges as number), "§6"],
-    ["Unique Completions", t(challenges.uniqueChallenges as number), "§e"],
+    ["Total Completions", t(challenges.totalChallenges!), "§6"],
+    ["Unique Completions", t(challenges.uniqueChallenges!), "§e"],
   ];
 
   return (

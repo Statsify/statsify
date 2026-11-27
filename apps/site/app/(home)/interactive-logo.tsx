@@ -51,7 +51,7 @@ export function InteractiveLogo() {
       setLosses(Math.floor(Math.random() * (MAX - MIN)) + MIN);
     }, 2500);
 
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); };
   }, []);
 
   const wlr = wins / losses;

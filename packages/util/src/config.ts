@@ -304,7 +304,7 @@ export const config = async <T extends keyof FlatConfig>(
   { required = true, default: defaultValue }: ConfigOptions<T> = {},
 ): Promise<FlatConfig[T]> => {
   // Don't load the config while testing
-  if (process.env.VITEST) return defaultValue as FlatConfig[T];
+  if (process.env.VITEST) return defaultValue!;
   if (!cfg) cfg = await loadConfig().then((c) => c.default);
 
   const raw = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg);
