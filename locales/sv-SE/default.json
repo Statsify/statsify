@@ -412,7 +412,7 @@
       "title": "Ingen topplista data på denna position"
     },
     "leaderboardInvalidPosition": {
-      "description": "Den rankningslist position du angav är ogiltig. Ange ett tal större än 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Ogiltig position"
     },
     "leaderboardNotFound": {
