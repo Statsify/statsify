@@ -73,12 +73,10 @@ fn draw_skin(
 
   let armor = options.armor.unwrap_or_default();
 
-  // Checked after narrowing, since a huge f64 becomes an f32 infinity
-  let yaw = options.yaw.map(|yaw| yaw as f32);
-
-  if yaw.is_some_and(|yaw| !yaw.is_finite()) {
-    return Err(crate::error::Error::InvalidYaw.into());
-  }
+  let yaw = options
+    .yaw
+    .map(|yaw| narrow(yaw).ok_or(crate::error::Error::InvalidYaw))
+    .transpose()?;
 
   let model = Model::load(
     renderer,
@@ -104,4 +102,10 @@ fn draw_skin(
     .map_err(crate::error::Error::from)?;
 
   Ok(buffer)
+}
+
+// Checked after narrowing, since a huge f64 becomes an f32 infinity
+fn narrow(value: f64) -> Option<f32> {
+  let value = value as f32;
+  value.is_finite().then_some(value)
 }
