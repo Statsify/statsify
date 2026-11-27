@@ -238,9 +238,7 @@ export class SkyBlockCommand {
     const player = await this.apiService.getSkyBlockProfiles(context.option("player"), user);
 
     const [rankings, logo, skin, badge, background] = await Promise.all([
-      this.apiService.getSkyBlockRankings(player.uuid).catch(() => {
-        throw new ErrorMessage("errors.skyblockUnavailable");
-      }),
+      this.apiService.getSkyBlockRankings(player.uuid),
       getLogo(user),
       this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
@@ -272,9 +270,7 @@ export class SkyBlockCommand {
     const t = context.t();
 
     const [mayor, logo, background] = await Promise.all([
-      this.apiService.getSkyBlockMayor().catch(() => {
-        throw new ErrorMessage("errors.skyblockUnavailable");
-      }),
+      this.apiService.getSkyBlockMayor(),
       getLogo(user),
       getSkyBlockBackground(),
     ]);
