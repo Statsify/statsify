@@ -528,6 +528,7 @@ export const PLAYER_STATS = [
 }[];
 
 export type PlayerStat = (typeof PLAYER_STATS)[number]["id"];
+export type Stats = Partial<Record<PlayerStat, number>>;
 
 export interface StatValue {
   stat: PlayerStat;

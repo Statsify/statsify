@@ -19,6 +19,7 @@ import {
   type Slots,
   type StatSource,
   type StatTotal,
+  type Stats,
   type StatsSection,
   type TreeLayout,
   type TreeNode,
@@ -37,8 +38,6 @@ import { getSlayers } from "./slayers.js";
 import { isWeapon } from "./gear.js";
 import { parsePieceBonuses, parseStatLine, statNamed } from "../lore.js";
 import type { RawMember, RawProfile } from "#raw";
-
-type Stats = Partial<Record<PlayerStat, number>>;
 
 const sumStats = (all: Iterable<Stats>): Stats => {
   const sum: Stats = {};
