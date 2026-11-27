@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HttpModule } from "@nestjs/axios";
-import { HypixelModule, SKYBLOCK_TIMEOUT } from "#hypixel";
+import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { SkyBlockBudgetService } from "./skyblock-budget.service.js";
@@ -23,11 +22,6 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     HypixelModule,
     PlayerModule,
     TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum]),
-    // HypixelModule's client sends the key on every request; the bazaar and items resource take none.
-    HttpModule.register({
-      baseURL: "https://api.hypixel.net/",
-      timeout: SKYBLOCK_TIMEOUT,
-    }),
   ],
   controllers: [SkyBlockController],
   providers: [SkyBlockService, SkyBlockBudgetService, SkyBlockPricesService, SkyBlockIconsService],

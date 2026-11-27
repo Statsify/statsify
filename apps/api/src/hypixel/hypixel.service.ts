@@ -28,6 +28,7 @@ import type { Span } from "@sentry/node";
 import type { ZodType } from "zod";
 
 const RATE_LIMIT_KEY = "hypixel:ratelimit";
+const KEY_HEADERS = { "API-Key": await config("hypixelApi.key") };
 
 // A large co-op's profiles response runs to several MB, more than the default timeout allows.
 export const SKYBLOCK_TIMEOUT = await config("skyblock.timeout", { default: 10_000 });
@@ -210,11 +211,18 @@ export class HypixelService {
    */
   private async getSkyBlock<T>(url: string, params: Record<string, unknown>, schema: ZodType): Promise<T> {
     const data = await lastValueFrom(
-      this.request<T>(url, params, SKYBLOCK_TIMEOUT).pipe(catchError((error) => throwError(() => toSkyBlockError(error))))
+      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT }).pipe(
+        catchError((error) => throwError(() => toSkyBlockError(error)))
+      )
     );
 
     schema.parse(data);
     return data;
+  }
+
+  /** For SkyBlock endpoints that take no key, like the bazaar and the items resource. */
+  public getSkyBlockKeyless<T>(url: string): Promise<T> {
+    return lastValueFrom(this.request<T>(url, undefined, { timeout: SKYBLOCK_TIMEOUT, keyless: true }));
   }
 
   public async getRateLimit(): Promise<RateLimit | undefined> {
@@ -251,7 +259,12 @@ export class HypixelService {
       .catch((error) => this.logger.error(error));
   }
 
-  private request<T>(url: string, params?: Record<string, unknown>, timeout?: number): Observable<T> {
+  /** A keyless request doesn't count against the key, so its RateLimit-* headers aren't the key's. */
+  private request<T>(
+    url: string,
+    params?: Record<string, unknown>,
+    { timeout, keyless = false }: { timeout?: number; keyless?: boolean } = {}
+  ): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -259,15 +272,15 @@ export class HypixelService {
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
     });
 
-    return this.httpService.get(url, { params, timeout }).pipe(
+    return this.httpService.get(url, { params, timeout, headers: keyless ? undefined : KEY_HEADERS }).pipe(
       tap((res) => {
-        this.recordRateLimit(res.headers, child);
+        if (!keyless) this.recordRateLimit(res.headers, child);
         child?.setHttpStatus(res.status);
         child?.finish();
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.recordRateLimit(err.response?.headers, child);
+        if (!keyless) this.recordRateLimit(err.response?.headers, child);
 
         return throwError(
           () =>
