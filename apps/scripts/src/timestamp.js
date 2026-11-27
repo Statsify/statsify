@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/config";
 import { connect } from "mongoose";
 
-const mongo = await connect(config("database.mongoUri"));
+const mongo = await connect(await config("database.mongoUri"));
 const now = DateTime.now();
 
 const getNextResetTime = (resetMinute, time) => {
