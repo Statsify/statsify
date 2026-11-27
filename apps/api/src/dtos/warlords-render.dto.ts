@@ -8,6 +8,7 @@
 
 import { UuidDto } from "./uuid.dto.js";
 import { createZodDto } from "nestjs-zod";
+import { queryBoolean } from "./skin-render.dto.js";
 import { sceneCamera } from "./scene-camera.dto.js";
 import { z } from "zod";
 
@@ -30,11 +31,6 @@ export class WarlordsRenderDto extends createZodDto(
     armor: selection.meta({ default: 0, description: "The class's stored <class>_armor_selection, from 0 to 2" }),
     team: z.string().optional().meta({ default: "blue", description: "The team colors the helmet and armor are drawn in: blue or red" }),
     weapon: z.string().optional().describe("The held weapon's stored weapon_inventory material, such as STONE_HOE"),
-    extruded: z
-      .enum(["true", "false"])
-      .meta({ default: "false" })
-      .transform((value) => value === "true")
-      .optional()
-      .describe("Draw the skin's outer layer in 3D"),
+    extruded: queryBoolean("false").optional().describe("Draw the skin's outer layer in 3D"),
   })
 ) {}
