@@ -9,9 +9,8 @@
 import { FACTIONS, JACOB_MEDALS, WHISPERS } from "#types";
 import { z } from "zod";
 
-// The parts of Hypixel's /v2/skyblock responses this package reads. Everything is optional, since Hypixel leaves out
-// whatever a player never touched or an API setting hides. Keys we don't read pass the check, since Hypixel adds them
-// all the time; callers check a response and then keep Hypixel's own object, not the parsed copy.
+// The parts of Hypixel's /v2/skyblock responses this package reads, all optional since Hypixel leaves out what a player
+// never touched or an API setting hides. Keys we don't read pass, and callers keep Hypixel's object, not the parsed copy.
 
 const numbers = z.record(z.string(), z.number());
 
