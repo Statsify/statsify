@@ -50,28 +50,7 @@ const EFFECT_COLORS: Record<string, number | undefined> = {
 };
 
 /** In the order of 1.8 wool's Damage values */
-export const DYES = [
-  "white",
-  "orange",
-  "magenta",
-  "light_blue",
-  "yellow",
-  "lime",
-  "pink",
-  "gray",
-  "light_gray",
-  "cyan",
-  "purple",
-  "blue",
-  "brown",
-  "green",
-  "red",
-  "black",
-] as const;
-
-export type DyeColor = (typeof DYES)[number];
-
-const DYE_COLORS: Record<string, number | undefined> = {
+export const DYES = {
   white: 0xf9_ff_fe,
   orange: 0xf9_80_1d,
   magenta: 0xc7_4e_bd,
@@ -88,7 +67,11 @@ const DYE_COLORS: Record<string, number | undefined> = {
   green: 0x5e_7c_16,
   red: 0xb0_2e_26,
   black: 0x1d_1d_21,
-};
+} as const;
+
+export type DyeColor = keyof typeof DYES;
+
+const DYE_COLORS: Record<string, number | undefined> = DYES;
 
 export function dyeColor(dye: string) {
   const color = DYE_COLORS[dye];

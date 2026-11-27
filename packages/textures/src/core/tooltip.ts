@@ -8,7 +8,7 @@
 
 import type { TextComponent, TextRenderer } from "./text.js";
 import type { ItemStack } from "./item-stack.js";
-import type { PackStack } from "./pack.js";
+import { type PackStack, withoutNamespace } from "./pack.js";
 import { context, createCanvas } from "./canvas.js";
 import { legacyName } from "./legacy-items.js";
 
@@ -26,7 +26,7 @@ export function loadNames(stack: PackStack) {
 }
 
 export function nameKeys(id: string) {
-  const path = id.replace(/^minecraft:/, "");
+  const path = withoutNamespace(id);
   return [`item.minecraft.${path}`, `block.minecraft.${path}`] as const;
 }
 

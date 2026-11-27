@@ -17,6 +17,8 @@ import { dyeColor, tintColor } from "./tints.js";
 
 const SIZE = 16;
 
+export const MS_PER_TICK = 50;
+
 interface TintedLayer extends ItemLayer {
   colors: number[];
 }
@@ -37,7 +39,10 @@ const FLAG_POSE: Transformation = {
   translation: [0, -44 / 16, 0],
 };
 
-const PATTERNED = new Set(["minecraft:banner", "minecraft:shield"]);
+/** The entity texture folder each patterned special model draws its patterns from */
+export const PATTERN_FOLDERS = { "minecraft:banner": "banner", "minecraft:shield": "shield" } as const;
+
+const PATTERNED = new Set(Object.keys(PATTERN_FOLDERS));
 
 const entityTexture = (folder: string, id: string) => {
   const [namespace, name] = namespaced(id).split(":");
@@ -82,13 +87,13 @@ interface Glint {
 }
 
 function modernGlint(tick: number): Glint {
-  const time = tick * 50 * 0.5 * 8;
+  const time = tick * MS_PER_TICK * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
   return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
 }
 
 function legacyGlint(tick: number): Glint {
-  const ms = tick * 50;
+  const ms = tick * MS_PER_TICK;
   return {
     passes: [
       { angle: (-5 * Math.PI) / 18, scrollU: (ms % 3000) / 3000, scrollV: 0 },
@@ -514,7 +519,7 @@ export class ItemRenderer {
   // Each pattern is its own pass, since at its part's exact depth it would lose depth ties and stripe
   private async patternPasses(
     part: (texture: ImageData) => Quad[],
-    folder: "banner" | "shield",
+    folder: (typeof PATTERN_FOLDERS)[keyof typeof PATTERN_FOLDERS],
     base: string,
     patterns: BannerLayer[],
   ) {

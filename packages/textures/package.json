@@ -28,7 +28,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:ci": "oxlint --format=github",
-    "generate": "node scripts/generate-minecraft-data.ts",
+    "generate": "pnpm build && node scripts/generate-minecraft-data.ts",
     "atlas": "node scripts/generate-atlas.ts"
   },
   "dependencies": {

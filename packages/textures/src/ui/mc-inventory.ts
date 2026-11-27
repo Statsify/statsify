@@ -19,13 +19,11 @@ import {
 import { context, createCanvas } from "../core/canvas.js";
 import { Atlas } from "../core/atlas.js";
 import { IconCache } from "../core/icon-cache.js";
-import { ItemRenderer } from "../core/item-renderer.js";
+import { ItemRenderer, MS_PER_TICK } from "../core/item-renderer.js";
 import type { ItemStack } from "../core/item-stack.js";
 import type { PackStack } from "../core/pack.js";
 import type { TextComponent } from "../core/text.js";
 import { tooltipOverlay } from "./tooltip-overlay.js";
-
-const MS_PER_TICK = 50;
 
 /** What an atlas inventory's `mc-tooltip-change` events carry while a slot with an item is hovered */
 export interface TooltipChange {
