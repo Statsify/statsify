@@ -20,7 +20,7 @@ import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
 import {
   Logger,
-  getRequestAttributes,
+  setDefaultOutcome,
   setRequestAttributes,
   settleAll,
   withRequestEvent,
@@ -169,7 +169,7 @@ export abstract class AbstractCommandListener {
     } catch (err) {
       if (!(err instanceof Message)) throw err;
 
-      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
+      setDefaultOutcome("message");
       return context.reply(err);
     }
   }
@@ -257,7 +257,7 @@ export abstract class AbstractCommandListener {
 
     const work = res?.catch((err) => {
       if (!(err instanceof Message)) throw err;
-      setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? "message" });
+      setDefaultOutcome("message");
     });
 
     return [{ type: InteractionResponseType.DeferredMessageUpdate }, work];
