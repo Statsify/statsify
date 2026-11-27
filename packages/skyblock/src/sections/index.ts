@@ -88,6 +88,7 @@ const READS: { [K in SectionKey]: MemberKeys } = {
   dungeons: { currencies: true, dungeons: true, glacite_player_data: true, player_data: true },
   experiments: { experimentation: true },
   fishing: { bestiary: true, player_stats: true, trophy_fish: true },
+  garden: { garden_player_data: true },
   gear: { inventory: true, loadout: true },
   hotf: { foraging_core: true, skill_tree: true },
   hotm: { glacite_player_data: true, mining_core: true, skill_tree: true },

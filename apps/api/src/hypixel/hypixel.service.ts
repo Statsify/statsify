@@ -23,7 +23,7 @@ import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import { Redis } from "ioredis";
 import { type APIData, config } from "@statsify/util";
-import { type RawGarden, RawMuseum, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
+import { RawGarden, RawMuseum, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
 import type { Span } from "@sentry/node";
 import type { ZodType } from "zod";
 
@@ -218,16 +218,20 @@ export class HypixelService {
   }
 
   /** null when the profile has no Garden, which Hypixel answers with a 404 ("No result was found"). */
-  public getSkyBlockGarden(profileId: string): Promise<RawGarden | null> {
-    return lastValueFrom(
+  public async getSkyBlockGarden(profileId: string): Promise<RawGarden | null> {
+    const data = await lastValueFrom(
       this.request<{ garden: RawGarden }>("/v2/skyblock/garden", { profile: profileId }, SKYBLOCK_TIMEOUT).pipe(
-        map(({ garden }) => garden),
         catchError((error: Error) => {
           const { response } = (error.cause ?? {}) as { response?: { status: number } };
           return response?.status === 404 ? of(null) : throwError(() => toSkyBlockError(error));
         })
       )
     );
+
+    if (!data) return null;
+    // Outside the catch, as in getSkyBlock
+    RawGarden.parse(data.garden);
+    return data.garden;
   }
 
   public async getRateLimit(): Promise<RateLimit | undefined> {
