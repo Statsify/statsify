@@ -10,7 +10,7 @@ import { HOTF_LAYOUT, LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { treeNodes } from "./hotm.js";
-import type { HotfSection, Whisper } from "#types";
+import { type HotfSection, type Whisper, WHISPERS } from "#types";
 import type { RawMember } from "#raw";
 
 /**
@@ -42,7 +42,7 @@ export function getHotf(member: RawMember): HotfSection | null {
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: { spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0 },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
-    whispers: { forest: whispers("forest"), desert: whispers("desert") },
+    whispers: Object.fromEntries(WHISPERS.map((type) => [type, whispers(type)])) as HotfSection["whispers"],
     nodes: treeNodes(HOTF_LAYOUT, nodes),
   };
 }
