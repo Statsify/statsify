@@ -27,7 +27,7 @@ import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PowerStat, Rarity, Skill, SlayerBoss, Stats, TreeLayout } from "#types";
+import type { PlayerStat, PowerStat, Rarity, Skill, SlayerBoss, Stats, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
