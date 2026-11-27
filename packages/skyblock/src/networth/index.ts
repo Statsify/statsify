@@ -15,7 +15,7 @@ import { prettify } from "@statsify/util";
 import { resourceTexture, textureOf } from "#textures";
 import type { ItemTexture, ItemsResource, NetworthItem, NetworthSection, PriceMap, RawItem } from "#types";
 import type { RawPet } from "#raw";
-import type { SectionInput } from "../sections/index.js";
+import { type SectionInput, checkReads } from "../sections/index.js";
 
 const TOP_ITEMS = 10;
 
@@ -86,7 +86,7 @@ let itemsUpdated: number | undefined;
  * Kept out of SECTIONS so the main entry, which the price worker loads under a 128 MB heap cap, never loads the networth
  * library.
  */
-export const NETWORTH = {
+const networth = {
   needs: ["museum", "prices", "items"] as const,
   async compute({ profile, member, museum, prices, items }: SectionInput): Promise<NetworthSection> {
     if (!prices || !items) throw new TypeError("networth needs prices and items");
@@ -130,3 +130,6 @@ export const NETWORTH = {
     };
   },
 };
+
+// The library reads more of the member, from keys this package doesn't read or type
+export const NETWORTH = checkReads<"networth">(networth, { currencies: true, inventory: true, pets_data: true, profile: true });
