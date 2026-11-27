@@ -68,8 +68,13 @@ type MemberKeys = { [K in keyof RawMember]?: true };
 /** The member's keys each section reads. */
 const READS: { [K in SectionKey]: MemberKeys } = {
   accessories: { accessory_bag_storage: true, inventory: true, nether_island_player_data: true, rift: true },
+  chocolate: { events: true },
+  crimson: { bestiary: true, nether_island_player_data: true },
   dungeons: { currencies: true, dungeons: true, player_data: true },
+  fishing: { bestiary: true, player_stats: true, trophy_fish: true },
+  hotf: { foraging_core: true, skill_tree: true },
   hotm: { glacite_player_data: true, mining_core: true, skill_tree: true },
+  jacob: { jacobs_contest: true },
   level: {
     accessory_bag_storage: true,
     inventory: true,
