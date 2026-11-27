@@ -28,7 +28,7 @@ interface LegacyItem {
   };
 }
 
-const SKIN_HOST = "textures.minecraft.net";
+export const SKIN_HOST = "textures.minecraft.net";
 
 /** A skin's textures.minecraft.net URL from a head's SkullOwner textures value, which is base64 JSON */
 export function skinUrl(value: string) {
