@@ -13,7 +13,7 @@ import {
   type MayorView,
   type PriceMap,
   type PriceView,
-  type RawBazaar,
+  RawBazaar,
   type RawElection,
   describeKey,
   labelVariants,
@@ -98,7 +98,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   private getBazaar(): Promise<Bazaar | undefined> {
     return this.getCopy(BAZAAR_KEY, BAZAAR_REFRESH, async () =>
-      parseBazaar(await this.get<RawBazaar>("/v2/skyblock/bazaar"))
+      parseBazaar(RawBazaar.parse(await this.get("/v2/skyblock/bazaar")))
     );
   }
 

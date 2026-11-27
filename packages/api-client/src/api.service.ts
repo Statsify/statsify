@@ -37,7 +37,7 @@ import {
 } from "#responses";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { loadImage } from "@statsify/rendering";
+import { IMAGE_DOWNLOAD_TIMEOUT, loadImage } from "@statsify/rendering";
 import type { SkyBlockSection } from "@statsify/skyblock";
 
 interface ExtraData {
@@ -372,9 +372,11 @@ export class ApiService {
   }
 
   private async requestImage(url: string, params?: Record<string, unknown>) {
-    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
-    const image = await loadImage(uri);
+    const buffer = await this.request<Buffer>(url, params, "GET", {
+      responseType: "arraybuffer",
+      timeout: IMAGE_DOWNLOAD_TIMEOUT,
+    });
 
-    return image;
+    return loadImage(buffer);
   }
 }
