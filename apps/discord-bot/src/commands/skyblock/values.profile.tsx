@@ -18,12 +18,13 @@ import type { LocalizeFunction } from "@statsify/discord";
 import type { MemberView, ProfileSummary } from "@statsify/skyblock";
 import type { PostSkyBlockRankingsResponse } from "@statsify/api-client";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-import type { User } from "@statsify/schemas";
+import { FormattedGame, type User } from "@statsify/schemas";
 
 const MISSING_PETS = 12;
 const RANKS = 16;
 
-const boardName = (name: string) => removeFormatting(name).replace(/^SkyBlock /, "");
+const SKYBLOCK_PREFIX = new RegExp(`^${removeFormatting(FormattedGame.SKYBLOCK)} `);
+const boardName = (name: string) => removeFormatting(name).replace(SKYBLOCK_PREFIX, "");
 
 export const missingPetIcons = ({ values }: MemberView) => values?.missingPets.slice(0, MISSING_PETS).map(({ texture }) => texture) ?? [];
 

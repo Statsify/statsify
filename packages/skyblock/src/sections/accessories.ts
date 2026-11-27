@@ -10,7 +10,7 @@ import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } fro
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
-import { PLAYER_STATS, RARITIES } from "#types";
+import { PLAYER_STATS, RARITIES, rarityRank } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { getLevel } from "#leveling";
@@ -257,7 +257,7 @@ export function getAccessories(
     tuningPoints,
     tuningTotal: tuningTotal(member, accessoryPower, enrichments, tuningPoints),
     enrichments,
-    unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
+    unenriched: active.filter((view) => !view.enrichment && rarityRank(view.rarity!) >= rarityRank("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
     unique: counted.size,
     chains: countChains(listed),
