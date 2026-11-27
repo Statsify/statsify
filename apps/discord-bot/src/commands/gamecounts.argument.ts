@@ -12,6 +12,7 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, type CommandContext, type LocalizationString } from "@statsify/discord";
+import { FUSE_OPTIONS } from "#constants";
 import { type ClassMetadata, FormattedGame, GameCounts, METADATA_KEY } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
@@ -21,14 +22,7 @@ const GAME_CHOICES = (
   ) as (keyof GameCounts)[]
 ).map((id) => ({ name: removeFormatting(FormattedGame[id]), value: id }));
 
-const GAME_FUSE = new Fuse(GAME_CHOICES, {
-  keys: ["name", "value"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-});
+const GAME_FUSE = new Fuse(GAME_CHOICES, { ...FUSE_OPTIONS, keys: ["name", "value"] });
 
 export const findGameId = (input: string) => {
   const query = input.toLowerCase();
