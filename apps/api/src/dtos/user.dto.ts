@@ -6,82 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
-import { Transform } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class UserIdDto {
-  @ApiProperty({ description: "Discord ID" })
-  @IsString()
-  @MinLength(17)
-  @MaxLength(20)
-  public id: string;
-}
+export class UserIdDto extends createZodDto(
+  z.object({ id: z.string().min(17).max(20).describe("Discord ID") })
+) {}
 
-export class UserDto {
-  @ApiProperty({ description: "Discord ID or UUID" })
-  @IsString()
-  @MinLength(17)
-  @MaxLength(36)
-  public tag: string;
-}
+export class UserDto extends createZodDto(
+  z.object({ tag: z.string().min(17).max(36).describe("Discord ID or UUID") })
+) {}
 
-class UserTheme {
-  @IsOptional()
-  @IsString()
-  public font?: string;
-
-  @IsOptional()
-  @IsString()
-  public palette?: string;
-
-  @IsOptional()
-  @IsString()
-  public boxes?: string;
-}
-
-class UserFooter {
-  @IsOptional()
-  @IsString()
-  public message?: string;
-
-  @IsOptional()
-  @IsNumber()
-  public icon?: number;
-}
-
-export class UpdateUserDto {
-  @IsBoolean()
-  @IsOptional()
-  public serverMember?: boolean;
-
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const theme = new UserTheme();
-    Object.assign(theme, params.value);
-    return theme;
-  })
-  public theme?: UserTheme;
-
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const footer = new UserFooter();
-    Object.assign(footer, params.value);
-    return footer;
-  })
-  public footer?: UserFooter;
-
-  @IsString()
-  @IsOptional()
-  public locale?: string;
-}
+export class UpdateUserDto extends createZodDto(
+  z.looseObject({
+    serverMember: z.boolean().nullish(),
+    theme: z.object({
+      font: z.string().nullish(),
+      palette: z.string().nullish(),
+      boxes: z.string().nullish(),
+    }).optional(),
+    footer: z.object({
+      message: z.string().nullish(),
+      icon: z.number().nullish(),
+    }).optional(),
+    locale: z.string().nullish(),
+  }).default({})
+) {}
