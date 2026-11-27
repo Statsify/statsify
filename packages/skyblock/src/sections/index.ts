@@ -74,19 +74,23 @@ const READS: { [K in SectionKey]: MemberKeys } = {
   slayers: { slayer: true },
 };
 
-/** The sections that read the co-op's members too. */
-const COOP_READS = new Set<SectionKey>(["skills"]);
+/** The keys a section reads of the co-op's other members, when it reads any. */
+const COOP_READS: { [K in SectionKey]?: MemberKeys } = {
+  skills: { player_data: true, profile: true },
+};
 
 /**
- * Checks the member's `keys` before computing the section, and every member's with `coop`, so a malformed key fails
+ * Checks the member's `keys` and the other members' `coopKeys` before computing the section, so a malformed key fails
  * only the sections that read it.
  */
-export function checkReads<K extends keyof MemberView>(section: Section<K>, keys: MemberKeys, coop = false): Section<K> {
-  const schema = RawMember.pick(keys);
+export function checkReads<K extends keyof MemberView>(section: Section<K>, keys: MemberKeys, coopKeys?: MemberKeys): Section<K> {
+  const own = RawMember.pick(keys);
+  const coop = coopKeys && RawMember.pick(coopKeys);
   return {
     needs: section.needs,
     compute: async (input) => {
-      for (const member of coop ? Object.values(input.profile.members) : [input.member]) schema.parse(member);
+      own.parse(input.member);
+      if (coop) for (const [uuid, member] of Object.entries(input.profile.members)) if (uuid !== input.uuid) coop.parse(member);
       return section.compute(input);
     },
   };
@@ -116,7 +120,7 @@ const DEFINITIONS: { [K in SectionKey]: Section<K> } = {
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS = Object.fromEntries(
-  (Object.keys(DEFINITIONS) as SectionKey[]).map((name) => [name, checkReads(DEFINITIONS[name], READS[name], COOP_READS.has(name))])
+  (Object.keys(DEFINITIONS) as SectionKey[]).map((name) => [name, checkReads(DEFINITIONS[name], READS[name], COOP_READS[name])])
 ) as typeof DEFINITIONS;
 
 /** museum is the whole museum response, when it was fetched. */
