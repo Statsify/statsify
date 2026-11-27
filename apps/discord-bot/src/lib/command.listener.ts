@@ -115,7 +115,7 @@ export class CommandListener extends AbstractCommandListener {
       const name = context.option<string>(arg.name);
       if (!type || !name || name.length > MAX_AUTOCOMPLETE_NAME_LENGTH) continue;
 
-      this.apiService.addAutocompleteHistory(type, userId, name).catch(() => null);
+      this.apiService.addAutocompleteHistory(type, userId, name).catch((err) => this.logger.error(err));
     }
   }
 
