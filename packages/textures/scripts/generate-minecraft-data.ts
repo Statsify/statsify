@@ -348,7 +348,7 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
-const materials = await fetch(BUKKIT_MATERIALS);
+const materials = await fetch(BUKKIT_MATERIALS, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
 if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
 
 // Entries look like GOLD_CHESTPLATE(315, 1, 112). Only ids the item table has are kept
