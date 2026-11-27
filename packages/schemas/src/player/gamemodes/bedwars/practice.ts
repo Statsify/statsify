@@ -10,14 +10,16 @@ import { type APIData, formatRaceTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, deepAdd, ratio } from "@statsify/math";
 
+const countOptions = { leaderboard: { limit: 10_000 } } as const;
+
 export class BedWarsPracticeMode {
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field(countOptions)
   public successes: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field(countOptions)
   public fails: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field(countOptions)
   public successRatio: number;
 
   public constructor(data: APIData = {}) {
@@ -81,7 +83,7 @@ export class BedWarsPractice {
   @Field()
   public pearlClutching: BedWarsPracticeMode;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field(countOptions)
   public blocksPlaced: number;
 
   @Field()
