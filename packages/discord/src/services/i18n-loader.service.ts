@@ -46,6 +46,7 @@ export class I18nLoaderService {
       preload: this.languages,
       initImmediate: false,
       defaultNS: "default",
+      fallbackNS: "untranslated",
       interpolation: {
         format,
         escapeValue: false,
