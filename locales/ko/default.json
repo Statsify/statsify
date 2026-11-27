@@ -412,7 +412,7 @@
       "title": "이 순위에 속한 순위표 데이터 없음"
     },
     "leaderboardInvalidPosition": {
-      "description": "입력한 순위표 순위가 잘못됐어요. 1보다 큰 숫자를 입력하세요.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "잘못된 순위"
     },
     "leaderboardNotFound": {
