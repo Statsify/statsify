@@ -23,18 +23,10 @@ import {
   type TreeLayout,
   type TreeNode,
 } from "#types";
-import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
+import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { attributeLevel } from "./attributes.js";
-import {
-  LEARNED_POWERS,
-  TUNING,
-  bagAccessories,
-  heldAccessories,
-  highestTiers,
-  powerScale,
-  stonePowerStats,
-} from "./accessories.js";
+import { TUNING, bagAccessories, heldAccessories, highestTiers, selectedPowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
 import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
@@ -74,18 +66,14 @@ const scaleStats = (stats: Stats, factor: number): Stats =>
   Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value * factor]));
 
 function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {
-  const stone = power ? POWERS[power] : undefined;
-  if (stone) {
-    return sumStats(
-      stonePowerStats(stone, accessoryPower).flatMap(({ name, value }) => {
-        const stat = statNamed(name);
-        return stat ? [{ [stat]: value }] : [];
-      })
-    );
-  }
-
-  const learned = power ? LEARNED_POWERS[power] : undefined;
-  return learned && scaleStats(learned, powerScale(accessoryPower));
+  const stats = selectedPowerStats(power, accessoryPower);
+  if (!stats) return undefined;
+  return sumStats(
+    stats.flatMap(({ name, value }) => {
+      const stat = statNamed(name);
+      return stat ? [{ [stat]: value }] : [];
+    })
+  );
 }
 
 const tuningStats = (points: Record<string, number>): Stats =>
