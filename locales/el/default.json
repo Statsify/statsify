@@ -412,7 +412,7 @@
       "title": "Κανένα Δεδομένο Κατάταξης Σε Αυτή Τη Θέση"
     },
     "leaderboardInvalidPosition": {
-      "description": "Η θέση της κατάταξης που καταχώρησες δεν είναι έγκυρη. Εισήγε έναν αριθμό μεγαλύτερο από 1.",
+      "description": "The leaderboard position you entered is invalid.",
       "title": "Μη Έγκυρη Θέση"
     },
     "leaderboardNotFound": {
