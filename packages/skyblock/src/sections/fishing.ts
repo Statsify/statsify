@@ -54,7 +54,7 @@ export function getFishing(member: RawMember): FishingSection | null {
       const tiers = Object.fromEntries(
         TROPHY_TIERS.map((tier) => [tier, caught(`${id.toLowerCase()}_${tier}`)])
       ) as TrophyFish["tiers"];
-      const best = TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? "bronze";
+      const best = TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? TROPHY_TIERS[0];
 
       return { id, name, tiers, texture: trophyFishTexture(id, best) };
     }),
