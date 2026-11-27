@@ -327,7 +327,7 @@ async function getInventoryValues(member: SectionInput["member"], map: PriceMap,
 }
 
 /** Beside NETWORTH for the same reason: it prices each item with the networth library. */
-export const VALUES = {
+const values = {
   needs: ["prices", "items"] as const,
   async compute({ profile, member, prices, items }: SectionInput): Promise<ValuesSection> {
     if (!prices || !items) throw new TypeError("values needs prices and items");
@@ -340,6 +340,15 @@ export const VALUES = {
     };
   },
 };
+
+export const VALUES = checkReads<"values">(values, {
+  foraging: true,
+  garden_player_data: true,
+  inventory: true,
+  loadout: true,
+  pets_data: true,
+  rift: true,
+});
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
