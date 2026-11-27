@@ -10,7 +10,6 @@ import { getLeaderboardFields } from "@statsify/schemas";
 import { z } from "zod";
 import type { Constructor } from "@statsify/util";
 
-// Zod's default message would list every leaderboard field
 export const leaderboardField = (constructor: Constructor<unknown>) =>
   z.enum(getLeaderboardFields(constructor).map(([key]) => key), {
     error: "Invalid leaderboard field",
