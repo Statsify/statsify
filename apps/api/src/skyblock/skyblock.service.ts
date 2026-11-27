@@ -226,18 +226,20 @@ export class SkyBlockService {
 
   /** This month's Bingo card with the player's part: one keyed call per lookup, from the SkyBlock budget. */
   public async getBingo(tag: string): Promise<PlayerRef & BingoView> {
-    const { uuid, username, displayName } = await this.getPlayer(tag);
-
-    const [resource, bingo] = await Promise.all([
+    const [resource, { uuid, username, displayName, bingo }] = await Promise.all([
       this.pricesService.getBingo(),
-      this.singleflight
-        .run(`bingo:${uuid}`, async () => {
-          await this.budgetService.take();
-          return this.hypixelService.getSkyBlockBingo(uuid);
-        })
-        .catch((error) => {
-          throw isUnavailable(error) ? toUnavailable(error) : error;
-        }),
+      this.getPlayer(tag).then(async (player) => {
+        const bingo = await this.singleflight
+          .run(`bingo:${player.uuid}`, async () => {
+            await this.budgetService.take();
+            return this.hypixelService.getSkyBlockBingo(player.uuid);
+          })
+          .catch((error) => {
+            throw isUnavailable(error) ? toUnavailable(error) : error;
+          });
+
+        return { ...player, bingo };
+      }),
     ]);
 
     if (!resource) throw new SkyBlockUnavailableException("hypixel");
