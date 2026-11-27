@@ -7,24 +7,15 @@
  */
 
 import * as Sentry from "@sentry/nestjs";
-import { config } from "@statsify/util";
+import { sentryOptions } from "@statsify/logger/sentry";
 
-const sentryDsn = await config("sentry.apiDsn", { required: false });
+const options = await sentryOptions("sentry.apiDsn");
 
 // Init even without a DSN: nothing gets sent, but withIsolationScope then forks instead of sharing one scope
 Sentry.init({
-  dsn: sentryDsn,
+  ...options,
   // Redis spans every command, so a player save would get one span per leaderboard
   integrations: (integrations) => integrations.filter((integration) => integration.name !== "Redis"),
-  // Sentry 11 collects all of these by default, and userInfo doesn't cover the client IP headers
-  dataCollection: {
-    userInfo: false,
-    cookies: false,
-    httpBodies: [],
-    databaseQueryData: false,
-    httpHeaders: { request: { deny: ["ip", "forwarded"] } },
-  },
-  normalizeDepth: 3,
-  tracesSampleRate: await config("sentry.tracesSampleRate", { required: sentryDsn !== undefined }),
-  environment: await config("environment"),
+  // userInfo doesn't cover the client IP headers
+  dataCollection: { ...options.dataCollection, httpHeaders: { request: { deny: ["ip", "forwarded"] } } },
 });
