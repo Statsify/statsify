@@ -126,8 +126,14 @@ export class SkinService {
 
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
     const smash = resolveSmash(hero, master);
-    const library = await this.getLibrary(SMASH_PACK);
-    return renderSmash(library, smash, options);
+
+    const [library, skin, armor] = await Promise.all([
+      this.getLibrary(SMASH_PACK),
+      drawHeroSkin(smash.skinColor),
+      resolvePackArmor(SMASH_PACK, smash),
+    ]);
+
+    return renderSmash(library, smash, { ...options, skin, armor });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -517,18 +523,20 @@ function drawHeroSkin(color: number) {
   return canvas.toBuffer("png");
 }
 
-export async function renderSmash(
+type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> & Pick<ArmoredPlayer, "skin" | "armor">;
+
+export function renderSmash(
   library: ModelLibrary,
-  { models, skinColor, ...worn }: SmashScene,
+  { models }: SmashScene,
   {
+    skin,
+    armor,
     width = SMASH_CAMERA.width,
     height = SMASH_CAMERA.height,
     yaw = SMASH_CAMERA.yaw,
     pitch = SMASH_CAMERA.pitch,
-  }: Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch">
+  }: SmashRenderOptions
 ): Promise<Buffer> {
-  const [skin, armor] = await Promise.all([drawHeroSkin(skinColor), resolvePackArmor(SMASH_PACK, worn)]);
-
   const player = {
     skin,
     // Every lobby stand's skin uses the classic arms
