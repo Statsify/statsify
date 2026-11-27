@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DYES } from "./tints.js";
+import { DYES, type DyeColor } from "./tints.js";
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import type { ItemStack } from "./item-stack.js";
 import { DOWNLOAD_TIMEOUT, namespaced, withoutNamespace } from "./pack.js";
@@ -33,6 +33,8 @@ const POTION = 373;
 const POTION_EFFECTS = [0, 10, 1, 12, 19, 6, 16, 0, 18, 5, 2, 8, 7, 13, 14, 0];
 const LEVEL_II = 0x20;
 const SPLASH = 0x40_00;
+
+const WOOL_DYES = Object.keys(DYES) as DyeColor[];
 
 const BANNER_PATTERNS: Record<string, string | undefined> = {
   b: "base",
@@ -90,7 +92,7 @@ export function legacyBannerPattern(code: string) {
 }
 
 /** A dye color for a 1.8 banner's dye Damage value, the reverse of wool's */
-export const legacyDye = (damage: number) => DYES[15 - damage];
+export const legacyDye = (damage: number) => WOOL_DYES[15 - damage];
 
 /**
  * The 26.3 item for a 1.8 numeric id and Damage value, as Hypixel sends them.
