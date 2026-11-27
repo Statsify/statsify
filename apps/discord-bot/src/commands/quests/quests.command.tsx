@@ -113,6 +113,6 @@ export class QuestsCommand {
         },
       }));
 
-    return paginate(context, pages, getProfileCustomId(context, player.uuid, `quests.${context.getCommandName()}`));
+    return paginate(context, pages, getProfileCustomId(context, player.uuid, ["quests", context.getCommandName()]));
   }
 }

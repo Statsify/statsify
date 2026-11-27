@@ -243,7 +243,7 @@ export class RatiosCommand {
       },
     }));
 
-    return paginate(context, pages, getProfileCustomId(context, player.uuid, `ratios.${context.getCommandName()}`));
+    return paginate(context, pages, getProfileCustomId(context, player.uuid, ["ratios", context.getCommandName()]));
   }
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
