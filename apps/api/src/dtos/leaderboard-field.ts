@@ -12,5 +12,6 @@ import type { Constructor } from "@statsify/util";
 
 export const leaderboardField = (constructor: Constructor<unknown>) =>
   z.enum(getLeaderboardFields(constructor).map(([key]) => key), {
-    error: "Invalid leaderboard field",
+    error: (issue) =>
+      issue.input === undefined ? "Required" : `unknown leaderboard field: ${JSON.stringify(issue.input)}`,
   });
