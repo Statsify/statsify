@@ -7,8 +7,8 @@
  */
 
 import { Container, Footer, Header, List, Table } from "#components";
-import { FormattedGame, type GameMode } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
+import type { FormattedGame } from "@statsify/schemas";
+import type { LocalizeFunction } from "@statsify/discord";
 import { unroundedRatio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -91,7 +91,7 @@ export type RatioWithStats = [
 ];
 
 export interface RatiosProfileProps extends Omit<BaseProfileProps, "time"> {
-  mode: GameMode<any>;
+  formattedMode: string;
   ratios: RatioWithStats[];
   gameName: FormattedGame;
 }
@@ -103,7 +103,7 @@ export const RatiosProfile = ({
   logo,
   user,
   badge,
-  mode,
+  formattedMode,
   ratios,
   t,
   gameName,
@@ -114,7 +114,7 @@ export const RatiosProfile = ({
       time="LIVE"
       name={player.prefixName}
       skin={skin}
-      title={`§l${gameName} §fRatios §r(${mode.formatted})`}
+      title={`§l${gameName} §fRatios §r(${formattedMode})`}
     />
     <Table.table>
       <Table.tr>
