@@ -14,8 +14,28 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame } from "@statsify/schemas";
+import { FormattedGame, type TurboKartRacersMap } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { LocalizeFunction } from "@statsify/discord";
+
+const GOLD = "§#ffd700";
+const SILVER = "§#c0c0c0";
+const BRONZE = "§#cd7f32";
+
+interface MapColumnProps {
+  title: string;
+  stats: TurboKartRacersMap;
+  t: LocalizeFunction;
+}
+
+const MapColumn = ({ title, stats, t }: MapColumnProps) => (
+  <Table.ts title={`§6${title}`}>
+    <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§a" size="small" />
+    <Table.td title={t("stats.gold")} value={t(stats.gold)} color={GOLD} size="small" />
+    <Table.td title={t("stats.silver")} value={t(stats.silver)} color={SILVER} size="small" />
+    <Table.td title={t("stats.bronze")} value={t(stats.bronze)} color={BRONZE} size="small" />
+  </Table.ts>
+);
 
 export const TurboKartRacersProfile = ({
   skin,
@@ -35,6 +55,9 @@ export const TurboKartRacersProfile = ({
     [t("stats.boxesPickedUp"), t(turbokartracers.boxesPickedUp), "§c"],
     [t("stats.grandPrixTokens"), t(turbokartracers.grandPrixTokens), "§b"],
     [t("stats.lapsCompleted"), t(turbokartracers.lapsCompleted), "§2"],
+    [t("stats.bananaHitsSent"), t(turbokartracers.bananaHitsSent), "§e"],
+    [t("stats.bananaHitsReceived"), t(turbokartracers.bananaHitsReceived), "§6"],
+    [t("stats.torpedoHitsReceived"), t(turbokartracers.torpedoHitsReceived), "§9"],
   ];
 
   return (
@@ -78,23 +101,30 @@ export const TurboKartRacersProfile = ({
           <Table.td
             title={t("stats.goldTrophies")}
             value={t(turbokartracers.gold)}
-            color="§#ffd700"
+            color={GOLD}
           />
           <Table.td
             title={t("stats.silverTrophies")}
             value={t(turbokartracers.silver)}
-            color="§#c0c0c0"
+            color={SILVER}
           />
           <Table.td
             title={t("stats.bronzeTrophies")}
             value={t(turbokartracers.bronze)}
-            color="§#cd7f32"
+            color={BRONZE}
           />
           <Table.td
             title={t("stats.totalTrophies")}
             value={t(turbokartracers.total)}
             color="§a"
           />
+        </Table.tr>
+        <Table.tr>
+          <MapColumn title="Retro" stats={turbokartracers.retro} t={t} />
+          <MapColumn title="Canyon" stats={turbokartracers.canyon} t={t} />
+          <MapColumn title="Olympus" stats={turbokartracers.olympus} t={t} />
+          <MapColumn title="Hypixel GP" stats={turbokartracers.hypixelGP} t={t} />
+          <MapColumn title="Jungle Rush" stats={turbokartracers.jungleRush} t={t} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
