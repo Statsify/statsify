@@ -73,9 +73,13 @@ const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) => createHash(algo
 const generationId = ({ packs }: Generation) => packs.join(" ");
 
 // Unlike Promise.all, this waits for every write or delete before throwing, so none outlives the update's lock
-async function settle(promises: Promise<unknown>[]) {
-  const failed = (await Promise.allSettled(promises)).find((result) => result.status === "rejected");
-  if (failed) throw failed.reason;
+async function settle<T>(promises: Promise<T>[]) {
+  const results = await Promise.allSettled(promises);
+
+  return results.map((result) => {
+    if (result.status === "rejected") throw result.reason;
+    return result.value;
+  });
 }
 
 async function get(url: string) {
@@ -255,7 +259,7 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
   if (!lease) return { status: "running" };
 
   try {
-    const generation = { packs: [await minecraftClient(MINECRAFT_VERSION), await hypixelPack()] };
+    const generation = { packs: await settle([minecraftClient(MINECRAFT_VERSION), hypixelPack()]) };
     const active = await readGeneration(ACTIVE);
     if (active && generationId(active) === generationId(generation)) {
       await rm(join(ROOT, HELD), { force: true });
