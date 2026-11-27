@@ -6,29 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import { AutocompleteType } from "@statsify/api-client";
-import { IsEnum, IsString, MaxLength } from "class-validator";
 import { UserIdDto } from "./user.dto.js";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class AutocompleteDto extends UserIdDto {
-  @IsEnum(AutocompleteType)
-  @ApiProperty({ enum: AutocompleteType, enumName: "AutocompleteType" })
-  public type: AutocompleteType;
+const type = z.enum(AutocompleteType).meta({ id: "AutocompleteType" });
 
-  @IsString()
-  @MaxLength(32)
-  @ApiProperty()
-  public query: string;
-}
+export class AutocompleteDto extends createZodDto(
+  UserIdDto.schema.extend({ type, query: z.string().max(32) })
+) {}
 
-export class AutocompleteHistoryDto extends UserIdDto {
-  @IsEnum(AutocompleteType)
-  @ApiProperty({ enum: AutocompleteType, enumName: "AutocompleteType" })
-  public type: AutocompleteType;
-
-  @IsString()
-  @MaxLength(32)
-  @ApiProperty({ description: "A player's username or a guild's name" })
-  public name: string;
-}
+export class AutocompleteHistoryDto extends createZodDto(
+  UserIdDto.schema.extend({
+    type,
+    name: z.string().max(32).describe("A player's username or a guild's name"),
+  })
+) {}
