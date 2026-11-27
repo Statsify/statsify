@@ -68,7 +68,7 @@ export const BEDWARS_MODES = new GameModes([
 export type BedWarsModes = ExtractGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field()

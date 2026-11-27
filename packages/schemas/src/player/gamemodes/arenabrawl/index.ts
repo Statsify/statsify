@@ -8,7 +8,7 @@
 
 import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -85,13 +85,13 @@ export class ArenaBrawl {
   @Field({ store: { default: "none" } })
   public rune: string;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public keys: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   public constructor(data: APIData, legacy: APIData) {

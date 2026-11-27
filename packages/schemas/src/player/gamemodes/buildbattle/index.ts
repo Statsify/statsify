@@ -15,7 +15,7 @@ import {
 } from "./mode.js";
 import { Color } from "#color";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import {
   GameTitle,
   createPrefixProgression,
@@ -78,7 +78,7 @@ export class BuildBattle {
   @Field()
   public speedBuilders: BuildBattleSpeedBuilders;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
@@ -90,7 +90,7 @@ export class BuildBattle {
   @Field()
   public votes: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public superVotes: number;
 
   @Field({ store: { default: defaultPrefix(titles) } })

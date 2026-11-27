@@ -7,7 +7,7 @@
  */
 
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -78,16 +78,16 @@ export class Quake {
   @Field()
   public teams: QuakeMode;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public highestKillstreak: number;
 
   @Field()
   public godlikes: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })

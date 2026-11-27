@@ -115,7 +115,6 @@ export class Duels {
 
   @Field({
     leaderboard: { extraDisplay: "this.overall.titleFormatted" },
-    historical: { enabled: false },
   })
   public tokens: number;
 

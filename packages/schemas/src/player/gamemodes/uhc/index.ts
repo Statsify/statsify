@@ -40,7 +40,7 @@ export class UHC {
   @Field()
   public teams: UHCMode;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })

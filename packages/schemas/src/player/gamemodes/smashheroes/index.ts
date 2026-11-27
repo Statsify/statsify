@@ -73,7 +73,7 @@ export class SmashHeroes {
   @Field()
   public teams: SmashHeroesMode;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field({ leaderboard: { enabled: false } })

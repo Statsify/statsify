@@ -6,21 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { deepAdd, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class BedWarsModeItemsCollected {
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public iron: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public gold: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public diamond: number;
 
-  @Field({ leaderboard: { limit: 100_000 } })
+  @Field({ leaderboard: { limit: 10_000 } })
   public emerald: number;
 
   public constructor(data: APIData, mode: string) {
@@ -32,7 +32,7 @@ export class BedWarsModeItemsCollected {
 }
 
 export class BedWarsMode {
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public winstreak: number;
 
   @Field()

@@ -7,7 +7,7 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { ratio } from "@statsify/math";
 
 export class CaptureTheWool {
@@ -46,8 +46,8 @@ export class CaptureTheWool {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.wins"],
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
-    historical: { enabled: false },
   })
   public fastestWin: number;
 
@@ -56,14 +56,13 @@ export class CaptureTheWool {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.woolCaptured"],
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
-    historical: { enabled: false },
   })
   public fastestWoolCapture: number;
 
   @Field({
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
+    leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT },
   })
   public longestGame: number;
 

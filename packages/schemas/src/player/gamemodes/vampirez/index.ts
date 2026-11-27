@@ -7,7 +7,7 @@
  */
 
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { VampireZHuman, VampireZVampire } from "./life.js";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
@@ -16,16 +16,16 @@ export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" 
 export type VampireZModes = ExtractGameModes<typeof VAMPIREZ_MODES>;
 
 export class VampireZ {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field()
   public tokens: number;
 
   @Field()
   public overallWins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public mostVampireKills: number;
 
   @Field()

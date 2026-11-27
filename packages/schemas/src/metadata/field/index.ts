@@ -15,6 +15,8 @@ import { prop } from "@typegoose/typegoose";
 import type { ClassMetadata } from "../metadata.interface.js";
 import type { FieldOptions } from "../field.options.js";
 
+export { LARGE_LEADERBOARD_LIMIT } from "./get-leaderboard-metadata.js";
+
 export function Field({
   type: typeOptions,
   leaderboard: leaderboardOptions,

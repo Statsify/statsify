@@ -7,7 +7,7 @@
  */
 
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 import type { APIData } from "@statsify/util";
 
@@ -45,10 +45,10 @@ export const MEGAWALLS_MODES = new GameModes([
 export type MegaWallsModes = ExtractGameModes<typeof MEGAWALLS_MODES>;
 
 export class MegaWalls {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public mythicFavor: number;
 
   @Field({ store: { default: "none" } })

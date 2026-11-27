@@ -13,7 +13,7 @@ import {
   HalloweenSimulator,
   ScubaSimulator,
 } from "./seasonal-mode.js";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
 
 export class BlockingDead {
@@ -67,7 +67,7 @@ export class BountyHunters {
 }
 
 export class CreeperAttack {
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxWave: number;
 
   public constructor(data: APIData) {
@@ -940,8 +940,8 @@ export class HoleInTheWall {
     leaderboard: {
       name: "Highest Score - Qualifications",
       fieldName: "Qualifiers PB",
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
-    historical: { enabled: false },
   })
   public highestScoreQualifications: number;
 
@@ -949,8 +949,8 @@ export class HoleInTheWall {
     leaderboard: {
       name: "Highest Score - Finals",
       fieldName: "Finals PB",
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
-    historical: { enabled: false },
   })
   public highestScoreFinals: number;
 
@@ -974,7 +974,7 @@ export class HypixelSaysMode {
   })
   public wins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxScore: number;
 
   public constructor(data: APIData, mode: "simon" | "santa") {
@@ -997,7 +997,7 @@ export class HypixelSays {
   })
   public wins: number;
 
-  @Field({ historical: { enabled: false } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public maxScore: number;
 
   @Field()
@@ -1362,8 +1362,7 @@ export class ThrowOut {
 
 export class ZombiesMapDifficulty {
   @Field({
-    leaderboard: { additionalFields: ["this.fastestWin"] },
-    historical: { enabled: false },
+    leaderboard: { additionalFields: ["this.fastestWin"], limit: 500_000 },
   })
   public wins: number;
 
@@ -1372,8 +1371,8 @@ export class ZombiesMapDifficulty {
       sort: "ASC",
       formatter: formatTime,
       additionalFields: ["this.wins"],
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
-    historical: { enabled: false },
   })
   public fastestWin: number;
 

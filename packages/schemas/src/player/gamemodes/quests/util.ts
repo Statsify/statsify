@@ -13,7 +13,7 @@ import {
   removeFormatting,
 } from "@statsify/util";
 import { DateTime } from "luxon";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { FormattedGame } from "#game";
 
 interface Quest {
@@ -99,7 +99,6 @@ const assignQuestMetadata = (
         enabled: time === QuestTime.Overall && quest.leaderboard,
         additionalFields: ["this.total"],
       },
-      historical: { enabled: false },
     });
 
     decorator(constructor.prototype, quest.propertyKey ?? quest.field);
@@ -111,8 +110,8 @@ const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
     name: "Total",
     fieldName: `${removeFormatting(game)} Total`,
     enabled,
+    limit: LARGE_LEADERBOARD_LIMIT,
   },
-  historical: { enabled: false },
 });
 
 type GameWithQuestMode<Fields extends string> = {
@@ -238,7 +237,6 @@ export function createQuestsInstance<
     const decorator = Field({
       type: () => GameModeClass,
       leaderboard: { fieldName: `${FormattedGame[gameName]} Quests -` },
-      historical: { enabled: false },
     });
 
     decorator(QuestInstance.prototype, gameName);

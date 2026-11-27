@@ -91,7 +91,7 @@ export const ARCADE_MODES = new GameModes([
 export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
 
 export class Arcade {
-  @Field({ historical: { enabled: false } })
+  @Field()
   public coins: number;
 
   @Field()
