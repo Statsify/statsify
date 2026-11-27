@@ -28,6 +28,7 @@
   "dependencies": {
     "@statsify/assets": "workspace:^",
     "@statsify/math": "workspace:^",
+    "@statsify/rendering": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "prismarine-nbt": "2.8.0",

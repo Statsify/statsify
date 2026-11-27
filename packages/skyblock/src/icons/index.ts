@@ -8,8 +8,9 @@
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import textures from "../generated/textures-1.8.json" with { type: "json" };
-import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
+import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
+import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
 import type { ItemTexture } from "#types";
 
 export interface IconOptions {
@@ -17,13 +18,14 @@ export interface IconOptions {
   size?: number;
 }
 
-/** A head's skin PNG by its texture hash; undefined when it has none. */
-export type HeadSource = (hash: string) => Promise<Buffer | undefined>;
+/** A head's skin, or its PNG, by its texture hash; undefined when it has none. */
+export type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
+
+export const SKIN_URL = "https://textures.minecraft.net/texture/";
 
 const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
 const CACHE_SIZE = 2000;
-const HEAD_TIMEOUT = 5000;
 
 const GRASS = 2;
 const LEAVES = 18;
@@ -106,9 +108,6 @@ function planOf(texture: ItemTexture): Plan | undefined {
   return { kind: "layers", layers: [{ path, tint: blockTint(id, damage) }] };
 }
 
-// Raster, like @statsify/rendering's createCanvas.
-const createCanvas = (width: number, height: number) => new Canvas(width, height, { gpu: false });
-
 const images = new Map<string, Promise<Image>>();
 const loadTexture = (path: string) => {
   let image = images.get(path);
@@ -169,11 +168,7 @@ const hasHat = (skin: Image) => {
   return ctx.getImageData(0, 0, 32, 32).data.some((value, index) => index % 4 === 3 && value < 128);
 };
 
-let headSource: HeadSource = async (hash) => {
-  const response = await fetch(`https://textures.minecraft.net/texture/${hash}`, { signal: AbortSignal.timeout(HEAD_TIMEOUT) });
-  if (!response.ok) throw new Error(`textures.minecraft.net answered ${response.status} for ${hash}`);
-  return Buffer.from(await response.arrayBuffer());
-};
+let headSource: HeadSource = (hash) => loadImage(`${SKIN_URL}${hash}`);
 
 /** Offline previews pass saved skins instead of fetching them. */
 export function setHeadSource(source: HeadSource) {
@@ -195,7 +190,7 @@ async function drawBase(plan: Plan, key: string) {
 
     case "head": {
       const skin = await headSource(plan.skin)
-        .then((data) => data && loadImage(data))
+        .then((data) => (Buffer.isBuffer(data) ? loadImage(data) : data))
         .catch(() => undefined);
       if (!skin) icons.delete(key);
       const image = skin ?? (await loadTexture("entity/steve"));
