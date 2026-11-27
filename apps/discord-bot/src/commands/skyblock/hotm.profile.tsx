@@ -7,9 +7,10 @@
  */
 
 import { Card } from "./components/Card.js";
+import { Color } from "@statsify/schemas";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { minecraftColors, prettify } from "@statsify/util";
+import { prettify } from "@statsify/util";
 import { type HotmSection, type Powder, POWDERS } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -19,17 +20,15 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-const fill = (code: string) => minecraftColors.find((color) => color.code === code)!.hex;
-
 // The perk tree as the menu lays it out: 7 columns, the top tier first
 const TREE_WIDTH = 7;
 const TREE_HEIGHT = 10;
 const PERK_SIZE = 14;
 
 const perkColor = ({ level, maxLevel, enabled }: HotmSection["nodes"][number]) => {
-  if (level === 0) return fill("§8");
-  if (!enabled) return fill("§c");
-  return fill(level === maxLevel ? "§a" : "§e");
+  if (level === 0) return new Color("§8").hex;
+  if (!enabled) return new Color("§c").hex;
+  return new Color(level === maxLevel ? "§a" : "§e").hex;
 };
 
 const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
