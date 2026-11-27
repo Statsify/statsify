@@ -24,7 +24,6 @@ import { HypixelService } from "#hypixel";
 import {
   Inject,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   forwardRef,
 } from "@nestjs/common";
@@ -245,11 +244,7 @@ export class PlayerService {
         catchError((error) => {
           // A name with characters Minecraft doesn't allow answers 400
           if ([400, 404].includes(error.response?.status)) throw new PlayerNotFoundException();
-          // Ratelimited
-          if (error.response?.status === 429) throw new InternalServerErrorException();
-
-          // Unknown
-          throw new InternalServerErrorException();
+          throw error;
         })
       )
     );
