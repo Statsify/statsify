@@ -6,17 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { LegacyTexture } from "../src/core/pack.js";
+import {
+  DOWNLOAD_TIMEOUT,
+  type LegacyTexture,
+  fetchMinecraftData,
+  resolveTextures,
+  withoutNamespace,
+} from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
-
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
 
 // Bukkit's 1.8 Material enum, which Hypixel's kit layouts name items by, like GOLD_CHESTPLATE
 const BUKKIT_MATERIALS =
@@ -206,34 +204,18 @@ async function readAssets(source: string) {
   return { models, textures };
 }
 
-const stripNamespace = (id: string) => id.replace("minecraft:", "");
-
 /** A model's textures with its parents' merged in and #references followed */
 function modelTextures(models: Map<string, ModelFile>, id: string) {
-  const merged: Record<string, string> = {};
   const chain: ModelFile[] = [];
 
   for (let next: string | undefined = id; next && models.has(next); ) {
     const model: ModelFile = models.get(next)!;
     chain.push(model);
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
-  for (const model of chain.toReversed()) {
-    for (const [key, value] of Object.entries(model.textures ?? {})) {
-      merged[key] = stripNamespace(typeof value === "string" ? value : value.sprite);
-    }
-  }
-
-  const resolved: Record<string, string> = {};
-
-  for (const key of Object.keys(merged)) {
-    let value: string | undefined = merged[key];
-    while (value?.startsWith("#")) value = merged[value.slice(1)];
-    if (value && !value.startsWith("#")) resolved[key] = value;
-  }
-
-  return resolved;
+  const textures = resolveTextures(Object.assign({}, ...chain.toReversed().map((model) => model.textures)));
+  return Object.fromEntries(Object.entries(textures).map(([key, texture]) => [key, withoutNamespace(texture)]));
 }
 
 unzipSync(await readFile(path), {
@@ -254,12 +236,12 @@ const [modernAssets, legacyAssets] = await Promise.all([readAssets(path), readAs
 if (!legacyAssets.textures.has("items/diamond_sword")) throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
 
 const [legacy, items, blocks, entities, effects, modernItems] = await Promise.all([
-  fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
-  fetchJson<LegacyItem[]>("1.8/items.json"),
-  fetchJson<LegacyItem[]>("1.8/blocks.json"),
-  fetchJson<LegacyEntity[]>("1.8/entities.json"),
-  fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
-  fetchJson<ModernItem[]>("26.1/items.json"),
+  fetchMinecraftData<{ items: Record<string, string | null> }>("common/legacy.json"),
+  fetchMinecraftData<LegacyItem[]>("1.8/items.json"),
+  fetchMinecraftData<LegacyItem[]>("1.8/blocks.json"),
+  fetchMinecraftData<LegacyEntity[]>("1.8/entities.json"),
+  fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
+  fetchMinecraftData<ModernItem[]>("26.1/items.json"),
 ]);
 
 const missing: string[] = [];
@@ -320,7 +302,7 @@ for (const [id, entries] of variants) {
     if (!name) continue;
 
     const key = entries.length === 1 ? `${id}` : `${id}:${damage}`;
-    const modern = modernName(key, name.replace("minecraft:", ""));
+    const modern = modernName(key, withoutNamespace(name));
     if (modern) output.items[key] = modern;
   }
 }
@@ -365,7 +347,7 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
-const materials = await fetch(BUKKIT_MATERIALS);
+const materials = await fetch(BUKKIT_MATERIALS, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
 if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
 
 // Entries look like GOLD_CHESTPLATE(315, 1, 112). Only ids the item table has are kept
@@ -435,7 +417,7 @@ function isTemplate(models: Map<string, ModelFile>, id: string) {
   for (let next: string | undefined = id; next && models.has(next) && !elements; ) {
     const model: ModelFile = models.get(next)!;
     elements = model.elements;
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
   return (elements ?? []).some((element) =>

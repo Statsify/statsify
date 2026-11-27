@@ -9,12 +9,22 @@
 import { DYES } from "./tints.js";
 import data from "../../data/minecraft-data.json" with { type: "json" };
 import type { ItemStack } from "./item-stack.js";
+import { DOWNLOAD_TIMEOUT, namespaced, withoutNamespace } from "./pack.js";
 
 const items: Record<string, string | undefined> = data.items;
 const durability: Record<string, number | undefined> = data.durability;
 const effects: Record<string, string | undefined> = data.effects;
 const materials: Record<string, number | undefined> = data.materials;
 const names: Record<string, string | undefined> = data.legacyNames;
+
+const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+
+/** A file from the minecraft-data release these tables are built from, like "1.8/items.json" */
+export async function fetchMinecraftData<T>(path: string): Promise<T> {
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
+  if (!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json() as Promise<T>;
+}
 
 const POTION = 373;
 
@@ -69,7 +79,7 @@ const BANNER_PATTERNS: Record<string, string | undefined> = {
 /** A 26.3 effect id for a 1.8 numeric effect id */
 export function legacyEffect(id: number) {
   const name = effects[id];
-  return name ? `minecraft:${name}` : undefined;
+  return name ? namespaced(name) : undefined;
 }
 
 /** A 26.3 banner pattern id for a 1.8 pattern code, like "bo" */
@@ -99,20 +109,14 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   const name = items[`${id}:${damage}`] ?? items[id];
   if (!name) return;
 
-  return { id: `minecraft:${name}`, damage: durability[name] && damage > 0 ? damage : undefined };
+  return { id: namespaced(name), damage: durability[name] && damage > 0 ? damage : undefined };
 }
 
 /** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
 export const legacyMaterialId = (name: string) => materials[name];
 
-/** The 26.3 item for a 1.8 Bukkit material name and Damage value */
-export function legacyMaterial(name: string, damage = 0) {
-  const id = legacyMaterialId(name);
-  return id === undefined ? undefined : legacyItem(id, damage);
-}
-
 /** How much wear a 26.3 item takes before it breaks */
-export const maxDamage = (id: string) => durability[id.replace("minecraft:", "")];
+export const maxDamage = (id: string) => durability[withoutNamespace(id)];
 
 /** 1.8's English name for a 26.3 item, after its rarity color, like "§bGolden Apple" */
-export const legacyName = (id: string) => names[id.replace("minecraft:", "")];
+export const legacyName = (id: string) => names[withoutNamespace(id)];

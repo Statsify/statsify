@@ -258,7 +258,7 @@ export class ModelResolver {
 }
 
 /** Follows #references until each texture is a sprite id, and drops any that never get one */
-function resolveTextures(textures: Record<string, TextureValue>) {
+export function resolveTextures(textures: Record<string, TextureValue>) {
   const resolved: Record<string, string> = {};
 
   for (const key of Object.keys(textures)) {
