@@ -409,7 +409,9 @@ export interface DojoTest {
   time?: number;
 }
 
-export type Faction = "mages" | "barbarians";
+export const FACTIONS = ["mages", "barbarians"] as const;
+
+export type Faction = (typeof FACTIONS)[number];
 
 // The API's names: "none" is the basic tier
 export const KUUDRA_TIERS = ["none", "hot", "burning", "fiery", "infernal"] as const;

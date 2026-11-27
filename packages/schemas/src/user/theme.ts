@@ -8,24 +8,30 @@
 
 import { Field } from "#metadata";
 
-export enum UserFont {
-  DEFAULT = "default",
-  HD = "hd",
-  FPACK = "fpack"
-}
+export const UserFont = {
+  DEFAULT: "default",
+  HD: "hd",
+  FPACK: "fpack",
+} as const;
 
-export enum UserPalette {
-  DEFAULT = "default",
-  LIGHT = "light",
-  DARK = "dark",
-  NO_BACKGROUNDS = "no-backgrounds"
-}
+export type UserFont = (typeof UserFont)[keyof typeof UserFont];
 
-export enum UserBoxes {
-  DEFAULT = "default",
-  HD = "hd",
-  UHD = "uhd"
-}
+export const UserPalette = {
+  DEFAULT: "default",
+  LIGHT: "light",
+  DARK: "dark",
+  NO_BACKGROUNDS: "no-backgrounds",
+} as const;
+
+export type UserPalette = (typeof UserPalette)[keyof typeof UserPalette];
+
+export const UserBoxes = {
+  DEFAULT: "default",
+  HD: "hd",
+  UHD: "uhd",
+} as const;
+
+export type UserBoxes = (typeof UserBoxes)[keyof typeof UserBoxes];
 
 export class UserTheme {
   @Field({ store: { required: false }, type: () => String })
