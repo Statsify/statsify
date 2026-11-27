@@ -8,6 +8,7 @@
 
 import itemModels from "./generated/item-models.json" with { type: "json" };
 import textures from "./generated/textures-1.8.json" with { type: "json" };
+import { prettify } from "@statsify/util";
 import type { ItemAttributes, ItemTexture, ItemsResource, RawItem } from "#types";
 
 /** NEU's item_model for each item a modern client draws as something other than its 1.8 material. */
@@ -68,6 +69,11 @@ export function resourceTexture({ skin, material, durability, color, model }: It
 
   const [red, green, blue] = color.split(",").map(Number);
   return { kind: "item", id, damage, color: (red << 16) | (green << 8) | blue, ...pack };
+}
+
+export function resourceItem(items: ItemsResource | undefined, id: string) {
+  const found = items?.items[id];
+  return { name: found?.name ?? prettify(id), texture: found && resourceTexture(found) };
 }
 
 if (import.meta.vitest) {

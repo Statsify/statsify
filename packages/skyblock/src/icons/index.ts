@@ -8,10 +8,12 @@
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import textures from "../generated/textures-1.8.json" with { type: "json" };
-import { Canvas, type CanvasRenderingContext2D, type Image, loadImage } from "skia-canvas";
 import { ItemRenderer, type ItemStack, type PackStack, legacyItem, setCanvasBackend } from "@statsify/textures";
+import { LRUCache } from "lru-cache";
+import { IMAGE_DOWNLOAD_TIMEOUT, createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { skiaCanvas } from "@statsify/textures/node";
+import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
 import type { ItemTexture } from "#types";
 
 export interface IconOptions {
@@ -21,18 +23,18 @@ export interface IconOptions {
   glint?: boolean;
 }
 
-/** A head's skin PNG by its texture hash; undefined when it has none. */
+/** A head's skin PNG by its texture hash; undefined when it has none. The pack renderer decodes the PNG itself. */
 export type HeadSource = (hash: string) => Promise<Buffer | undefined>;
+
+export const SKIN_URL = "https://textures.minecraft.net/texture/";
 
 const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
-const SKIN_URL = "https://textures.minecraft.net/texture/";
 const GLINT = "misc/enchanted_item_glint";
 // 1.8 tints its gray glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
 const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
 const GLINT_ANGLES = [(-5 * Math.PI) / 18, Math.PI / 18];
 const CACHE_SIZE = 2000;
-const HEAD_TIMEOUT = 5000;
 
 const GRASS = 2;
 const LEAVES = 18;
@@ -115,9 +117,6 @@ function planOf(texture: ItemTexture): Plan | undefined {
   return { kind: "layers", layers: [{ path, tint: blockTint(id, damage) }] };
 }
 
-// Raster, like @statsify/rendering's createCanvas.
-const createCanvas = (width: number, height: number) => new Canvas(width, height, { gpu: false });
-
 const images = new Map<string, Promise<Image>>();
 const loadTexture = (path: string) => {
   let image = images.get(path);
@@ -179,7 +178,7 @@ const hasHat = (skin: Image) => {
 };
 
 let headSource: HeadSource = async (hash) => {
-  const response = await fetch(`${SKIN_URL}${hash}`, { signal: AbortSignal.timeout(HEAD_TIMEOUT) });
+  const response = await fetch(`${SKIN_URL}${hash}`, { signal: AbortSignal.timeout(IMAGE_DOWNLOAD_TIMEOUT) });
   if (!response.ok) throw new Error(`textures.minecraft.net answered ${response.status} for ${hash}`);
   return Buffer.from(await response.arrayBuffer());
 };
@@ -287,7 +286,7 @@ async function drawGlint(icon: Canvas) {
   iconCtx.drawImage(layer, 0, 0);
 }
 
-const icons = new Map<string, Promise<Canvas | undefined>>();
+const icons = new LRUCache<string, Promise<Canvas | undefined>>({ max: CACHE_SIZE });
 
 const cacheKey = (texture: ItemTexture, size: number, glint: boolean) =>
   `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}:${glint}`;
@@ -311,15 +310,12 @@ function legacyIcon(texture: ItemTexture, size: number, glint: boolean) {
   const key = cacheKey(texture, size, glint);
   let icon = icons.get(key);
 
-  if (icon) {
-    icons.delete(key);
-  } else {
+  if (!icon) {
     icon = drawIcon(texture, size, glint, key);
     icon.catch(() => icons.delete(key));
+    icons.set(key, icon);
   }
 
-  icons.set(key, icon);
-  if (icons.size > CACHE_SIZE) icons.delete(icons.keys().next().value!);
   return icon;
 }
 

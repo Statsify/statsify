@@ -18,6 +18,8 @@ export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
 export const progressText = (t: LocalizeFunction, value: number, max: number) =>
   `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
 
+export const outOf = (t: LocalizeFunction, value: number, max: number, color: string) => `${t(value)}§7/${color}${t(max)}`;
+
 // Table.tr splits its width by its cells, so a short last row is padded to keep the columns unless it spreads
 export const gridRows = (cells: JSX.Element[], columns: number, spreadLastRow = false) =>
   arrayGroup(cells, columns).map((row) => (

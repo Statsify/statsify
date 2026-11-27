@@ -8,7 +8,7 @@
 
 import { FormattedGame } from "@statsify/schemas";
 import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
-import { SkyBlockAttributesProfile, SkyBlockStatsProfile } from "./stats.profile.js";
+import { STAT_PAGES, SkyBlockAttributesProfile, SkyBlockStatsProfile } from "./stats.profile.js";
 import { SkyBlockBestiaryProfile, SkyBlockCollectionsProfile, SkyBlockMinionsProfile, collectionIcons, minionIcons } from "./collections.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
@@ -178,11 +178,10 @@ export const SKYBLOCK_CARDS = {
   stats: {
     sections: ["stats"],
     settings: ["skills", "inventory"],
-    profile: [
-      { label: (t) => t("skyblock.statPages.combat"), profile: (props) => <SkyBlockStatsProfile {...props} page="combat" /> },
-      { label: (t) => t("skyblock.statPages.gathering"), profile: (props) => <SkyBlockStatsProfile {...props} page="gathering" /> },
-      { label: (t) => t("skyblock.statPages.misc"), profile: (props) => <SkyBlockStatsProfile {...props} page="misc" /> },
-    ],
+    profile: (Object.keys(STAT_PAGES) as (keyof typeof STAT_PAGES)[]).map((page): SkyBlockSubPage => ({
+      label: (t) => t(`skyblock.statPages.${page}`),
+      profile: (props) => <SkyBlockStatsProfile {...props} page={page} />,
+    })),
   },
   attributes: {
     sections: ["attributes"],
@@ -226,9 +225,12 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
+export const skyBlockHeading = (t: LocalizeFunction, name: SkyBlockCardName | "bingo" | "calendar" | "ranks") =>
+  `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
+
 export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
   // The Header moves the profile onto its own line where that narrows the card
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}\n§r(${formatProfileName(profile)}§r)`;
+  return `${skyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {

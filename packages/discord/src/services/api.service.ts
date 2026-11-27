@@ -277,6 +277,18 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  public override getSkyBlockRankings(uuid: string) {
+    return super.getSkyBlockRankings(uuid).catch((err) => {
+      throw this.skyBlockError(err, "uuid", uuid);
+    });
+  }
+
+  public override getSkyBlockMayor() {
+    return super.getSkyBlockMayor().catch((err) => {
+      throw this.skyBlockError(err);
+    });
+  }
+
   public getSkyBlockProfile(
     uuid: string,
     sections: SkyBlockSection[],

@@ -25,6 +25,7 @@ export const RARITIES = [
 ] as const;
 
 export type Rarity = (typeof RARITIES)[number];
+export const rarityRank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 export type GameMode = "normal" | "ironman" | "stranded" | "bingo";
 
 export interface Freshness {
@@ -89,7 +90,6 @@ export interface ProfileSummary {
   bank?: number;
   bankTier: BankTier; // the highest BANK_UPGRADE_* task any member has
   bankLimit: number;
-  bankInterest?: number; // a season's, on the co-op and personal balances, without Museum milestones' boost
   personalBank?: number;
   personalBankLimit?: number;
   firstJoin?: number;
@@ -278,6 +278,9 @@ export interface SkillsSection {
 export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "vampire"] as const;
 
 export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
+
+// Vampire's level stats are Rift Time, a Rift-only stat
+export const STAT_SLAYERS = SLAYER_BOSSES.filter((boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire");
 
 export interface SlayersSection {
   xp: number;
@@ -772,6 +775,7 @@ export const PLAYER_STATS = [
 }[];
 
 export type PlayerStat = (typeof PLAYER_STATS)[number]["id"];
+export type Stats = Partial<Record<PlayerStat, number>>;
 
 export interface StatValue {
   stat: PlayerStat;
@@ -790,11 +794,7 @@ export const STAT_SOURCES = [
   "tuning",
   "pet",
   "skills",
-  "zombie",
-  "spider",
-  "wolf",
-  "enderman",
-  "blaze",
+  ...STAT_SLAYERS,
   "slayerTiers", // Combat Wisdom from each slayer boss tier killed
   "petScore",
   "essence",
@@ -867,6 +867,8 @@ export interface Consumable {
   used: number;
   max: number;
 }
+
+export const PET_SKIN_PREFIX = "PET_SKIN_";
 
 export interface PetsSection {
   score: number;

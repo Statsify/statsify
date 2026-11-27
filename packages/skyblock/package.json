@@ -36,9 +36,11 @@
   "dependencies": {
     "@statsify/assets": "workspace:^",
     "@statsify/math": "workspace:^",
+    "@statsify/rendering": "workspace:^",
     "@statsify/textures": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
+    "lru-cache": "^11.5.3",
     "prismarine-nbt": "2.8.0",
     "skia-canvas": "4.0.0",
     "skyhelper-networth": "2.11.1",

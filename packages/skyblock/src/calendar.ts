@@ -13,7 +13,6 @@ import type { MayorView } from "./election.js";
 const EPOCH = 1_560_275_700_000;
 const DAY = 1_200_000;
 const MONTH_DAYS = 31;
-const YEAR_DAYS = 12 * MONTH_DAYS;
 
 export const SKYBLOCK_MONTHS = [
   "earlySpring",
@@ -30,6 +29,8 @@ export const SKYBLOCK_MONTHS = [
   "lateWinter",
 ] as const;
 
+const YEAR_DAYS = SKYBLOCK_MONTHS.length * MONTH_DAYS;
+
 /** A day of SkyBlock's calendar: the month counts from 0 (Early Spring), the day from 1. */
 export interface SkyBlockDate {
   year: number;
@@ -45,10 +46,12 @@ export const skyblockDate = (time: number): SkyBlockDate => {
 /** When a SkyBlock day begins. */
 export const skyblockTime = ({ year, month, day }: SkyBlockDate) => EPOCH + ((year - 1) * YEAR_DAYS + month * MONTH_DAYS + day - 1) * DAY;
 
+const ELECTION_END = { month: 2, day: 27 } as const;
+
 /** Each year's fixed events from the wiki's Calendar page (unverified): the month and day each starts, and how many days. */
 const EVENTS = [
   { key: "hoppitysHunt", month: 0, day: 1, days: 93 },
-  { key: "electionOver", month: 2, day: 27, days: 1 },
+  { key: "electionOver", ...ELECTION_END, days: 1 },
   { key: "travelingZoo", month: 3, day: 1, days: 3 },
   { key: "electionOpens", month: 5, day: 27, days: 1 },
   { key: "harvestFeast", month: 6, day: 1, days: 93 },
@@ -112,7 +115,7 @@ export interface EventTime {
 export function termOf(mayor: MayorView | undefined, time: number) {
   // A copy the API cached before `term` existed has none until it refreshes
   if (mayor?.term === undefined) return;
-  const start = skyblockTime({ year: mayor.term, month: 2, day: 27 });
+  const start = skyblockTime({ year: mayor.term, ...ELECTION_END });
   const end = start + YEAR_DAYS * DAY;
   return end > time ? { start, end } : undefined;
 }

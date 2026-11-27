@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { costOf, parsePetKey } from "#prices";
+import { costOf } from "#prices";
+import { parsePetKey } from "#auctions";
 import { PET_RARITIES, getPets, petMaxLevel, petName, petScorePoints, petTexture } from "./pets.js";
 import { PET_TEXTURES, SKYBLOCK_XP } from "#data";
-import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { SKYBLOCK_XP_PER_LEVEL, skyblockLevel } from "../profiles.js";
 import { cheapestFirst, getAccessories } from "./accessories.js";
 import { prettify } from "@statsify/util";
 import type { ItemsResource, Level, MissingAccessory, PriceMap, SkyBlockLevelSection } from "#types";
@@ -19,7 +20,7 @@ type Source = SkyBlockLevelSection["sources"][number];
 
 /** SkyBlock levels have no cap, so maxLevel is the next one and the bar always runs to it. */
 function toLevel(xp: number): Level {
-  const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+  const level = skyblockLevel(xp);
   const xpCurrent = xp % SKYBLOCK_XP_PER_LEVEL;
   return {
     level,

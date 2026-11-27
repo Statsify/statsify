@@ -6,17 +6,28 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PETS, PET_TEXTURES } from "#data";
+import { PETS, PET_ITEMS, PET_STATS, PET_TEXTURES } from "#data";
 import { RARITY_COLORS } from "../display.js";
-import { RARITIES, type ItemTexture, type ItemsResource, type Level, type PetView, type PetsSection, type Rarity } from "#types";
+import {
+  PET_SKIN_PREFIX,
+  RARITIES,
+  type ItemTexture,
+  type ItemsResource,
+  type Level,
+  type PetView,
+  type PetsSection,
+  type PlayerStat,
+  type Rarity,
+  rarityRank,
+} from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import { resourceTexture } from "#textures";
+import { sumStats } from "#lore";
 import type { RawMember, RawPet } from "#raw";
 
 export const PET_RARITIES = RARITIES.slice(0, 6);
-const rank = (rarity: Rarity) => RARITIES.indexOf(rarity);
 
 export const petName = (type: string) => PETS.id_to_display_name[type] ?? prettify(type);
 
@@ -25,7 +36,7 @@ export function boostedRarity(pet: RawPet) {
   const base = pet.tier as Rarity;
   // A boost never makes a pet Mythic, except the Bingo pet (the wiki's Tier Boost page, unverified)
   const highest = pet.type === "BINGO" ? "MYTHIC" : "LEGENDARY";
-  return pet.heldItem === "PET_ITEM_TIER_BOOST" && rank(base) < rank(highest) ? PET_RARITIES[rank(base) + 1] : base;
+  return pet.heldItem === "PET_ITEM_TIER_BOOST" && rarityRank(base) < rarityRank(highest) ? PET_RARITIES[rarityRank(base) + 1] : base;
 }
 
 export const petMaxLevel = (type: string) => PETS.custom_pet_leveling[type]?.max_level ?? 100;
@@ -45,11 +56,11 @@ export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
 
 /** The items resource covers skins newer than the NEU pin; a type falls back to its nearest rarity's head. */
 export function petTexture(type: string, rarity: Rarity, skin?: string | null, items?: ItemsResource): ItemTexture {
-  const skinned = skin && (PET_TEXTURES.skins[skin] ?? items?.items[`PET_SKIN_${skin}`]?.skin);
+  const skinned = skin && (PET_TEXTURES.skins[skin] ?? items?.items[`${PET_SKIN_PREFIX}${skin}`]?.skin);
   if (skinned) return { kind: "head", skin: skinned };
 
   const textures = PET_TEXTURES.pets[type] ?? {};
-  const nearest = RARITIES.toSorted((a, b) => Math.abs(rank(a) - rank(rarity)) - Math.abs(rank(b) - rank(rarity)));
+  const nearest = RARITIES.toSorted((a, b) => Math.abs(rarityRank(a) - rarityRank(rarity)) - Math.abs(rarityRank(b) - rarityRank(rarity)));
   const hash = nearest.map((candidate) => textures[candidate]).find(Boolean);
   // A type newer than the pin has no head: show the bare skull item.
   return hash ? { kind: "head", skin: hash } : { kind: "item", id: 397, damage: 3 };
@@ -58,7 +69,7 @@ export function petTexture(type: string, rarity: Rarity, skin?: string | null, i
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
   const heldResource = pet.heldItem ? items?.items[pet.heldItem] : undefined;
-  const skinTier = pet.skin ? items?.items[`PET_SKIN_${pet.skin}`]?.tier : undefined;
+  const skinTier = pet.skin ? items?.items[`${PET_SKIN_PREFIX}${pet.skin}`]?.tier : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,
@@ -79,6 +90,26 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 
 /** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
 export const petScorePoints = (tier: string) => PET_RARITIES.indexOf(tier as Rarity) + 1;
+
+/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
+function petStats(pet: PetView | undefined): Partial<Record<PlayerStat, number>> | undefined {
+  if (!pet) return undefined;
+
+  const table = PET_STATS[pet.type]?.[pet.rarity];
+  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
+  const [from, to] = table?.levels ?? [1, 100];
+  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
+
+  // A dragon below its table's first level is still an egg, with no stats of its own
+  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
+    const stat = key as PlayerStat;
+    const first = table?.first[stat] ?? 0;
+    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
+    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
+  });
+
+  return sumStats([...own, item?.stats ?? {}]);
+}
 
 /**
  * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
@@ -105,16 +136,19 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
   if (montezuma) views.push(toPetView({ ...montezuma, active: false }, items));
 
   const pets = views.toSorted(
-    (a, b) => Number(b.active) - Number(a.active) || rank(b.rarity) - rank(a.rarity) || b.level.xp - a.level.xp
+    (a, b) => Number(b.active) - Number(a.active) || rarityRank(b.rarity) - rarityRank(a.rarity) || b.level.xp - a.level.xp
   );
+
+  const active = pets.find((pet) => pet.active);
 
   return {
     score: add(...Array.from(best.values(), ({ points, level }) => points + Number(level.level === level.maxLevel))),
-    active: pets.find((pet) => pet.active),
+    active,
     pets,
     totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
     skinned: views.filter(({ skin }) => skin).length,
     candyUsed: add(...views.map(({ candyUsed }) => candyUsed)),
+    activeStats: petStats(active),
   };
 }
 

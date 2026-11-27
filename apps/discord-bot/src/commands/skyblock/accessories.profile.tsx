@@ -10,7 +10,7 @@ import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, outOf, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { StatLines } from "./components/StatLines.js";
 import { prettify, removeFormatting } from "@statsify/util";
@@ -66,7 +66,7 @@ export const SkyBlockAccessoriesProfile = ({ profile, t, icons, page, ...card }:
   const sidebar: SidebarItem[] = [
     [t("skyblock.accessoryPower"), t(accessories.accessoryPower), "§d"],
     [t("skyblock.selectedPower"), accessories.selectedPower ? prettify(accessories.selectedPower) : t("skyblock.none"), "§e"],
-    [t("skyblock.accessories"), `${t(accessories.unique)}§7/§a${t(accessories.chains)}`, "§a"],
+    [t("skyblock.accessories"), outOf(t, accessories.unique, accessories.chains, "§a"), "§a"],
     [t("skyblock.missing"), t(accessories.missing.filter(({ nextTier }) => !nextTier).length), "§c"],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
     [t("skyblock.unenriched"), t(accessories.unenriched), "§c"],

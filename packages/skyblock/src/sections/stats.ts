@@ -10,33 +10,25 @@ import {
   type ItemView,
   type ItemsResource,
   PLAYER_STATS,
-  type PetView,
   type PlayerStat,
   SKILLS,
   SLAYER_BOSSES,
+  STAT_SLAYERS,
   STAT_SOURCES,
-  type SlayerBoss,
   type Slots,
   type StatSource,
   type StatTotal,
+  type Stats,
   type StatsSection,
   type TreeLayout,
   type TreeNode,
 } from "#types";
-import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
+import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, STAT_TABLES } from "#data";
 import { add, roundTo } from "@statsify/math";
 import { attributeLevel } from "./attributes.js";
-import {
-  LEARNED_POWERS,
-  TUNING,
-  bagAccessories,
-  heldAccessories,
-  highestTiers,
-  powerScale,
-  stonePowerStats,
-} from "./accessories.js";
+import { TUNING, bagAccessories, heldAccessories, highestTiers, selectedPowerStats } from "./accessories.js";
 import { decodeSlots } from "#items";
-import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { skyblockLevel } from "../profiles.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
@@ -44,18 +36,8 @@ import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import { isWeapon } from "./gear.js";
-import { parsePieceBonuses, parseStatLine, statNamed } from "../lore.js";
+import { parsePieceBonuses, parseStatLine, statNamed, sumStats } from "../lore.js";
 import type { RawMember, RawProfile } from "#raw";
-
-type Stats = Partial<Record<PlayerStat, number>>;
-
-const sumStats = (all: Iterable<Stats>): Stats => {
-  const sum: Stats = {};
-  for (const stats of all) {
-    for (const [stat, value] of Object.entries(stats) as [PlayerStat, number][]) sum[stat] = add(sum[stat] ?? 0, value);
-  }
-  return sum;
-};
 
 /** The stat lines in the items' lore, which already count each item's reforge, gems, enchantments and stars. */
 const loreStats = (items: Slots): Stats =>
@@ -74,18 +56,14 @@ const scaleStats = (stats: Stats, factor: number): Stats =>
   Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value * factor]));
 
 function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {
-  const stone = power ? POWERS[power] : undefined;
-  if (stone) {
-    return sumStats(
-      stonePowerStats(stone, accessoryPower).flatMap(({ name, value }) => {
-        const stat = statNamed(name);
-        return stat ? [{ [stat]: value }] : [];
-      })
-    );
-  }
-
-  const learned = power ? LEARNED_POWERS[power] : undefined;
-  return learned && scaleStats(learned, powerScale(accessoryPower));
+  const stats = selectedPowerStats(power, accessoryPower);
+  if (!stats) return undefined;
+  return sumStats(
+    stats.flatMap(({ name, value }) => {
+      const stat = statNamed(name);
+      return stat ? [{ [stat]: value }] : [];
+    })
+  );
 }
 
 const tuningStats = (points: Record<string, number>): Stats =>
@@ -95,26 +73,6 @@ const tuningStats = (points: Record<string, number>): Stats =>
       return tuned && count > 0 ? [{ [tuned[0]]: count * tuned[1] }] : [];
     })
   );
-
-/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
-export function petStats(pet: PetView | undefined): Stats | undefined {
-  if (!pet) return undefined;
-
-  const table = PET_STATS[pet.type]?.[pet.rarity];
-  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
-  const [from, to] = table?.levels ?? [1, 100];
-  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
-
-  // A dragon below its table's first level is still an egg, with no stats of its own
-  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
-    const stat = key as PlayerStat;
-    const first = table?.first[stat] ?? 0;
-    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
-    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
-  });
-
-  return sumStats([...own, item?.stats ?? {}]);
-}
 
 // Essence shop perks that count everywhere, per level (wiki: Essence Shops' pages). The Catacombs perks count only in
 // dungeons, and the rest only on an island or against some mobs.
@@ -161,7 +119,7 @@ const PEPPER_HEALTH = 1;
 const neuHealth = (levels: Stats[]) => levels.map(({ health }) => (health ? { health } : {}));
 
 // Each boss's level stats, NEU's and the wiki's. NEU's Zombie, Spider and Enderman tables predate 0.19.2, so only their
-// Health (which matches the wiki's) is kept, and it has no Blaze table. Vampire's are Rift Time, a Rift-only stat.
+// Health (which matches the wiki's) is kept, and it has no Blaze table.
 const SLAYER_LEVELS = {
   zombie: { neu: neuHealth(STAT_TABLES.slayers.zombie), wiki: [{}, {}, {}, {}, {}, {}, {}, { health_regen: 30 }, {}] },
   spider: {
@@ -197,13 +155,11 @@ const SLAYER_LEVELS = {
       { health: 7 },
     ],
   },
-} satisfies Partial<Record<SlayerBoss, { neu: Stats[]; wiki: Stats[] }>>;
+} satisfies Record<(typeof STAT_SLAYERS)[number], { neu: Stats[]; wiki: Stats[] }>;
 
 // Combat Wisdom for each boss tier killed once: 1 for tiers I to III, 2 for IV and V, Vampire's too (the wiki's Combat
 // Wisdom page, an owner exception, unverified)
 const tierWisdom = (kills: number[]) => add(...kills.map((count, tier) => (count > 0 ? (tier < 3 ? 1 : 2) : 0)));
-
-const STAT_SLAYERS = Object.keys(SLAYER_LEVELS) as (keyof typeof SLAYER_LEVELS)[];
 
 // Anita's Extra Farming Fortune and Agatha's and Miria's log fortunes, per level (wiki: Farming, Fig, Mangrove and Helix
 // Fortune)
@@ -267,7 +223,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
   const perks = member.player_data?.perks ?? {};
   const essence = essenceStats(perks);
   const catacombs = getDungeons(member).catacombs.level;
-  const level = Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL);
+  const level = skyblockLevel(member.leveling?.experience ?? 0);
   const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
   const slayerTiers = add(...SLAYER_BOSSES.map((boss) => tierWisdom(slayers[boss].kills)));
 
@@ -298,7 +254,7 @@ export function getStats(profile: RawProfile, member: RawMember, items: ItemsRes
     skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
     ...Object.fromEntries(slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])])),
     slayerTiers: { combat_wisdom: slayerTiers },
-    pet: petStats(pets.active),
+    pet: pets.activeStats,
     petScore: { magic_find: petScoreMagicFind(pets.score) },
     essence,
     hotm: treeStats(getHotm(member).nodes, HOTM_LAYOUT),

@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { KUUDRA_TIERS, type PlayerStat, type PowerStat, RARITIES, type StatValue } from "#types";
+import { KUUDRA_TIERS, PET_SKIN_PREFIX, type PlayerStat, type PowerStat, RARITIES, type StatValue } from "#types";
 import { normalizeItemText, statNamed, statRewards } from "#lore";
 import { add, roundTo } from "@statsify/math";
 import { prettify, removeFormatting } from "@statsify/util";
 import type { SyncContext } from "../sync-data.ts";
 import { bestiaryBoards } from "@statsify/skyblock";
+import { fetchOk, minecraftData } from "./textures.ts";
 import { join } from "node:path";
 import { legacyItem } from "@statsify/textures";
-import { minecraftData } from "./textures.ts";
 import { readdir } from "node:fs/promises";
 import { skinHash } from "#textures";
 
@@ -24,8 +24,7 @@ export const NEU_REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 export const NEU_BEFORE_REMOVAL = "5a5e9866a8578c8a36891acc508fc1e46e41eb31";
 
 export async function neuBeforeRemoval<T>(path: string) {
-  const response = await fetch(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
-  if (!response.ok) throw new Error(`${path} at ${NEU_BEFORE_REMOVAL} answered ${response.status}`);
+  const response = await fetchOk(`https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`);
   return (await response.json()) as T;
 }
 
@@ -402,6 +401,8 @@ export const NEU_UNITS = {
     const trophyFish = new Set(Object.keys(await readJson<Record<string, number[]>>("constants/trophyfish.json")));
     const trophyNames: Record<string, string> = {};
     const petItems: Record<string, NonNullable<ReturnType<typeof petItemEffect>>> = {};
+    const essenceTextures: Record<string, string> = {};
+    const headlessEssence: string[] = [];
     const itemModels: Record<string, string> = {};
     const [minecraftItems, names] = await Promise.all([minecraftData("items"), readdir(join(neu, "items"))]);
     const materials = new Map(minecraftItems.map(({ id, name }) => [`minecraft:${name}`, id]));
@@ -436,14 +437,21 @@ export const NEU_UNITS = {
       if (trophy && trophyFish.has(trophy[1])) trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(/ BRONZE$/, "");
 
       // A skin's name takes its rarity's color, Ultimate (§4) included, and so does the ✦ after a pet that wears it
-      const skin = item.internalname.startsWith("PET_SKIN_") && skullHash(item.nbttag);
-      if (skin) skinTextures[item.internalname.slice("PET_SKIN_".length)] = skin;
+      const skin = item.internalname.startsWith(PET_SKIN_PREFIX) && skullHash(item.nbttag);
+      if (skin) skinTextures[item.internalname.slice(PET_SKIN_PREFIX.length)] = skin;
       const skinColor = skin && /^§./.exec(item.displayname)?.[0];
-      if (skinColor) skinColors[item.internalname.slice("PET_SKIN_".length)] = skinColor;
+      if (skinColor) skinColors[item.internalname.slice(PET_SKIN_PREFIX.length)] = skinColor;
 
       // "§a§lUNCOMMON PET ITEM"
       const petItem = removeFormatting(item.lore?.at(-1) ?? "").endsWith("PET ITEM") && petItemEffect(item.lore ?? []);
       if (petItem) petItems[item.internalname] = petItem;
+
+      // Every essence item at the pin, not the essence shops' types, which leave some out
+      if (/^ESSENCE_\w+$/.test(item.internalname)) {
+        const essence = skullHash(item.nbttag);
+        if (essence) essenceTextures[item.internalname] = essence;
+        else headlessEssence.push(item.internalname);
+      }
 
       // A power stone lists its Power's stats, some negative, at a set Accessory Power: "§7At §6250 Accessory Power§7:",
       // then lines like "§c+80.99<glyph> Strength". Most then list a "Unique Power Bonus:", which doesn't scale.
@@ -481,6 +489,8 @@ export const NEU_UNITS = {
     await write("trophyfish.json", trophyNames);
     await write("pet-items.json", petItems);
     await write("item-models.json", itemModels);
+    if (headlessEssence.length > 0) throw new Error(`no essence head for ${headlessEssence.join(", ")}`);
+    await write("essence-textures.json", essenceTextures);
 
     const pets = await readJson<Record<string, unknown>>("constants/pets.json");
     const offsets = pets.pet_rarity_offset as Record<string, number>;
@@ -547,14 +557,5 @@ export const NEU_UNITS = {
         ])
       )
     );
-  },
-
-  // Every essence item at the pin, not the essence shops' types, which leave some out
-  async essence({ neu, readJson, write }: SyncContext) {
-    const files = (await readdir(join(neu, "items"))).filter((file) => /^ESSENCE_\w+\.json$/.test(file));
-    const items = await Promise.all(files.map((file) => readJson<NeuItem>(join("items", file))));
-    const headless = items.filter(({ nbttag }) => !skullHash(nbttag)).map(({ internalname }) => internalname);
-    if (headless.length > 0) throw new Error(`no essence head for ${headless.join(", ")}`);
-    await write("essence-textures.json", Object.fromEntries(items.map(({ internalname, nbttag }) => [internalname, skullHash(nbttag)])));
   },
 };

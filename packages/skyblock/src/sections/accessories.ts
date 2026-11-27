@@ -7,10 +7,10 @@
  */
 
 import { ACCESSORY_UPGRADES, ATTRIBUTE_SHARDS, IGNORED_ACCESSORIES, POWERS } from "#data";
-import { SKYBLOCK_XP_PER_LEVEL } from "../profiles.js";
+import { skyblockLevel } from "../profiles.js";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
-import { PLAYER_STATS, RARITIES } from "#types";
+import { PLAYER_STATS, RARITIES, rarityRank } from "#types";
 import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
 import { getLevel } from "#leveling";
@@ -61,9 +61,9 @@ const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
 // How a Power's stats scale with Accessory Power, per the wiki
-export const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
+const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
 
-export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
+function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
   const scaled = stats.map((stat) => ({ ...stat, value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt) }));
 
   for (const extra of bonus) {
@@ -76,7 +76,7 @@ export function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typ
 }
 
 // Learned Powers' stats per unit of powerScale (wiki: Powers); stone Powers list theirs on the stone
-export const LEARNED_POWERS: Record<string, Partial<Record<PlayerStat, number>>> = {
+const LEARNED_POWERS: Record<string, Partial<Record<PlayerStat, number>>> = {
   fortuitous: { health: 3.35, defense: 1.2, strength: 4.8, crit_chance: 4.35, crit_damage: 4.8 },
   pretty: { health: 1.65, defense: 1.2, speed: 0.65, strength: 4.8, intelligence: 10.8, crit_chance: 0.475, crit_damage: 1.2 },
   protected: { health: 11.75, defense: 10.8, strength: 2.4, crit_chance: 0.475, crit_damage: 1.2 },
@@ -94,6 +94,14 @@ const learnedPowerStats = (perUnit: Partial<Record<PlayerStat, number>>, accesso
     const value = perUnit[id];
     return value === undefined ? [] : [{ name: prettify(id), color, value: value * powerScale(accessoryPower) }];
   });
+
+/** The selected Power's stats at this Accessory Power, a stone's or a learned one's. */
+export function selectedPowerStats(power: string | undefined, accessoryPower: number): PowerStat[] | undefined {
+  const stone = power ? POWERS[power] : undefined;
+  if (stone) return stonePowerStats(stone, accessoryPower);
+  const learned = power ? LEARNED_POWERS[power] : undefined;
+  return learned && learnedPowerStats(learned, accessoryPower);
+}
 
 /** Variants list each other (Dante's Talisman and Ring); a higher tier doesn't list its lower one. */
 const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
@@ -127,7 +135,7 @@ const IN_PLACE: Record<string, InPlaceUpgrade> = {
   BOOK_OF_PROGRESSION: {
     unit: "level",
     tiers: { UNCOMMON: 100, RARE: 200, EPIC: 300, LEGENDARY: 400, MYTHIC: 500 },
-    progress: (_, member) => Math.floor((member.leveling?.experience ?? 0) / SKYBLOCK_XP_PER_LEVEL),
+    progress: (_, member) => skyblockLevel(member.leveling?.experience ?? 0),
   },
   // Every saved Codex fits the milestone claimed, which can lag the bestiary's
   BEASTSLAYERS_CODEX: {
@@ -234,8 +242,6 @@ export function getAccessories(
   const { active, inactive, owned, counted, contacts, accessoryPower } = bag;
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
-  const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
-  const learned = storage?.selected_power ? LEARNED_POWERS[storage.selected_power] : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
   const tuningPoints = add(...Object.values(tuning));
@@ -246,12 +252,12 @@ export function getAccessories(
     accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
-    powerStats: stone ? stonePowerStats(stone, accessoryPower) : learned && learnedPowerStats(learned, accessoryPower),
+    powerStats: selectedPowerStats(storage?.selected_power, accessoryPower),
     tuning,
     tuningPoints,
     tuningTotal: tuningTotal(member, accessoryPower, enrichments, tuningPoints),
     enrichments,
-    unenriched: active.filter((view) => !view.enrichment && RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY")).length,
+    unenriched: active.filter((view) => !view.enrichment && rarityRank(view.rarity!) >= rarityRank("LEGENDARY")).length,
     recombobulated: active.filter((view) => view.recombobulated).length,
     unique: counted.size,
     chains: countChains(listed),

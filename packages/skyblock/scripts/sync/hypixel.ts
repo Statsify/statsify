@@ -10,6 +10,7 @@ import { collectionBoards } from "@statsify/skyblock";
 import { neuBeforeRemoval, neuStats, statTotals } from "./neu.ts";
 import { normalizeItemText, statRewards } from "#lore";
 import type { SyncContext } from "../sync-data.ts";
+import { fetchOk } from "./textures.ts";
 import { toLevelCosts } from "#leveling";
 
 export const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
@@ -27,9 +28,7 @@ interface HypixelCollections {
 
 /** One of Hypixel's keyless SkyBlock resources. */
 async function hypixelResource<T>(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
-  return (await response.json()) as T & { version: string };
+  return (await (await fetchOk(url)).json()) as T & { version: string };
 }
 
 // NEU's bonus tables: a slayer level gives the stats of the highest level key at or under it
@@ -41,14 +40,30 @@ const perLevel = (table: Record<string, Record<string, number>>, levels: number)
 /** The tables built from Hypixel's skills and collections resources, with NEU's where they're merged with them. */
 export const HYPIXEL_UNITS = {
   async hypixel({ readJson, write, setBoards }: SyncContext) {
-    // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
-    const { skills, version: skillsVersion } = await hypixelResource<{ skills: Record<string, HypixelSkill> }>(HYPIXEL_SKILLS);
+    const [
+      { skills, version: skillsVersion },
+      { collections, version: collectionsVersion },
+      leveling,
+      sblevels,
+      fairySouls,
+      misc,
+      bonuses,
+    ] = await Promise.all([
+      // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
+      hypixelResource<{ skills: Record<string, HypixelSkill> }>(HYPIXEL_SKILLS),
+      // Collection tiers come from Hypixel's collections resource too, in its order of categories and items.
+      hypixelResource<{ collections: Record<string, HypixelCollections> }>(HYPIXEL_COLLECTIONS),
+      readJson<Record<string, unknown>>("constants/leveling.json"),
+      neuBeforeRemoval<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json"),
+      readJson<{ "Max Souls": number }>("constants/fairy_souls.json"),
+      neuBeforeRemoval<{ base_stats: Record<string, number> }>("constants/misc.json"),
+      readJson<{
+        bonus_stats: Record<string, Record<string, Record<string, number>>>;
+        pet_rewards: Record<string, { magic_find: number }>;
+      }>("constants/bonuses.json"),
+    ]);
     const xpTable = (skill: string) => toLevelCosts(skills[skill].levels.map(({ totalExpRequired }) => totalExpRequired));
 
-    // Collection tiers come from Hypixel's collections resource too, in its order of categories and items.
-    const { collections, version: collectionsVersion } = await hypixelResource<{
-      collections: Record<string, HypixelCollections>;
-    }>(HYPIXEL_COLLECTIONS);
     const collectionData = Object.entries(collections).map(([category, { name, items }]) => ({
       id: category,
       name,
@@ -60,10 +75,7 @@ export const HYPIXEL_UNITS = {
     }));
     await write("collections.json", collectionData);
 
-    const leveling = await readJson<Record<string, unknown>>("constants/leveling.json");
     const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-    const sblevels = await neuBeforeRemoval<{ sblevel_colours: Record<string, string> }>("constants/sblevels.json");
-    const fairySouls = await readJson<{ "Max Souls": number }>("constants/fairy_souls.json");
     await write("leveling.json", {
       catacombs: leveling.catacombs,
       fairy_souls: fairySouls["Max Souls"],
@@ -79,13 +91,6 @@ export const HYPIXEL_UNITS = {
       slayer_to_highest_tier: leveling.slayer_to_highest_tier,
       social: xpTable("SOCIAL"),
     });
-
-    const misc = await neuBeforeRemoval<{ base_stats: Record<string, number> }>("constants/misc.json");
-
-    const bonuses = await readJson<{
-      bonus_stats: Record<string, Record<string, Record<string, number>>>;
-      pet_rewards: Record<string, { magic_find: number }>;
-    }>("constants/bonuses.json");
 
     await write("stats.json", {
       base: neuStats(misc.base_stats),

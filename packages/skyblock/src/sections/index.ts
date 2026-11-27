@@ -31,7 +31,7 @@ import { getPets } from "./pets.js";
 import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
-import { getStats, petStats } from "./stats.js";
+import { getStats } from "./stats.js";
 import { type RawGarden, RawMember, type RawMuseum, type RawMuseumMember, type RawProfile } from "#raw";
 import type { ItemsResource, MemberView, PriceMap } from "#types";
 
@@ -259,10 +259,7 @@ const DEFINITIONS: { [K in SectionKey]: Section<K> } = {
   },
   pets: {
     needs: ["items"],
-    compute: async ({ member, items }) => {
-      const pets = getPets(member, items);
-      return { ...pets, activeStats: petStats(pets.active) };
-    },
+    compute: async ({ member, items }) => getPets(member, items),
   },
   rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: { needs: [], compute: async ({ profile, member, ranked }) => getSkills(profile, member, ranked) },

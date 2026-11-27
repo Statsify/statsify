@@ -12,6 +12,13 @@ import type { SyncContext } from "../sync-data.ts";
 export const MINECRAFT_DATA = "PrismarineJS/minecraft-data";
 export const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb"; // 3.117.0
 const PACK = new URL("../../../../assets/public/minecraft-textures/default/assets/minecraft/textures/", import.meta.url);
+const SYNC_TIMEOUT = 60_000;
+
+export async function fetchOk(url: string) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(SYNC_TIMEOUT) });
+  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
+  return response;
+}
 
 const COLORS = ["white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green", "red", "black"] as const;
 const WOODS = ["oak", "spruce", "birch", "jungle", "acacia", "big_oak"] as const;
@@ -273,9 +280,7 @@ const texturePath = (name: string, damage: number) => {
 
 const downloadMinecraftData = async (file: "blocks" | "items") => {
   const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
-  return (await response.json()) as MinecraftItem[];
+  return (await (await fetchOk(url)).json()) as MinecraftItem[];
 };
 
 // The neu and textures units both read items.json, so a run downloads each file once
@@ -285,8 +290,8 @@ export const minecraftData = (file: "blocks" | "items") => (minecraftDownloads[f
 /** textures-1.8.json, from minecraft-data's 1.8 items and blocks and the 1.8 pack. */
 export const TEXTURE_UNITS = {
   async textures({ write }: SyncContext) {
+    const [minecraftItems, minecraftBlocks] = await Promise.all([minecraftData("items"), minecraftData("blocks")]);
     // "<id>:<damage>" per variant and "<id>" for damage 0; ./icons tries both.
-    const minecraftItems = await minecraftData("items");
     const textures: Record<string, string> = {};
     const unmapped: string[] = [];
 
@@ -304,7 +309,6 @@ export const TEXTURE_UNITS = {
     }
 
     // items.json repeats each block's item under the block's id, so those ids take the block's name.
-    const minecraftBlocks = await minecraftData("blocks");
     const blockIds = new Set(minecraftBlocks.map(({ id }) => id));
     const materials = Object.fromEntries([
       ...minecraftBlocks.map(({ id, name }) => [MATERIAL_NAMES.blocks[name] ?? name.toUpperCase(), id]),
