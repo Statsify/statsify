@@ -9,6 +9,7 @@
 import { config } from "@statsify/util";
 
 const DISCORD_API = "https://discord.com/api/v10";
+const DISCORD_TIMEOUT_MS = 10_000;
 
 export const applicationId = await config("discordBot.applicationId", { required: false });
 export const clientSecret = await config("linkedRoles.clientSecret", { required: false });
@@ -58,6 +59,7 @@ export const discordRequest = async (
       ...(body && { "Content-Type": "application/json" }),
     },
     body,
+    signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
   });
 
   if (!response.ok) throw new DiscordRequestError(method, path, response.status);
@@ -87,4 +89,5 @@ const oauthRequest = (path: string, params: Record<string, string>) =>
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({ client_id: applicationId!, client_secret: clientSecret!, ...params }),
+    signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
   });
