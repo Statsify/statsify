@@ -133,10 +133,10 @@ export class SkinService {
 
   private async resolveHelmet(helmet: ArmorDto["helmet"]): Promise<ArmorPiece | undefined> {
     if (!helmet) return;
-    if ("head" in helmet) return this.resolveHead(helmet.head);
+    if (helmet.head !== undefined) return this.resolveHead(helmet.head);
 
     // 1.8 draws no glint on a worn skull or player head
-    if ("skull" in helmet) {
+    if (helmet.skull !== undefined) {
       const texture = await readFile(getMinecraftTexturePath(`textures/entity/${SKULL_TEXTURES[helmet.skull]}.png`));
       return { texture, enchanted: false, skull: true };
     }
