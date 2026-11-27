@@ -149,7 +149,7 @@ interface OlderModel {
 
 function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const model = parseJson<OlderModel>(file);
-  const parent = model.parent?.replace("minecraft:", "");
+  const parent = model.parent && withoutNamespace(model.parent);
 
   // Chests, heads and banners, which 26.3 draws in code
   if (parent === "builtin/entity") return;
@@ -157,7 +157,7 @@ function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const renamed: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(model.textures ?? {})) {
-    const id = value.replace("minecraft:", "");
+    const id = withoutNamespace(value);
     const target = value.startsWith("#") || !(id in textures) ? value : textures[id];
     if (target === null) return;
 
@@ -292,6 +292,8 @@ export class PackStack {
 
 /** A namespaced id with or without its namespace, like "item/stick" or "minecraft:item/stick" */
 export const namespaced = (id: string) => (id.includes(":") ? id : `minecraft:${id}`);
+
+export const withoutNamespace = (id: string) => id.replace(/^minecraft:/, "");
 
 /** A JSON reviver for item model definitions and fonts, where every "type" is an id with an optional namespace */
 export const namespaceTypes = (key: string, value: unknown) =>
