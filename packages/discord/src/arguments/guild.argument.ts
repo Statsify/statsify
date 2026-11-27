@@ -15,7 +15,7 @@ import { ApiService } from "#services";
 import { ChoiceArgument } from "./choice.argument.js";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
-import { GuildQuery } from "@statsify/api-client";
+import { GuildQuery, MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
 import { PlayerArgument, autocompleteNames } from "./player.argument.js";
 
@@ -46,7 +46,9 @@ class GuildQueryArgument extends AbstractArgument {
     const query = context.option<string>(this.name);
     if (!query) return [];
 
-    return autocompleteNames(query, 32, () => apiClient.getGuildAutocomplete(query));
+    return autocompleteNames(query, MAX_AUTOCOMPLETE_NAME_LENGTH, () =>
+      apiClient.getGuildAutocomplete(query)
+    );
   }
 }
 

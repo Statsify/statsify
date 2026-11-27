@@ -15,6 +15,7 @@ import { ApiService } from "#services";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { LocalizationString } from "#messages";
+import { MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
 
 const apiClient = Container.get(ApiService);
 
@@ -53,5 +54,5 @@ export async function autocompleteNames(
 
   if (!query || names.some((name) => name.toLowerCase() === query.toLowerCase())) return results;
 
-  return [...results.slice(0, 24), searched];
+  return [...results.slice(0, MAX_AUTOCOMPLETE_CHOICES - 1), searched];
 }
