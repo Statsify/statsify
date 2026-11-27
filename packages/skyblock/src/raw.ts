@@ -82,7 +82,7 @@ export const RawMember = z.object({
       sea_creature_kills: z.number().optional(),
     })
     .optional(),
-  bestiary: z.object({ kills: numbers.optional() }).optional(),
+  bestiary: z.object({ kills: z.object({ last_killed_mob: z.string().optional() }).catchall(z.number()).optional() }).optional(),
   trophy_fish: z.record(z.string(), z.unknown()).optional(), // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data: z
     .object({
