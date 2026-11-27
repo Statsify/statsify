@@ -380,6 +380,7 @@
       "description_username": "A player by the username of `{{tag}}` could not be found!",
       "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_none": "The player you're verified to could not be found!",
       "title": "Invalid Player"
     },
     "invalidSession": {

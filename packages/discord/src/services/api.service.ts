@@ -294,7 +294,7 @@ export class ApiService extends StatsifyApiService {
   public missingPlayer(type: PlayerTag, tag: string) {
     const buttons: ButtonBuilder[] = [];
 
-    if (type !== "discordId") {
+    if (type === "username" || type === "uuid") {
       const button = new ButtonBuilder()
         .label("NameMC")
         .style(ButtonStyle.Link)
