@@ -89,7 +89,6 @@ export interface ProfileSummary {
   bank?: number;
   bankTier: BankTier; // the highest BANK_UPGRADE_* task any member has
   bankLimit: number;
-  bankInterest?: number; // a season's, on the co-op and personal balances, without Museum milestones' boost
   personalBank?: number;
   personalBankLimit?: number;
   firstJoin?: number;

@@ -35,7 +35,6 @@ export const SkyBlockSummaryProfile = ({ profile, t, ...card }: SkyBlockProfileP
     sidebar.push([t("skyblock.personalBank"), `${t(Math.floor(profile.personalBank))}§7/§6${t(profile.personalBankLimit)}`, "§6"]);
 
   sidebar.push([t("skyblock.bankTier"), prettify(profile.bankTier), "§6"]);
-  if (profile.bankInterest !== undefined) sidebar.push([t("skyblock.bankInterest"), t(Math.round(profile.bankInterest)), "§6"]);
 
   const current = profile.members.filter(({ removed, invited }) => !removed && !invited).length;
   const left = profile.members.filter(({ removed }) => removed).length;
