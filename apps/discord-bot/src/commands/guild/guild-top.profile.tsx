@@ -29,6 +29,7 @@ export interface GuildTopProfileProps {
 }
 
 export const GUILD_TOP_PAGE_SIZE = 30;
+const MAX_SINGLE_COLUMN = 10;
 
 export const GuildTopProfile = ({
   guild,
@@ -40,7 +41,10 @@ export const GuildTopProfile = ({
   user,
   logo,
 }: GuildTopProfileProps) => {
-  const groups = arrayGroup(members, Math.ceil(members.length / 2));
+  const groups = arrayGroup(
+    members,
+    members.length > MAX_SINGLE_COLUMN ? Math.ceil(members.length / 2) : members.length
+  );
   const indexOffset = page * GUILD_TOP_PAGE_SIZE + 1;
 
   const lists = groups.map((members, i) => (
