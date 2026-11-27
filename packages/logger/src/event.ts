@@ -87,6 +87,10 @@ type CountAttribute = {
   [K in keyof RequestAttributes]-?: NonNullable<RequestAttributes[K]> extends number ? K : never;
 }[keyof RequestAttributes];
 
+type StringAttribute = {
+  [K in keyof RequestAttributes]-?: string extends NonNullable<RequestAttributes[K]> ? K : never;
+}[keyof RequestAttributes];
+
 const logger = new Logger("Event");
 
 // Outside a request this is the process-wide scope, and every later request's scope starts as a copy of it
@@ -106,6 +110,11 @@ export const getRequestAttributes = () =>
 
 export const setDefaultOutcome = (outcome: RequestOutcome) =>
   setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? outcome });
+
+export const appendRequestAttribute = (key: StringAttribute, value: string, separator: string) => {
+  const current = getRequestAttributes()[key];
+  setRequestAttributes({ [key]: current ? `${current}${separator}${value}` : value });
+};
 
 export const incrementRequestAttributes = (counts: Partial<Record<CountAttribute, number>>) => {
   const attributes = getRequestAttributes();

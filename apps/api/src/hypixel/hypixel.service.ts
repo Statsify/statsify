@@ -28,7 +28,7 @@ import {
   throwError,
 } from "rxjs";
 import {
-  getRequestAttributes,
+  appendRequestAttribute,
   incrementRequestAttributes,
   isRetryableStatus,
   setRequestAttributes,
@@ -173,11 +173,9 @@ export class HypixelService {
 
     if (status === undefined) return;
 
-    const { "hypixel.response.status_codes": statuses } = getRequestAttributes();
+    appendRequestAttribute("hypixel.response.status_codes", `${status}`, ",");
 
-    setRequestAttributes({
-      "hypixel.response.status_codes": statuses ? `${statuses},${status}` : `${status}`,
-      ...(rateLimitRemaining !== undefined && { "hypixel.ratelimit.remaining": Number(rateLimitRemaining) }),
-    });
+    if (rateLimitRemaining !== undefined)
+      setRequestAttributes({ "hypixel.ratelimit.remaining": Number(rateLimitRemaining) });
   }
 }
