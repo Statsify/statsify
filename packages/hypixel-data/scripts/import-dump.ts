@@ -773,7 +773,7 @@ function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
 
   for (const line of dumped.lore) {
     const text = plain(line).trim();
-    const continuesStatus = dropping && /^\s/.test(plain(line)) && text !== "";
+    const continuesStatus: boolean = dropping && /^\s/.test(plain(line)) && text !== "";
     dropping = MENU_STATUS.test(text) || continuesStatus;
 
     const extraBlank = blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!));
