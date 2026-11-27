@@ -9,7 +9,7 @@
 import { Bingo } from "./bingo.js";
 import { Events } from "./events.js";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { getNetworkLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
 
@@ -52,7 +52,7 @@ export class General {
   @Field({
     leaderboard: {
       additionalFields: ["this.highestRewardStreak"],
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public currentRewardStreak: number;
@@ -60,19 +60,23 @@ export class General {
   @Field({
     leaderboard: {
       additionalFields: ["this.currentRewardStreak"],
-      limit: 50_000,
+      limit: LARGE_LEADERBOARD_LIMIT,
     },
   })
   public highestRewardStreak: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public tournamentTributes: number;
 
   @Field()
   public ranksGifted: number;
 
   @Field({
-    leaderboard: { fieldName: "Tokens", name: "Classic Tokens", limit: 50_000 },
+    leaderboard: {
+      fieldName: "Tokens",
+      name: "Classic Tokens",
+      limit: LARGE_LEADERBOARD_LIMIT,
+    },
   })
   public classicTokens: number;
 

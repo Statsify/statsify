@@ -7,7 +7,7 @@
  */
 
 import { type APIData, formatTime, prettify } from "@statsify/util";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 
@@ -98,12 +98,20 @@ export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
 
 export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime, limit: 50_000 },
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      limit: LARGE_LEADERBOARD_LIMIT,
+    },
   })
   public fastestDetectiveWin: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime, limit: 50_000 },
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      limit: LARGE_LEADERBOARD_LIMIT,
+    },
   })
   public fastestMurdererWin: number;
 

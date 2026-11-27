@@ -8,7 +8,7 @@
 
 import { type APIData, formatTime } from "@statsify/util";
 import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 
 export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
@@ -18,7 +18,7 @@ const fieldOptions = {
   sort: "ASC",
   formatter: formatTime,
   fieldName: "Time",
-  limit: 50_000,
+  limit: LARGE_LEADERBOARD_LIMIT,
 };
 
 export class Parkour {

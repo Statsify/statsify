@@ -8,7 +8,7 @@
 
 import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -88,7 +88,7 @@ export class ArenaBrawl {
   @Field()
   public coins: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public keys: number;
 
   @Field()

@@ -8,7 +8,7 @@
 
 import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
@@ -59,12 +59,12 @@ export class SkyWars {
   public coins: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.opals"], limit: 50_000 },
+    leaderboard: { additionalFields: ["this.opals"], limit: LARGE_LEADERBOARD_LIMIT },
   })
   public souls: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.souls"], limit: 50_000 },
+    leaderboard: { additionalFields: ["this.souls"], limit: LARGE_LEADERBOARD_LIMIT },
   })
   public opals: number;
 

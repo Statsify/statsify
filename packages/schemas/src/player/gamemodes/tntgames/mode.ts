@@ -7,7 +7,7 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { type GamePrefix, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
@@ -95,7 +95,7 @@ export class PVPRun {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({ leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT } })
   public record: number;
 
   @Field()
@@ -149,7 +149,7 @@ export class TNTRun {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime, limit: 50_000 } })
+  @Field({ leaderboard: { formatter: formatTime, limit: LARGE_LEADERBOARD_LIMIT } })
   public record: number;
 
   @Field()

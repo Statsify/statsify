@@ -7,7 +7,7 @@
  */
 
 import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
+import { Field, LARGE_LEADERBOARD_LIMIT } from "#metadata";
 import { VampireZHuman, VampireZVampire } from "./life.js";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
@@ -25,7 +25,7 @@ export class VampireZ {
   @Field()
   public overallWins: number;
 
-  @Field({ leaderboard: { limit: 50_000 } })
+  @Field({ leaderboard: { limit: LARGE_LEADERBOARD_LIMIT } })
   public mostVampireKills: number;
 
   @Field()

@@ -25,6 +25,8 @@ const getLeaderboardName = (field: string) => {
   return prettify(field);
 };
 
+export const LARGE_LEADERBOARD_LIMIT = 50_000;
+
 const getDefaultLeaderboardLimit = (propertyKey: string) => {
   switch (propertyKey) {
     case "exp":
@@ -40,7 +42,7 @@ const getDefaultLeaderboardLimit = (propertyKey: string) => {
     case "bedsBroken":
     case "bblr":
     case "tokens":
-      return 50_000;
+      return LARGE_LEADERBOARD_LIMIT;
 
     case "losses":
     case "deaths":
