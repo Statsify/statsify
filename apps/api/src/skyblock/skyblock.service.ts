@@ -178,11 +178,14 @@ export class SkyBlockService {
 
   /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
   public async nextRefetchAt(uuid: string): Promise<number | undefined> {
-    const document = await this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec();
+    const [document, failedFor] = await Promise.all([
+      this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec(),
+      this.redis.pttl(failedKey(`profiles:${uuid}`)),
+    ]);
+
     if (!document) return undefined;
     if (isFresh(document.fetchedAt, CacheLevel.CACHE)) return document.fetchedAt + SKYBLOCK_FRESH_FOR;
 
-    const failedFor = await this.redis.pttl(failedKey(`profiles:${uuid}`));
     return failedFor > 0 ? Date.now() + failedFor : undefined;
   }
 
