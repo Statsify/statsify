@@ -251,7 +251,7 @@ export const QuestsProfile = ({
 
   if (api !== "overall") {
     sidebar.push([
-      t("stats.game-total", { game: formatted }),
+      t("stats.gameTotal"),
       t(quests[period][api].total),
       "§a",
     ]);
