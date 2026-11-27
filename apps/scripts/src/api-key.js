@@ -109,7 +109,7 @@ const keyManager = async () => {
 
   const { method } = await inquirer.prompt([
     {
-      type: "list",
+      type: "select",
       name: "method",
       message: "API Key Action?",
       choices: availableMethods,
@@ -154,7 +154,7 @@ const createNewKey = async () => {
       default: defaultKeyValue,
     },
     {
-      type: "list",
+      type: "select",
       name: "role",
       message: "API Key Role?",
       choices: Object.keys(roles),
@@ -180,7 +180,7 @@ const createNewKey = async () => {
 const deleteKey = async () => {
   const { deletedKey } = await inquirer.prompt([
     {
-      type: "list",
+      type: "select",
       name: "deletedKey",
       message: "Which API Key?",
       choices: await getKeyNames(),
@@ -227,13 +227,13 @@ const listKeys = async () => {
 const editKey = async () => {
   const { editedKey, field } = await inquirer.prompt([
     {
-      type: "list",
+      type: "select",
       name: "editedKey",
       message: "Which API Key?",
       choices: await getKeyNames(),
     },
     {
-      type: "list",
+      type: "select",
       name: "field",
       message: "Which Field?",
       choices: ["name", "role", "limit"],

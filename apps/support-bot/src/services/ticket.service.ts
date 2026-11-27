@@ -210,8 +210,12 @@ export class TicketService {
     for (const m of messages) {
       if (!m.author.bot) participants.add(`<@${m.author.id}>`);
 
+      const author = m.author.discriminator === "0" ?
+        m.author.username :
+        `${m.author.username}#${m.author.discriminator}`;
+
       const message = [
-        `${m.author.username}#${m.author.discriminator}: ${m.content}`,
+        `${author}: ${m.content}`,
         ...m.attachments.map((a) => a.url),
       ].join("\n");
 
