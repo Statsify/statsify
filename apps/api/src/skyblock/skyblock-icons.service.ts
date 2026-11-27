@@ -48,11 +48,16 @@ export class SkyBlockIconsService implements OnModuleInit {
 
   /** undefined when the 1.8 pack has no texture for the item. */
   public async getIcon(texture: ItemTexture, size: IconSize, glint: boolean): Promise<Icon | undefined> {
-    const standIn = texture.kind === "head" && !(await this.getHead(texture.skin));
     const icon = await getItemIcon(texture, { size, glint });
     if (!icon) return undefined;
 
-    return { png: await icon.toBuffer("png"), standIn };
+    // Only after drawing: it loads the head, which marks a failed load
+    const [png, failed] = await Promise.all([
+      icon.toBuffer("png"),
+      texture.kind === "head" ? this.redis.exists(failedHeadKey(texture.skin)) : 0,
+    ]);
+
+    return { png, standIn: failed > 0 };
   }
 
   private getHead(hash: string): Promise<Buffer | undefined> {
