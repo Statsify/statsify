@@ -110,13 +110,15 @@ export class SkinService {
 
   public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
     const warlords = resolveWarlords(options, uuid !== undefined);
+    const { armor: piece } = warlords;
 
-    const [library, player] = await Promise.all([
+    const [library, player, armor] = await Promise.all([
       this.getLibrary(WARLORDS_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
+      resolvePackArmor(WARLORDS_PACK, { chestplate: piece, leggings: piece, boots: piece }),
     ]);
 
-    return renderWarlords(library, warlords, { ...options, player });
+    return renderWarlords(library, warlords, { ...options, player: player && { ...player, armor } });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -389,8 +391,12 @@ interface PlayerSkin {
   slim: boolean;
 }
 
+interface ArmoredPlayer extends PlayerSkin {
+  armor: Armor;
+}
+
 export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: PlayerSkin & { armor: Armor };
+  player?: ArmoredPlayer;
 }
 
 async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
@@ -455,12 +461,12 @@ export function resolveWarlords(
 }
 
 export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: PlayerSkin;
+  player?: ArmoredPlayer;
 }
 
-export async function renderWarlords(
+export function renderWarlords(
   library: ModelLibrary,
-  { models, armor }: WarlordsScene,
+  { models }: WarlordsScene,
   { player, extruded = false, ...camera }: WarlordsRenderOptions
 ): Promise<Buffer> {
   const defaults = player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
@@ -474,9 +480,7 @@ export async function renderWarlords(
 
   if (!player) return renderScene(library, { models }, output);
 
-  const worn = await resolvePackArmor(WARLORDS_PACK, { chestplate: armor, leggings: armor, boots: armor });
-
-  return renderScene(library, { player: { ...player, extruded, armor: worn, pose: "standing" }, models }, output);
+  return renderScene(library, { player: { ...player, extruded, pose: "standing" }, models }, output);
 }
 
 interface MojangProfile {
