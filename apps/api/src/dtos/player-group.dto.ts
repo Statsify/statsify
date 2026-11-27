@@ -6,19 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, Min } from "class-validator";
-import { Transform } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class PlayerGroupDto {
-  @Transform((params) => +params.value)
-  @IsNumber()
-  @Min(0)
-  @ApiProperty()
-  public start: number;
-
-  @Transform((params) => +params.value)
-  @IsNumber()
-  @ApiProperty()
-  public end: number;
-}
+export class PlayerGroupDto extends createZodDto(
+  z.object({
+    start: z.coerce.number().min(0),
+    end: z.coerce.number(),
+  })
+) {}
