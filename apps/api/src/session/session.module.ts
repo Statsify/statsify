@@ -6,22 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { MongoModule } from "#mongo";
 import { Module, forwardRef } from "@nestjs/common";
-import { Player, User } from "@statsify/schemas";
+import { PlayerSchema, UserSchema } from "@statsify/schemas";
 import { PlayerModule } from "#player";
 import { Session } from "./session.model.js";
 import { SessionController } from "./session.controller.js";
 import { SessionService } from "./session.service.js";
-import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [
     forwardRef(() => PlayerModule),
-    TypegooseModule.forFeature([
-      Session,
-      Player,
-      User,
-    ]),
+    MongoModule.forFeature([Session, PlayerSchema, UserSchema]),
   ],
   controllers: [SessionController],
   providers: [SessionService],

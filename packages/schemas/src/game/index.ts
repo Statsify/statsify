@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./game.js";
+export * from "./definition.js";
 export * from "./game-modes.js";
 export * from "./constants.js";

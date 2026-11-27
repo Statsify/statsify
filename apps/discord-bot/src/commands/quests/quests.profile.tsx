@@ -8,22 +8,18 @@
 
 import { Box, DeferredGradient, useGradient } from "@statsify/rendering";
 import {
-  ClassMetadata,
-  DailyQuests,
   FormattedGame,
   type GameId,
   type GameMode,
-  GameQuests,
-  GenericQuestInstance,
-  METADATA_KEY,
-  MonthlyQuests,
-  OverallQuests,
-  QuestModes,
+  type ObjectSchema,
+  type QuestModes,
   QuestTime,
-  User,
+  type Quests,
+  QuestsSchema,
   UserPalette,
-  WeeklyQuests,
-  scanMetadata,
+  UserTier,
+  getField,
+  hasTier,
 } from "@statsify/schemas";
 import {
   Container,
@@ -39,28 +35,14 @@ import { HistoricalTimes } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette.js";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Constructor } from "@statsify/util";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
-function getQuestMetadata<T>(constructor: Constructor<T>) {
-  const entries = Object.entries(
-    Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata
-  );
-
-  const metadata = entries.map(([key, data]) => [
-    key,
-    Object.fromEntries(scanMetadata(data.type.type)),
-  ]);
-
-  return Object.fromEntries(metadata);
-}
-
-const questMetadata: Record<QuestTime, ReturnType<typeof getQuestMetadata>> = {
-  [QuestTime.Daily]: getQuestMetadata(DailyQuests),
-  [QuestTime.Weekly]: getQuestMetadata(WeeklyQuests),
-  [QuestTime.Monthly]: getQuestMetadata(MonthlyQuests),
-  [QuestTime.Overall]: getQuestMetadata(OverallQuests),
+const questsDuring: Record<QuestTime, ObjectSchema> = {
+  [QuestTime.Daily]: QuestsSchema.definition.daily,
+  [QuestTime.Weekly]: QuestsSchema.definition.weekly,
+  [QuestTime.Monthly]: QuestsSchema.definition.monthly,
+  [QuestTime.Overall]: QuestsSchema.definition.overall,
 };
 
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
@@ -71,7 +53,7 @@ export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
 }
 
 interface NormalTableProps {
-  quests: GenericQuestInstance;
+  quests: Quests["daily" | "weekly" | "monthly" | "overall"];
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
   time: QuestTime;
@@ -138,7 +120,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 };
 
 interface GameTableProps {
-  quests: GameQuests;
+  quests: Record<string, number>;
   t: LocalizeFunction;
   time: QuestTime;
   game: keyof typeof FormattedGame;
@@ -152,7 +134,8 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
     .filter(([k, v]) => k !== "total" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
-      const name = questMetadata[time][game][quest].leaderboard.name;
+      const schema = questsDuring[time].definition[game] as ObjectSchema;
+      const name = getField(schema, quest)!.leaderboard.name;
 
       return (
         <box width="100%">
@@ -217,7 +200,7 @@ export const QuestsProfile = ({
   const { api, formatted } = mode;
   let table: JSX.Element;
 
-  const colorPalette = User.isDiamond(user) ?
+  const colorPalette = hasTier(user, UserTier.DIAMOND) ?
     getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT) :
     undefined;
 

@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Commands } from "@statsify/schemas";
+import { MongoModule } from "#mongo";
+import { CommandsSchema } from "@statsify/schemas";
 import { CommandsController } from "./commands.controller.js";
 import { CommandsService } from "./commands.service.js";
 import { Module } from "@nestjs/common";
-import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [TypegooseModule.forFeature([Commands])],
+  imports: [MongoModule.forFeature([CommandsSchema])],
   controllers: [CommandsController],
   providers: [CommandsService],
 })

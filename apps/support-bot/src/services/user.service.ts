@@ -7,13 +7,13 @@
  */
 
 import { Inject, Service } from "typedi";
-import { User, UserTier } from "@statsify/schemas";
-import type { ReturnModelType } from "@typegoose/typegoose";
+import { type User, UserSchema, UserTier } from "@statsify/schemas";
+import type { Model } from "mongoose";
 
 @Service()
 export class UserService {
   public constructor(
-    @Inject(() => User) private readonly userModel: ReturnModelType<typeof User>
+    @Inject(UserSchema.name) private readonly userModel: Model<User>
   ) {}
 
   public async findAllPremium() {

@@ -18,7 +18,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
-import { GuildMember } from "@statsify/schemas";
+import { isGuildMaster } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile.js";
 import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
@@ -40,7 +40,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guild = await this.getGuild(context);
 
-    const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
+    const guildMaster = guild.members.find((m) => isGuildMaster(m));
 
     if (!guildMaster) throw new ErrorMessage("errors.unknown");
 

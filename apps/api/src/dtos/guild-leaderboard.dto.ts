@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { Guild, getLeaderboardFields } from "@statsify/schemas";
+import { getLeaderboardFields, GuildSchema } from "@statsify/schemas";
 import {
   IsEnum,
   IsInt,
@@ -19,7 +19,7 @@ import {
 } from "class-validator";
 import { Transform } from "class-transformer";
 
-const fields = getLeaderboardFields(Guild).map(([key]) => key);
+const fields = getLeaderboardFields(GuildSchema).map(({ path }) => path);
 
 export class GuildLeaderboardDto {
   @IsEnum(fields)

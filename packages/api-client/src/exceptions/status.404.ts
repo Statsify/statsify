@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException } from "./base.404.js";
-import { Player, PlayerStatus } from "@statsify/schemas";
+import type { Player, PlayerStatus } from "@statsify/schemas";
 
 export class StatusNotFoundException extends NotFoundException {
   @ApiProperty()

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { InjectModel, type MongoModel } from "#mongo";
 import {
   type APIData,
   type Circular,
@@ -20,16 +21,22 @@ import {
   NotFoundException,
   forwardRef,
 } from "@nestjs/common";
-import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Player, deserialize, serialize } from "@statsify/schemas";
+import {
+  type Player,
+  PlayerSchema,
+  compute,
+  deserialize,
+  player as parsePlayer,
+  serialize,
+  withDependencies,
+} from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
-type PlayerModel = ReturnModelType<typeof Player>;
+type PlayerModel = MongoModel<typeof PlayerSchema>;
 
 @Injectable()
 export class PlayerService {
@@ -38,7 +45,7 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel
+    @InjectModel(PlayerSchema) private readonly playerModel: PlayerModel
   ) {}
 
   /**
@@ -59,6 +66,11 @@ export class PlayerService {
       selector.guildId = true;
       selector.sessionReset = true;
       selector.expiresAt = true;
+
+      // Reading builds computed fields again, like displayName from rank, so it needs their inputs
+      selector = Object.fromEntries(
+        withDependencies(PlayerSchema, Object.keys(selector)).map((path) => [path, true])
+      );
     }
 
     const mongoPlayer = await this.findMongoDocument(tag, selector);
@@ -67,7 +79,7 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
-      return deserialize(Player, mongoPlayer);
+      return deserialize(PlayerSchema, mongoPlayer);
     }
 
     const player = await this.hypixelService.getPlayer(
@@ -86,16 +98,16 @@ export class PlayerService {
 
       flatPlayer.isNew = !mongoPlayer;
 
-      return deserialize(Player, flatPlayer);
+      return deserialize(PlayerSchema, flatPlayer);
     } else if (mongoPlayer) {
-      return deserialize(Player, mongoPlayer);
+      return deserialize(PlayerSchema, mongoPlayer);
     }
 
     return null;
   }
 
   public async update(data: APIData) {
-    const player = new Player(data);
+    const player = compute(PlayerSchema, parsePlayer(data));
 
     const mongoPlayer = await this.findMongoDocument(player.uuid, {
       username: true,
@@ -113,7 +125,7 @@ export class PlayerService {
 
   public getPlayers(start: number, end: number) {
     return this.playerLeaderboardService["getLeaderboardFromRedis"](
-      Player,
+      PlayerSchema,
       "stats.general.networkExp",
       start,
       end
@@ -160,7 +172,7 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(
-        Player,
+        PlayerSchema,
         player,
         "uuid",
         true
@@ -173,14 +185,14 @@ export class PlayerService {
   public async saveOne(player: Player, registerAutocomplete: boolean) {
     // Serialize and flatten the player
     const flatPlayer = flatten(player);
-    const serializedPlayer = serialize<Player>(Player, flatPlayer);
+    const serializedPlayer = serialize(PlayerSchema, flatPlayer);
 
     const promises = [
       this.playerModel
         .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
         .exec(),
       this.playerLeaderboardService.addLeaderboards(
-        Player,
+        PlayerSchema,
         flatPlayer,
         "uuid",
         false

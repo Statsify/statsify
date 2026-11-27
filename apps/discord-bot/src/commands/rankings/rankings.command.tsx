@@ -22,8 +22,8 @@ import {
   PAINTBALL_MODES,
   PARKOUR_MODES,
   PIT_MODES,
-  Player,
-  PlayerStats,
+  PlayerSchema,
+  type PlayerStats,
   QUAKE_MODES,
   QUEST_MODES,
   SKYWARS_MODES,
@@ -60,7 +60,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
-const fields = getLeaderboardFields(Player).map(([key]) => key);
+const fields = getLeaderboardFields(PlayerSchema).map(({ path }) => path);
 
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
