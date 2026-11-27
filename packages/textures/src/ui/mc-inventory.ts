@@ -35,6 +35,8 @@ export interface TooltipChange {
   pointerType: string;
 }
 
+const HIGHLIGHT = "rgba(255, 255, 255, 0.5)";
+
 // The site's Minecraft.ttf has 16 GUI pixels to the em, and trimming each line to its cap height
 // puts a glyph's top where the game draws it
 const STYLE = `
@@ -44,7 +46,7 @@ const STYLE = `
   .text > span { position: absolute; line-height: 0.5em; text-box: trim-both cap alphabetic; }
   [part="title"] { color: #404040; }
   [part="count"] { color: #ffffff; text-shadow: var(--gui-pixel) var(--gui-pixel) 0 #3f3f3f; }
-  .highlight { position: absolute; display: none; pointer-events: none; background: rgba(255, 255, 255, 0.5); }
+  .highlight { position: absolute; display: none; pointer-events: none; background: ${HIGHLIGHT}; }
 `;
 
 interface Resources {
@@ -399,7 +401,7 @@ export class McInventory extends HTMLElement {
       if (atlas) {
         Object.assign(this.highlight.style, { left: `${left}px`, top: `${top}px`, width: `${side}px`, height: `${side}px` });
       } else {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.fillStyle = HIGHLIGHT;
         ctx.fillRect(left, top, side, side);
       }
     }
