@@ -283,6 +283,16 @@ export class ItemRenderer {
         ?.files.has(legacy) ?? false;
   }
 
+  public animates(item: ItemStack) {
+    return (
+      Boolean(item.enchanted) ||
+      this.models
+        .resolve(item)
+        .flatMap(textureIds)
+        .some((id) => this.textures.frame(id, 0))
+    );
+  }
+
   public async render(
     item: ItemStack,
     scale: number,

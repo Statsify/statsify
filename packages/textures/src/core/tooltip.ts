@@ -85,7 +85,7 @@ const BACKGROUND = "rgba(16, 0, 16, 0.941)";
 const BORDER_TOP = "rgba(80, 0, 255, 0.314)";
 const BORDER_BOTTOM = "rgba(40, 0, 127, 0.314)";
 
-const TOOLTIP_PADDING = 4;
+export const TOOLTIP_PADDING = 4;
 
 export function drawTooltip(
   text: TextRenderer,

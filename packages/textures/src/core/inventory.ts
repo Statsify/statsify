@@ -14,12 +14,22 @@ import type { PackStack } from "./pack.js";
 import { TextRenderer } from "./text.js";
 import { maxDamage } from "./legacy-items.js";
 
+export const LAYOUTS = {
+  chest: { rows: 3, cols: 9 },
+  "large-chest": { rows: 6, cols: 9 },
+  shop: { rows: 6, cols: 9 },
+  hotbar: { rows: 1, cols: 9 },
+} as const;
+
+export type InventoryLayout = keyof typeof LAYOUTS;
+
 export interface IconSource {
   render(
     item: ItemStack,
     scale: number,
     tick?: number,
   ): Promise<OffscreenCanvas>;
+  animates(item: ItemStack): boolean;
 }
 
 export interface InventorySize {
@@ -44,11 +54,23 @@ const CHEST_SCREEN_BOTTOM = 215;
 
 const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 
-const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
+export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
   [
     EDGE + (slot % cols) * SLOT,
     slotsTop(title) + Math.floor(slot / cols) * SLOT,
   ] as const;
+
+export function slotAt(
+  { rows, cols, title }: InventorySize,
+  x: number,
+  y: number,
+) {
+  const col = Math.floor((x - EDGE) / SLOT);
+  const row = Math.floor((y - slotsTop(title)) / SLOT);
+  return col >= 0 && col < cols && row >= 0 && row < rows
+    ? row * cols + col
+    : -1;
+}
 
 function fill(
   ctx: OffscreenCanvasRenderingContext2D,
@@ -107,7 +129,15 @@ export class InventoryRenderer {
     return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
   }
 
-  private drawSlot(
+  public animates(item: ItemStack) {
+    return this.icons.animates(item);
+  }
+
+  public icon(item: ItemStack, scale: number, tick: number) {
+    return this.icons.render(item, scale, tick);
+  }
+
+  public drawSlot(
     ctx: OffscreenCanvasRenderingContext2D,
     size: InventorySize,
     slot: number,

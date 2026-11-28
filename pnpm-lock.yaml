@@ -800,7 +800,13 @@ importers:
       idb:
         specifier: ^8.0.4
         version: 8.0.4
+      react:
+        specifier: ^19.2.1
+        version: 19.3.1
     devDependencies:
+      '@types/react':
+        specifier: ^19.2.16
+        version: 19.3.3
       skia-canvas:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)

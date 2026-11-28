@@ -8,6 +8,14 @@
       "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
+    "./mc-inventory": {
+      "types": "./src/ui/mc-inventory.ts",
+      "default": "./dist/ui/mc-inventory.js"
+    },
+    "./react": {
+      "types": "./src/ui/react.ts",
+      "default": "./dist/ui/react.js"
+    },
     "./node": {
       "types": "./src/node.ts",
       "default": "./dist/node.js"
@@ -27,12 +35,17 @@
     "idb": "^8.0.4"
   },
   "devDependencies": {
+    "@types/react": "^19.2.16",
     "skia-canvas": "4.0.0"
   },
   "peerDependencies": {
+    "react": "^19.2.1",
     "skia-canvas": "4.0.0"
   },
   "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
     "skia-canvas": {
       "optional": true
     }
