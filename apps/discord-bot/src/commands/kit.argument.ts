@@ -11,7 +11,12 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, ErrorMessage, LocalizationString } from "@statsify/discord";
+import {
+  AbstractArgument,
+  CommandContext,
+  ErrorMessage,
+  LocalizationString,
+} from "@statsify/discord";
 import type { GameModeWithSubModes, GameModes, Mode } from "@statsify/schemas";
 
 // Discord select menus and autocomplete both allow at most 25 options
@@ -32,7 +37,10 @@ export class KitArgument<T extends Mode[]> extends AbstractArgument {
     this.description = (t) => t("arguments.kit");
 
     const [, ...kits] = modes.getModes();
-    this.kits = kits.map(({ api, formatted }) => ({ name: formatted, value: api }));
+    this.kits = kits.map(({ api, formatted }) => ({
+      name: formatted,
+      value: api,
+    }));
 
     this.fuse = new Fuse(this.kits, {
       keys: ["name", "value"],
@@ -45,7 +53,7 @@ export class KitArgument<T extends Mode[]> extends AbstractArgument {
   }
 
   public autocompleteHandler(
-    context: CommandContext
+    context: CommandContext,
   ): APIApplicationCommandOptionChoice[] {
     const query = context.option<string>(this.name, "");
 
@@ -60,8 +68,11 @@ export class KitArgument<T extends Mode[]> extends AbstractArgument {
 
 export function filterKits<T extends Mode[]>(
   modes: GameModeWithSubModes<T>[],
-  compareActivity: (a: GameModeWithSubModes<T>, b: GameModeWithSubModes<T>) => number,
-  kit?: string | null
+  compareActivity: (
+    a: GameModeWithSubModes<T>,
+    b: GameModeWithSubModes<T>,
+  ) => number,
+  kit?: string | null,
 ): GameModeWithSubModes<T>[] {
   const [overall, ...kits] = modes;
   kits.sort(compareActivity);
