@@ -18,7 +18,6 @@ export interface LayoutShape<T> {
   layout(slots: string[]): T;
 }
 
-// Lists use "null" for an empty slot, like BedWars' quick buy
 export const LIST_LAYOUT: LayoutShape<string> = {
   slots: (list) =>
     list.split(",").map((slot) => (slot === "null" ? undefined : slot)),
@@ -40,7 +39,6 @@ export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
   },
 };
 
-// Stored as `id:damage`, without a damage of 0
 export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
   slots: (layout) =>
     SLOT_LAYOUT.slots(layout).map((token) =>
