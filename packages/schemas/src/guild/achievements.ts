@@ -115,7 +115,7 @@ if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
   suite("getAchievementProgress", () => {
-    it("gives the tier reached and the progress toward the next one", () => {
+    it("should give the tier reached and the progress toward the next one", () => {
       expect(getAchievementProgress(FAMILY_REQUIREMENTS, 4)).toEqual({
         tier: "",
         progression: { current: 4, max: 5, percent: 0.8 },

@@ -17,11 +17,16 @@ export const getNetworkLevel = (networkExp = 0) =>
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
-  suite("getNetworkExp and getNetworkLevel", () => {
-    it("convert a network level to its exp and back", () => {
+  suite("getNetworkExp", () => {
+    it("should convert a network level to its exp", () => {
       expect(getNetworkExp(1)).toBe(0);
       expect(getNetworkExp(2)).toBe(10_000);
       expect(getNetworkExp(3)).toBe(22_500);
+    });
+  });
+
+  suite("getNetworkLevel", () => {
+    it("should convert network exp to its level", () => {
       expect(getNetworkLevel(0)).toBe(1);
       expect(getNetworkLevel(5000)).toBe(1.53);
       expect(getNetworkLevel(22_500)).toBe(3);
