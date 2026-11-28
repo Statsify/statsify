@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Newer item text draws stats with the SkyBlock pack's private-use glyphs, which the 1.8 font doesn't have.
-// Each glyph maps to the symbol Hypixel's older lore puts in front of the same stat.
+// The 1.8 font lacks the pack's stat glyphs, so each maps to its old symbol.
 const SYMBOLS: Record<string, string> = {
   "\uE001": "⚔", // Attack Speed
   "\uE002": "๑", // Ability Damage
@@ -61,18 +60,15 @@ const SYMBOLS: Record<string, string> = {
 // Obfuscated text runs until a color code or §r
 const OBFUSCATED = /§k(?:[^§]|§[k-o])*/gi;
 
-// 1.8 clears formatting at a color code, but Statsify's renderer keeps it. The added §r also clears an inline
-// §^n^ size, so cards size item text with <text size>.
+// Our renderer needs a §r where 1.8 clears formatting at a color code.
 const FORMATTING_BEFORE_COLOR = /§[k-o](?:[^§]|§[k-o])*(?=§[\da-f])/gi;
 
-// A dropped glyph takes the space after it when it starts a word ("§2<glyph> Undead" → "§2Undead"), and the space
-// before it when punctuation follows ("Undead <glyph>!" → "Undead!")
+// A dropped glyph takes the space after it, or before it ahead of punctuation.
 const UNMAPPED_GLYPH =
   /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
 
 const NEEDS_NORMALIZING = /§[k-o]|\p{Co}/iu;
 
-/** Item text as 1.8 draws it, minus obfuscated text and glyphs with no 1.8 symbol (mob types, weather, newer stats). */
 export function normalizeItemText(text: string) {
   if (!NEEDS_NORMALIZING.test(text)) return text;
 
@@ -84,26 +80,39 @@ export function normalizeItemText(text: string) {
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("normalizeItemText draws item text the way 1.8 does", () => {
-    expect(
-      normalizeItemText("§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7."),
-    ).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
-    expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe(
-      "§7Grants §d+3 Hunting Fortune§7.",
-    );
-    expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe(
-      "§7taken from §2Undead §7mobs",
-    );
-    expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe(
-      "§d§lUltimate Wise V§r§9, §9Champion X",
-    );
-    expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe(
-      "§d§l§r §d§lMYTHIC ACCESSORY §r§d§l",
-    );
-    expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe(
-      "§6§LEPIC §r§9§9 Shard",
-    );
+  suite("normalizeItemText", () => {
+    it("should draw stat glyphs as their 1.8 symbols", () => {
+      expect(
+        normalizeItemText(
+          "§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7.",
+        ),
+      ).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
+    });
+
+    it("should drop a glyph with no symbol and its space", () => {
+      expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe(
+        "§7Grants §d+3 Hunting Fortune§7.",
+      );
+      expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe(
+        "§7taken from §2Undead §7mobs",
+      );
+    });
+
+    it("should reset formatting before a color code", () => {
+      expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe(
+        "§d§lUltimate Wise V§r§9, §9Champion X",
+      );
+    });
+
+    it("should drop obfuscated text", () => {
+      expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe(
+        "§d§l§r §d§lMYTHIC ACCESSORY §r§d§l",
+      );
+      expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe(
+        "§6§LEPIC §r§9§9 Shard",
+      );
+    });
   });
 }
