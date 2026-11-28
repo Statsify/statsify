@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIThumbnailComponent, ComponentType } from "discord-api-types/v10";
+import {
+  type APIThumbnailComponent,
+  ComponentType,
+} from "discord-api-types/v10";
 
 export class ThumbnailBuilder {
   #name: string;

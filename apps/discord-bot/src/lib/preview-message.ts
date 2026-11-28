@@ -15,7 +15,11 @@ import {
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 
-export function previewMessage(content: LocalizationString, name: string, data: Buffer): IMessage {
+export function previewMessage(
+  content: LocalizationString,
+  name: string,
+  data: Buffer,
+): IMessage {
   const container = new ContainerBuilder([
     new TextDisplayBuilder(content),
     new MediaGalleryBuilder([name]),

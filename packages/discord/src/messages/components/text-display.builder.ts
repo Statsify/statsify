@@ -6,8 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APITextDisplayComponent, ComponentType } from "discord-api-types/v10";
-import { type LocalizationString, type LocalizeFunction, translateField } from "../localize.js";
+import {
+  type APITextDisplayComponent,
+  ComponentType,
+} from "discord-api-types/v10";
+import {
+  type LocalizationString,
+  type LocalizeFunction,
+  translateField,
+} from "../localize.js";
 
 export class TextDisplayBuilder {
   #content: LocalizationString;

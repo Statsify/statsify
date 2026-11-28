@@ -19,12 +19,18 @@ export class SectionBuilder {
   /**
    * @param texts One to three blocks of text shown beside the accessory
    */
-  public constructor(texts: LocalizationString[], accessory: ButtonBuilder | ThumbnailBuilder) {
+  public constructor(
+    texts: LocalizationString[],
+    accessory: ButtonBuilder | ThumbnailBuilder,
+  ) {
     this.#texts = texts.map((text) => new TextDisplayBuilder(text));
     this.#accessory = accessory;
   }
 
-  public build(locale: LocalizeFunction): Omit<APISectionComponent, "accessory"> & {
+  public build(locale: LocalizeFunction): Omit<
+    APISectionComponent,
+    "accessory"
+  > & {
     accessory: ReturnType<ButtonBuilder["build"] | ThumbnailBuilder["build"]>;
   } {
     return {

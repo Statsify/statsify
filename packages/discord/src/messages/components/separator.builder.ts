@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APISeparatorComponent, ComponentType } from "discord-api-types/v10";
+import {
+  type APISeparatorComponent,
+  ComponentType,
+} from "discord-api-types/v10";
 
 export class SeparatorBuilder {
   public build(): APISeparatorComponent {

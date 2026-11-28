@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIMediaGalleryComponent, ComponentType } from "discord-api-types/v10";
+import {
+  type APIMediaGalleryComponent,
+  ComponentType,
+} from "discord-api-types/v10";
 
 export class MediaGalleryBuilder {
   #names: string[];
@@ -18,7 +21,9 @@ export class MediaGalleryBuilder {
   public build(): APIMediaGalleryComponent {
     return {
       type: ComponentType.MediaGallery,
-      items: this.#names.map((name) => ({ media: { url: `attachment://${name}` } })),
+      items: this.#names.map((name) => ({
+        media: { url: `attachment://${name}` },
+      })),
     };
   }
 }

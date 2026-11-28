@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIContainerComponent, ComponentType } from "discord-api-types/v10";
+import {
+  type APIContainerComponent,
+  ComponentType,
+} from "discord-api-types/v10";
 import type { ActionRowBuilder } from "./action-row.builder.js";
 import type { FileBuilder } from "./file.builder.js";
 import type { LocalizeFunction } from "../localize.js";
@@ -41,7 +44,10 @@ export class ContainerBuilder {
     return this;
   }
 
-  public build(locale: LocalizeFunction): Omit<APIContainerComponent, "components"> & {
+  public build(locale: LocalizeFunction): Omit<
+    APIContainerComponent,
+    "components"
+  > & {
     components: ReturnType<ContainerComponent["build"]>[];
   } {
     return {
