@@ -484,3 +484,11 @@ export const mapGame = (game: GameId, mode: string) => {
 
   return prettify(mode.replace(`${GameCodeMapping[game]}_`, "").replace(game, ""));
 };
+
+export const FUSE_OPTIONS = {
+  includeScore: false,
+  shouldSort: true,
+  isCaseSensitive: false,
+  threshold: 0.3,
+  ignoreLocation: true,
+};
