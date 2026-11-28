@@ -9,4 +9,6 @@
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-export class GuildSearchDto extends createZodDto(z.object({ query: z.string().max(32).optional() })) {}
+export class GuildSearchDto extends createZodDto(
+  z.object({ query: z.string().max(32).optional() }),
+) {}

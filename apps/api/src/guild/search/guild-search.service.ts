@@ -24,7 +24,9 @@ export class GuildSearchService {
 
   public constructor(
     @InjectRedis() private readonly redis: Redis,
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<
+      typeof Guild
+    >,
   ) {}
 
   public async get(query: string): Promise<string[]> {
@@ -32,14 +34,15 @@ export class GuildSearchService {
 
     if (!query) return [];
 
-    const searchOptions = query.length >= 3 ? ["FUZZY", "MAX", "25"] : ["MAX", "25"];
+    const searchOptions =
+      query.length >= 3 ? ["FUZZY", "MAX", "25"] : ["MAX", "25"];
 
     const redisResults = await (
       this.redis.call(
         "FT.SUGGET",
         GUILD_AUTOCOMPLETE_KEY,
         query,
-        ...searchOptions
+        ...searchOptions,
       ) as Promise<string[]>
     ).catch((e) => {
       this.handleRedisError(e);
