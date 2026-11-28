@@ -8,23 +8,22 @@
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import {
-  IMAGE_DOWNLOAD_TIMEOUT,
-  createCanvas,
-  loadImage,
-} from "@statsify/rendering";
-import {
   ItemRenderer,
   type ItemStack,
   type PackStack,
   legacyItem,
   setCanvasBackend,
 } from "@statsify/textures";
+import { createCanvas, downloadImage, loadImage } from "@statsify/rendering";
+import { Canvas } from "skia-canvas";
 import { LRUCache } from "lru-cache";
 import { TEXTURE_PATHS } from "#data";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { skiaCanvas } from "@statsify/textures/node";
-import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
+import type { CanvasRenderingContext2D, Image } from "skia-canvas";
 import type { ItemTexture } from "#types";
+
+setCanvasBackend(skiaCanvas);
 
 interface IconOptions {
   // A multiple of 16, the game's own size.
@@ -263,17 +262,7 @@ const hasHat = (skin: Image) => {
     .data.some((value, index) => index % 4 === 3 && value < 128);
 };
 
-let headSource: HeadSource = async (hash) => {
-  const response = await fetch(`${SKIN_URL}${hash}`, {
-    signal: AbortSignal.timeout(IMAGE_DOWNLOAD_TIMEOUT),
-  });
-  if (!response.ok) {
-    const status = `${response.status} for ${hash}`;
-    throw new Error(`textures.minecraft.net answered ${status}`);
-  }
-
-  return Buffer.from(await response.arrayBuffer());
-};
+let headSource: HeadSource = (hash) => downloadImage(`${SKIN_URL}${hash}`);
 
 export function setHeadSource(source: HeadSource) {
   headSource = source;
@@ -440,7 +429,6 @@ const loadSkin = async (url: string) => {
 
 // Undefined draws every icon from the 1.8 textures again.
 export function setResourcePacks(stack: PackStack | undefined) {
-  setCanvasBackend(skiaCanvas);
   packs = stack && new ItemRenderer(stack, undefined, loadSkin);
 }
 
@@ -480,8 +468,10 @@ export function getItemIcon(
 
   // The 1.8 icon stands in for an item the packs can't draw yet, like a banner.
   return renderer.render(item, size / BASE_SIZE).then(
-    // Node's canvas backend is skia-canvas, so the renderer draws a Canvas.
-    (icon) => icon as unknown as Canvas,
+    (icon) => {
+      if (icon instanceof Canvas) return icon;
+      throw new TypeError("The pack renderer didn't draw a skia-canvas Canvas");
+    },
     () => getLegacyIcon(texture, size, glint),
   );
 }
