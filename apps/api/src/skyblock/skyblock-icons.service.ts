@@ -25,7 +25,8 @@ const failedHeadKey = (hash: string) => `skyblock:head:failed:${hash}`;
 
 export interface Icon {
   png: Buffer;
-  standIn: boolean; // Steve, for a head whose skin didn't load
+  // A stand-in is Steve, drawn for a head whose skin didn't load.
+  standIn: boolean;
 }
 
 @Injectable()
