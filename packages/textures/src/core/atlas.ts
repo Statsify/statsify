@@ -93,6 +93,7 @@ export class Atlas implements ItemSource {
 
     if (!icon) {
       const rects = findRect(this.data.icons, id);
+      // An item's icons are smallest first, so the last is the largest
       const [x, y, width, height] =
         rects.find(([, , width]) => width === 16 * scale) ?? rects.at(-1)!;
       icon = createCanvas(16 * scale, 16 * scale);
