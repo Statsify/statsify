@@ -50,7 +50,8 @@ export interface RawDungeonType {
   tier_completions?: Record<string, number>;
   highest_tier_completed?: number;
   best_score?: Record<string, number>;
-  best_runs?: Record<string, RawDungeonRun[]>; // a few of the best per floor
+  // Hypixel keeps a few of the best runs per floor.
+  best_runs?: Record<string, RawDungeonRun[]>;
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
@@ -109,7 +110,8 @@ export type RawHarp = Record<string, number | string | boolean>;
 
 export interface RawContest {
   collected: number;
-  claimed_position?: number; // from 0
+  // The claimed position counts from 0.
+  claimed_position?: number;
   claimed_participants?: number;
   claimed_medal?: string;
 }
@@ -117,7 +119,8 @@ export interface RawContest {
 // Each kind lists bare ExtraAttributes blobs, beside flags like IN_USE.
 export interface RawToolkit {
   IS_UNLOCKED?: boolean;
-  IN_USE?: Record<string, Record<string, boolean>>; // by kind, then slot
+  // The use flags are keyed by kind, then slot.
+  IN_USE?: Record<string, Record<string, boolean>>;
   [kind: string]: unknown;
 }
 
@@ -205,10 +208,12 @@ export interface RawMember {
     reaper_peppers_eaten?: number;
     bee_saliva_eaten?: number;
     isopod_husks_eaten?: number;
-    crafted_generators?: string[]; // "WHEAT_11"
+    // Each entry is a minion and tier, like "WHEAT_11".
+    crafted_generators?: string[];
   };
   collection?: Record<string, number>;
-  attributes?: { stacks?: Record<string, number> }; // shards syphoned
+  // Each attribute counts the shards syphoned into it.
+  attributes?: { stacks?: Record<string, number> };
   shards?: { owned?: { type: string; amount_owned?: number }[] };
   inventory?: {
     inv_contents?: RawNbt;
@@ -271,11 +276,13 @@ export interface RawMember {
     songs?: { harp?: RawHarp };
     fish_family?: string[];
     hina?: { tasks?: { completed_tasks?: string[] } };
-    tree_gifts?: Record<string, unknown>; // by tree, plus milestone_tier_claimed
+    // The gifts are keyed by tree, beside milestone_tier_claimed.
+    tree_gifts?: Record<string, unknown>;
     starlyn?: { personal_bests?: Record<string, number> };
     hunting_toolkit?: RawToolkit;
   };
-  quests?: { harp_quest?: RawHarp }; // the harp before foraging.songs
+  // The harp lived here before foraging.songs.
+  quests?: { harp_quest?: RawHarp };
   winter_player_data?: { refined_jyrre_uses?: number };
   foraging_core?: {
     whispers?: Partial<
@@ -407,7 +414,8 @@ export interface RawItemAttributes {
   dye_item?: string;
   skin?: string;
   originTag?: string;
-  new_year_cake_bag_data?: number[]; // the cakes inside, as an inventory blob
+  // The bag's data is the cakes inside, as an inventory blob.
+  new_year_cake_bag_data?: number[];
   new_years_cake?: number;
   [key: string]: unknown;
 }
@@ -502,7 +510,8 @@ export interface RawElection {
 interface RawBingoGoal {
   id: string;
   name: string;
-  lore?: string; // Hypixel's docs require only the id and name
+  // Hypixel's docs require only the id and name.
+  lore?: string;
   // Only community goals have these: the network's progress and tier amounts.
   tiers?: number[];
   progress?: number;
