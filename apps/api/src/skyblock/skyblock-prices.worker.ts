@@ -45,6 +45,10 @@ async function getPage(page: number, timeout: number) {
 
 async function* getPages(timeout: number): AsyncGenerator<RawAuctionsPage> {
   const first = await getPage(0, timeout);
+  if (!Number.isInteger(first.totalPages)) {
+    throw new Error(`auctions page 0 has no totalPages (${first.totalPages})`);
+  }
+
   yield first;
 
   for (let start = 1; start < first.totalPages; start += PAGES_IN_FLIGHT) {
