@@ -21,6 +21,9 @@ import { arrayGroup } from "@statsify/util";
 
 const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
 
+// Discord shows at most 25 autocomplete choices.
+const MAX_MATCHES = 25;
+
 @Injectable()
 export class SkyBlockSearchService {
   private readonly logger = new Logger("SkyBlockSearchService");
@@ -35,7 +38,7 @@ export class SkyBlockSearchService {
         query,
         "FUZZY",
         "MAX",
-        "25",
+        String(MAX_MATCHES),
         "WITHPAYLOADS",
       )
       .catch((error) => {
@@ -43,10 +46,14 @@ export class SkyBlockSearchService {
         throw new SkyBlockUnavailableException("market");
       })) as string[] | null;
 
-    return arrayGroup(reply ?? [], 2).map(([name, payload]) => ({
-      name,
-      ...JSON.parse(payload),
-    }));
+    return arrayGroup(reply ?? [], 2)
+      .flatMap(([name, payload]) =>
+        (JSON.parse(payload) as Omit<ItemMatch, "name">[]).map((key) => ({
+          ...key,
+          name,
+        })),
+      )
+      .slice(0, MAX_MATCHES);
   }
 
   // Each rebuild fills a new key and renames it, so a search never sees half.
@@ -54,12 +61,16 @@ export class SkyBlockSearchService {
     const next = `${AUTOCOMPLETE_KEY}:next`;
     const pipeline = this.redis.pipeline().del(next);
 
-    for (const key of Object.keys(map.entries)) {
-      const described = describeKey(key, items);
-      if (!described) continue;
+    const described = Object.keys(map.entries)
+      .map((key) => describeKey(key, items))
+      .filter((view) => view !== undefined);
 
-      const payload = JSON.stringify({ id: key, rarity: described.rarity });
-      pipeline.call("FT.SUGADD", next, described.name, "1", "PAYLOAD", payload);
+    // Redis keeps one suggestion per name, so its payload lists every key.
+    for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
+      const payload = JSON.stringify(
+        keys.map(({ id, rarity }) => ({ id, rarity })),
+      );
+      pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
     }
 
     await pipeline.rename(next, AUTOCOMPLETE_KEY).exec();
