@@ -22,37 +22,56 @@ import type { LeaderboardType } from "./leaderboard.profile.js";
  */
 export const LEADERBOARD_ROUTE = "lb";
 
-export function leaderboardRoute(listener: AbstractCommandListener): ComponentRoute {
-  return (interaction, { ownerId, values: [action, subcommand, leaderboard] }) => {
+export function leaderboardRoute(
+  listener: AbstractCommandListener,
+): ComponentRoute {
+  return (
+    interaction,
+    { ownerId, values: [action, subcommand, leaderboard] },
+  ) => {
     // The modal takes the button's custom id, so submitting it comes back here to search
     if (
       interaction.isButtonInteraction() &&
-      (action === LeaderboardQuery.INPUT || action === LeaderboardQuery.POSITION)
+      (action === LeaderboardQuery.INPUT ||
+        action === LeaderboardQuery.POSITION)
     ) {
       return listener.showModal(
         interaction,
         ownerId,
-        getSearchModal(subcommand === "guild" ? "guild" : "player", action).customId(interaction.getCustomId())
+        getSearchModal(
+          subcommand === "guild" ? "guild" : "player",
+          action,
+        ).customId(interaction.getCustomId()),
       );
     }
 
-    return listener.rerunCommand(interaction, ownerId, ["leaderboard", subcommand], { leaderboard });
+    return listener.rerunCommand(
+      interaction,
+      ownerId,
+      ["leaderboard", subcommand],
+      { leaderboard },
+    );
   };
 }
 
-function getSearchModal(type: LeaderboardType, search: typeof LeaderboardQuery.INPUT | typeof LeaderboardQuery.POSITION) {
+function getSearchModal(
+  type: LeaderboardType,
+  search: typeof LeaderboardQuery.INPUT | typeof LeaderboardQuery.POSITION,
+) {
   const input =
-    search === LeaderboardQuery.INPUT ?
-      new TextInputBuilder()
-        .label((t) => t(`leaderboard.${type}Input.label`))
-        .placeholder((t) => t(`leaderboard.${type}Input.placeholder`))
-        .maxLength(type === "player" ? 16 : 36) :
-      new TextInputBuilder()
-        .label((t) => t("leaderboard.positionInput.label"))
-        .placeholder((t) => t("leaderboard.positionInput.placeholder"))
-        .maxLength(6);
+    search === LeaderboardQuery.INPUT
+      ? new TextInputBuilder()
+          .label((t) => t(`leaderboard.${type}Input.label`))
+          .placeholder((t) => t(`leaderboard.${type}Input.placeholder`))
+          .maxLength(type === "player" ? 16 : 36)
+      : new TextInputBuilder()
+          .label((t) => t("leaderboard.positionInput.label"))
+          .placeholder((t) => t("leaderboard.positionInput.placeholder"))
+          .maxLength(6);
 
   return new ModalBuilder()
     .title((t) => t("leaderboard.modal.title"))
-    .component(new ActionRowBuilder().component(input.minLength(1).required(true)));
+    .component(
+      new ActionRowBuilder().component(input.minLength(1).required(true)),
+    );
 }
