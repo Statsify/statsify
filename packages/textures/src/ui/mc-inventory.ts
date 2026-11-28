@@ -29,7 +29,7 @@ interface Resources {
 const cache = new IconCache();
 const resources = new WeakMap<PackStack, Resources>();
 
-/** A player head's skin from the texture server, which allows cross-origin reads */
+// The texture server allows cross-origin reads
 async function fetchSkin(url: string) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!response.ok)
@@ -54,19 +54,16 @@ function resourcesFor(pack: PackStack) {
   return shared;
 }
 
-/** What the last full draw made, which ticks and hovers draw over */
 interface View {
   renderer: InventoryRenderer;
   tooltips: Resources["tooltips"];
   size: InventorySize;
-  /** The slots it drew, which can trail `slots` until the next draw finishes */
+  // This can trail `slots` until the next draw finishes
   items: (ItemStack | undefined)[];
-  /** The inventory without its moving slots' contents */
   still: OffscreenCanvas;
   composed: OffscreenCanvas;
 }
 
-/** <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack */
 export class McInventory extends HTMLElement {
   public static observedAttributes = [
     "rows",
@@ -77,8 +74,7 @@ export class McInventory extends HTMLElement {
     "freeze",
   ];
 
-  // Inventories with moving slots share one clock, so their animations stay in step. It runs on
-  // animation frames, which browsers pause in background tabs
+  // Moving inventories share one clock, so their animations stay in step
   private static playing = new Set<McInventory>();
   private static clock = 0;
   private static frame?: number;
@@ -89,7 +85,6 @@ export class McInventory extends HTMLElement {
   private hovered = -1;
   private drawing = 0;
   private view?: View;
-  /** Slots whose icons change from tick to tick, and their icons at the current tick */
   private moving: number[] = [];
   private movingIcons: (OffscreenCanvas | undefined)[] = [];
   private stepping = false;
@@ -130,7 +125,7 @@ export class McInventory extends HTMLElement {
     // A touch the browser takes over for a scroll ends in pointercancel
     this.canvas.addEventListener("pointercancel", () => this.unhover());
     this.canvas.addEventListener("pointerleave", (event) => {
-      // A lifted finger leaves too, which would close the tooltip its tap opened
+      // A lifted finger leaves too, which would close its tap's tooltip
       if (event.pointerType === "touch") return;
       this.unhover();
     });
@@ -248,9 +243,9 @@ export class McInventory extends HTMLElement {
 
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
-    const moving = shown.flatMap((item, slot) =>
-      item && !frozen && renderer.animates(item) ? [slot] : [],
-    );
+    const moving: number[] = [];
+    for (const [slot, item] of shown.entries())
+      if (item && !frozen && renderer.animates(item)) moving.push(slot);
 
     const [still, icons] = await Promise.all([
       renderer.draw(
@@ -281,7 +276,6 @@ export class McInventory extends HTMLElement {
     this.updatePlaying();
   }
 
-  /** Draws the moving slots' icons for the clock's tick */
   private async step() {
     const view = this.view;
     if (this.stepping || !view) return;
@@ -305,7 +299,6 @@ export class McInventory extends HTMLElement {
     }
   }
 
-  /** The still inventory with the moving slots and the hovered slot's highlight over it */
   private show() {
     if (!this.view) return;
 
