@@ -123,7 +123,9 @@ export const SkyBlockMuseumProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      <Table.table>{gridRows(categories, 3, true)}</Table.table>
+      <Table.table>
+        {gridRows(categories, 3, { spreadLastRow: true })}
+      </Table.table>
     </Card>
   );
 };

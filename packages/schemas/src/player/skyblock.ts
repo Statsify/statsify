@@ -9,10 +9,7 @@
 import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
-/**
- * The SkyBlock values only /player has, kept so SkyBlock lookups can read them without another call.
- * Achievements are the player's best over every profile.
- */
+// Only /player has these, so SkyBlock lookups read them from the player.
 export class PlayerSkyBlock {
   @Field({ leaderboard: { enabled: false } })
   public angler: number;

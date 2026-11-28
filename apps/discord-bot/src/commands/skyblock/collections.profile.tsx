@@ -10,9 +10,10 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, gridRows, progressText } from "./components/ItemGrid.js";
+import { ItemGrid, formatProgress, gridRows } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
-import type { CollectionCategory, MemberView } from "@statsify/skyblock";
+import type { CollectionCategory } from "@statsify/skyblock/display";
+import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const categoryItems = (
@@ -66,7 +67,7 @@ export const SkyBlockCollectionsProfile = ({
           items={items.map(({ texture, name, amount, tier, maxTier }) => ({
             texture,
             name: `§f${name}`,
-            value: `§b${t(amount)} ${progressText(t, tier, maxTier)}`,
+            value: `§b${t(amount)} ${formatProgress(t, tier, maxTier)}`,
           }))}
           icons={icons}
           columns={3}
@@ -113,7 +114,7 @@ export const SkyBlockMinionsProfile = ({
           items={crafted.map(({ texture, name, tiers, maxTier }) => ({
             texture,
             name: `§f${name.replace(/ Minion$/, "")}`,
-            value: progressText(t, Math.max(...tiers), maxTier),
+            value: formatProgress(t, Math.max(...tiers), maxTier),
           }))}
           icons={icons}
           columns={3}
@@ -151,7 +152,7 @@ export const SkyBlockBestiaryProfile = ({
     return (
       <Table.td
         title={label}
-        value={progressText(t, tiers, maxTiers)}
+        value={formatProgress(t, tiers, maxTiers)}
         color="§f"
         size="small"
       />
@@ -160,7 +161,7 @@ export const SkyBlockBestiaryProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      <Table.table>{gridRows(pages, 3, true)}</Table.table>
+      <Table.table>{gridRows(pages, 3, { spreadLastRow: true })}</Table.table>
     </Card>
   );
 };

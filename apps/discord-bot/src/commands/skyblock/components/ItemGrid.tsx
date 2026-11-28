@@ -12,19 +12,26 @@ import { arrayGroup, formatTime } from "@statsify/util";
 import type { ItemTexture } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
-export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
+export const formatPriceAge = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", {
     time: formatTime(Date.now() - asOf, { entries: 1 }),
   });
 
-export const progressText = (t: LocalizeFunction, value: number, max: number) =>
-  `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
+export const formatProgress = (
+  t: LocalizeFunction,
+  value: number,
+  max: number,
+) => `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
 
-// Table.tr splits its width by its cells, so a short last row is padded to keep the columns unless it spreads
+interface GridRowsOptions {
+  spreadLastRow?: boolean;
+}
+
+// Table.tr splits its width by cell, so a short last row gets padding.
 export const gridRows = (
   cells: JSX.Element[],
   columns: number,
-  spreadLastRow = false,
+  { spreadLastRow = false }: GridRowsOptions = {},
 ) =>
   arrayGroup(cells, columns).map((row) => (
     <Table.tr>
@@ -39,7 +46,7 @@ export const gridRows = (
 
 export interface ItemGridEntry {
   texture?: ItemTexture;
-  badge?: ItemTexture; // drawn small over the slot's corner
+  badge?: ItemTexture;
   name: string;
   value: string;
 }
@@ -48,12 +55,8 @@ export interface ItemGridProps {
   items: ItemGridEntry[];
   icons: ItemIcons;
   columns?: number;
-  /**
-   * The value under the name instead of beside it, for long values that would widen the card.
-   * Held left, so icons and text line up down a column when the card is wider than the cells need.
-   */
+  // A long value goes under the name, so it doesn't widen the card.
   stacked?: boolean;
-  /** A short last row's cells share the card's width, so it leaves no hole. */
   spreadLastRow?: boolean;
 }
 
@@ -79,6 +82,7 @@ export const ItemGrid = ({
       )}
       {stacked ? (
         <>
+          {/* Left-aligned, so a wide card's cells line up down a column. */}
           <div direction="column" margin={{ left: 8, right: 4 }}>
             <text align="left" margin={{ top: 0, bottom: 2 }}>
               {name}
@@ -99,5 +103,7 @@ export const ItemGrid = ({
     </box>
   ));
 
-  return <Table.table>{gridRows(cells, columns, spreadLastRow)}</Table.table>;
+  return (
+    <Table.table>{gridRows(cells, columns, { spreadLastRow })}</Table.table>
+  );
 };

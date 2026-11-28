@@ -9,10 +9,11 @@
 import { gunzip, gzip } from "node:zlib";
 import { promisify } from "node:util";
 
-// libuv's threadpool compresses, so a big co-op's response doesn't hold up the requests behind it
+// The async zlib calls keep a big co-op's response off the event loop.
 const gzipAsync = promisify(gzip);
 const gunzipAsync = promisify(gunzip);
 
-export const zip = (value: unknown) => gzipAsync(JSON.stringify(value));
+export const gzipJson = (value: unknown) => gzipAsync(JSON.stringify(value));
 
-export const unzip = async <T>(data: Buffer) => JSON.parse((await gunzipAsync(data)).toString()) as T;
+export const gunzipJson = async <T>(data: Buffer) =>
+  JSON.parse((await gunzipAsync(data)).toString()) as T;

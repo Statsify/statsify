@@ -14,7 +14,7 @@ import {
   RARITY_COLORS,
   formatProfileName,
 } from "@statsify/skyblock/display";
-import { ItemGrid, gridRows, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, gridRows, formatPriceAge } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import { removeFormatting } from "@statsify/util";
 import type { Image } from "skia-canvas";
@@ -85,7 +85,7 @@ export const SkyBlockValuesProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {cells.length > 0 ? (
-        <Table.table>{gridRows(cells, 4, true)}</Table.table>
+        <Table.table>{gridRows(cells, 4, { spreadLastRow: true })}</Table.table>
       ) : (
         <></>
       )}
@@ -106,7 +106,7 @@ export const SkyBlockValuesProfile = ({
       ) : (
         <Empty text={t("skyblock.noMissingPets")} />
       )}
-      <Empty text={pricesAsOf(t, values.pricesAsOf)} />
+      <Empty text={formatPriceAge(t, values.pricesAsOf)} />
     </Card>
   );
 };

@@ -9,8 +9,8 @@
 import { Container, Footer, Table } from "#components";
 import {
   SKYBLOCK_MONTHS,
-  nextEvents,
-  skyblockDate,
+  getNextEvents,
+  toSkyBlockDate,
 } from "@statsify/skyblock/display";
 import { formatTime } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
@@ -38,7 +38,7 @@ export const SkyBlockCalendarProfile = ({
   t,
   title,
 }: SkyBlockCalendarProfileProps) => {
-  const { year, month, day } = skyblockDate(now);
+  const { year, month, day } = toSkyBlockDate(now);
 
   const perks = [
     ...mayor.mayor.perks.map((perk) => ({ ...perk, holder: mayor.mayor.name })),
@@ -47,7 +47,7 @@ export const SkyBlockCalendarProfile = ({
       : []),
   ];
 
-  const events = nextEvents(now, mayor).map(({ key, start, end }) => {
+  const events = getNextEvents(now, mayor).map(({ key, start, end }) => {
     const on = start <= now;
     const time = formatTime((on ? end : start) - now, { entries: 2 });
     return (

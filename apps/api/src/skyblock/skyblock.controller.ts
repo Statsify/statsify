@@ -29,14 +29,12 @@ import {
   CachedPlayerDto,
   PlayerDto,
   SkyBlockIconDto,
-  SkyBlockItemsDto,
   SkyBlockPriceDto,
   SkyBlockProfileDto,
 } from "#dtos";
 import {
   ErrorResponse,
   GetSkyBlockBingoResponse,
-  GetSkyBlockItemsResponse,
   GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
@@ -78,11 +76,9 @@ export class SkyBlockController {
   @Auth({ role: AuthRole.WORKER, weight: 2 })
   @Get("/profiles")
   public async getProfiles(@Query() { player, cache }: CachedPlayerDto) {
-    const profiles = await this.skyblockService.getProfiles(player, cache);
-
     return {
       success: true,
-      profiles,
+      player: await this.skyblockService.getProfiles(player, cache),
     };
   }
 
@@ -113,28 +109,6 @@ export class SkyBlockController {
     return {
       success: true,
       profile,
-    };
-  }
-
-  @ApiOperation({ summary: "Get What a SkyBlock Item is Worth" })
-  @ApiOkResponse({ type: GetSkyBlockPriceResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({
-    type: SkyBlockNotFoundException,
-    description: "item or price",
-  })
-  @ApiServiceUnavailableResponse({
-    type: SkyBlockUnavailableException,
-    description: "market",
-  })
-  @Auth({ role: AuthRole.WORKER, weight: 1 })
-  @Get("/price")
-  public async getPrice(@Query() { item }: SkyBlockPriceDto) {
-    const price = await this.pricesService.getPrice(item);
-
-    return {
-      success: true,
-      price,
     };
   }
 
@@ -172,18 +146,12 @@ export class SkyBlockController {
   @Auth({ role: AuthRole.WORKER, weight: 2 })
   @Get("/bingo")
   public async getBingo(@Query() { player }: PlayerDto) {
-    const bingo = await this.skyblockService.getBingo(player);
-
     return {
       success: true,
-      bingo,
+      bingo: await this.skyblockService.getBingo(player),
     };
   }
 
-  /**
-   * The site's item icons, which it proxies with a year's edge cache. A Steve stand-in for a head whose skin didn't load
-   * is cached only as long as the failure is remembered, so the real head shows once it loads.
-   */
   @Get("/icons")
   @Auth({ role: AuthRole.WORKER, weight: 0 })
   @ApiExcludeEndpoint()
@@ -197,6 +165,7 @@ export class SkyBlockController {
     const icon = await this.iconsService.getIcon(texture, size, glint === 1);
     if (!icon) throw new NotFoundException("no texture");
 
+    // A Steve stand-in is cached only while its head's failure is remembered.
     reply.header(
       "Cache-Control",
       icon.standIn
@@ -206,22 +175,25 @@ export class SkyBlockController {
     return new StreamableFile(icon.png, { type: "image/png" });
   }
 
-  @ApiOperation({
-    summary: "Get a Fuzzy Searched List of Priced SkyBlock Items",
+  @ApiOperation({ summary: "Get What a SkyBlock Item is Worth" })
+  @ApiOkResponse({ type: GetSkyBlockPriceResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({
+    type: SkyBlockNotFoundException,
+    description: "item or price",
   })
-  @ApiOkResponse({ type: GetSkyBlockItemsResponse })
   @ApiServiceUnavailableResponse({
     type: SkyBlockUnavailableException,
     description: "market",
   })
-  @Auth({ role: AuthRole.WORKER, weight: 0 })
-  @Get("/items")
-  public async getItems(@Query() { query }: SkyBlockItemsDto) {
-    const items = await this.pricesService.searchItems(query);
+  @Auth({ role: AuthRole.WORKER, weight: 1 })
+  @Get("/price")
+  public async getPrice(@Query() { item }: SkyBlockPriceDto) {
+    const price = await this.pricesService.getPrice(item);
 
     return {
       success: true,
-      items,
+      price,
     };
   }
 }

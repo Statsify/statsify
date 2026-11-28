@@ -7,9 +7,7 @@
  */
 
 import {
-  ActionRowBuilder,
   ApiService,
-  ButtonBuilder,
   Command,
   CommandContext,
   ErrorMessage,
@@ -21,7 +19,6 @@ import {
   SubCommand,
   paginate,
 } from "@statsify/discord";
-import { ButtonStyle } from "discord-api-types/v10";
 import { Container } from "typedi";
 import {
   SKYBLOCK_CARDS,
@@ -29,10 +26,9 @@ import {
   type SkyBlockCardName,
   type SkyBlockProfile,
   getSkyBlockBackground,
-  skyBlockHeading,
+  getSkyBlockHeading,
   skyBlockTitle,
 } from "./cards.js";
-import type { User } from "@statsify/schemas";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
@@ -41,7 +37,6 @@ import { SkyBlockCalendarProfile } from "./calendar.profile.js";
 import { SkyBlockLeaderboardArgument } from "#commands/leaderboards/skyblock-leaderboard.argument";
 import { SkyBlockLeaderboardSubCommand } from "#commands/leaderboards/skyblock-leaderboard.subcommand";
 import { SkyBlockRanksProfile } from "./values.profile.js";
-import { config } from "@statsify/util";
 import { hasMuseum } from "@statsify/skyblock/display";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getLogo } from "@statsify/assets";
@@ -49,8 +44,7 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 import type { GameMode, SkyBlockProfileView } from "@statsify/skyblock";
-
-const siteUrl = await config("skyblock.siteUrl", { required: false });
+import type { User } from "@statsify/schemas";
 
 const GAME_MODE_EMOJI: Record<GameMode, string | false> = {
   normal: false,
@@ -71,54 +65,52 @@ export interface SkyBlockProfileProps {
   icons: ItemIcons;
 }
 
-// By uuid, which the site sends on to the name, since a name like "item" is one of the site's own paths
-function fullProfile(uuid: string, cuteName: string) {
-  if (!siteUrl) return;
-  const url = `${siteUrl}/skyblock/${uuid}/${encodeURIComponent(cuteName.toLowerCase())}`;
-  return [
-    new ActionRowBuilder([
-      new ButtonBuilder()
-        .label((t) => t("skyblock.fullProfile"))
-        .style(ButtonStyle.Link)
-        .url(url),
-    ]),
-  ];
-}
-
-// A new profile reads every API setting as off and has no museum yet
-function notes(
+function getSettingNotes(
   t: LocalizeFunction,
   view: SkyBlockProfileView,
   card: SkyBlockCard,
 ) {
-  const off = view.newProfile
-    ? []
-    : card.settings.filter(
-        (setting) => view.member.apiSettings[setting] === false,
-      );
+  // A new profile reads every API setting as off and has no museum yet.
+  if (view.newProfile) return [];
+
+  const notes: string[] = [];
+  const off = card.settings.filter(
+    (setting) => view.member.apiSettings[setting] === false,
+  );
   const apiOff = off.filter((setting) => setting !== "banking");
 
-  return [
-    view.stale
-      ? t("skyblock.stale", { time: Math.floor(view.fetchedAt / 1000) })
-      : "",
-    apiOff.length > 0
-      ? t("skyblock.apiOffNote", {
-          settings: apiOff
-            .map((setting) => t(`skyblock.apiSettings.${setting}`))
-            .join(", "),
-        })
-      : "",
-    off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    !view.newProfile &&
-    hasMuseum(view.gameMode) &&
-    view.member.networth?.museumIncluded === false
-      ? t("skyblock.museumNotCounted")
-      : "",
-    view.marketDown ? t("skyblock.pricesNotReady") : "",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  if (apiOff.length > 0) {
+    const settings = apiOff
+      .map((setting) => t(`skyblock.apiSettings.${setting}`))
+      .join(", ");
+    notes.push(t("skyblock.apiOffNote", { settings }));
+  }
+
+  if (off.includes("banking")) notes.push(t("skyblock.bankingOffNote"));
+
+  const museumMissed =
+    hasMuseum(view.gameMode) && view.member.networth?.museumIncluded === false;
+  if (museumMissed) notes.push(t("skyblock.museumNotCounted"));
+
+  return notes;
+}
+
+function getNotes(
+  t: LocalizeFunction,
+  view: SkyBlockProfileView,
+  card: SkyBlockCard,
+) {
+  const notes: string[] = [];
+
+  if (view.stale) {
+    const time = Math.floor(view.fetchedAt / 1000);
+    notes.push(t("skyblock.stale", { time }));
+  }
+
+  notes.push(...getSettingNotes(t, view, card));
+  if (view.marketDown) notes.push(t("skyblock.pricesNotReady"));
+
+  return notes.join("\n");
 }
 
 @Command({ description: (t) => t("commands.skyblock"), cooldown: 10 })
@@ -376,7 +368,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={skyBlockHeading(t, "ranks")}
+        title={getSkyBlockHeading(t, "ranks")}
       />,
       getTheme(user),
     );
@@ -414,7 +406,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={skyBlockHeading(t, "calendar")}
+        title={getSkyBlockHeading(t, "calendar")}
       />,
       getTheme(user),
     );
@@ -460,7 +452,7 @@ export class SkyBlockCommand {
         logo={logo}
         user={user}
         t={t}
-        title={`${skyBlockHeading(t, "bingo")} §r(§e${bingo.name}§r)`}
+        title={`${getSkyBlockHeading(t, "bingo")} §r(§e${bingo.name}§r)`}
       />,
       getTheme(user),
     );
@@ -562,10 +554,10 @@ export class SkyBlockCommand {
     ]);
 
     const generator =
-      (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) =>
+      (id: string, Profile: SkyBlockProfile, getIcons = card.icons) =>
       async (t: LocalizeFunction) => {
         const view = await getView(id);
-        const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
+        const icons = await loadItemIcons(getIcons?.(view.member) ?? []);
         const title = skyBlockTitle(t, view, name);
 
         const canvas = render(
@@ -584,7 +576,7 @@ export class SkyBlockCommand {
         );
 
         return new Message({
-          content: notes(t, view, card),
+          content: getNotes(t, view, card),
           files: [
             {
               name: "skyblock.png",
@@ -598,11 +590,7 @@ export class SkyBlockCommand {
       };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
-      const page = {
-        label: cuteName,
-        emoji: GAME_MODE_EMOJI[gameMode],
-        rows: fullProfile(player.uuid, cuteName),
-      };
+      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode] };
 
       if (Array.isArray(card.profile)) {
         const subPages = card.profile.map(({ label, profile, icons }) => ({

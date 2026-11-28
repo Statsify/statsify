@@ -27,39 +27,33 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { SkyBlockService } from "#skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class PlayerService {
-  private readonly deleteHooks: ((uuid: string) => Promise<unknown>)[] = [];
-
   public constructor(
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
+    @Inject(forwardRef(() => SkyBlockService))
+    private readonly skyblockService: Circular<SkyBlockService>,
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
-
-  /** For a module that stores more per player and imports this one (SkyBlock), so deleting reaches it too. */
-  public onDelete(hook: (uuid: string) => Promise<unknown>) {
-    this.deleteHooks.push(hook);
-  }
 
   /**
    *
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
-   * @param beforeFetch (optional) Runs just before the player is fetched from Hypixel, and can throw to stop it
    */
   public async get(
     tag: string,
     cacheLevel: CacheLevel,
-    selector?: Record<string, boolean>,
-    beforeFetch?: () => Promise<void>
+    selector?: Record<string, boolean>
   ): Promise<Player | null> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
@@ -78,8 +72,6 @@ export class PlayerService {
     ) {
       return deserialize(Player, mongoPlayer);
     }
-
-    await beforeFetch?.();
 
     const player = await this.hypixelService.getPlayer(
       mongoPlayer?.uuid ?? tag
@@ -176,7 +168,7 @@ export class PlayerService {
         "uuid",
         true
       ),
-      ...this.deleteHooks.map((hook) => hook(player.uuid)),
+      this.skyblockService.deletePlayer(player.uuid),
     ]);
 
     return true;
