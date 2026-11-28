@@ -11,7 +11,11 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import {
+  AbstractArgument,
+  CommandContext,
+  LocalizationString,
+} from "@statsify/discord";
 import { FUSE_OPTIONS } from "./player-leaderboard.argument.js";
 import { SkyBlockStats, getLeaderboardFields } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
@@ -20,7 +24,7 @@ const list = getLeaderboardFields(SkyBlockStats).map(
   ([key, { leaderboard }]) => ({
     value: key,
     name: removeFormatting(leaderboard.name),
-  })
+  }),
 );
 
 const fuse = new Fuse(list, FUSE_OPTIONS);
@@ -38,7 +42,7 @@ export class SkyBlockLeaderboardArgument extends AbstractArgument {
   }
 
   public autocompleteHandler(
-    context: CommandContext
+    context: CommandContext,
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 

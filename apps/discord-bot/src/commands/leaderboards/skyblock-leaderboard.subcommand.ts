@@ -27,9 +27,12 @@ export class SkyBlockLeaderboardSubCommand extends BaseLeaderboardCommand {
       context,
       background,
       field,
-      getLeaderboard: this.apiService.getSkyBlockLeaderboard.bind(this.apiService),
+      getLeaderboard: this.apiService.getSkyBlockLeaderboard.bind(
+        this.apiService,
+      ),
       type: "player",
-      getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(skyblockStatsUuid(id), 24),
+      getLeaderboardDataIcon: (id) =>
+        this.apiService.getPlayerHead(skyblockStatsUuid(id), 24),
     });
   }
 }

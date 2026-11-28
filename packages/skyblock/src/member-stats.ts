@@ -46,7 +46,9 @@ const KUUDRA_STATS = {
 
 // The page's Social is the co-op's sum and level, so its board ranks the member's own XP, with no level
 type LeveledSkill = Exclude<Skill, "social">;
-const LEVELED_SKILLS = SKILLS.filter((skill): skill is LeveledSkill => skill !== "social");
+const LEVELED_SKILLS = SKILLS.filter(
+  (skill): skill is LeveledSkill => skill !== "social",
+);
 
 export type MemberStat =
   | "xp"
@@ -92,22 +94,50 @@ const cappedLevel = ({ level, maxLevel }: Level) => Math.min(level, maxLevel);
  * hide counts 0. What a co-op shares counts the member's own part: their own Social XP, and their share of the bank.
  */
 export function toMemberStats(
-  { uuid, profile, member, items, prices }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
-  view: MemberView
+  {
+    uuid,
+    profile,
+    member,
+    items,
+    prices,
+  }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
+  view: MemberView,
 ): Partial<MemberStats> {
-  const { chocolate, crimson, dungeons, fishing, hotm, networth, pets, skills, slayers } = view;
+  const {
+    chocolate,
+    crimson,
+    dungeons,
+    fishing,
+    hotm,
+    networth,
+    pets,
+    skills,
+    slayers,
+  } = view;
   const summary = toProfileSummary(profile, uuid);
-  const stats: Partial<MemberStats> = { xp: summary.xp, level: summary.level, fairySouls: summary.fairySouls };
+  const stats: Partial<MemberStats> = {
+    xp: summary.xp,
+    level: summary.level,
+    fairySouls: summary.fairySouls,
+  };
 
   if (networth) {
-    const members = Object.keys(profile.members).filter((other) => isMember(profile, other)).length;
+    const members = Object.keys(profile.members).filter((other) =>
+      isMember(profile, other),
+    ).length;
     const othersBank = networth.bank - networth.bank / members;
-    stats.networth = networth.noInventory ? 0 : Math.floor(networth.total - othersBank);
-    stats.nonCosmeticNetworth = networth.noInventory ? 0 : Math.floor(networth.nonCosmetic.total - othersBank);
+    stats.networth = networth.noInventory
+      ? 0
+      : Math.floor(networth.total - othersBank);
+    stats.nonCosmeticNetworth = networth.noInventory
+      ? 0
+      : Math.floor(networth.nonCosmetic.total - othersBank);
   }
 
   if (skills !== undefined) {
-    const averagedXp = skills ? add(...AVERAGED.map((skill) => skills.skills[skill].xp)) : 0;
+    const averagedXp = skills
+      ? add(...AVERAGED.map((skill) => skills.skills[skill].xp))
+      : 0;
     stats.skillAverage = skills?.average ?? 0;
     stats.skillAverageOrder = skillAverageOrder(stats.skillAverage, averagedXp);
 
@@ -142,7 +172,9 @@ export function toMemberStats(
 
   if (crimson !== undefined) {
     for (const tier of KUUDRA_TIERS) {
-      stats[KUUDRA_STATS[tier]] = crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ?? 0;
+      stats[KUUDRA_STATS[tier]] =
+        crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ??
+        0;
     }
   }
 
@@ -153,7 +185,8 @@ export function toMemberStats(
 
   // The bag alone, without the accessories section's stored items and upgrades. It waits for prices as that section
   // does, so the board and the page agree
-  if (items && prices) stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
+  if (items && prices)
+    stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
   if (pets) stats.petScore = pets.score;
   if (fishing !== undefined) stats.trophyFish = fishing?.trophyFishCaught ?? 0;
   if (chocolate !== undefined) stats.chocolate = chocolate?.total ?? 0;
@@ -165,9 +198,15 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("skillAverageOrder ranks by the shown average, then by the XP under it", () => {
-    expect(skillAverageOrder(55.7, 0)).toBeGreaterThan(skillAverageOrder(55.69, 1e11));
-    expect(skillAverageOrder(55.704, 2)).toBeGreaterThan(skillAverageOrder(55.696, 1));
-    expect(skillAverageOrder(55.7, 1e13)).toBe(skillAverageOrder(55.7, 2 ** 40));
+    expect(skillAverageOrder(55.7, 0)).toBeGreaterThan(
+      skillAverageOrder(55.69, 1e11),
+    );
+    expect(skillAverageOrder(55.704, 2)).toBeGreaterThan(
+      skillAverageOrder(55.696, 1),
+    );
+    expect(skillAverageOrder(55.7, 1e13)).toBe(
+      skillAverageOrder(55.7, 2 ** 40),
+    );
     expect(Number.isSafeInteger(skillAverageOrder(60, 1e13))).toBe(true);
   });
 }

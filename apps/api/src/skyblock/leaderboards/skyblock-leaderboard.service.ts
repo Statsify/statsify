@@ -11,16 +11,29 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player, SkyBlockStats, type SkyBlockStatsRow, getLeaderboardField, serialize, skyblockStatsId, skyblockStatsUuid } from "@statsify/schemas";
-import { type LeaderboardQuery, PlayerNotFoundException } from "@statsify/api-client";
+import {
+  Player,
+  SkyBlockStats,
+  type SkyBlockStatsRow,
+  getLeaderboardField,
+  serialize,
+  skyblockStatsId,
+  skyblockStatsUuid,
+} from "@statsify/schemas";
+import {
+  type LeaderboardQuery,
+  PlayerNotFoundException,
+} from "@statsify/api-client";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import { formatProfileName } from "@statsify/skyblock/display";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 /** A row's name: "Name (Profile)", the profile in its colors and with its mode's badge. */
-export const memberName = (displayName: string, row: Pick<SkyBlockStatsRow, "cuteName" | "gameMode">) =>
-  `${displayName}§r §7(${formatProfileName(row)}§7)`;
+export const memberName = (
+  displayName: string,
+  row: Pick<SkyBlockStatsRow, "cuteName" | "gameMode">,
+) => `${displayName}§r §7(${formatProfileName(row)}§7)`;
 
 const boardKey = (field: string) => `skyblockstats.${field}`;
 
@@ -28,17 +41,25 @@ const boardKey = (field: string) => `skyblockstats.${field}`;
 export class SkyBlockLeaderboardService extends LeaderboardService {
   // The first parameter needs its own injection decorator, or it inherits LeaderboardService's Redis
   public constructor(
-    @InjectModel(SkyBlockStats) private readonly statsModel: ReturnModelType<typeof SkyBlockStats>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectModel(SkyBlockStats) private readonly statsModel: ReturnModelType<
+      typeof SkyBlockStats
+    >,
+    @InjectModel(Player) private readonly playerModel: ReturnModelType<
+      typeof Player
+    >,
     private readonly playerService: PlayerService,
-    @InjectRedis() redis: Redis
+    @InjectRedis() redis: Redis,
   ) {
     super(redis);
   }
 
   /** The members a row can name, since a name only comes from a player record. */
   public async knownPlayers(uuids: string[]): Promise<Set<string>> {
-    const players = await this.playerModel.find({ uuid: { $in: uuids } }).select({ uuid: true }).lean().exec();
+    const players = await this.playerModel
+      .find({ uuid: { $in: uuids } })
+      .select({ uuid: true })
+      .lean()
+      .exec();
     return new Set(players.map(({ uuid }) => uuid));
   }
 
@@ -46,10 +67,19 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
    * Saves a stored copy's rows, and drops `removed` and the looked-up player's rows on profiles the copy no longer has.
    * A number a row leaves out, because its section's prices weren't ready, keeps the stored one.
    */
-  public async addMembers(uuid: string, profileIds: string[], rows: SkyBlockStatsRow[], removed: string[]) {
+  public async addMembers(
+    uuid: string,
+    profileIds: string[],
+    rows: SkyBlockStatsRow[],
+    removed: string[],
+  ) {
     const [stored, gone] = await Promise.all([
       this.statsModel
-        .find({ id: { $in: rows.map((row) => skyblockStatsId(row.uuid, row.profileId)) } })
+        .find({
+          id: {
+            $in: rows.map((row) => skyblockStatsId(row.uuid, row.profileId)),
+          },
+        })
         .select({ id: true, overall: true, networthAsOf: true })
         .lean()
         .exec(),
@@ -65,41 +95,89 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const members = rows.map((row) => {
       const old = storedById.get(skyblockStatsId(row.uuid, row.profileId));
       const boards = { ...old?.overall, ...row.boards };
-      return flatten(new SkyBlockStats({ ...row, networthAsOf: row.networthAsOf ?? old?.networthAsOf, boards }));
+      return flatten(
+        new SkyBlockStats({
+          ...row,
+          networthAsOf: row.networthAsOf ?? old?.networthAsOf,
+          boards,
+        }),
+      );
     });
 
     const dropped = [...removed, ...gone.map(({ id }) => id)];
 
     await Promise.all([
       ...members.map((member) =>
-        this.statsModel.replaceOne({ id: member.id }, serialize(SkyBlockStats, member), { upsert: true }).exec()
+        this.statsModel
+          .replaceOne({ id: member.id }, serialize(SkyBlockStats, member), {
+            upsert: true,
+          })
+          .exec(),
       ),
-      ...(dropped.length > 0 ? [this.statsModel.deleteMany({ id: { $in: dropped } }).exec()] : []),
-      ...members.map((member) => this.addLeaderboards(SkyBlockStats, member, "id")),
-      ...dropped.map((id) => this.addLeaderboards(SkyBlockStats, { id } as Flatten<SkyBlockStats>, "id", true)),
+      ...(dropped.length > 0
+        ? [this.statsModel.deleteMany({ id: { $in: dropped } }).exec()]
+        : []),
+      ...members.map((member) =>
+        this.addLeaderboards(SkyBlockStats, member, "id"),
+      ),
+      ...dropped.map((id) =>
+        this.addLeaderboards(
+          SkyBlockStats,
+          { id } as Flatten<SkyBlockStats>,
+          "id",
+          true,
+        ),
+      ),
     ]);
   }
 
   /** Drops every row of a deleted player, with their scores. */
   public async removePlayer(uuid: string) {
-    const rows = await this.statsModel.find({ uuid }).select({ id: true }).lean().exec();
+    const rows = await this.statsModel
+      .find({ uuid })
+      .select({ id: true })
+      .lean()
+      .exec();
 
     await Promise.all([
       this.statsModel.deleteMany({ uuid }).exec(),
-      ...rows.map(({ id }) => this.addLeaderboards(SkyBlockStats, { id } as Flatten<SkyBlockStats>, "id", true)),
+      ...rows.map(({ id }) =>
+        this.addLeaderboards(
+          SkyBlockStats,
+          { id } as Flatten<SkyBlockStats>,
+          "id",
+          true,
+        ),
+      ),
     ]);
   }
 
   /** Tied rows share a rank, unlike on the player and guild boards. */
-  public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
-    const leaderboard = await super.getLeaderboard(constructor, field, input, type);
+  public async getLeaderboard<T>(
+    constructor: Constructor<T>,
+    field: string,
+    input: number | string,
+    type: LeaderboardQuery,
+  ) {
+    const leaderboard = await super.getLeaderboard(
+      constructor,
+      field,
+      input,
+      type,
+    );
     // A board can keep a member whose record is gone, and nothing is left to name the row
     const data = leaderboard.data.filter((row) => row.name);
     if (data.length === 0) return { ...leaderboard, data };
 
-    const scores = await this.redis.zmscore(boardKey(field), data.map(({ id }) => id));
+    const scores = await this.redis.zmscore(
+      boardKey(field),
+      data.map(({ id }) => id),
+    );
     const ranks = await this.sharedRanks(field, scores.map(Number));
-    return { ...leaderboard, data: data.map((row, index) => ({ ...row, position: ranks[index] })) };
+    return {
+      ...leaderboard,
+      data: data.map((row, index) => ({ ...row, position: ranks[index] })),
+    };
   }
 
   /** Each score's rank, 1 plus the members ahead of it on the board, so tied rows share one (1, 2, 2, 4). */
@@ -109,38 +187,74 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     const distinct = [...new Set(scores)];
 
     const ahead = await Promise.all(
-      distinct.map((score) => (ascending ? this.redis.zcount(key, "-inf", `(${score}`) : this.redis.zcount(key, `(${score}`, "+inf")))
+      distinct.map((score) =>
+        ascending
+          ? this.redis.zcount(key, "-inf", `(${score}`)
+          : this.redis.zcount(key, `(${score}`, "+inf"),
+      ),
     );
 
     return scores.map((score) => ahead[distinct.indexOf(score)] + 1);
   }
 
   /** The player's best rank on a board over their profiles, counted from 0, or undefined when none is on it. */
-  public async bestRank(uuid: string, field: string): Promise<number | undefined> {
-    const rows = await this.statsModel.find({ uuid }).select({ id: true }).lean().exec();
+  public async bestRank(
+    uuid: string,
+    field: string,
+  ): Promise<number | undefined> {
+    const rows = await this.statsModel
+      .find({ uuid })
+      .select({ id: true })
+      .lean()
+      .exec();
     const key = boardKey(field);
     const ascending = getLeaderboardField(SkyBlockStats, field).sort === "ASC";
 
-    const ranks = await Promise.all(rows.map(({ id }) => (ascending ? this.redis.zrank(key, id) : this.redis.zrevrank(key, id))));
+    const ranks = await Promise.all(
+      rows.map(({ id }) =>
+        ascending ? this.redis.zrank(key, id) : this.redis.zrevrank(key, id),
+      ),
+    );
     const ranked = ranks.filter((rank) => rank !== null);
     return ranked.length > 0 ? Math.min(...ranked) : undefined;
   }
 
-  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    const player = await this.playerService.findMongoDocument(input, { uuid: true });
+  protected async searchLeaderboardInput(
+    input: string,
+    field: string,
+  ): Promise<number> {
+    const player = await this.playerService.findMongoDocument(input, {
+      uuid: true,
+    });
     if (!player) throw new PlayerNotFoundException();
 
     const rank = await this.bestRank(player.uuid, field);
-    if (rank === undefined || rank >= getLeaderboardField(SkyBlockStats, field).limit) throw new PlayerNotFoundException();
+    if (
+      rank === undefined ||
+      rank >= getLeaderboardField(SkyBlockStats, field).limit
+    )
+      throw new PlayerNotFoundException();
     return rank + 1;
   }
 
-  protected async getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]> {
-    const selector: Record<string, boolean> = { id: true, uuid: true, cuteName: true, gameMode: true };
+  protected async getAdditionalStats(
+    ids: string[],
+    fields: string[],
+  ): Promise<LeaderboardAdditionalStats[]> {
+    const selector: Record<string, boolean> = {
+      id: true,
+      uuid: true,
+      cuteName: true,
+      gameMode: true,
+    };
     for (const field of fields) selector[field] = true;
 
     const [rows, players] = await Promise.all([
-      this.statsModel.find({ id: { $in: ids } }).select(selector).lean().exec(),
+      this.statsModel
+        .find({ id: { $in: ids } })
+        .select(selector)
+        .lean()
+        .exec(),
       this.playerModel
         .find({ uuid: { $in: ids.map(skyblockStatsUuid) } })
         .select({ uuid: true, displayName: true })
@@ -149,7 +263,9 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     ]);
 
     const rowsById = new Map(rows.map((row) => [row.id, row]));
-    const namesByUuid = new Map(players.map((player) => [player.uuid, player.displayName]));
+    const namesByUuid = new Map(
+      players.map((player) => [player.uuid, player.displayName]),
+    );
 
     return ids.map((id) => {
       const row = rowsById.get(id);
