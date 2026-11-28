@@ -15,7 +15,13 @@ import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import { hasMarket } from "../profiles.js";
 import type { ApiSettings, ItemsResource, MemberView, PriceMap } from "#types";
-import type { RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
+import type {
+  RawItemsResource,
+  RawMember,
+  RawMuseum,
+  RawMuseumMember,
+  RawProfile,
+} from "#raw";
 
 export type SectionNeed = "museum" | "prices" | "items";
 
@@ -26,6 +32,7 @@ export interface SectionInput {
   museum?: RawMuseumMember;
   prices?: PriceMap;
   items?: ItemsResource;
+  rawItems?: RawItemsResource;
 }
 
 export interface Section<K extends keyof MemberView> {
