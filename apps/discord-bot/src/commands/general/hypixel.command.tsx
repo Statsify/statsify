@@ -9,5 +9,8 @@
 import { Command } from "@statsify/discord";
 import { GeneralCommand } from "./general.command.js";
 
-@Command({ description: (t) => t("commands.general") })
+@Command({
+  description: (t) => t("commands.general"),
+  contextMenu: (t) => t("commands.hypixel-context-menu"),
+})
 export class HypixelCommand extends GeneralCommand {}
