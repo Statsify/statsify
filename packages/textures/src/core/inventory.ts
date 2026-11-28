@@ -29,6 +29,7 @@ export interface InventorySize {
   title?: string;
 }
 
+// Container geometry in GUI pixels, from the vanilla chest screen
 const SLOT = 18;
 const EDGE = 7;
 const TITLE_HEIGHT = 17;
@@ -38,6 +39,7 @@ const CHEST_SCREEN = "assets/minecraft/textures/gui/container/generic_54.png";
 // GUI pixels across the chest screen texture, which HD packs draw larger
 const CHEST_SCREEN_SIZE = 256;
 
+// The chest screen's bottom edge starts below its player inventory
 const CHEST_SCREEN_BOTTOM = 215;
 
 const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);

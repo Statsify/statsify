@@ -138,6 +138,7 @@ export function transformQuads(
   }));
 }
 
+// The corners of each face in the order the game assigns uvs to them
 const FACE_CORNERS: Record<Direction, (from: Vec3, to: Vec3) => Vec3[]> = {
   down: (f, t) => [
     [f[0], f[1], t[2]],
@@ -177,6 +178,7 @@ const FACE_CORNERS: Record<Direction, (from: Vec3, to: Vec3) => Vec3[]> = {
   ],
 };
 
+// The uvs a face gets from its element's position when it lists none
 const DEFAULT_UVS: Record<
   Direction,
   (from: Vec3, to: Vec3) => [number, number, number, number]
@@ -332,6 +334,7 @@ export function composeTransforms(
   const [ox, oy, oz] = outer.translation ?? [0, 0, 0];
   const [tx, ty, tz] = apply(outerMatrix, [ix * scale, iy * scale, iz * scale]);
 
+  // Back to x, y, z angles for displayMatrix's Rx · Ry · Rz
   const y = Math.asin(Math.max(-1, Math.min(1, matrix[2])));
   const [x, z] =
     Math.abs(matrix[2]) < 0.999_999

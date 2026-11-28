@@ -37,6 +37,7 @@ export const createCanvas = (width: number, height: number) =>
 
 export const decodePng = (file: Uint8Array) => backend.decodePng(file);
 
+// A PNG's size sits in its IHDR chunk, so it's known without decoding
 export function pngSize(file: Uint8Array) {
   const view = new DataView(file.buffer, file.byteOffset, file.byteLength);
   return { width: view.getUint32(16), height: view.getUint32(20) };
