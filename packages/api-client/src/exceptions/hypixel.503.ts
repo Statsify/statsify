@@ -21,7 +21,8 @@ export class HypixelUnavailableException extends ServiceUnavailableException {
 
   @ApiProperty({
     required: false,
-    description: "Seconds until Hypixel stops rate limiting Statsify, only set when it is",
+    description:
+      "Seconds until Hypixel stops rate limiting Statsify, only set when it is",
   })
   public retryAfter?: number;
 
