@@ -28,32 +28,52 @@ export function getHotm(member: RawMember): HotmSection {
   const suffix = slot === 1 ? "" : `_${slot}`;
   const nodes = tree?.nodes?.[`mining${suffix}`] ?? core.nodes ?? {};
 
-  const level = getLevel(tree?.experience?.mining ?? core.experience ?? 0, LEVELING.HOTM, LEVELING.leveling_caps.HOTM);
+  const level = getLevel(
+    tree?.experience?.mining ?? core.experience ?? 0,
+    LEVELING.HOTM,
+    LEVELING.leveling_caps.HOTM,
+  );
   // The old mining_core tree names it special_0
   const coreLevel = Number(nodes.core_of_the_mountain ?? nodes.special_0 ?? 0);
-  const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) => /^mountain(_\d+)?$/.test(key)).length;
+  const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) =>
+    /^mountain(_\d+)?$/.test(key),
+  ).length;
 
   return {
     level,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: {
-      spent: tree?.tokens_spent?.[`mountain${suffix}`] ?? core.tokens_spent ?? 0,
+      spent:
+        tree?.tokens_spent?.[`mountain${suffix}`] ?? core.tokens_spent ?? 0,
       total: add(CORE_TOKENS[coreLevel], ...TIER_TOKENS.slice(0, level.level)),
     },
-    ability: tree?.selected_ability?.[`mining${suffix}`] ?? core.selected_pickaxe_ability,
+    ability:
+      tree?.selected_ability?.[`mining${suffix}`] ??
+      core.selected_pickaxe_ability,
     // Core of the Mountain's powder is kept apart in powder_spent_non_refundable_*, since a reset never refunds it
     powder: Object.fromEntries(
       POWDERS.map((type) => [
         type,
         {
           total: core[`powder_${type}`] ?? 0,
-          spent: add(core[`powder_spent_${type}${suffix}`] ?? 0, core[`powder_spent_non_refundable_${type}${suffix}`] ?? 0),
+          spent: add(
+            core[`powder_spent_${type}${suffix}`] ?? 0,
+            core[`powder_spent_non_refundable_${type}${suffix}`] ?? 0,
+          ),
         },
-      ])
+      ]),
     ) as HotmSection["powder"],
     nodes: Object.entries(HOTM_LAYOUT).map(([id, { name, x, y, maxLevel }]) => {
       const nodeLevel = Number(nodes[id] ?? 0);
-      return { id, name, level: nodeLevel, maxLevel, x, y, enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false };
+      return {
+        id,
+        name,
+        level: nodeLevel,
+        maxLevel,
+        x,
+        y,
+        enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false,
+      };
     }),
   };
 }
@@ -66,26 +86,56 @@ if (import.meta.vitest) {
       skill_tree: {
         experience: { mining: 2_000_000 },
         selected_skill_tree_slot: { mining: 2 },
-        nodes: { mining: { mining_speed: 50 }, mining_2: { core_of_the_mountain: 10, mining_fortune: 3, toggle_mining_fortune: false } },
+        nodes: {
+          mining: { mining_speed: 50 },
+          mining_2: {
+            core_of_the_mountain: 10,
+            mining_fortune: 3,
+            toggle_mining_fortune: false,
+          },
+        },
         tokens_spent: { mountain: 1, mountain_2: 25 },
         selected_ability: { mining: "pickobulus", mining_2: "sheer_force" },
       },
-      mining_core: { powder_mithril: 10, powder_spent_mithril: 1, powder_spent_mithril_2: 2 },
+      mining_core: {
+        powder_mithril: 10,
+        powder_spent_mithril: 1,
+        powder_spent_mithril_2: 2,
+      },
     });
 
-    expect(hotm.level).toMatchObject({ level: 10, xp: 2_000_000, xpForNext: undefined });
+    expect(hotm.level).toMatchObject({
+      level: 10,
+      xp: 2_000_000,
+      xpForNext: undefined,
+    });
     expect(hotm.loadout).toEqual({ selected: 2, total: 2 });
     expect(hotm.tokens).toEqual({ spent: 25, total: 25 });
     expect(hotm.ability).toBe("sheer_force");
     expect(hotm.powder.mithril).toEqual({ total: 10, spent: 2 });
-    expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({ level: 3, enabled: false });
-    expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({ level: 0, enabled: false });
+    expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({
+      level: 3,
+      enabled: false,
+    });
+    expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({
+      level: 0,
+      enabled: false,
+    });
 
     // Tier 6 gives two tokens, and Core of the Mountain's first level one
-    const hotm5 = getHotm({ skill_tree: { experience: { mining: 110_000 }, nodes: { mining: { core_of_the_mountain: 1 } } } });
+    const hotm5 = getHotm({
+      skill_tree: {
+        experience: { mining: 110_000 },
+        nodes: { mining: { core_of_the_mountain: 1 } },
+      },
+    });
 
     expect(hotm5.tokens.total).toBe(10);
-    expect(getHotm({ skill_tree: { experience: { mining: 230_000 } } }).tokens.total).toBe(11); // HOTM 6
-    expect(getHotm({ skill_tree: { experience: { mining: 400_000 } } }).tokens.total).toBe(14); // HOTM 7
+    expect(
+      getHotm({ skill_tree: { experience: { mining: 230_000 } } }).tokens.total,
+    ).toBe(11); // HOTM 6
+    expect(
+      getHotm({ skill_tree: { experience: { mining: 400_000 } } }).tokens.total,
+    ).toBe(14); // HOTM 7
   });
 }

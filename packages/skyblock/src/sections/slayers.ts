@@ -17,8 +17,17 @@ export function getSlayers(member: RawMember): SlayersSection {
     const thresholds = LEVELING.slayer_xp[boss];
     const raw = member.slayer?.slayer_bosses?.[boss];
     const xp = raw?.xp ?? 0;
-    const kills = Array.from({ length: LEVELING.slayer_to_highest_tier[boss] }, (_, i) => raw?.[`boss_kills_tier_${i}`] ?? 0);
-    return [boss, { level: getLevel(xp, toLevelCosts(thresholds), thresholds.length), kills }] as const;
+    const kills = Array.from(
+      { length: LEVELING.slayer_to_highest_tier[boss] },
+      (_, i) => raw?.[`boss_kills_tier_${i}`] ?? 0,
+    );
+    return [
+      boss,
+      {
+        level: getLevel(xp, toLevelCosts(thresholds), thresholds.length),
+        kills,
+      },
+    ] as const;
   });
 
   return {

@@ -31,7 +31,12 @@ export const LEVELING = leveling as {
 export const PETS = pets as {
   custom_pet_leveling: Record<
     string,
-    { type?: number; pet_levels?: number[]; max_level?: number; rarity_offset?: Record<string, number> }
+    {
+      type?: number;
+      pet_levels?: number[];
+      max_level?: number;
+      rarity_offset?: Record<string, number>;
+    }
   >;
   id_to_display_name: Record<string, string>;
   pet_levels: number[];
@@ -44,9 +49,14 @@ export const PET_TEXTURES = petTextures as {
 };
 
 /** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
-export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
+export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
+  string,
+  string[]
+>;
 
-export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
+export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(
+  accessories.ignored,
+);
 
 export const HOTM_LAYOUT = hotmLayout as Record<
   string,

@@ -12,11 +12,20 @@ import { fractionalLevel, getLevel } from "#leveling";
 import type { DungeonFloor, DungeonsSection } from "#types";
 import type { RawDungeonType, RawMember } from "#raw";
 
-export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+export const DUNGEON_CLASSES = [
+  "healer",
+  "mage",
+  "berserk",
+  "archer",
+  "tank",
+] as const;
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
-function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor[] {
+function floorsOf(
+  type: RawDungeonType | undefined,
+  first: number,
+): DungeonFloor[] {
   return Array.from({ length: 8 - first }, (_, i) => {
     const key = String(first + i);
     const completions = type?.tier_completions?.[key] ?? 0;
@@ -41,17 +50,32 @@ export function getDungeons(member: RawMember): DungeonsSection {
   const classes = Object.fromEntries(
     DUNGEON_CLASSES.map((name) => [
       name,
-      getLevel(dungeons?.player_classes?.[name]?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
-    ])
+      getLevel(
+        dungeons?.player_classes?.[name]?.experience ?? 0,
+        LEVELING.catacombs,
+        MAX_LEVEL,
+        true,
+      ),
+    ]),
   );
 
   return {
-    catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
+    catacombs: getLevel(
+      types?.catacombs?.experience ?? 0,
+      LEVELING.catacombs,
+      MAX_LEVEL,
+      true,
+    ),
     classes,
-    classAverage: add(...Object.values(classes).map(fractionalLevel)) / DUNGEON_CLASSES.length,
+    classAverage:
+      add(...Object.values(classes).map(fractionalLevel)) /
+      DUNGEON_CLASSES.length,
     selectedClass: dungeons?.selected_dungeon_class,
     secrets: dungeons?.secrets ?? 0,
-    floors: { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) },
+    floors: {
+      normal: floorsOf(types?.catacombs, 0),
+      master: floorsOf(types?.master_catacombs, 1),
+    },
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
       master: types?.master_catacombs?.highest_tier_completed,
