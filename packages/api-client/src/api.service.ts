@@ -126,6 +126,14 @@ export class ApiService {
     });
   }
 
+  public getGuildAutocomplete(query: string) {
+    return this.requestKey<GetGuildSearchResponse, "guilds">(
+      "/guild/search",
+      "guilds",
+      { query }
+    );
+  }
+
   public getGuildLeaderboard(
     field: string,
     input: string | number,
@@ -147,14 +155,6 @@ export class ApiService {
       {
         body: { fields, id },
       }
-    );
-  }
-
-  public getGuildAutocomplete(query: string) {
-    return this.requestKey<GetGuildSearchResponse, "guilds">(
-      "/guild/search",
-      "guilds",
-      { query }
     );
   }
 

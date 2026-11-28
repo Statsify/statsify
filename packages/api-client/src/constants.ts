@@ -51,3 +51,7 @@ export const LeaderboardQuery = {
 } as const;
 
 export type LeaderboardQuery = (typeof LeaderboardQuery)[keyof typeof LeaderboardQuery];
+
+export const MAX_AUTOCOMPLETE_NAME_LENGTH = 32;
+
+export const MAX_AUTOCOMPLETE_CHOICES = 25;
