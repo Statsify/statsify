@@ -82,7 +82,8 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
     );
     const layout: Record<string, number[]> = {};
 
-    // Hypixel's key order decides which item a shared slot shows
+    // A shared slot keeps Hypixel's key order, which picks the item it shows,
+    // so an item goes in once it's first in every slot it shares
     for (;;) {
       const item = stacks
         .map((stack) => stack[0])
