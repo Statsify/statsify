@@ -20,10 +20,10 @@ import {
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
+import { renderWithAltText } from "#lib/alt-text";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
-import { render } from "@statsify/rendering";
 import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
@@ -120,7 +120,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
               { mode: gameMode, data }
             );
 
-            return render(profile, getTheme(user));
+            return renderWithAltText(profile, getTheme(user));
           },
         };
       }
@@ -152,7 +152,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             { mode: gameMode, data }
           );
 
-          return render(profile, getTheme(user));
+          return renderWithAltText(profile, getTheme(user));
         },
       }));
 

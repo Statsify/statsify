@@ -115,7 +115,7 @@ export class ThemeCommand {
 
     return {
       content: t("config.theme.view"),
-      files: [{ name: "theme.png", data: profile, type: "image/png" }],
+      files: [profile],
     };
   }
 
@@ -199,7 +199,7 @@ export class ThemeCommand {
 
     return {
       content: t("config.footer.reset"),
-      files: [{ name: "footer.png", data: profile, type: "image/png" }],
+      files: [profile],
     };
   }
 
@@ -227,7 +227,7 @@ export class ThemeCommand {
     return {
       content:
         mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
-      files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
+      files: [profile],
     };
   }
 
@@ -263,6 +263,11 @@ export class ThemeCommand {
       getTheme(user)
     );
 
-    return canvas.toBuffer("png");
+    return {
+      name: `${mode}.png`,
+      data: await canvas.toBuffer("png"),
+      type: "image/png",
+      description: t(`altText.${mode}`),
+    };
   }
 }

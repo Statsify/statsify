@@ -7,5 +7,6 @@
  */
 
 export * from "./Header.js";
+export * from "./HeaderBody.js";
 export * from "./HeaderNametag.js";
 export * from "./progression.js";

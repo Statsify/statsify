@@ -26,6 +26,7 @@ import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
+import { renderAttachment, renderWithAltText } from "#lib/alt-text";
 
 @Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {
@@ -70,20 +71,20 @@ export class GuildCommand extends GuildTopSubCommand {
       {
         label: "Overall",
         generator: () =>
-          render(<GuildProfile {...props} page="overall" />, getTheme(user)),
+          renderWithAltText(<GuildProfile {...props} page="overall" />, getTheme(user)),
       },
       {
         label: "GEXP",
-        generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user)),
+        generator: () => renderWithAltText(<GuildProfile {...props} page="gexp" />, getTheme(user)),
       },
       {
         label: "GEXP Per Game",
         generator: () =>
-          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
+          renderWithAltText(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
       },
       {
         label: "Misc",
-        generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
+        generator: () => renderWithAltText(<GuildProfile {...props} page="misc" />, getTheme(user)),
       },
     ]);
   }
@@ -112,7 +113,14 @@ export class GuildCommand extends GuildTopSubCommand {
     const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
+      files: [
+        {
+          name: "guild-list.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.guildList", { guild: guild.name }),
+        },
+      ],
     };
   }
 
@@ -135,7 +143,7 @@ export class GuildCommand extends GuildTopSubCommand {
       getBackground("hypixel", "overall"),
     ]);
 
-    const canvas = render(
+    const profile = (
       <GuildMemberProfile
         logo={logo}
         skin={skin}
@@ -145,14 +153,11 @@ export class GuildCommand extends GuildTopSubCommand {
         t={t}
         badge={badge}
         user={user}
-      />,
-      getTheme(user)
+      />
     );
 
-    const buffer = await canvas.toBuffer("png");
-
     return {
-      files: [{ name: "guild-member.png", data: buffer, type: "image/png" }],
+      files: [await renderAttachment(profile, "guild-member.png", getTheme(user))],
     };
   }
 }

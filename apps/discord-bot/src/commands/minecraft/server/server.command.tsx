@@ -38,7 +38,8 @@ export class ServerCommand {
     const t = context.t();
     const user = context.getUser();
 
-    const server = await this.getServer(context.option<string>("server"));
+    const tag = context.option<string>("server");
+    const server = await this.getServer(tag);
 
     const [serverLogo, background] = await Promise.all([
       server.icon ? loadImage(server.icon) : undefined,
@@ -57,7 +58,16 @@ export class ServerCommand {
 
     const buffer = await canvas.toBuffer("png");
 
-    return { files: [{ name: "server.png", data: buffer, type: "image/png" }] };
+    return {
+      files: [
+        {
+          name: "server.png",
+          data: buffer,
+          type: "image/png",
+          description: t("altText.server", { server: server.hostname ?? tag }),
+        },
+      ],
+    };
   }
 
   private async getServer(tag: string) {

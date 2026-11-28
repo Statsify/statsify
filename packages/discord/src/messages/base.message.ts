@@ -36,7 +36,10 @@ export class Message {
       content: translateField(locale, this.content),
       embeds: this.embeds?.map((embed) => embed.build(locale)),
       ephemeral: this.ephemeral,
-      files: this.files,
+      files: this.files?.map((file) => ({
+        ...file,
+        description: translateField(locale, file.description),
+      })),
       mentions: this.mentions,
       tts: this.tts,
     };
@@ -58,7 +61,14 @@ export class Message {
     if (data.files)
       return {
         files: data.files,
-        payload_json: res,
+        payload_json: {
+          ...res,
+          // Discord reads alt text from the attachment whose id is the file's index
+          attachments: [
+            ...(res.attachments ?? []),
+            ...data.files.map(({ description }, id) => ({ id, description })),
+          ],
+        },
       };
 
     return res;

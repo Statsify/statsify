@@ -1,4 +1,14 @@
 {
+  "altText": {
+    "badge": "Profile preview with your badge",
+    "footer": "Profile preview with your footer",
+    "guildList": "Member list of {{guild}}",
+    "guildTop": "Top GEXP members of {{guild}} ({{period}})",
+    "leaderboard": "{{name}} leaderboard",
+    "server": "Status of {{server}}",
+    "text": "Your text in the Minecraft font",
+    "theme": "Profile preview with your theme"
+  },
   "arguments": {
     "choice": "Choose an option",
     "file": "Upload a file",
