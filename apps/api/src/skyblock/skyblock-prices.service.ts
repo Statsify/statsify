@@ -9,14 +9,12 @@
 import {
   type Bazaar,
   type ItemsResource,
-  type MayorView,
   type PriceMap,
   type PriceView,
   type RawItemsResource,
   describeKey,
   parseBazaar,
   parseItemsResource,
-  toMayorView,
   toPriceView,
 } from "@statsify/skyblock";
 import {
@@ -34,7 +32,6 @@ import {
 } from "@statsify/api-client";
 import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { Worker } from "node:worker_threads";
-import { getTerm } from "@statsify/skyblock/display";
 import { gunzipJson, gzipJson } from "./zip.js";
 import type {
   RebuildRequest,
@@ -45,12 +42,10 @@ const PRICES_KEY = "skyblock:prices";
 const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
-const ELECTION_KEY = "skyblock:resource:election";
 
 const PRICES_REFRESH_MS = 15 * 60_000;
 const BAZAAR_REFRESH_MS = 60_000;
 const ITEMS_REFRESH_MS = 12 * 60 * 60_000;
-const ELECTION_REFRESH_MS = 30 * 60_000;
 export const FAILURE_BACKOFF_MS = 60_000;
 // The lock spaces rebuilds out too, for when the feed's lastUpdated stops.
 const LOCK_MS = 300_000;
@@ -67,26 +62,12 @@ function isCurrent<T>(copy: Copy<T> | undefined, maxAge: number) {
   return copy !== undefined && Date.now() - copy.fetchedAt <= maxAge;
 }
 
-// Hypixel can still send the last mayor after a term ends, so only a copy
-// fetched during its term goes out of date when it ends.
-const isOutdated = ({ value, fetchedAt }: Copy<MayorView>) =>
-  getTerm(value, fetchedAt) !== undefined &&
-  getTerm(value, Date.now()) === undefined;
-
-const isMayorCurrent = (copy: Copy<MayorView> | undefined) =>
-  copy !== undefined &&
-  isCurrent(copy, ELECTION_REFRESH_MS) &&
-  !isOutdated(copy);
+export const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 interface LoadedItems {
   raw: RawItemsResource;
   parsed: ItemsResource;
 }
-
-const loadItems = ({ value, fetchedAt }: Copy<RawItemsResource>) => ({
-  value: { raw: value, parsed: parseItemsResource(value) },
-  fetchedAt,
-});
 
 interface MarketReads {
   bazaar?: Promise<Bazaar | undefined>;
@@ -99,8 +80,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   // A process keeps what it unzipped, since unzipping per request is slow.
   private map?: PriceMap;
   private bazaar?: Copy<Bazaar>;
-  private items?: Copy<LoadedItems>;
-  private mayor?: Copy<MayorView>;
+  private items?: Copy<RawItemsResource>;
+  private loadedItems?: LoadedItems;
   private worker?: Worker;
 
   public constructor(
@@ -131,60 +112,19 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async getItems(): Promise<LoadedItems | undefined> {
-    if (!isCurrent(this.items, ITEMS_REFRESH_MS)) {
-      const stored = await this.readStored<RawItemsResource>(
-        ITEMS_KEY,
-        this.items?.fetchedAt,
-      );
-      if (stored) this.items = loadItems(stored);
+    this.items = await this.getCopy(
+      ITEMS_KEY,
+      ITEMS_REFRESH_MS,
+      () => this.fetchItems(),
+      this.items,
+    );
+
+    const raw = this.items?.value;
+    if (raw && raw !== this.loadedItems?.raw) {
+      this.loadedItems = { raw, parsed: parseItemsResource(raw) };
     }
 
-    if (this.items && isCurrent(this.items, ITEMS_REFRESH_MS)) {
-      return this.items.value;
-    }
-
-    if (await this.failedRecently(ITEMS_KEY)) return this.items?.value;
-
-    const refetch = this.hypixelService.getSkyBlockItems().then(async (raw) => {
-      const copy = { value: raw, fetchedAt: Date.now() };
-      const loaded = loadItems(copy);
-      await this.store(ITEMS_KEY, copy);
-      this.items = loaded;
-      return loaded.value;
-    });
-
-    return this.staleOrRefetch(ITEMS_KEY, this.items, refetch);
-  }
-
-  public async getMayor(): Promise<MayorView | undefined> {
-    if (!isMayorCurrent(this.mayor)) {
-      const stored = await this.readStored<MayorView>(
-        ELECTION_KEY,
-        this.mayor?.fetchedAt,
-      );
-      if (stored) this.mayor = stored;
-    }
-
-    if (this.mayor && isMayorCurrent(this.mayor)) return this.mayor.value;
-    if (await this.failedRecently(ELECTION_KEY)) return this.mayor?.value;
-
-    const refetch = this.hypixelService
-      .getSkyBlockElection()
-      .then(async (raw) => {
-        const copy = { value: toMayorView(raw), fetchedAt: Date.now() };
-        await this.store(ELECTION_KEY, copy);
-        this.mayor = copy;
-        return copy.value;
-      });
-
-    const last = this.mayor;
-    if (!last || !isOutdated(last)) {
-      return this.staleOrRefetch(ELECTION_KEY, last, refetch);
-    }
-
-    // A term that ended waits for the new mayor, or keeps the last on failure.
-    const mayor = await this.staleOrRefetch(ELECTION_KEY, undefined, refetch);
-    return mayor ?? last.value;
+    return this.loadedItems;
   }
 
   public async getPrice(id: string): Promise<PriceView> {
@@ -209,30 +149,21 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private async getBazaar(): Promise<Bazaar | undefined> {
-    if (!isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
-      const stored = await this.readStored<Bazaar>(
-        BAZAAR_KEY,
-        this.bazaar?.fetchedAt,
-      );
-      if (stored) this.bazaar = stored;
-    }
+    this.bazaar = await this.getCopy(
+      BAZAAR_KEY,
+      BAZAAR_REFRESH_MS,
+      () => this.hypixelService.getSkyBlockBazaar().then(parseBazaar),
+      this.bazaar,
+    );
 
-    if (this.bazaar && isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
-      return this.bazaar.value;
-    }
+    return this.bazaar?.value;
+  }
 
-    if (await this.failedRecently(BAZAAR_KEY)) return this.bazaar?.value;
-
-    const refetch = this.hypixelService
-      .getSkyBlockBazaar()
-      .then(async (raw) => {
-        const copy = { value: parseBazaar(raw), fetchedAt: Date.now() };
-        await this.store(BAZAAR_KEY, copy);
-        this.bazaar = copy;
-        return copy.value;
-      });
-
-    return this.staleOrRefetch(BAZAAR_KEY, this.bazaar, refetch);
+  // A response that doesn't parse is never stored, so the last good one stays.
+  private async fetchItems() {
+    const raw = await this.hypixelService.getSkyBlockItems();
+    parseItemsResource(raw);
+    return raw;
   }
 
   private async rebuild(reads: MarketReads) {
@@ -321,29 +252,41 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     await this.redis.hset(key, { data: await gzipJson(value), fetchedAt });
   }
 
-  private async failedRecently(key: string) {
-    const failedAt = Number(await this.redis.hget(key, "failedAt"));
-    return Date.now() - failedAt < FAILURE_BACKOFF_MS;
-  }
-
-  // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
-  private async staleOrRefetch<T>(
+  private async getCopy<T>(
     key: string,
-    stale: Copy<T> | undefined,
-    refetch: Promise<T>,
-  ): Promise<T | undefined> {
-    const recorded = refetch.catch(async (error) => {
-      await this.redis.hset(key, "failedAt", Date.now());
-      throw error;
-    });
+    maxAgeMs: number,
+    fetch: () => Promise<T>,
+    last?: Copy<T>,
+  ): Promise<Copy<T> | undefined> {
+    let copy = last;
+    if (!isCurrent(copy, maxAgeMs)) {
+      copy = (await this.readStored<T>(key, copy?.fetchedAt)) ?? copy;
+    }
 
-    if (stale) {
-      void recorded.catch((error) => this.logger.error(error));
-      return stale.value;
+    if (isCurrent(copy, maxAgeMs)) return copy;
+    if (await this.redis.exists(getFailureKey(key))) return copy;
+
+    // Only a failed request backs off, not a failed write to Redis.
+    const refetch = fetch().then(
+      async (value) => {
+        const fetched = { value, fetchedAt: Date.now() };
+        await this.store(key, fetched);
+        return fetched;
+      },
+      async (error) => {
+        await this.redis.set(getFailureKey(key), "1", "PX", FAILURE_BACKOFF_MS);
+        throw error;
+      },
+    );
+
+    // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
+    if (copy) {
+      void refetch.catch((error) => this.logger.error(error));
+      return copy;
     }
 
     try {
-      return await recorded;
+      return await refetch;
     } catch (error) {
       if (!(error instanceof HypixelUnavailableError)) throw error;
 

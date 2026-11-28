@@ -8,7 +8,6 @@
 
 export * from "./types.js";
 export * from "./raw.js";
-export { toMayorView, type MayorView, type Perk } from "./election.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export {
   describeKey,
