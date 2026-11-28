@@ -67,7 +67,8 @@ const FORMATTING_BEFORE_COLOR = /§[k-o](?:[^§]|§[k-o])*(?=§[\da-f])/gi;
 
 // A dropped glyph takes the space after it when it starts a word ("§2<glyph> Undead" → "§2Undead"), and the space
 // before it when punctuation follows ("Undead <glyph>!" → "Undead!")
-const UNMAPPED_GLYPH = /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
+const UNMAPPED_GLYPH =
+  /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
 
 const NEEDS_NORMALIZING = /§[k-o]|\p{Co}/iu;
 
@@ -86,11 +87,23 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("normalizeItemText draws item text the way 1.8 does", () => {
-    expect(normalizeItemText("§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7.")).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
-    expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe("§7Grants §d+3 Hunting Fortune§7.");
-    expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe("§7taken from §2Undead §7mobs");
-    expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe("§d§lUltimate Wise V§r§9, §9Champion X");
-    expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe("§d§l§r §d§lMYTHIC ACCESSORY §r§d§l");
-    expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe("§6§LEPIC §r§9§9 Shard");
+    expect(
+      normalizeItemText("§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7."),
+    ).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
+    expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe(
+      "§7Grants §d+3 Hunting Fortune§7.",
+    );
+    expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe(
+      "§7taken from §2Undead §7mobs",
+    );
+    expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe(
+      "§d§lUltimate Wise V§r§9, §9Champion X",
+    );
+    expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe(
+      "§d§l§r §d§lMYTHIC ACCESSORY §r§d§l",
+    );
+    expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe(
+      "§6§LEPIC §r§9§9 Shard",
+    );
   });
 }
