@@ -14,6 +14,7 @@ import { gunzipSync } from "fflate";
 const base64Bytes = (base64: string) =>
   Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
 
+// Hypixel stores an empty slot as {}
 interface LegacyItem {
   id?: number;
   Count?: number;
@@ -30,6 +31,7 @@ interface LegacyItem {
 
 export const SKIN_HOST = "textures.minecraft.net";
 
+// A head's SkullOwner textures value is base64 JSON
 export function skinUrl(value: string) {
   const profile = JSON.parse(new TextDecoder().decode(base64Bytes(value))) as {
     textures?: { SKIN?: { url?: string } };
@@ -93,6 +95,7 @@ export function fromHypixelNBT({
   return (items as LegacyItem[]).map(itemStack);
 }
 
+// The game shows the three main rows above the hotbar
 export const playerInventoryOrder = <T>(slots: T[]) => [
   ...slots.slice(HOTBAR, ARMOR.boots),
   ...slots.slice(0, HOTBAR),
