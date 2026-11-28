@@ -54,9 +54,22 @@ const DROPPER_MAPS = scanMetadata(DropperMaps)
   ] as [keyof DropperMaps, string])
   .sort(([a], [b]) => a.localeCompare(b));
 
-const HARD_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§c")), 4);
-const MEDIUM_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§e")), 4);
-const EASY_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([, name]) => name.startsWith("§a")), 4);
+const DROPPER_MAP_COLUMNS = 3;
+
+const HARD_DROPPER_MAP_GROUPS = arrayGroup(
+  DROPPER_MAPS.filter(([, name]) => name.startsWith("§c")),
+  DROPPER_MAP_COLUMNS
+);
+
+const MEDIUM_DROPPER_MAP_GROUPS = arrayGroup(
+  DROPPER_MAPS.filter(([, name]) => name.startsWith("§e")),
+  DROPPER_MAP_COLUMNS
+);
+
+const EASY_DROPPER_MAP_GROUPS = arrayGroup(
+  DROPPER_MAPS.filter(([, name]) => name.startsWith("§a")),
+  DROPPER_MAP_COLUMNS
+);
 
 interface DropperMapsTableProps {
   dropper: Dropper;
