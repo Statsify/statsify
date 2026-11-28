@@ -24,8 +24,11 @@ export interface Pack {
 
 type Format = [major: number, minor: number];
 
+// 26.3's pack format picks which of a pack's overlays apply
 const TARGET_FORMAT: Format = [97, 1];
 
+// Item model definitions arrived in format 46 (1.21.4)
+// and flattened names in format 4 (1.13)
 const MODERN_FORMAT = 46;
 const FLATTENED_FORMAT = 4;
 
@@ -161,6 +164,7 @@ function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const model = parseJson<OlderModel>(file);
   const parent = model.parent && withoutNamespace(model.parent);
 
+  // 26.3 draws chests, heads and banners in code
   if (parent === "builtin/entity") return;
 
   const renamed: Record<string, string> = {};
@@ -289,6 +293,7 @@ export async function loadPack(
 
   const files = new Map<string, Uint8Array>();
 
+  // Later overlays replace files from earlier ones and from the pack itself
   for (const directory of directories) {
     const prefix = `${root}${directory}assets/`;
 
@@ -312,6 +317,7 @@ export async function loadPack(
   };
 }
 
+// Packs are layered as the game layers them, lowest priority first
 export class PackStack {
   public readonly hash: string;
 
