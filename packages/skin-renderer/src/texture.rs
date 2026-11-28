@@ -1,11 +1,10 @@
 use image::GenericImageView;
 
-use crate::error::Result;
+use crate::error::{Error, Result};
 
 pub struct Texture {
   pub texture: wgpu::Texture,
   pub view: wgpu::TextureView,
-  pub sampler: wgpu::Sampler,
 }
 
 impl Texture {
@@ -34,24 +33,8 @@ impl Texture {
     };
     let texture = device.create_texture(&desc);
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
-    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
-      address_mode_u: wgpu::AddressMode::ClampToEdge,
-      address_mode_v: wgpu::AddressMode::ClampToEdge,
-      address_mode_w: wgpu::AddressMode::ClampToEdge,
-      mag_filter: wgpu::FilterMode::Linear,
-      min_filter: wgpu::FilterMode::Linear,
-      mipmap_filter: wgpu::FilterMode::Nearest,
-      compare: Some(wgpu::CompareFunction::LessEqual),
-      lod_min_clamp: 0.0,
-      lod_max_clamp: 100.0,
-      ..Default::default()
-    });
 
-    Self {
-      texture,
-      view,
-      sampler,
-    }
+    Self { texture, view }
   }
 
   pub fn from_image(
@@ -60,6 +43,12 @@ impl Texture {
     img: &image::DynamicImage,
   ) -> Result<Self> {
     let dimensions = img.dimensions();
+    let limit = device.limits().max_texture_dimension_2d;
+
+    if dimensions.0 > limit || dimensions.1 > limit {
+      return Err(Error::TextureTooLarge);
+    }
+
     let rgba = img.to_rgba8();
 
     let size = wgpu::Extent3d {
@@ -99,20 +88,6 @@ impl Texture {
 
     let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
 
-    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
-      address_mode_u: wgpu::AddressMode::ClampToEdge,
-      address_mode_v: wgpu::AddressMode::ClampToEdge,
-      address_mode_w: wgpu::AddressMode::ClampToEdge,
-      mag_filter: wgpu::FilterMode::Nearest,
-      min_filter: wgpu::FilterMode::Nearest,
-      mipmap_filter: wgpu::FilterMode::Nearest,
-      ..Default::default()
-    });
-
-    Ok(Self {
-      texture,
-      view,
-      sampler,
-    })
+    Ok(Self { texture, view })
   }
 }

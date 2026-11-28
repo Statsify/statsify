@@ -1,7 +1,8 @@
-use cgmath::{perspective, Deg, Matrix4, Point3, Vector3};
+use cgmath::{Deg, EuclideanSpace, InnerSpace, Matrix4, Point3, Rad, Vector3};
 
 use super::CameraBehavior;
 use crate::geometry::coordinate::Coordinate;
+use crate::geometry::{sin_cos, tan};
 
 const TWO_PI: f32 = std::f32::consts::PI * 2.0;
 
@@ -72,6 +73,41 @@ impl OrbitalCamera {
     }
   }
 
+  pub fn with_theta(mut self, theta: f32) -> Self {
+    self.update_theta(theta);
+    self
+  }
+
+  // A fixed render isn't bound by the viewer's zoom limits
+  pub fn fitted(mut self, points: &[Vector3<f32>], radius: f32) -> Self {
+    let back = self.eye().to_vec().normalize();
+    let right = Vector3::unit_y().cross(back).normalize();
+    let up = back.cross(right);
+    let tan = tan(Deg(self.fovy / 2.0));
+
+    // The radius at which the farthest-out point sits `margin` pixels inside the frame
+    let radius_for = |margin: f32| {
+      let half_height = tan * (1.0 - 2.0 * margin / self.height);
+      let half_width = tan * self.width / self.height * (1.0 - 2.0 * margin / self.width);
+
+      points
+        .iter()
+        .map(|point| {
+          let spread = (point.dot(right).abs() / half_width).max(point.dot(up).abs() / half_height);
+          point.dot(back) + spread
+        })
+        .fold(f32::MIN, f32::max)
+    };
+
+    self.radius = if radius_for(1.0) > radius {
+      radius_for(4.0)
+    } else {
+      radius
+    };
+
+    self
+  }
+
   fn update_radius(&mut self, radius: f32) {
     self.radius = radius.clamp(self.min_radius, self.max_radius);
   }
@@ -87,9 +123,12 @@ impl OrbitalCamera {
 
 impl CameraBehavior for OrbitalCamera {
   fn eye(&self) -> Point3<f32> {
-    let x = self.radius * self.phi.sin() * self.theta.sin();
-    let y = self.radius * self.phi.cos();
-    let z = self.radius * self.phi.sin() * self.theta.cos();
+    let (phi_sin, phi_cos) = sin_cos(Rad(self.phi));
+    let (theta_sin, theta_cos) = sin_cos(Rad(self.theta));
+
+    let x = self.radius * phi_sin * theta_sin;
+    let y = self.radius * phi_cos;
+    let z = self.radius * phi_sin * theta_cos;
 
     Point3::new(x, y, z)
   }
@@ -98,11 +137,16 @@ impl CameraBehavior for OrbitalCamera {
     let eye = self.eye();
     let view = Matrix4::look_at_rh(eye, self.target, Vector3::unit_y());
 
-    let proj = perspective(
-      Deg(self.fovy),
-      self.width / self.height,
-      self.znear,
-      self.zfar,
+    // cgmath's perspective, with the tangent from geometry::tan
+    let f = tan(Deg(self.fovy / 2.0)).recip();
+    let (near, far) = (self.znear, self.zfar);
+
+    #[rustfmt::skip]
+    let proj = Matrix4::new(
+      f / (self.width / self.height), 0.0, 0.0, 0.0,
+      0.0, f, 0.0, 0.0,
+      0.0, 0.0, (far + near) / (near - far), -1.0,
+      0.0, 0.0, (2.0 * far * near) / (near - far), 0.0,
     );
 
     proj * view

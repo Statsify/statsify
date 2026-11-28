@@ -1,10 +1,11 @@
-use std::io::{BufWriter, Cursor};
+use std::sync::mpsc;
 
-use futures_intrusive::channel;
-use image::{ImageBuffer, Rgba};
+use image::codecs::png::PngEncoder;
+use image::{ExtendedColorType, ImageEncoder};
+use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::{Backend, OutputTexture};
-use super::SkinRender;
+use super::PngBytes;
 use crate::buffer_dimensions::BufferDimensions;
 use crate::error::{Error, Result as SkinRendererResult};
 
@@ -100,10 +101,12 @@ impl Backend for NativeBackend {
   async fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<SkinRender> {
+  ) -> SkinRendererResult<PngBytes> {
+    let dimensions = self.dimensions;
+
     let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
-      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
+      size: (dimensions.padded_bytes_per_row * dimensions.height) as u64,
       usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
@@ -114,46 +117,55 @@ impl Backend for NativeBackend {
         buffer: &output_buffer,
         layout: wgpu::TexelCopyBufferLayout {
           offset: 0,
-          bytes_per_row: Some(self.dimensions.padded_bytes_per_row),
-          rows_per_image: Some(self.dimensions.height),
+          bytes_per_row: Some(dimensions.padded_bytes_per_row),
+          rows_per_image: Some(dimensions.height),
         },
       },
       self.texture_extent,
     );
 
-    let index = self.queue.submit(Some(encoder.finish()));
+    // Waiting on the GPU blocks the thread, so it runs off napi's async workers. submit goes
+    // with it: it waits on the device lock a running poll holds until its GPU work finishes
+    let device = self.device.clone();
+    let queue = self.queue.clone();
+    let command_buffer = encoder.finish();
 
-    let buffer_slice = output_buffer.slice(..);
-    let (sender, receiver) = channel::shared::oneshot_channel();
-    buffer_slice.map_async(wgpu::MapMode::Read, move |v| sender.send(v).unwrap());
+    spawn_blocking(move || {
+      let index = queue.submit(Some(command_buffer));
 
-    self
-      .device
-      .poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
+      let buffer_slice = output_buffer.slice(..);
+      let (sender, receiver) = mpsc::channel();
+      buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
+        let _ = sender.send(v);
+      });
 
-    if let Some(Ok(())) = receiver.receive().await {
+      device.poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
+
+      let Ok(Ok(())) = receiver.recv() else {
+        return Err(Error::RenderFailure);
+      };
+
       let padded_buffer = buffer_slice.get_mapped_range();
 
       let buffer = padded_buffer
-        .chunks(self.dimensions.padded_bytes_per_row as usize)
-        .take(self.dimensions.height as usize)
-        .flat_map(|row| &row[..self.dimensions.unpadded_bytes_per_row as usize])
+        .chunks(dimensions.padded_bytes_per_row as usize)
+        .take(dimensions.height as usize)
+        .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
         .copied()
         .collect::<Vec<u8>>();
 
-      let image =
-        ImageBuffer::<Rgba<u8>, _>::from_vec(self.dimensions.width, self.dimensions.height, buffer)
-          .expect("Failed to create image buffer");
+      let mut png = Vec::new();
 
-      let mut writer = BufWriter::new(Cursor::new(Vec::new()));
+      PngEncoder::new(&mut png).write_image(
+        &buffer,
+        dimensions.width,
+        dimensions.height,
+        ExtendedColorType::Rgba8,
+      )?;
 
-      image.write_to(&mut writer, image::ImageFormat::Png)?;
-
-      let bytes = writer.into_inner().unwrap().into_inner();
-
-      Ok(bytes)
-    } else {
-      Err(Error::RenderFailure)
-    }
+      Ok(png)
+    })
+    .await
+    .map_err(|_| Error::RenderFailure)?
   }
 }

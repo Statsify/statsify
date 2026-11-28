@@ -9,20 +9,25 @@
 import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { InjectRedis } from "#redis";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
+import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { renderSkin } from "@statsify/skin-renderer";
+import { type Armor, type ArmorPiece, renderSkin } from "@statsify/skin-renderer";
+import type { ArmorDto, ArmorPieceDto, SKULLS, SkinRenderDto } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { readFile } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
   public constructor(
     private readonly httpService: HttpService,
-    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
+    @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
+    @InjectRedis() private readonly redis: Redis
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
@@ -43,12 +48,31 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
-    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
-    // This field is set by loadImage from `@statsify/rendering`
-    const { _data: buffer } = image as unknown as { _data: Buffer };
-    return renderSkin(buffer, skin.slim ?? false, extruded);
+  public async getRender(
+    uuid: string,
+    extruded: boolean,
+    { yaw, pose, cape, armor = {} }: Omit<SkinRenderDto, "uuid">
+  ): Promise<Buffer> {
+    const enchanted = Object.values(armor).some((piece) => piece && "enchanted" in piece && piece.enchanted);
+
+    const [skin, resolvedArmor, glint] = await Promise.all([
+      this.getSkin(uuid),
+      this.resolveArmor(armor),
+      enchanted ? readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+    ]);
+
+    const [{ skin: image }, capeImage] = await Promise.all([
+      this.resolveSkin(skin.skinUrl, skin.slim),
+      cape && skin.capeUrl ? loadTexture(skin.capeUrl) : undefined,
+    ]);
+
+    return renderSkin(imageData(image), skin.slim ?? false, extruded, {
+      yaw,
+      pose,
+      armor: resolvedArmor,
+      glint,
+      cape: capeImage && imageData(capeImage),
+    });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -100,6 +124,44 @@ export class SkinService {
     };
   }
 
+  private async resolveArmor(armor: ArmorDto): Promise<Armor> {
+    const [helmet, chestplate, leggings, boots] = await Promise.all([
+      this.resolveHelmet(armor.helmet),
+      armor.chestplate && resolveArmorPiece(armor.chestplate, 1),
+      armor.leggings && resolveArmorPiece(armor.leggings, 2),
+      armor.boots && resolveArmorPiece(armor.boots, 1),
+    ]);
+
+    return { helmet, chestplate, leggings, boots };
+  }
+
+  private async resolveHelmet(helmet: ArmorDto["helmet"]): Promise<ArmorPiece | undefined> {
+    if (!helmet) return;
+    if (helmet.head !== undefined) return this.resolveHead(helmet.head);
+
+    // 1.8 draws no glint on a worn skull or player head
+    if (helmet.skull !== undefined) {
+      const texture = await readFile(getMinecraftTexturePath(`textures/entity/${SKULL_TEXTURES[helmet.skull]}.png`));
+      return { texture, enchanted: false, skull: true };
+    }
+
+    return resolveArmorPiece(helmet, 1);
+  }
+
+  private async resolveHead(hash: string): Promise<ArmorPiece> {
+    const key = `head:${hash}`;
+    let head = await this.redis.getBuffer(key);
+
+    if (!head) {
+      head = imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
+
+      // The hash pins the image, so this expiry only bounds how many heads Redis keeps
+      await this.redis.set(key, head, "EX", 60 * 60 * 24 * 30);
+    }
+
+    return { texture: head, enchanted: false, skull: true };
+  }
+
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -133,6 +195,59 @@ export class SkinService {
       )
     );
   }
+}
+
+// This field is set by loadImage from `@statsify/rendering`
+const imageData = (image: Image) => {
+  const { _data: data } = image as unknown as { _data: Buffer };
+  return data;
+};
+
+const loadTexture = (url: string) =>
+  loadImage(url).catch((error) => {
+    if (error.response?.status === 404) throw new NotFoundException("texture");
+    throw error;
+  });
+
+const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
+  skeleton: "skeleton/skeleton",
+  wither_skeleton: "skeleton/wither_skeleton",
+  zombie: "zombie/zombie",
+  creeper: "creeper/creeper",
+};
+
+const UNDYED_LEATHER = 0xA0_65_40;
+
+async function resolveArmorPiece(
+  { material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto,
+  layer: 1 | 2
+): Promise<ArmorPiece> {
+  const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
+  if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
+
+  // The dye tints the base, then the overlay adds the undyed details
+  const [base, overlay] = await Promise.all([
+    loadImage(`${path}.png`),
+    loadImage(`${path}_overlay.png`),
+  ]);
+  const canvas = createCanvas(base.width, base.height);
+  const ctx = canvas.getContext("2d");
+
+  ctx.drawImage(base, 0, 0);
+
+  const pixels = ctx.getImageData(0, 0, base.width, base.height);
+  const dye = [(color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF];
+
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    for (let channel = 0; channel < 3; channel++) {
+      pixels.data[i + channel] = Math.floor((pixels.data[i + channel] * dye[channel]) / 255);
+    }
+  }
+
+  ctx.putImageData(pixels, 0, 0);
+  ctx.drawImage(overlay, 0, 0);
+
+  return { texture: await canvas.toBuffer("png"), enchanted };
 }
 
 interface MojangProfile {

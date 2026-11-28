@@ -1,5 +1,5 @@
 #[cfg(not(target_arch = "wasm32"))]
-use super::SkinRender;
+use super::PngBytes;
 use crate::error::{Error, Result as SkinRendererResult};
 
 #[cfg(target_arch = "wasm32")]
@@ -40,7 +40,7 @@ pub trait Backend {
   async fn handle_encoder_after_render(
     &self,
     encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<SkinRender>;
+  ) -> SkinRendererResult<PngBytes>;
 
   #[cfg(target_arch = "wasm32")]
   fn handle_encoder_after_render(

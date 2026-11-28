@@ -1,10 +1,10 @@
-use cgmath::{Deg, Quaternion, Rotation3, Vector3, Zero};
+use cgmath::{Deg, Quaternion, Vector3, Zero};
 use image::{DynamicImage, GenericImageView};
 use strum::IntoEnumIterator;
 
 use super::orientation::{Orientation, Vector3Ext};
 use super::prism::{Prism, TexturePixel, TextureProvider, TextureRegion};
-use super::{Geometry, Rotation};
+use super::{axis_angle, Geometry, Rotation};
 
 pub struct OuterLayerGeometry<'a> {
   pub dimensions: Vector3<f32>,
@@ -53,10 +53,10 @@ impl<'a> OuterLayerGeometry<'a> {
     let dimensions = Vector3::new(1.0, 1.0, self.thickness);
     let sign = face.sign();
     let quaternion = match face {
-      Orientation::Top | Orientation::Bottom => Quaternion::from_angle_x(Deg(-90.0 * sign)),
+      Orientation::Top | Orientation::Bottom => axis_angle(Vector3::unit_x(), Deg(-90.0 * sign)),
       Orientation::Front => Quaternion::zero(),
-      Orientation::Back => Quaternion::from_angle_y(Deg(180.0)),
-      Orientation::Right | Orientation::Left => Quaternion::from_angle_y(Deg(90.0 * sign)),
+      Orientation::Back => axis_angle(Vector3::unit_y(), Deg(180.0)),
+      Orientation::Right | Orientation::Left => axis_angle(Vector3::unit_y(), Deg(90.0 * sign)),
     };
 
     // Use placeholder position for now which will be updated for each voxel
