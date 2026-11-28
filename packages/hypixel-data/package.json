@@ -19,5 +19,8 @@
     "@statsify/textures": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "@statsify/util": "workspace:^"
   }
 }
