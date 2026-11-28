@@ -16,11 +16,17 @@ export interface CustomId {
   values: string[];
 }
 
-export function createCustomId(route: string, ownerId: string, ...values: (string | number)[]) {
+export function createCustomId(
+  route: string,
+  ownerId: string,
+  ...values: (string | number)[]
+) {
   const customId = [route, ownerId, ...values].join(":");
 
   if (customId.length > MAX_CUSTOM_ID_LENGTH)
-    throw new Error(`The custom id "${customId}" is over Discord's ${MAX_CUSTOM_ID_LENGTH} character limit`);
+    throw new Error(
+      `The custom id "${customId}" is over Discord's ${MAX_CUSTOM_ID_LENGTH} character limit`,
+    );
 
   return customId;
 }
