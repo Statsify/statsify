@@ -50,7 +50,8 @@ export interface RawDungeonType {
   tier_completions?: Record<string, number>;
   highest_tier_completed?: number;
   best_score?: Record<string, number>;
-  best_runs?: Record<string, RawDungeonRun[]>; // a few of the best per floor
+  // Hypixel keeps a few of the best runs per floor.
+  best_runs?: Record<string, RawDungeonRun[]>;
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
@@ -109,7 +110,8 @@ export type RawHarp = Record<string, number | string | boolean>;
 
 export interface RawContest {
   collected: number;
-  claimed_position?: number; // from 0
+  // The claimed position counts from 0.
+  claimed_position?: number;
   claimed_participants?: number;
   claimed_medal?: string;
 }
@@ -265,11 +267,13 @@ export interface RawMember {
     songs?: { harp?: RawHarp };
     fish_family?: string[];
     hina?: { tasks?: { completed_tasks?: string[] } };
-    tree_gifts?: Record<string, unknown>; // by tree, plus milestone_tier_claimed
+    // The gifts are keyed by tree, beside milestone_tier_claimed.
+    tree_gifts?: Record<string, unknown>;
     starlyn?: { personal_bests?: Record<string, number> };
     hunting_toolkit?: RawToolkit;
   };
-  quests?: { harp_quest?: RawHarp }; // the harp before foraging.songs
+  // The harp lived here before foraging.songs.
+  quests?: { harp_quest?: RawHarp };
   winter_player_data?: { refined_jyrre_uses?: number };
   foraging_core?: {
     whispers?: Partial<

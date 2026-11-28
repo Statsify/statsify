@@ -34,7 +34,8 @@ import type { SlayerBoss } from "./sections/slayers.js";
 
 export const LEVELING = leveling as {
   catacombs: number[];
-  fairy_souls: number; // the most a profile can collect
+  // fairy_souls is the most a profile can collect.
+  fairy_souls: number;
   HOTF: number[];
   HOTM: number[];
   leveling_caps: Record<string, number>;
