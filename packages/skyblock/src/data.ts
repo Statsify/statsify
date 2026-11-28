@@ -13,6 +13,7 @@ import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
+import textures from "./generated/textures-1.8.json" with { type: "json" };
 import { prettify } from "@statsify/util";
 import type { Rarity } from "#types";
 
@@ -55,6 +56,13 @@ export const PET_TEXTURES = petTextures as {
   pets: Record<string, Partial<Record<Rarity, string>>>;
   skins: Record<string, string>;
 };
+
+export const MATERIAL_IDS: Record<string, number | undefined> =
+  textures.materials;
+
+// 1.8 pack texture paths by "<id>:<damage>", and by "<id>" for damage 0.
+export const TEXTURE_PATHS: Record<string, string | undefined> =
+  textures.textures;
 
 // An accessory's higher tiers, or a variant like Dante's Talisman and Ring.
 export const ACCESSORY_UPGRADES = accessories.upgrades as Record<

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PET_TEXTURES } from "#data";
+import { MATERIAL_IDS, PET_TEXTURES } from "#data";
 import {
   RARITIES,
   type ItemTexture,
@@ -14,21 +14,6 @@ import {
   type Rarity,
 } from "#types";
 import type { RawItem } from "#raw";
-
-// 1.8 ids for the items resource's accessory materials.
-const MATERIAL_IDS: Record<string, number> = {
-  BOOK: 340,
-  COMPASS: 345,
-  DISPENSER: 23,
-  DROPPER: 158,
-  ENCHANTED_BOOK: 403,
-  GOLD_BARDING: 418,
-  GOLD_NUGGET: 371,
-  IRON_BARDING: 417,
-  PAPER: 339,
-  SKULL_ITEM: 397,
-  STRING: 287,
-};
 
 export function skinHash(value: string): string | undefined {
   const { textures } = JSON.parse(
@@ -59,12 +44,17 @@ export function resourceTexture({
   skin,
   material,
   durability,
+  color,
 }: ItemsResource["items"][string]): ItemTexture | undefined {
   if (skin) return { kind: "head", skin };
   const id = MATERIAL_IDS[material];
-  return id === undefined
-    ? undefined
-    : { kind: "item", id, damage: durability ?? 0 };
+  if (id === undefined) return undefined;
+
+  const damage = durability ?? 0;
+  if (color === undefined) return { kind: "item", id, damage };
+
+  const [red, green, blue] = color.split(",").map(Number);
+  return { kind: "item", id, damage, color: (red << 16) | (green << 8) | blue };
 }
 
 interface PetTextureOptions {
@@ -114,6 +104,19 @@ if (import.meta.vitest) {
           durability: 2,
         }),
       ).toEqual({ kind: "item", id: 397, damage: 2 });
+      expect(
+        resourceTexture({ name: "Lapis", material: "INK_SACK", durability: 4 }),
+      ).toEqual({ kind: "item", id: 351, damage: 4 });
+    });
+
+    it("should read leather dye", () => {
+      expect(
+        resourceTexture({
+          name: "Boots",
+          material: "LEATHER_BOOTS",
+          color: "139,0,0",
+        }),
+      ).toEqual({ kind: "item", id: 301, damage: 0, color: 0x8b_00_00 });
     });
 
     it("should skip an unknown material", () => {
