@@ -14,7 +14,7 @@ import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const crimsonIcons = ({ crimson }: MemberView) =>
+export const getCrimsonIcons = ({ crimson }: MemberView) =>
   crimson?.kuudra.map(({ texture }) => texture) ?? [];
 
 export const SkyBlockCrimsonProfile = ({

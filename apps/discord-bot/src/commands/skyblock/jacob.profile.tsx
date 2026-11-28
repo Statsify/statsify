@@ -15,7 +15,7 @@ import type { MemberView } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const jacobIcons = ({ jacob }: MemberView) =>
+export const getJacobIcons = ({ jacob }: MemberView) =>
   jacob?.crops
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined) ?? [];

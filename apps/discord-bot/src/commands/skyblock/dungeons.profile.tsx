@@ -17,10 +17,10 @@ import { Empty } from "./components/Empty.js";
 import {
   LevelBar,
   type LevelBarProps,
-  levelBarRows,
+  getLevelBarRows,
 } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
-import { gridRows } from "./components/ItemGrid.js";
+import { getGridRows } from "./components/ItemGrid.js";
 import type { DungeonFloor } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -118,7 +118,7 @@ export const SkyBlockDungeonsProfile = ({
             />
           </Table.tr>,
           // Five classes in one row set the card's width, so they wrap.
-          ...levelBarRows(classes, 3),
+          ...getLevelBarRows(classes, 3),
           ...(floors.length > 0
             ? arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>)
             : [
@@ -157,7 +157,7 @@ export const SkyBlockEssenceProfile = ({
 
   return (
     <Card {...card} name={profile.displayName}>
-      <Table.table>{gridRows(cells, 4)}</Table.table>
+      <Table.table>{getGridRows(cells, 4)}</Table.table>
     </Card>
   );
 };

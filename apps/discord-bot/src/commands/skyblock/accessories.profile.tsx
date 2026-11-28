@@ -23,9 +23,10 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
-const MAX_POWER_STATS_PER_LINE = 3; // more is wider than the card
+// More power stats on a line would make the card wider.
+const MAX_POWER_STATS_PER_LINE = 3;
 
-const topMissing = ({ accessories }: MemberView) =>
+const getTopMissing = ({ accessories }: MemberView) =>
   accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
 
 function getBaseName({ name, reforge }: InactiveAccessory) {
@@ -60,9 +61,10 @@ interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
   page: "missing" | "inactive";
 }
 
-export const accessoryIcons =
+export const getAccessoryIcons =
   (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) => {
-    const shown = page === "missing" ? topMissing(member) : topInactive(member);
+    const shown =
+      page === "missing" ? getTopMissing(member) : topInactive(member);
     return shown.map(({ texture }) => texture);
   };
 
@@ -154,7 +156,7 @@ export const SkyBlockAccessoriesProfile = ({
     );
   }
 
-  const shown = topMissing(profile.member);
+  const shown = getTopMissing(profile.member);
   // A price or the outside-bag note would widen the card beside the name.
   const stacked =
     accessories.market || shown.some(({ outsideBag }) => outsideBag);

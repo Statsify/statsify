@@ -9,7 +9,7 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { type LevelBarProps, levelBarRows } from "./components/LevelBar.js";
+import { type LevelBarProps, getLevelBarRows } from "./components/LevelBar.js";
 import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
@@ -48,7 +48,7 @@ export const SkyBlockSkillsProfile = ({
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {skills ? (
         // Four "XP past max" notes in one row set the card's width.
-        <Table.table>{levelBarRows(bars, 3)}</Table.table>
+        <Table.table>{getLevelBarRows(bars, 3)}</Table.table>
       ) : (
         <EmptySection
           setting="skills"

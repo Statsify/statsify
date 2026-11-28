@@ -37,6 +37,7 @@ export interface ItemSlotProps {
   size?: number;
 }
 
+// A texture the 1.8 pack doesn't have, like a barrier, leaves the slot empty.
 export const ItemSlot = ({ icon, size = ICON_SIZE }: ItemSlotProps) =>
   icon ? (
     <img image={icon} width={size} height={size} />
