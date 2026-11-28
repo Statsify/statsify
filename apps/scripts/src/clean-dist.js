@@ -18,7 +18,8 @@ const SRC = "src";
 // src/a.ts builds to dist/a.js and dist/a.js.map, which all share the stem "a"
 const stem = (path) => path.replace(/\.map$/, "").replace(/\.[^./\\]+$/, "");
 
-const entries = (dir) => readdirSync(dir, { recursive: true, withFileTypes: true });
+const entries = (dir) =>
+  readdirSync(dir, { recursive: true, withFileTypes: true });
 
 const files = (dir) =>
   entries(dir)
@@ -40,5 +41,6 @@ if (existsSync(DIST)) {
     if (readdirSync(folder).length === 0) rmdirSync(folder);
   }
 
-  if (orphans.length > 0) console.log(`Removed ${orphans.length} orphaned files from dist`);
+  if (orphans.length > 0)
+    console.log(`Removed ${orphans.length} orphaned files from dist`);
 }
