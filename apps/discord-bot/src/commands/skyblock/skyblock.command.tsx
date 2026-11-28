@@ -26,7 +26,7 @@ import {
   type SkyBlockCardName,
   type SkyBlockProfile,
   getSkyBlockBackground,
-  skyBlockTitle,
+  getSkyBlockTitle,
 } from "./cards.js";
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
@@ -284,7 +284,7 @@ export class SkyBlockCommand {
       async (t: LocalizeFunction) => {
         const view = await getView(id);
         const icons = await loadItemIcons(getIcons?.(view.member) ?? []);
-        const title = skyBlockTitle(t, view, name);
+        const title = getSkyBlockTitle(t, view, name);
 
         const canvas = render(
           <Profile

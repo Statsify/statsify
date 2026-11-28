@@ -8,7 +8,7 @@
 
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { RARITY_COLORS, gridRows } from "./components/ItemGrid.js";
+import { RARITY_COLORS, getGridRows } from "./components/ItemGrid.js";
 import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -74,10 +74,10 @@ export const SkyBlockChocolateProfile = ({
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.ts title={`§a${t("skyblock.rabbits")}`}>
-          {gridRows(rabbits, COLUMNS)}
+          {getGridRows(rabbits, COLUMNS)}
         </Table.ts>
         <Table.ts title={`§a${t("skyblock.employees")}`}>
-          {gridRows(employees, COLUMNS)}
+          {getGridRows(employees, COLUMNS)}
         </Table.ts>
       </Table.table>
     </Card>

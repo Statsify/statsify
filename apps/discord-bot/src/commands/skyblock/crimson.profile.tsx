@@ -18,7 +18,7 @@ const FACTION_COLORS: Record<Faction, string> = {
   barbarians: "§c",
 };
 
-export const crimsonIcons = ({ crimson }: MemberView) =>
+export const getCrimsonIcons = ({ crimson }: MemberView) =>
   crimson?.kuudra.map(({ texture }) => texture) ?? [];
 
 export const SkyBlockCrimsonProfile = ({

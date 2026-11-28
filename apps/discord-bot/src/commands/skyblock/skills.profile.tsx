@@ -9,9 +9,9 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { LevelBar } from "./components/LevelBar.js";
+import { type LevelBarProps, getLevelBarRows } from "./components/LevelBar.js";
 import { SKILLS, type Skill } from "@statsify/skyblock";
-import { arrayGroup, prettify } from "@statsify/util";
+import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const SKILL_COLORS: Record<Skill, string> = {
@@ -40,36 +40,30 @@ export const SkyBlockSkillsProfile = ({
     ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
     : [];
 
-  const cells = skills
+  const bars: LevelBarProps[] = skills
     ? SKILLS.map((name) => {
         const level = skills.skills[name];
         const maxed = level.xpForNext === undefined && !level.unverified;
         const xp = t(Math.floor(level.xpCurrent));
 
-        return (
-          <LevelBar
-            title={prettify(name)}
-            level={level}
-            color={SKILL_COLORS[name]}
-            t={t}
-            note={
-              maxed && level.xpCurrent > 0
-                ? `§7${t("skyblock.xpPastMax", { xp })}`
-                : undefined
-            }
-          />
-        );
+        return {
+          title: prettify(name),
+          level,
+          color: SKILL_COLORS[name],
+          t,
+          notes:
+            maxed && level.xpCurrent > 0
+              ? [`§7${t("skyblock.xpPastMax", { xp })}`]
+              : [],
+        };
       })
     : [];
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {skills ? (
-        <Table.table>
-          {arrayGroup(cells, 4).map((row) => (
-            <Table.tr>{row}</Table.tr>
-          ))}
-        </Table.table>
+        // Four "XP past max" notes in one row set the card's width.
+        <Table.table>{getLevelBarRows(bars, 3)}</Table.table>
       ) : (
         <EmptySection
           setting="skills"

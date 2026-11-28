@@ -9,7 +9,7 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { MEDAL_COLORS, gridRows } from "./components/ItemGrid.js";
+import { MEDAL_COLORS, getGridRows } from "./components/ItemGrid.js";
 import { type FishingSection, TROPHY_TIERS } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -115,7 +115,7 @@ const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
         </Table.tr>
       </Table.ts>
       <Table.ts title={`§6${t("skyblock.trophyFish")} §8(${legend}§8)`}>
-        {gridRows(fish, 3)}
+        {getGridRows(fish, 3)}
       </Table.ts>
     </Table.table>
   );
@@ -131,5 +131,5 @@ const SeaCreatureTable = ({ fishing, t }: FishingTableProps) => {
   if (creatures.length === 0)
     return <Empty text={t("skyblock.noSeaCreatures")} />;
 
-  return <Table.table>{gridRows(creatures, 3)}</Table.table>;
+  return <Table.table>{getGridRows(creatures, 3)}</Table.table>;
 };
