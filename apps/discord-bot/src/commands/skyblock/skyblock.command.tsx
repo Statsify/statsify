@@ -299,7 +299,10 @@ export class SkyBlockCommand {
         .getSkyBlockProfile(player.uuid, ["armor"], user, id)
         .then(
           ({ member }) => member.armor ?? undefined,
-          () => undefined,
+          (error) => {
+            if (!(error instanceof ErrorMessage)) throw error;
+            return undefined;
+          },
         );
 
       return this.apiService.getPlayerSkin(player.uuid, user, armor);
