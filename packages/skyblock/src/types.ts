@@ -94,7 +94,8 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
-  xpCurrent: number; // at the max level, all the XP past it
+  // At the max level, this is all the XP past it.
+  xpCurrent: number;
   xpForNext?: number;
   progress: number;
 }
@@ -142,7 +143,8 @@ export interface DungeonsSection {
 
 export interface Essence {
   type: string;
-  amount?: number; // missing for a shop Hypixel sends no balance for
+  // Hypixel sends no balance for some shops.
+  amount?: number;
   perks: number;
   maxPerks: number;
 }
@@ -239,7 +241,8 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  powerStats?: PowerStat[]; // only for a Power learned from a stone
+  // Only a Power learned from a stone has these.
+  powerStats?: PowerStat[];
   tuning: Record<string, number>;
   tuningPoints: number;
   enrichments: number;
@@ -253,7 +256,7 @@ export interface AccessoriesSection {
 
 export interface PowerStat {
   name: string;
-  color: string; // a § code
+  color: string;
   value: number;
 }
 
@@ -324,7 +327,8 @@ export interface ItemView {
   stars?: number;
   recombobulated: boolean;
   enchantments?: Record<string, number>;
-  enrichment?: string; // an accessory's, as its stat id
+  // An accessory's enrichment is its stat id.
+  enrichment?: string;
 }
 
 // An item's id is its 1.8 numeric id, and a head's skin is a texture hash.
