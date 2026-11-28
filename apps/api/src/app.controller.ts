@@ -7,7 +7,7 @@
  */
 
 import { ApiExcludeEndpoint } from "@nestjs/swagger";
-import { type Connection, ConnectionStates } from "mongoose";
+import { type Connection, STATES } from "mongoose";
 import { Controller, Get, Header, Render, ServiceUnavailableException } from "@nestjs/common";
 import { InjectConnection } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
@@ -23,7 +23,7 @@ export class AppController {
   @Get("healthz")
   @ApiExcludeEndpoint()
   public healthz() {
-    if (this.connection.readyState !== ConnectionStates.connected || this.redis.status !== "ready")
+    if (this.connection.readyState !== STATES.connected || this.redis.status !== "ready")
       throw new ServiceUnavailableException();
   }
 
