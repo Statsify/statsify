@@ -29,28 +29,44 @@ const SKILL_COLORS: Record<Skill, string> = {
   social: "§a",
 };
 
-export const SkyBlockSkillsProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockSkillsProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { skills } = profile.member;
 
-  const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
+  const sidebar: SidebarItem[] = skills
+    ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
+    : [];
 
-  const cells = skills ?
-    SKILLS.map((name) => (
-      <LevelBar title={prettify(name)} level={skills.skills[name]} color={SKILL_COLORS[name]} t={t} />
-    )) :
-    [];
+  const cells = skills
+    ? SKILLS.map((name) => (
+        <LevelBar
+          title={prettify(name)}
+          level={skills.skills[name]}
+          color={SKILL_COLORS[name]}
+          t={t}
+        />
+      ))
+    : [];
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {skills ?
-        (
-          <Table.table>
-            {arrayGroup(cells, 4).map((row) => (
-              <Table.tr>{row}</Table.tr>
-            ))}
-          </Table.table>
-        ) :
-        <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
+      {skills ? (
+        <Table.table>
+          {arrayGroup(cells, 4).map((row) => (
+            <Table.tr>{row}</Table.tr>
+          ))}
+        </Table.table>
+      ) : (
+        <EmptySection
+          setting="skills"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noSkills")}
+          t={t}
+        />
+      )}
     </Card>
   );
 };

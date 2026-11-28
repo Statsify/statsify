@@ -17,7 +17,19 @@ export interface EmptySectionProps {
   t: LocalizeFunction;
 }
 
-export const EmptySection = ({ setting, newProfile, empty, t }: EmptySectionProps) =>
-  newProfile ?
-    <Empty text={empty} /> :
-    <Empty text={t("skyblock.apiOffCard", { setting: t(`skyblock.apiSettings.${setting}`) })} color="§c" />;
+export const EmptySection = ({
+  setting,
+  newProfile,
+  empty,
+  t,
+}: EmptySectionProps) =>
+  newProfile ? (
+    <Empty text={empty} />
+  ) : (
+    <Empty
+      text={t("skyblock.apiOffCard", {
+        setting: t(`skyblock.apiSettings.${setting}`),
+      })}
+      color="§c"
+    />
+  );

@@ -6,8 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, ApiService, type CommandContext, type LocalizationString } from "@statsify/discord";
-import { type APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
+import {
+  AbstractArgument,
+  ApiService,
+  type CommandContext,
+  type LocalizationString,
+} from "@statsify/discord";
+import {
+  type APIApplicationCommandOptionChoice,
+  ApplicationCommandOptionType,
+} from "discord-api-types/v10";
 import { Container } from "typedi";
 
 export class ItemArgument extends AbstractArgument {
@@ -22,11 +30,15 @@ export class ItemArgument extends AbstractArgument {
     this.description = (t) => t("arguments.skyblock-item");
   }
 
-  public async autocompleteHandler(context: CommandContext): Promise<APIApplicationCommandOptionChoice[]> {
+  public async autocompleteHandler(
+    context: CommandContext,
+  ): Promise<APIApplicationCommandOptionChoice[]> {
     const query = context.option<string>(this.name, "");
     if (!query) return [];
 
-    const items = await Container.get(ApiService).getSkyBlockItems(query).catch(() => []);
+    const items = await Container.get(ApiService)
+      .getSkyBlockItems(query)
+      .catch(() => []);
     return items.map(({ id, name }) => ({ name, value: id }));
   }
 }

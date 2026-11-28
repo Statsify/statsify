@@ -15,14 +15,19 @@ export type ItemIcons = Map<ItemTexture, Canvas>;
 
 const ICON_SIZE = 32;
 
-export async function loadItemIcons(textures: ItemTexture[], size = ICON_SIZE): Promise<ItemIcons> {
-  const icons = await Promise.all(textures.map((texture) => getItemIcon(texture, { size })));
+export async function loadItemIcons(
+  textures: ItemTexture[],
+  size = ICON_SIZE,
+): Promise<ItemIcons> {
+  const icons = await Promise.all(
+    textures.map((texture) => getItemIcon(texture, { size })),
+  );
 
   return new Map(
     textures.flatMap((texture, index) => {
       const icon = icons[index];
       return icon ? [[texture, icon] as const] : [];
-    })
+    }),
   );
 }
 
@@ -33,4 +38,8 @@ export interface ItemSlotProps {
 
 /** A texture the 1.8 pack doesn't have (a barrier) leaves the slot empty. */
 export const ItemSlot = ({ icon, size = ICON_SIZE }: ItemSlotProps) =>
-  icon ? <img image={icon} width={size} height={size} /> : <div width={size} height={size} />;
+  icon ? (
+    <img image={icon} width={size} height={size} />
+  ) : (
+    <div width={size} height={size} />
+  );

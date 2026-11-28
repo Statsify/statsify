@@ -59,7 +59,8 @@ export interface ProfileSummary {
   fairySouls: number;
 }
 
-export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
+export interface SkyBlockProfileView
+  extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
 }
@@ -120,7 +121,14 @@ export interface SkillsSection {
   skills: Record<Skill, SkillLevel>;
 }
 
-export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "vampire"] as const;
+export const SLAYER_BOSSES = [
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
+  "blaze",
+  "vampire",
+] as const;
 
 export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
@@ -159,7 +167,15 @@ export interface HotmSection {
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { total: number; spent: number }>;
-  nodes: { id: string; name: string; level: number; maxLevel: number; x: number; y: number; enabled: boolean }[];
+  nodes: {
+    id: string;
+    name: string;
+    level: number;
+    maxLevel: number;
+    x: number;
+    y: number;
+    enabled: boolean;
+  }[];
 }
 
 export interface PetsSection {
@@ -247,7 +263,10 @@ export interface NetworthSection {
   noInventory: boolean;
   museumIncluded: boolean;
   pricesAsOf: number;
-  categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  categories: Record<
+    string,
+    { total: number; unsoulbound: number; top: NetworthItem[] }
+  >;
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
 }
@@ -305,7 +324,11 @@ export const RawItem = z.object({
   tag: z
     .object({
       display: z
-        .object({ Name: z.string().optional(), Lore: z.array(z.string()).optional(), color: z.number().optional() })
+        .object({
+          Name: z.string().optional(),
+          Lore: z.array(z.string()).optional(),
+          color: z.number().optional(),
+        })
         .optional(),
       ExtraAttributes: z
         .object({
@@ -314,14 +337,22 @@ export const RawItem = z.object({
           modifier: z.string().optional(),
           upgrade_level: z.number().optional(),
           // A few items store it as a long, which the decode leaves as `[high, low]`
-          dungeon_item_level: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+          dungeon_item_level: z
+            .union([z.number(), z.tuple([z.number(), z.number()])])
+            .optional(),
           rarity_upgrades: z.number().optional(),
           enchantments: z.record(z.string(), z.number()).optional(),
         })
         .catchall(z.unknown())
         .optional(),
       SkullOwner: z
-        .object({ Properties: z.object({ textures: z.array(z.object({ Value: z.string() })).optional() }).optional() })
+        .object({
+          Properties: z
+            .object({
+              textures: z.array(z.object({ Value: z.string() })).optional(),
+            })
+            .optional(),
+        })
         .optional(),
       ench: z.array(z.unknown()).optional(),
     })

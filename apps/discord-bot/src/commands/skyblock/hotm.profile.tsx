@@ -19,15 +19,32 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockHotmProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { level, loadout, tokens, ability, powder } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), `${t(tokens.spent)}§7/§5${t(tokens.total)}`, "§5"],
-    [t("skyblock.pickaxeAbility"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.tokensSpent"),
+      `${t(tokens.spent)}§7/§5${t(tokens.total)}`,
+      "§5",
+    ],
+    [
+      t("skyblock.pickaxeAbility"),
+      ability ? prettify(ability) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (loadout.total > 1)
+    sidebar.unshift([
+      t("skyblock.loadout"),
+      t("skyblock.loadoutOf", loadout),
+      "§b",
+    ]);
 
   const powders = POWDERS.map((type) => {
     const color = POWDER_COLORS[type];
@@ -35,9 +52,15 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
 
     return (
       <box direction="column" location="center" width="100%">
-        <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${t(`skyblock.powders.${type}`)}`}</text>
-        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(total)}`}</text>
-        <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
+        <text
+          margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+        >{`${color}${t(`skyblock.powders.${type}`)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
+        >{`§^3^${color}${t(total)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 8, left: 10, right: 10 }}
+        >{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
       </box>
     );
   });
@@ -46,7 +69,12 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
+          <LevelBar
+            title={t("skyblock.hotmLevel")}
+            level={level}
+            color="§5"
+            t={t}
+          />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
       </Table.table>

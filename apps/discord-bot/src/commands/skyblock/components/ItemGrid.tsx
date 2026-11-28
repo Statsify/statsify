@@ -27,12 +27,16 @@ export const RARITY_COLORS: Record<Rarity, string> = {
 };
 
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
-  t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });
+  t("skyblock.pricesAsOf", {
+    time: formatTime(Date.now() - asOf, { entries: 1 }),
+  });
 
 // Table.tr splits its width by its cells, so a short last row is padded to keep the columns
 export const gridRows = (cells: JSX.Element[], columns: number) =>
   arrayGroup(cells, columns).map((row) => (
-    <Table.tr>{[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}</Table.tr>
+    <Table.tr>
+      {[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}
+    </Table.tr>
   ));
 
 export interface ItemGridEntry {
