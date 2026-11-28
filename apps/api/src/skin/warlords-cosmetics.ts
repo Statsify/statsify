@@ -89,20 +89,43 @@ export const WARLORDS_WEAPONS = {
 // Simple is leather in a team's dye; the pack paints the other tiers over vanilla materials,
 // recolored for the blue team.
 export const WARLORDS_ARMOR = {
-  0: { blue: { material: "leather", color: SUIT_DYES.BLUE }, red: { material: "leather", color: SUIT_DYES.RED } },
+  0: {
+    blue: { material: "leather", color: SUIT_DYES.BLUE },
+    red: { material: "leather", color: SUIT_DYES.RED },
+  },
   1: { blue: { material: "iron" }, red: { material: "chainmail" } },
   2: { blue: { material: "gold" }, red: { material: "diamond" } },
 } as const satisfies Record<number, Record<"blue" | "red", ArmorPieceDto>>;
 
-export const getWarlordsWeaponModel = (weapon: string) => lookup(WARLORDS_WEAPONS, weapon, `Unknown weapon ${weapon}`);
+export const getWarlordsWeaponModel = (weapon: string) =>
+  lookup(WARLORDS_WEAPONS, weapon, `Unknown weapon ${weapon}`);
 
-export function getWarlordsHelmetModel(playerClass: string, selection: number, team: string) {
-  const helmets = lookup(WARLORDS_HELMETS, playerClass, `Unknown class ${playerClass}`);
-  const helmet = lookup(helmets, `${selection}`, `Unknown ${playerClass} helmet ${selection}`);
+export function getWarlordsHelmetModel(
+  playerClass: string,
+  selection: number,
+  team: string,
+) {
+  const helmets = lookup(
+    WARLORDS_HELMETS,
+    playerClass,
+    `Unknown class ${playerClass}`,
+  );
+  const helmet = lookup(
+    helmets,
+    `${selection}`,
+    `Unknown ${playerClass} helmet ${selection}`,
+  );
   return lookup(helmet, team, `Unknown team ${team}`);
 }
 
-export function getWarlordsArmor(selection: number, team: string): ArmorPieceDto {
-  const armor = lookup(WARLORDS_ARMOR, `${selection}`, `Unknown armor ${selection}`);
+export function getWarlordsArmor(
+  selection: number,
+  team: string,
+): ArmorPieceDto {
+  const armor = lookup(
+    WARLORDS_ARMOR,
+    `${selection}`,
+    `Unknown armor ${selection}`,
+  );
   return lookup(armor, team, `Unknown team ${team}`);
 }
