@@ -11,13 +11,15 @@ import type { RawElection } from "#raw";
 
 export interface Perk {
   name: string;
-  description: string; // with § codes
+  // The description keeps its § codes.
+  description: string;
 }
 
 export interface MayorView {
   mayor: { name: string; perks: Perk[] };
   minister?: { name: string; perk: Perk };
-  term: number; // the SkyBlock year after its election's
+  // A term's year is the year after its election's.
+  term: number;
 }
 
 // Perks write stats with the private-use glyphs that lore uses.

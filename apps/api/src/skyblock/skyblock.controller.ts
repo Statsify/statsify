@@ -48,6 +48,7 @@ import {
   SkyBlockIconsService,
 } from "./skyblock-icons.service.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockResourcesService } from "./skyblock-resources.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
 import { parseIconKey } from "@statsify/skyblock/icon-key";
 import type { FastifyReply } from "fastify";
@@ -58,6 +59,7 @@ export class SkyBlockController {
   public constructor(
     private readonly skyblockService: SkyBlockService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly resourcesService: SkyBlockResourcesService,
     private readonly iconsService: SkyBlockIconsService,
   ) {}
 
@@ -125,7 +127,7 @@ export class SkyBlockController {
   @Auth({ role: AuthRole.WORKER, weight: 1 })
   @Get("/mayor")
   public async getMayor() {
-    const mayor = await this.pricesService.getMayor();
+    const mayor = await this.resourcesService.getMayor();
     if (!mayor) throw new SkyBlockUnavailableException("hypixel");
 
     return {
