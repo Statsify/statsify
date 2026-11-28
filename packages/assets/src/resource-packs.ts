@@ -42,7 +42,7 @@ const PACK_FORMAT = 97;
 
 const HYPIXEL_PACK = "SkyBlock";
 
-// A pack under any other license than this sha256 waits for a review
+// A pack under any license but Hypixel's v1.0 (2026-07-07) waits for a review
 const REVIEWED_LICENSE =
   "22d27db6dc242dbdfdb0bac60ee16a488a8791d724be1734eedc23d85ad8068c";
 
@@ -52,7 +52,7 @@ const HELD = "held.json";
 const LOCK = "update.lock";
 const STAGING = ".staging-";
 
-// A lock untouched for five minutes was left by a crashed update
+// The holder touches the lock every minute, so one idle for five is stale
 const HEARTBEAT = 60 * 1000;
 const STALE_LOCK = 5 * HEARTBEAT;
 
@@ -73,6 +73,7 @@ interface VersionMetadata {
   downloads: { client: { url: string; sha1: string } };
 }
 
+// Packs go lowest priority first, so the client jar is packs[0]
 interface Generation {
   packs: string[];
 }
@@ -87,7 +88,8 @@ const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) =>
 
 const generationId = ({ packs }: Generation) => packs.join(" ");
 
-// Unlike Promise.all, this waits for every write so none outlives the lock
+// Unlike Promise.all, this waits for every write and delete before throwing,
+// so none outlives the update's lock
 async function settle<T>(promises: Promise<T>[]) {
   const results = await Promise.allSettled(promises);
 
