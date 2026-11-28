@@ -281,7 +281,7 @@ export class ModelResolver {
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
 
-      // Shields keep their special models' transformation on the condition around them
+      // Shields keep their special model's transformation on the condition
       case "minecraft:condition":
         return this.layers(
           condition(model, item) ? model.on_true : model.on_false,
