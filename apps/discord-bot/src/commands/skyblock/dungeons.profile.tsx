@@ -7,6 +7,11 @@
  */
 
 import { Card } from "./components/Card.js";
+import {
+  CLASS_COLORS,
+  DUNGEON_CLASSES,
+  GRADE_COLORS,
+} from "@statsify/skyblock/display";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import {
@@ -16,11 +21,7 @@ import {
 } from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import { gridRows } from "./components/ItemGrid.js";
-import {
-  CLASS_COLORS,
-  DUNGEON_CLASSES,
-  GRADE_COLORS,
-} from "@statsify/skyblock/display";
+import type { DungeonFloor } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {
@@ -57,26 +58,27 @@ export const SkyBlockDungeonsProfile = ({
     ],
   ];
 
-  if (mode === "normal")
+  if (mode === "normal") {
     sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
+  }
 
   const classes = DUNGEON_CLASSES.map((name): LevelBarProps => {
     const color = CLASS_COLORS[name];
     const damage = dungeons.mostDamage[mode][name];
-    const notes =
-      damage > 0
-        ? [`§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`]
-        : [];
+    const mostDamage = `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`;
+
     return {
       title: prettify(name),
       level: dungeons.classes[name],
       color,
       t,
-      notes,
+      notes: damage > 0 ? [mostDamage] : [],
     };
   });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
+  const score = (best?: DungeonFloor["best"]) =>
+    best ? `${t(best.score)} ${GRADE_COLORS[best.grade]}${best.grade}` : none;
 
   const floors = dungeons.floors[mode]
     .filter(({ played }) => played > 0)
@@ -88,9 +90,9 @@ export const SkyBlockDungeonsProfile = ({
         <text
           margin={{ top: 0, bottom: 2 }}
         >{`§7${t("skyblock.completions")}: §a${t(completions)}`}</text>
-        <text margin={{ top: 0, bottom: 2 }}>
-          {`§7${t("skyblock.bestScore")}: §e${best ? `${t(best.score)} ${GRADE_COLORS[best.grade]}${best.grade}` : none}`}
-        </text>
+        <text
+          margin={{ top: 0, bottom: 2 }}
+        >{`§7${t("skyblock.bestScore")}: §e${score(best)}`}</text>
         <text
           margin={{ top: 0, bottom: 2 }}
         >{`§7${t("skyblock.fastest")}: §6${time(fastest)}`}</text>
@@ -115,7 +117,7 @@ export const SkyBlockDungeonsProfile = ({
               t={t}
             />
           </Table.tr>,
-          // Five classes in one row set the card's width, so they wrap three and two
+          // Five classes in one row set the card's width, so they wrap.
           ...levelBarRows(classes, 3),
           ...(floors.length > 0
             ? arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>)

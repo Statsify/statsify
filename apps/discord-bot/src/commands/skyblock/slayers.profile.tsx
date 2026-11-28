@@ -30,7 +30,7 @@ export const SkyBlockSlayersProfile = ({
       (count, tier) => `§7${romanNumeral(tier + 1)} §f${t(count)}`,
     );
 
-    // On one line, the longest boss's tier counts set every cell's width
+    // On one line, the longest boss's tier counts set every cell's width.
     const lines = arrayGroup(tiers, Math.ceil(tiers.length / 2));
 
     return (

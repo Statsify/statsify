@@ -12,7 +12,7 @@ import { arrayGroup } from "@statsify/util";
 import type { Level } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
-// A note line's height: size 2 text is 20px tall
+// Size 2 text is 20px tall.
 const NOTE_HEIGHT = 20;
 
 export interface LevelBarProps {
@@ -20,8 +20,8 @@ export interface LevelBarProps {
   level: Level;
   color: string;
   t: LocalizeFunction;
-  notes?: string[]; // lines under the bar
-  lines?: number; // note lines to make room for, blank past the notes
+  notes?: string[];
+  lines?: number; // note lines to fit, blank past the notes
 }
 
 export const LevelBar = ({
@@ -54,12 +54,8 @@ export const LevelBar = ({
       </text>
       <>
         {Array.from({ length: lines }, (_, index) => {
-          const margin = {
-            top: 0,
-            bottom: index === lines - 1 ? 8 : 2,
-            left: 10,
-            right: 10,
-          };
+          const bottom = index === lines - 1 ? 8 : 2;
+          const margin = { top: 0, bottom, left: 10, right: 10 };
           return index < notes.length ? (
             <text margin={margin}>{notes[index]}</text>
           ) : (
@@ -71,7 +67,7 @@ export const LevelBar = ({
   );
 };
 
-/** Level bars in rows. A bar with fewer notes than its row keeps blank lines, so the row's boxes end level. */
+// Each bar fits its row's most notes, so the row's boxes end level.
 export const levelBarRows = (bars: LevelBarProps[], columns: number) =>
   arrayGroup(bars, columns).map((row) => {
     const lines = Math.max(...row.map(({ notes = [] }) => notes.length));

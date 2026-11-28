@@ -9,7 +9,7 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, formatPriceAge } from "./components/ItemGrid.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView, NetworthSection } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
@@ -23,7 +23,9 @@ const topItems = ({ categories }: NetworthSection) =>
     .slice(0, TOP_ITEMS);
 
 export const networthIcons = ({ networth }: MemberView) =>
-  topItems(networth!).flatMap(({ texture }) => (texture ? [texture] : []));
+  topItems(networth!)
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined);
 
 export const SkyBlockNetworthProfile = ({
   profile,
@@ -47,7 +49,7 @@ export const SkyBlockNetworthProfile = ({
     .filter(([, { total }]) => total > 0)
     .toSorted(([, a], [, b]) => b.total - a.total)
     .map(([name, { total }]) => (
-      // prettify gives "Enderchest"; Hypixel calls it the Ender Chest
+      // prettify would write "Enderchest".
       <Table.td
         title={
           name === "enderchest" ? t("skyblock.enderChest") : prettify(name)
@@ -58,7 +60,6 @@ export const SkyBlockNetworthProfile = ({
       />
     ));
 
-  // Laid out two to a row: three long names like Carnival Mask Inventory in one row set the card's width
   const cells = [
     <Table.td
       title={t("stats.coins")}
@@ -83,6 +84,7 @@ export const SkyBlockNetworthProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
+        {/* Three long names like Carnival Mask Inventory widen a row. */}
         {arrayGroup(cells, 2).map((row) => (
           <Table.tr>{row}</Table.tr>
         ))}
@@ -92,7 +94,7 @@ export const SkyBlockNetworthProfile = ({
       ) : (
         <></>
       )}
-      <Empty text={`${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`} />
+      <Empty text={`${unpriced}${formatPriceAge(t, networth.pricesAsOf)}`} />
     </Card>
   );
 };

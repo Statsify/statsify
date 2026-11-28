@@ -31,7 +31,8 @@ import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
-const cacheLevelFor = (user: User | null) => (User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE);
+const getCacheLevel = (user: User | null) =>
+  User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE;
 
 const SKYBLOCK_NOT_FOUND: Record<string, string | undefined> = {
   skyblock: "errors.skyblockNoProfiles",
@@ -45,11 +46,12 @@ function skyBlockNotFound(message: string, tag: string) {
   return new ErrorMessage((t) => t(`${key}.title`), (t) => t(`${key}.description`, { tag }));
 }
 
-/** A 404 is a player or guild the board doesn't rank, which the board shows as null. */
+// A 404 is a player or guild the board doesn't rank, which shows as null.
 const leaderboardOrNull = <T>(request: Promise<T>) =>
   request.catch((err: AxiosError) => {
     if (!err.response) throw err;
-    if ((err.response.data as PlayerNotFoundException | GuildNotFoundException).statusCode === 404) return null;
+    const error = err.response.data as PlayerNotFoundException | GuildNotFoundException;
+    if (error.statusCode === 404) return null;
     throw new ErrorMessage("errors.leaderboardNotFound");
   });
 
@@ -73,7 +75,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super
-      .getCachedPlayer(input, cacheLevelFor(user))
+      .getCachedPlayer(input, getCacheLevel(user))
       .catch((err) => {
         if (!err.response || !err.response.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;
@@ -263,7 +265,7 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getCachedSkyBlockProfiles(input, cacheLevelFor(user)).catch((err) => {
+    return super.getCachedSkyBlockProfiles(input, getCacheLevel(user)).catch((err) => {
       throw this.skyBlockError(err, type, tag);
     });
   }
@@ -274,9 +276,11 @@ export class ApiService extends StatsifyApiService {
     user: User | null = null,
     profileId?: string
   ) {
-    return super.getCachedSkyBlockProfile(uuid, sections, cacheLevelFor(user), profileId).catch((err) => {
-      throw this.skyBlockError(err, "uuid", uuid);
-    });
+    return super
+      .getCachedSkyBlockProfile(uuid, sections, getCacheLevel(user), profileId)
+      .catch((err) => {
+        throw this.skyBlockError(err, "uuid", uuid);
+      });
   }
 
   /**
@@ -285,7 +289,8 @@ export class ApiService extends StatsifyApiService {
    */
   public override async getSkyBlockPrice(item: string) {
     const price = await super.getSkyBlockPrice(item).catch((err) => {
-      if ((err.response?.data as SkyBlockNotFoundException | undefined)?.message === "item") return;
+      const error = err.response?.data as SkyBlockNotFoundException | undefined;
+      if (error?.message === "item") return;
       throw this.skyBlockError(err, undefined, item);
     });
 
@@ -394,9 +399,9 @@ export class ApiService extends StatsifyApiService {
     if (!err.response?.data) return this.unknownError();
 
     const error = err.response.data as
-      | PlayerNotFoundException |
-      SkyBlockNotFoundException |
-      SkyBlockUnavailableException;
+      | PlayerNotFoundException
+      | SkyBlockNotFoundException
+      | SkyBlockUnavailableException;
 
     if (error.statusCode === 503) {
       const { reason, retryAfter } = error as SkyBlockUnavailableException;

@@ -11,18 +11,16 @@ import type { RawElection } from "#raw";
 
 export interface Perk {
   name: string;
-  /** With the game's § codes. */
-  description: string;
+  description: string; // with § codes
 }
 
-/** The mayor and minister in office. */
 export interface MayorView {
   mayor: { name: string; perks: Perk[] };
   minister?: { name: string; perk: Perk };
-  term: number; // the SkyBlock year the term began, the one after its election's
+  term: number; // the SkyBlock year after its election's
 }
 
-// Perks write stats with the game's private-use glyphs, as lore does
+// Perks write stats with the private-use glyphs that lore uses.
 const toPerk = ({ name, description }: Perk): Perk => ({
   name,
   description: normalizeItemText(description),

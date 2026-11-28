@@ -10,18 +10,17 @@ import { Color } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { TreeNode } from "@statsify/skyblock";
 
-// Both hearts' trees as their menus lay them out: 7 columns, the top tier first
 const TREE_WIDTH = 7;
 const PERK_SIZE = 14;
 
-const perkColor = ({ level, maxLevel, enabled }: TreeNode) => {
+function getPerkColor({ level, maxLevel, enabled }: TreeNode) {
   if (level === 0) return new Color("§8").hex;
   if (!enabled) return new Color("§c").hex;
   return new Color(level === maxLevel ? "§a" : "§e").hex;
-};
+}
 
 export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
-  const byPosition = new Map(
+  const nodesByPosition = new Map(
     nodes.map((node) => [`${node.x},${node.y}`, node]),
   );
   const height = Math.max(...nodes.map(({ y }) => y)) + 1;
@@ -35,12 +34,16 @@ export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
       {Array.from({ length: height }, (_, y) => (
         <div>
           {Array.from({ length: TREE_WIDTH }, (_, x) => {
-            const node = byPosition.get(`${x},${y}`);
-            return node ? (
+            const node = nodesByPosition.get(`${x},${y}`);
+            if (!node) {
+              return <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
+            }
+
+            return (
               <box
                 width={PERK_SIZE}
                 height={PERK_SIZE}
-                color={perkColor(node)}
+                color={getPerkColor(node)}
                 padding={0}
                 margin={1}
                 border={{
@@ -51,8 +54,6 @@ export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
                 }}
                 shadowDistance={0}
               />
-            ) : (
-              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />
             );
           })}
         </div>

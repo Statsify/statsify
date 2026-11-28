@@ -7,10 +7,10 @@
  */
 
 import { Card } from "./components/Card.js";
+import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
 import { POWDERS, POWDER_COLORS } from "@statsify/skyblock/display";
-import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -84,7 +84,7 @@ export const SkyBlockHotmProfile = ({
           />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
-        {/* Not a Table.tr: its cells keep their own height, and the stats' box should be as tall as the tree's */}
+        {/* A Table.tr won't stretch the stats' box to the tree's height. */}
         <div width="100%">
           <box direction="column" width="1/2" location="center">
             <text

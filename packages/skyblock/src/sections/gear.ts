@@ -13,6 +13,7 @@ import type { GearSection, ItemView, Loadout, Slots } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
 const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
+
 const EQUIPMENT_PIECES = [
   "EQUIPMENT_SLOT_1",
   "EQUIPMENT_SLOT_2",
@@ -20,28 +21,26 @@ const EQUIPMENT_PIECES = [
   "EQUIPMENT_SLOT_4",
 ] as const;
 
-// The item type ends an item's rarity line: "LEGENDARY DUNGEON SWORD", "EPIC BOW"
+// The rarity line ends with the item type, as in "EPIC BOW".
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
 export const isWeapon = (item: ItemView) =>
   WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
 
-type SavedSets<Piece extends string> = Record<
-  `${number}`,
-  Partial<Record<Piece, RawNbt>>
-> & { equipped_set?: number };
+interface SavedSets<Piece extends string> {
+  equipped_set?: number;
+  [slot: `${number}`]: Partial<Record<Piece, RawNbt>>;
+}
 
-/** Each saved set with anything in it, by slot, and the worn set's slot. */
-function savedSets<Piece extends string>(
-  saved: SavedSets<Piece>,
-  pieces: readonly Piece[],
+function getSavedSets<Piece extends string>(
+  { equipped_set: wornSlot, ...saved }: SavedSets<Piece>,
+  pieces: Piece[],
   worn: Slots,
 ) {
-  const { equipped_set: wornSlot, ...sets } = saved;
-  const list = Object.entries(sets)
+  const sets = Object.entries(saved)
     .map(([slot, set]) => ({
       slot: Number(slot),
-      // The worn set's slot holds only its id, since its pieces are on the player
+      // The worn set's pieces are on the player, not in its slot.
       items:
         Number(slot) === wornSlot
           ? worn
@@ -52,13 +51,9 @@ function savedSets<Piece extends string>(
     }))
     .filter(({ items }) => items.some(Boolean))
     .toSorted((a, b) => a.slot - b.slot);
-  return { sets: list, wornSlot };
+  return { sets, wornSlot };
 }
 
-/**
- * Each set with anything in it, by slot, and the worn set's slot. Old saves keep pages of 36 (four rows of nine, a set
- * per column).
- */
 function getWardrobe(
   member: RawMember,
   worn: Slots,
@@ -66,11 +61,9 @@ function getWardrobe(
   const loadout = member.loadout?.armor;
 
   if (loadout) {
-    const { sets, wornSlot } = savedSets(loadout, ARMOR_PIECES, worn);
-    return {
-      wardrobe: sets.map(({ slot, items }) => ({ slot, armor: items })),
-      wardrobeSlot: wornSlot,
-    };
+    const { sets, wornSlot } = getSavedSets(loadout, [...ARMOR_PIECES], worn);
+    const wardrobe = sets.map(({ slot, items }) => ({ slot, armor: items }));
+    return { wardrobe, wardrobeSlot: wornSlot };
   }
 
   const equipped = member.inventory?.wardrobe_equipped_slot;
@@ -80,6 +73,7 @@ function getWardrobe(
   const contents = member.inventory?.wardrobe_contents;
   if (!contents) return { wardrobe: [], wardrobeSlot };
 
+  // Old saves keep pages of 36, with a set in each column of nine.
   const slots = decodeSlots(contents);
   const wardrobe: GearSection["wardrobe"] = [];
   for (let page = 0; page * 36 < slots.length; page++) {
@@ -98,55 +92,45 @@ function getEquipmentSets(
   member: RawMember,
   worn: Slots,
 ): Pick<GearSection, "equipmentSets" | "equipmentSlot"> {
-  const { sets, wornSlot } = savedSets(
+  const { sets, wornSlot } = getSavedSets(
     member.loadout?.equipment ?? {},
-    EQUIPMENT_PIECES,
+    [...EQUIPMENT_PIECES],
     worn,
   );
-  return {
-    equipmentSets: sets.map(({ slot, items }) => ({ slot, equipment: items })),
-    equipmentSlot: wornSlot,
-  };
+  const equipmentSets = sets.map(({ slot, items }) => ({
+    slot,
+    equipment: items,
+  }));
+  return { equipmentSets, equipmentSlot: wornSlot };
 }
 
-/**
- * The saved loadouts with anything in them. `tuning_points_slot` n is read as slot_<n>, which the saves' loadout names
- * fit (unverified); a tuning slot also keeps purchase_ts.
- */
+function getLoadoutTuning(points: unknown) {
+  if (!points || typeof points !== "object") return;
+
+  // A tuning slot keeps its purchase_ts beside the points.
+  const stats = Object.entries(points as Record<string, number>).filter(
+    ([key, value]) => key in TUNING && value > 0,
+  );
+  return stats.length > 0 ? Object.fromEntries(stats) : undefined;
+}
+
 function getLoadouts(member: RawMember): Loadout[] {
   const tuning = member.accessory_bag_storage?.tuning ?? {};
+
   return Object.values(member.loadout?.loadouts ?? {})
-    .map(
-      ({
-        id,
-        name,
-        armor_set_id,
-        equipment_set_id,
-        pet,
-        power_stone,
-        tuning_points_slot,
-      }) => {
-        const points =
-          tuning_points_slot === undefined
-            ? undefined
-            : tuning[`slot_${tuning_points_slot}`];
-        const stats =
-          points && typeof points === "object"
-            ? Object.entries(points).filter(
-                ([key, value]) => key in TUNING && value > 0,
-              )
-            : [];
-        return {
-          id,
-          name,
-          armorSet: armor_set_id,
-          equipmentSet: equipment_set_id,
-          pet,
-          power: power_stone,
-          tuning: stats.length > 0 ? Object.fromEntries(stats) : undefined,
-        };
-      },
-    )
+    .map((loadout) => {
+      const slot = loadout.tuning_points_slot;
+      const points = slot === undefined ? undefined : tuning[`slot_${slot}`];
+      return {
+        id: loadout.id,
+        name: loadout.name,
+        armorSet: loadout.armor_set_id,
+        equipmentSet: loadout.equipment_set_id,
+        pet: loadout.pet,
+        power: loadout.power_stone,
+        tuning: getLoadoutTuning(points),
+      };
+    })
     .filter(({ armorSet, equipmentSet, pet, power, tuning }) =>
       [armorSet, equipmentSet, pet, power, tuning].some(
         (value) => value !== undefined,
@@ -155,12 +139,11 @@ function getLoadouts(member: RawMember): Loadout[] {
     .toSorted((a, b) => a.id - b.id);
 }
 
-/** What the member wears and keeps in the wardrobe, and the weapons in their inventory. */
 export function getGear(member: RawMember): GearSection | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // The armor inventory runs from the boots up
+  // The armor inventory runs from the boots up.
   const armor = inventory.inv_armor
     ? decodeSlots(inventory.inv_armor).toReversed()
     : [null, null, null, null];

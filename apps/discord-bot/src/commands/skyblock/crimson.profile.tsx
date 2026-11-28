@@ -82,7 +82,7 @@ export const SkyBlockCrimsonProfile = ({
             ))}
           </Table.tr>
         </Table.ts>
-        {/* Five minibosses in one row set the card's width, so they wrap three and two */}
+        {/* Five minibosses in one row set the card's width, so they wrap. */}
         <Table.ts title={`§e${t("skyblock.minibosses")}`}>
           {arrayGroup(crimson.minibosses, 3).map((row) => (
             <Table.tr>

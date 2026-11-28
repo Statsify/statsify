@@ -15,8 +15,9 @@ import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const gardenIcons = ({ garden }: MemberView) =>
-  garden?.garden?.crops.flatMap(({ texture }) => (texture ? [texture] : [])) ??
-  [];
+  garden?.garden?.crops
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined) ?? [];
 
 export const SkyBlockGardenProfile = ({
   profile,
@@ -75,10 +76,13 @@ export const SkyBlockGardenProfile = ({
     const tierColor = milestone.xpForNext === undefined ? "§6" : "§e";
     const upgradeColor = upgrade.level === upgrade.maxLevel ? "§6" : "§a";
 
+    const tier = t("skyblock.milestoneTier", { tier: milestone.level });
+    const upgradeLevel = t("skyblock.cropUpgrade", { level: upgrade.level });
+
     return {
       texture,
       name: `§f${name}`,
-      value: `${tierColor}${t("skyblock.milestoneTier", { tier: milestone.level })} §8• ${upgradeColor}${t("skyblock.cropUpgrade", { level: upgrade.level })}`,
+      value: `${tierColor}${tier} §8• ${upgradeColor}${upgradeLevel}`,
     };
   });
 
@@ -106,7 +110,7 @@ export const SkyBlockGardenProfile = ({
       </Table.table>
       <ItemGrid items={crops} icons={icons} columns={2} spreadLastRow />
       <Table.table>
-        {/* Five upgrades in one row set the card's width, so they wrap three and two */}
+        {/* Five upgrades in one row would set the card's width. */}
         <Table.ts title={`§2${t("skyblock.composter")}`}>
           {arrayGroup(composter, 3).map((row) => (
             <Table.tr>{row}</Table.tr>
