@@ -127,7 +127,6 @@ const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 @Injectable()
 export class SkyBlockService {
   private readonly logger = new Logger("SkyBlockService");
-  private readonly rankings = new Map<string, Promise<void>>();
 
   public constructor(
     @Inject(forwardRef(() => PlayerService))
@@ -215,12 +214,12 @@ export class SkyBlockService {
         ? this.getMuseum(profile.profile_id, cache).then((museum) => {
             // A stale copy is older than rows a co-op member may have written.
             if (museum?.newlyStored && !stale) {
-              this.rankInBackground(
+              void this.rankMembers(
                 player.uuid,
                 profiles,
                 fetchedAt,
                 profile.profile_id,
-              );
+              ).catch((error) => this.logger.error(error));
             }
 
             return museum;
@@ -351,7 +350,9 @@ export class SkyBlockService {
           { uuid, fetchedAt, data },
           { upsert: true },
         );
-        this.rankInBackground(uuid, profiles ?? [], fetchedAt);
+        void this.rankMembers(uuid, profiles ?? [], fetchedAt).catch((error) =>
+          this.logger.error(error),
+        );
       }
 
       return { profiles, fetchedAt, stale: false };
@@ -362,23 +363,6 @@ export class SkyBlockService {
       if (!stored) throw toUnavailable(error);
       return readProfiles(stored, true);
     }
-  }
-
-  // A player's rankings run in order, so a museum's row lands after its copy's.
-  private rankInBackground(
-    uuid: string,
-    profiles: RawProfile[],
-    fetchedAt: number,
-    profileId?: string,
-  ) {
-    const ranking = (this.rankings.get(uuid) ?? Promise.resolve())
-      .then(() => this.rankMembers(uuid, profiles, fetchedAt, profileId))
-      .catch((error) => this.logger.error(error));
-
-    this.rankings.set(uuid, ranking);
-    void ranking.finally(() => {
-      if (this.rankings.get(uuid) === ranking) this.rankings.delete(uuid);
-    });
   }
 
   // Ranking never fetches, and with a profileId only the player's row ranks.
