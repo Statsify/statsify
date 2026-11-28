@@ -17,10 +17,12 @@ export { parseItemsResource, toItemView } from "./items.js";
 export { getItemTexture, resourceTexture } from "./textures.js";
 export {
   SECTIONS,
+  SKYBLOCK_SECTIONS,
   getApiSettings,
   type SectionInput,
   type SectionKey,
   type SectionNeed,
+  type SkyBlockSection,
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";

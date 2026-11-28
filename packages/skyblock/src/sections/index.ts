@@ -40,9 +40,15 @@ export interface Section<K extends keyof MemberView> {
   compute(input: SectionInput): Promise<MemberView[K]>;
 }
 
+// Networth is computed by ./networth, which keeps its library out of here.
+export const NETWORTH_SECTION = "networth";
+
 // The caller fetches what a section needs before it calls compute.
 export const SECTIONS: {
-  [K in Exclude<keyof MemberView, "apiSettings" | "networth">]: Section<K>;
+  [K in Exclude<
+    keyof MemberView,
+    "apiSettings" | typeof NETWORTH_SECTION
+  >]: Section<K>;
 } = {
   accessories: {
     needs: ["prices", "items"],
@@ -76,6 +82,13 @@ export const SECTIONS: {
 };
 
 export type SectionKey = keyof typeof SECTIONS;
+
+export type SkyBlockSection = Exclude<keyof MemberView, "apiSettings">;
+
+export const SKYBLOCK_SECTIONS: SkyBlockSection[] = [
+  ...(Object.keys(SECTIONS) as SectionKey[]),
+  NETWORTH_SECTION,
+];
 
 export function getApiSettings(
   profile: RawProfile,

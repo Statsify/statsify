@@ -11,6 +11,7 @@ export * from "./error.response.js";
 export * from "./get.gamecounts.response.js";
 export * from "./get.guild.response.js";
 export * from "./get.session.response.js";
+export * from "./get.skyblock.response.js";
 export * from "./get.key.response.js";
 export * from "./get.player.response.js";
 export * from "./get.skin-textures.response.js";

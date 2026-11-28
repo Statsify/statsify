@@ -16,6 +16,7 @@ import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
 import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
+import { SkyBlockModule } from "#skyblock";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
 import { config } from "@statsify/util";
@@ -42,6 +43,7 @@ const redisUrl = await config("database.redisUrl");
     HypixelResourcesModule,
     SkinModule,
     SessionModule,
+    SkyBlockModule,
     AuthModule,
     UserModule,
     CommandsModule,

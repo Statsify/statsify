@@ -327,3 +327,10 @@ export interface PriceView {
   npc?: number;
   asOf: number;
 }
+
+// The id of a search result is a price key, so books and pets have their own.
+export interface ItemMatch {
+  id: string;
+  name: string;
+  rarity?: Rarity;
+}

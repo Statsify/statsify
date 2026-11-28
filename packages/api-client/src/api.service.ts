@@ -23,6 +23,10 @@ import {
   GetPlayerSearchResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
+  GetSkyBlockItemsResponse,
+  GetSkyBlockPriceResponse,
+  GetSkyBlockProfileResponse,
+  GetSkyBlockProfilesResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -34,6 +38,7 @@ import {
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { IMAGE_DOWNLOAD_TIMEOUT, loadImage } from "@statsify/rendering";
+import type { SkyBlockSection } from "@statsify/skyblock";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
@@ -41,6 +46,9 @@ interface ExtraData {
   responseType?: ResponseType;
   timeout?: number;
 }
+
+// A cold SkyBlock lookup makes up to two slow Hypixel calls before it computes anything.
+const SKYBLOCK_REQUEST_TIMEOUT = 30_000;
 
 // TODO: Move dtos in api to @statsify/api-client
 interface UpdateUser {
@@ -110,6 +118,47 @@ export class ApiService {
     return this.requestKey<GetPlayerSearchResponse, "players">(
       "/player/search",
       "players",
+      { query }
+    );
+  }
+
+  public getCachedSkyBlockProfiles(tag: string, cache: CacheLevel) {
+    return this.requestKey<GetSkyBlockProfilesResponse, "player">(
+      "/skyblock/profiles",
+      "player",
+      { player: tag, cache },
+      "GET",
+      { timeout: SKYBLOCK_REQUEST_TIMEOUT }
+    );
+  }
+
+  public getCachedSkyBlockProfile(
+    tag: string,
+    sections: SkyBlockSection[],
+    cache: CacheLevel,
+    profile?: string
+  ) {
+    return this.requestKey<GetSkyBlockProfileResponse, "profile">(
+      "/skyblock/profile",
+      "profile",
+      { player: tag, profile, sections: sections.join(","), cache },
+      "GET",
+      { timeout: SKYBLOCK_REQUEST_TIMEOUT }
+    );
+  }
+
+  public getSkyBlockPrice(item: string) {
+    return this.requestKey<GetSkyBlockPriceResponse, "price">(
+      "/skyblock/price",
+      "price",
+      { item }
+    );
+  }
+
+  public getSkyBlockItems(query: string) {
+    return this.requestKey<GetSkyBlockItemsResponse, "items">(
+      "/skyblock/items",
+      "items",
       { query }
     );
   }
@@ -272,9 +321,10 @@ export class ApiService {
     url: string,
     key: K,
     params?: Record<string, unknown>,
-    method: Method = "GET"
+    method: Method = "GET",
+    extra?: ExtraData
   ) {
-    const data = await this.request<T>(url, params, method);
+    const data = await this.request<T>(url, params, method, extra);
 
     if (data[key] === undefined || data[key] === null) {
       throw new Error(`Key not found: ${String(key)}`);

@@ -21,6 +21,47 @@ import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
+import type {
+  RawBazaar,
+  RawItemsResource,
+  RawMuseum,
+  RawProfile,
+} from "@statsify/skyblock";
+
+// A big co-op's profiles run to several MB, past the default timeout.
+export const SKYBLOCK_TIMEOUT_MS = 10_000;
+
+// Axios leaves out a null header, so this drops the module's API-Key.
+const KEYLESS_HEADERS = { "API-Key": null };
+
+export class HypixelUnavailableError extends Error {}
+
+export class HypixelThrottledError extends HypixelUnavailableError {
+  public constructor(
+    public readonly retryAfter: number | undefined,
+    global: boolean
+  ) {
+    super(global ? "Hypixel throttled every key" : "Hypixel throttled the key");
+  }
+}
+
+function toSkyBlockError(error: Error) {
+  const { response } = (error.cause ?? {}) as {
+    response?: {
+      status: number;
+      headers: Record<string, unknown>;
+      data?: { global?: boolean };
+    };
+  };
+  if (response?.status !== 429) {
+    const message = `Hypixel did not answer (${String(error)})`;
+    return new HypixelUnavailableError(message, { cause: error });
+  }
+
+  const reset = Number(response.headers["ratelimit-reset"]);
+  const retryAfter = Number.isNaN(reset) ? undefined : reset * 1000;
+  return new HypixelThrottledError(retryAfter, response.data?.global === true);
+}
 
 @Injectable()
 export class HypixelService {
@@ -141,7 +182,47 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
-  private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+  public async getSkyBlockProfiles(uuid: string) {
+    const { profiles } = await this.getSkyBlock<{ profiles?: RawProfile[] | null }>(
+      "/v2/skyblock/profiles",
+      { params: { uuid } }
+    );
+
+    return profiles ?? null;
+  }
+
+  public getSkyBlockMuseum(profileId: string) {
+    return this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", {
+      params: { profile: profileId },
+    });
+  }
+
+  public getSkyBlockBazaar() {
+    return this.getSkyBlock<RawBazaar>("/v2/skyblock/bazaar", { keyless: true });
+  }
+
+  public getSkyBlockItems() {
+    return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items", {
+      keyless: true,
+    });
+  }
+
+  private getSkyBlock<T>(
+    url: string,
+    { params, keyless }: { params?: Record<string, unknown>; keyless?: boolean } = {}
+  ) {
+    return lastValueFrom(
+      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT_MS, keyless }).pipe(
+        catchError((error) => throwError(() => toSkyBlockError(error)))
+      )
+    );
+  }
+
+  private request<T>(
+    url: string,
+    params?: Record<string, unknown>,
+    { timeout, keyless }: { timeout?: number; keyless?: boolean } = {}
+  ): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -149,7 +230,8 @@ export class HypixelService {
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
     });
 
-    return this.httpService.get(url, { params }).pipe(
+    const headers = keyless ? KEYLESS_HEADERS : undefined;
+    return this.httpService.get(url, { params, timeout, headers }).pipe(
       tap((res) => {
         child?.setHttpStatus(res.status);
         child?.finish();

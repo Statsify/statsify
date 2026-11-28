@@ -26,7 +26,12 @@ import type {
   PriceMap,
 } from "#types";
 import type { RawItem, RawItemsResource, RawPet } from "#raw";
-import type { Section } from "../sections/index.js";
+import {
+  NETWORTH_SECTION,
+  SECTIONS,
+  type Section,
+  type SkyBlockSection,
+} from "../sections/index.js";
 
 const TOP_ITEMS = 10;
 
@@ -122,7 +127,7 @@ function setNetworthItems(resource: RawItemsResource) {
 }
 
 // The price worker can't afford this library, so it stays out of SECTIONS.
-export const NETWORTH: Section<"networth"> = {
+const NETWORTH: Section<"networth"> = {
   needs: ["museum", "prices", "items"],
   async compute({ profile, member, museum, prices, items, rawItems }) {
     if (!prices || !items || !rawItems) {
@@ -172,4 +177,9 @@ export const NETWORTH: Section<"networth"> = {
       ...getUnpriced(parsed, prices, items),
     };
   },
+};
+
+export const ALL_SECTIONS: { [K in SkyBlockSection]: Section<K> } = {
+  ...SECTIONS,
+  [NETWORTH_SECTION]: NETWORTH,
 };
