@@ -59,7 +59,10 @@ export class GuildLeaderboardController {
   }
 
   @Post("/members")
-  @ApiOperation({ summary: "Get a Player Leaderboard of a Guild's Members", tags: ["Guild Leaderboards"] })
+  @ApiOperation({
+    summary: "Get a Player Leaderboard of a Guild's Members",
+    tags: ["Guild Leaderboards"],
+  })
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: GuildNotFoundException })
