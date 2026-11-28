@@ -9,7 +9,7 @@
 export * from "./types.js";
 export * from "./raw.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
-export { parseBazaar } from "./prices.js";
+export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";
@@ -25,6 +25,7 @@ export {
 export { getAccessories } from "./sections/accessories.js";
 export { getDungeons } from "./sections/dungeons.js";
 export { POWDERS, getHotm, type Powder } from "./sections/hotm.js";
+export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
 export { SKILLS, getSkills, type Skill } from "./sections/skills.js";
 export {

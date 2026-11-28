@@ -9,11 +9,19 @@
 import { getAccessories } from "./accessories.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotm } from "./hotm.js";
+import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
+import { hasMarket } from "../profiles.js";
 import type { ApiSettings, ItemsResource, MemberView, PriceMap } from "#types";
-import type { RawMember, RawMuseum, RawMuseumMember, RawProfile } from "#raw";
+import type {
+  RawItemsResource,
+  RawMember,
+  RawMuseum,
+  RawMuseumMember,
+  RawProfile,
+} from "#raw";
 
 export type SectionNeed = "museum" | "prices" | "items";
 
@@ -24,29 +32,38 @@ export interface SectionInput {
   museum?: RawMuseumMember;
   prices?: PriceMap;
   items?: ItemsResource;
+  rawItems?: RawItemsResource;
 }
 
-interface Section<K extends keyof MemberView> {
+export interface Section<K extends keyof MemberView> {
   needs: SectionNeed[];
   compute(input: SectionInput): Promise<MemberView[K]>;
 }
 
 // The caller fetches what a section needs before it calls compute.
 export const SECTIONS: {
-  [K in Exclude<keyof MemberView, "apiSettings">]: Section<K>;
+  [K in Exclude<keyof MemberView, "apiSettings" | "networth">]: Section<K>;
 } = {
   accessories: {
     needs: ["prices", "items"],
-    compute: async ({ member, items, prices }) => {
+    compute: async ({ profile, member, items, prices }) => {
       if (!items || !prices) {
         throw new TypeError("accessories needs prices and items");
       }
 
-      return getAccessories(member, items, prices);
+      return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  level: {
+    needs: ["prices", "items"],
+    compute: async ({ profile, member, items, prices }) => {
+      if (!items || !prices)
+        throw new TypeError("level needs prices and items");
+      return getSkyBlockLevel(member, items, prices, hasMarket(profile));
+    },
+  },
   pets: {
     needs: ["items"],
     compute: async ({ member, items }) => getPets(member, items),

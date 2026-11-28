@@ -12,6 +12,8 @@ import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
+import sblevels from "./generated/sblevels.json" with { type: "json" };
+import { prettify } from "@statsify/util";
 import type { Rarity } from "#types";
 
 export const LEVELING = leveling as {
@@ -42,6 +44,12 @@ export const PETS = pets as {
   pet_levels: number[];
   pet_rarity_offset: Record<string, number>;
 };
+
+export const getPetName = (type: string) =>
+  PETS.id_to_display_name[type] ?? prettify(type);
+
+// The SkyBlock XP for each point of accessory power and of pet score.
+export const SKYBLOCK_XP = sblevels.core_task;
 
 export const PET_TEXTURES = petTextures as {
   pets: Record<string, Partial<Record<Rarity, string>>>;

@@ -94,7 +94,8 @@ try {
     "constants/leveling.json",
   );
   const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-  const { sblevel_colours } = await readJson<{
+  const { core_task, sblevel_colours } = await readJson<{
+    core_task: Record<string, unknown>;
     sblevel_colours: Record<string, string>;
   }>("constants/sblevels.json");
   await write("leveling.json", {
@@ -124,6 +125,13 @@ try {
     pet_levels: pets.pet_levels,
     // NEU levels SPECIAL pets on Epic's table, but the game uses Legendary's.
     pet_rarity_offset: { ...offsets, SPECIAL: offsets.LEGENDARY },
+  });
+
+  await write("sblevels.json", {
+    core_task: {
+      accessory_bag_xp: core_task.accessory_bag_xp,
+      pet_score_xp: core_task.pet_score_xp,
+    },
   });
 
   const hotm = await readJson<{

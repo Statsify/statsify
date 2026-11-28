@@ -7,7 +7,7 @@
  */
 
 import { LEVELING } from "#data";
-import { SKYBLOCK_XP_PER_LEVEL } from "#leveling";
+import { toSkyBlockLevel } from "#leveling";
 import { minecraftColors } from "@statsify/util";
 import type {
   Freshness,
@@ -34,6 +34,10 @@ const LEVEL_COLORS = Object.entries(LEVELING.sblevel_colours).map(
 
 export const getGameMode = ({ game_mode }: RawProfile): GameMode =>
   GAME_MODES[game_mode ?? "normal"] ?? "normal";
+
+// Ironman, stranded and bingo profiles can't use the Auction House or Bazaar.
+export const hasMarket = (profile: RawProfile) =>
+  getGameMode(profile) === "normal";
 
 function isNew(member: RawMember) {
   const skillXp = Object.entries(member.player_data?.experience ?? {}).some(
@@ -74,7 +78,7 @@ export function toProfileSummary(
 ): ProfileSummary {
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
-  const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+  const { level } = toSkyBlockLevel(xp);
 
   return {
     id: profile.profile_id,

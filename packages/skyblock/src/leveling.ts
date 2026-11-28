@@ -8,9 +8,10 @@
 
 import { PETS } from "#data";
 import { type Level, RARITIES, type Rarity } from "#types";
-import type { RawPet } from "#raw";
+import { add } from "@statsify/math";
+import type { RawMember, RawPet } from "#raw";
 
-export const SKYBLOCK_XP_PER_LEVEL = 100;
+const SKYBLOCK_XP_PER_LEVEL = 100;
 
 export const PET_RARITIES = RARITIES.slice(0, 6);
 
@@ -66,6 +67,20 @@ export const fractionalLevel = ({ level, progress, xpForNext }: Level) =>
 export const toLevelCosts = (thresholds: number[]) =>
   thresholds.map((threshold, i) => threshold - (thresholds[i - 1] ?? 0));
 
+// SkyBlock levels have no cap, so maxLevel is always the next one.
+export function toSkyBlockLevel(xp: number): Level {
+  const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+  const xpCurrent = xp % SKYBLOCK_XP_PER_LEVEL;
+  return {
+    level,
+    maxLevel: level + 1,
+    xp,
+    xpCurrent,
+    xpForNext: SKYBLOCK_XP_PER_LEVEL,
+    progress: xpCurrent / SKYBLOCK_XP_PER_LEVEL,
+  };
+}
+
 export function boostedRarity(pet: RawPet): Rarity {
   const rarity = pet.tier as Rarity;
   if (pet.heldItem !== "PET_ITEM_TIER_BOOST") return rarity;
@@ -76,6 +91,9 @@ export function boostedRarity(pet: RawPet): Rarity {
   return index < RARITIES.indexOf(highest) ? PET_RARITIES[index + 1] : rarity;
 }
 
+export const getPetMaxLevel = (type: string) =>
+  PETS.custom_pet_leveling[type]?.max_level ?? 100;
+
 // Custom tables add levels past 100, like Golden Dragon's to 200.
 export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const custom = PETS.custom_pet_leveling[pet.type] ?? {};
@@ -85,13 +103,43 @@ export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const offset =
     offsets[rarity] ??
     (highest ? offsets[highest] : PETS.pet_rarity_offset[rarity]);
-  const maxLevel = custom.max_level ?? 100;
+  const maxLevel = getPetMaxLevel(pet.type);
   const table = [
     ...PETS.pet_levels.slice(offset, offset + 99),
     ...(custom.pet_levels ?? []),
   ];
   const level = getLevel(pet.exp, table, maxLevel - 1);
   return { ...level, level: level.level + 1, maxLevel };
+}
+
+// Common scores 1 up to Mythic's 6, and every other tier 0.
+export const getPetScorePoints = (tier: string) =>
+  PET_RARITIES.indexOf(tier as Rarity) + 1;
+
+export function getPetScore(member: RawMember) {
+  // The score ranks each type's pets by the API's tier, without Tier Boost.
+  const best = new Map<
+    string,
+    { points: number; level: number; maxed: boolean }
+  >();
+  for (const pet of member.pets_data?.pets ?? []) {
+    const points = getPetScorePoints(pet.tier);
+    if (points === 0) continue;
+
+    const { level, maxLevel } = getPetLevel(pet);
+    const seen = best.get(pet.type);
+    if (
+      !seen ||
+      points > seen.points ||
+      (points === seen.points && level > seen.level)
+    ) {
+      best.set(pet.type, { points, level, maxed: level === maxLevel });
+    }
+  }
+
+  return add(
+    ...Array.from(best.values(), ({ points, maxed }) => points + Number(maxed)),
+  );
 }
 
 if (import.meta.vitest) {

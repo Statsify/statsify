@@ -13,7 +13,7 @@ import {
   type ItemsResource,
   type Rarity,
 } from "#types";
-import type { RawItem, RawPet } from "#raw";
+import type { RawItem } from "#raw";
 
 // 1.8 ids for the items resource's accessory materials.
 const MATERIAL_IDS: Record<string, number> = {
@@ -67,19 +67,23 @@ export function resourceTexture({
     : { kind: "item", id, damage: durability ?? 0 };
 }
 
+interface PetTextureOptions {
+  skin?: string | null;
+  items?: ItemsResource;
+}
+
 export function getPetTexture(
-  pet: RawPet,
+  type: string,
   rarity: Rarity,
-  items: ItemsResource | undefined,
+  { skin, items }: PetTextureOptions = {},
 ): ItemTexture {
   // The items resource has the skins newer than the NEU pin.
-  const skin =
-    pet.skin &&
-    (PET_TEXTURES.skins[pet.skin] ??
-      items?.items[`PET_SKIN_${pet.skin}`]?.skin);
-  if (skin) return { kind: "head", skin };
+  const skinned =
+    skin &&
+    (PET_TEXTURES.skins[skin] ?? items?.items[`PET_SKIN_${skin}`]?.skin);
+  if (skinned) return { kind: "head", skin: skinned };
 
-  const textures = PET_TEXTURES.pets[pet.type] ?? {};
+  const textures = PET_TEXTURES.pets[type] ?? {};
   const distance = (candidate: Rarity) =>
     Math.abs(RARITIES.indexOf(candidate) - RARITIES.indexOf(rarity));
   const hash = RARITIES.toSorted((a, b) => distance(a) - distance(b))

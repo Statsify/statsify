@@ -9,6 +9,7 @@
 import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES } from "#data";
 import { add } from "@statsify/math";
 import { decodeInventory } from "#nbt";
+import { getItemCost } from "#prices";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
 import type {
@@ -29,6 +30,14 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   LEGENDARY: 16,
   MYTHIC: 22,
 };
+
+interface Bag {
+  accessoryPower: number;
+  active: ItemView[];
+  inactive: ItemView[];
+  owned: Set<string>;
+  contacts: number;
+}
 
 // Some old hats aren't in the items resource, so their rarity marks them.
 const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
@@ -100,11 +109,7 @@ function getStoredAccessories(member: RawMember, items: ItemsResource) {
   return stored;
 }
 
-export function getAccessories(
-  member: RawMember,
-  items: ItemsResource,
-  prices: PriceMap,
-): AccessoriesSection | null {
+function readBag(member: RawMember, items: ItemsResource): Bag | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
 
@@ -141,35 +146,24 @@ export function getAccessories(
     }
   }
 
-  const storage = member.accessory_bag_storage;
-  const stored = getStoredAccessories(member, items);
+  // A consumed Rift Prism comes back to the bag as a Rare.
+  const accessoryPower = add(
+    ...active.map(power),
+    prism.length * getAccessoryPower("RIFT_PRISM", "RARE", 0),
+  );
 
-  return {
-    // A consumed Rift Prism comes back to the bag as a Rare.
-    accessoryPower: add(
-      ...active.map(power),
-      prism.length * getAccessoryPower("RIFT_PRISM", "RARE", 0),
-    ),
-    highestAccessoryPower: storage?.highest_magical_power,
-    selectedPower: storage?.selected_power,
-    tuning: storage?.tuning?.slot_0 ?? {},
-    pricesAsOf: prices.asOf,
-    active,
-    inactive,
-    missing: getMissing(owned, stored, active, contacts, items, prices),
-  };
+  return { accessoryPower, active, inactive, owned, contacts };
 }
 
-function getMissing(
-  owned: Set<string>,
-  stored: ItemView[],
-  active: ItemView[],
-  contacts: number,
+// Every unowned tier above the bag's best in a chain is a step.
+function getSteps(
+  { active, owned, contacts }: Bag,
+  member: RawMember,
   items: ItemsResource,
-  prices: PriceMap,
+  prices: PriceMap | undefined,
 ) {
   const bestStored = new Map<string, ItemView>();
-  for (const view of stored) {
+  for (const view of getStoredAccessories(member, items)) {
     const kept = bestStored.get(view.id);
     const power = getAccessoryPower(view.id, view.rarity, contacts);
     if (!kept || power > getAccessoryPower(kept.id, kept.rarity, contacts)) {
@@ -191,37 +185,13 @@ function getMissing(
     ),
   );
 
-  const unowned = new Map(
-    Object.entries(items.items).filter(
-      ([id, item]) =>
-        item.tier !== undefined &&
-        isCandidate(id, item) &&
-        !owned.has(id) &&
-        !getUpgrades(id).some(
-          (upgrade) => owned.has(upgrade) || outsideBag.has(upgrade),
-        ),
-    ),
-  );
+  const steps: MissingAccessory[] = [];
+  for (const [id, item] of Object.entries(items.items)) {
+    if (!item.tier || !isCandidate(id, item) || owned.has(id)) continue;
 
-  const power = (id: string) =>
-    getAccessoryPower(
-      id,
-      outsideBag.get(id)?.rarity ?? unowned.get(id)?.tier,
-      contacts,
-    );
-
-  // A chain offers its top unowned tier, and any tier kept outside the bag.
-  const supersedes = (upgrade: string, id: string) =>
-    !outsideBag.has(id) &&
-    unowned.has(upgrade) &&
-    (!isVariant(id, upgrade) || isPreferredVariant(upgrade, id, power));
-
-  const missing: MissingAccessory[] = [];
-  for (const [id, item] of unowned) {
-    if (getUpgrades(id).some((upgrade) => supersedes(upgrade, id))) continue;
-
-    const texture = resourceTexture(item);
-    if (!texture || !item.tier) continue;
+    const upgrades = getUpgrades(id);
+    if (upgrades.some((upgrade) => owned.has(upgrade))) continue;
+    if (upgrades.some((upgrade) => outsideBag.has(upgrade))) continue;
 
     let replaces: { id: string; power: number } | undefined;
     for (const view of active) {
@@ -233,28 +203,96 @@ function getMissing(
       }
     }
 
-    // A recombobulated lower tier can be worth as much as the next one up.
-    const gain = power(id) - (replaces?.power ?? 0);
-    if (gain <= 0) continue;
-
     const view = outsideBag.get(id);
-    missing.push({
+    const rarity = view?.rarity ?? item.tier;
+    // A recombobulated lower tier can be worth as much as the next one up.
+    const gain =
+      getAccessoryPower(id, rarity, contacts) - (replaces?.power ?? 0);
+    const texture = resourceTexture(item);
+    if (gain <= 0 || !texture) continue;
+
+    const cost = view ? undefined : getItemCost(prices?.entries[id]);
+    steps.push({
       id,
       name: item.name,
-      rarity: view?.rarity ?? item.tier,
+      rarity,
       accessoryPower: gain,
       outsideBag: view !== undefined,
-      price: view ? undefined : prices.entries[id],
+      cost,
+      coinsPerAccessoryPower: cost && cost.coins / gain,
       replaces: replaces?.id,
       texture,
     });
   }
 
+  return steps;
+}
+
+// A tier lists every tier above it, so a chain's first step is its best.
+export function keepBestPerChain<T extends { id: string }>(sorted: T[]) {
+  const best: T[] = [];
+  for (const step of sorted) {
+    const sameChain = best.some(
+      ({ id }) =>
+        getUpgrades(id).includes(step.id) || getUpgrades(step.id).includes(id),
+    );
+    if (!sameChain) best.push(step);
+  }
+
+  return best;
+}
+
+// Without a market, nothing has a cost.
+export function getAccessorySteps(
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap,
+  market: boolean,
+) {
+  const bag = readBag(member, items);
+  if (!bag) return null;
+
+  return {
+    accessoryPower: bag.accessoryPower,
+    highestAccessoryPower: member.accessory_bag_storage?.highest_magical_power,
+    steps: getSteps(bag, member, items, market ? prices : undefined),
+  };
+}
+
+export function getAccessories(
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap,
+  market: boolean,
+): AccessoriesSection | null {
+  const bag = readBag(member, items);
+  if (!bag) return null;
+
   // Outside the bag first, since those cost nothing.
-  return missing.toSorted(
+  const steps = getSteps(
+    bag,
+    member,
+    items,
+    market ? prices : undefined,
+  ).toSorted(
     (a, b) =>
       Number(b.outsideBag) - Number(a.outsideBag) ||
+      (a.coinsPerAccessoryPower ?? Infinity) -
+        (b.coinsPerAccessoryPower ?? Infinity) ||
       b.accessoryPower - a.accessoryPower ||
       a.name.localeCompare(b.name),
   );
+
+  const storage = member.accessory_bag_storage;
+  return {
+    accessoryPower: bag.accessoryPower,
+    highestAccessoryPower: storage?.highest_magical_power,
+    selectedPower: storage?.selected_power,
+    tuning: storage?.tuning?.slot_0 ?? {},
+    pricesAsOf: prices.asOf,
+    market,
+    active: bag.active,
+    inactive: bag.inactive,
+    missing: keepBestPerChain(steps),
+  };
 }

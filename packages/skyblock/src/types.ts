@@ -75,6 +75,8 @@ export interface MemberView {
   hotm?: HotmSection;
   dungeons?: DungeonsSection;
   slayers?: SlayersSection;
+  networth?: NetworthSection;
+  level?: SkyBlockLevelSection;
 }
 
 export interface ApiSettings {
@@ -193,6 +195,11 @@ export interface Bazaar {
   products: Record<string, BazaarProduct>;
 }
 
+export interface ItemCost {
+  coins: number;
+  source: "bin" | "bazaar";
+}
+
 export interface MissingAccessory {
   id: string;
   name: string;
@@ -201,8 +208,9 @@ export interface MissingAccessory {
   accessoryPower: number;
   // Outside the bag means the inventory, ender chest, a backpack or the vault.
   outsideBag: boolean;
-  // An accessory outside the bag has no price.
-  price?: PriceEntry;
+  // An accessory outside the bag has no cost.
+  cost?: ItemCost;
+  coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
 }
@@ -213,11 +221,58 @@ export interface AccessoriesSection {
   selectedPower?: string;
   tuning: Record<string, number>;
   pricesAsOf: number;
+  market: boolean;
   active: ItemView[];
   // Inactive ones are duplicates and tiers an upgrade in the bag replaces.
   inactive: ItemView[];
-  // Missing ones outside the bag come first, then the most power.
+  // Missing ones outside the bag come first, then the cheapest per power.
   missing: MissingAccessory[];
+}
+
+export interface NetworthSection {
+  total: number;
+  unsoulbound: number;
+  purse: number;
+  bank: number;
+  personalBank: number;
+  coins: number;
+  nonCosmetic: { total: number; unsoulbound: number };
+  noInventory: boolean;
+  museumIncluded: boolean;
+  pricesAsOf: number;
+  categories: Record<
+    string,
+    { total: number; unsoulbound: number; top: NetworthItem[] }
+  >;
+  unpriced: { key: string; name: string; count: number }[];
+  unpricedCount: number;
+}
+
+export interface NetworthItem {
+  id: string;
+  name: string;
+  count: number;
+  price: number;
+  soulbound: boolean;
+  cosmetic: boolean;
+  texture?: ItemTexture;
+}
+
+export interface SkyBlockLevelSection {
+  level: Level;
+  pricesAsOf: number;
+  market: boolean;
+  sources: {
+    kind: "accessory" | "pet";
+    // A pet's id is its price key, or its type when it has no market.
+    id: string;
+    name: string;
+    xp: number;
+    outsideBag: boolean;
+    cost?: ItemCost;
+    coinsPerXp?: number;
+    texture: ItemTexture;
+  }[];
 }
 
 export interface ItemView {
@@ -259,4 +314,16 @@ export interface ItemsResource {
       npcPrice?: number;
     }
   >;
+}
+
+// texture is missing for a material the 1.8 table doesn't map yet.
+export interface PriceView {
+  id: string;
+  name: string;
+  rarity?: Rarity;
+  texture?: ItemTexture;
+  bazaar?: BazaarProduct;
+  lowestBin?: { coins: number; listings: number };
+  npc?: number;
+  asOf: number;
 }
