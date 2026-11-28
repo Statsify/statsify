@@ -30,6 +30,7 @@ import {
   withoutNamespace,
 } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
+import { removeFormatting } from "@statsify/util";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 
 // Tokens drop copy numbers (wood_1 is wood), by their default layout slot
@@ -242,8 +243,7 @@ function namedItem(name: string) {
   );
 }
 
-const withoutCodes = (text: string) => text.replaceAll(/§./g, "");
-const isBlank = (line: string) => withoutCodes(line).trim() === "";
+const isBlank = (line: string) => removeFormatting(line).trim() === "";
 
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
 function storedSlot(slot: number) {
@@ -270,12 +270,12 @@ function editorItems(screen: Screen) {
 // Older dumps have no editor screens, only the slots each item was seen in
 function editor(title: string) {
   const screen = screens.find(
-    (shown) => withoutCodes(shown.title) === `Layout Editor - ${title}`,
+    (shown) => removeFormatting(shown.title) === `Layout Editor - ${title}`,
   );
   // Wizards fills the main rows with blank panes, as its kit fits the hotbar
   if (screen)
     return editorItems(screen).filter(
-      ({ item }) => withoutCodes(item.name).trim() !== "",
+      ({ item }) => removeFormatting(item.name).trim() !== "",
     );
 
   const seenItems: { slot: number; item: DumpItem }[] = [];
@@ -397,7 +397,7 @@ function pickerEntries(screen: Screen) {
 function selected(screen: Screen) {
   for (const item of pickerEntries(screen)) {
     const name = /^Currently Selected - (.+)$/.exec(
-      withoutCodes(item.name),
+      removeFormatting(item.name),
     )?.[1];
     if (name) return { name, lore: item.lore, icon: item };
   }
@@ -413,7 +413,7 @@ function pickerSkull(text: string, kit: string) {
   if (text !== "Skull Item") return undefined;
 
   const head = items.find(
-    (item) => withoutCodes(item.name) === `${kit}'s Head`,
+    (item) => removeFormatting(item.name) === `${kit}'s Head`,
   );
   if (!head)
     unmatched.push(`${kit}'s Skull Item, as no ${kit}'s Head was dumped`);
@@ -421,7 +421,7 @@ function pickerSkull(text: string, kit: string) {
 }
 
 function pickerArmor(lore: string[], kit: string) {
-  const lines = lore.map(withoutCodes);
+  const lines = lore.map(removeFormatting);
   const armor: Record<number, ItemStack> = {};
 
   for (const [index, line] of lines.entries()) {
@@ -459,11 +459,11 @@ const skyWarsPages = screens
   .filter((screen) => /Choose Your Kit/.test(screen.title))
   .map((screen) => {
     const entries = pickerEntries(screen).filter((item) =>
-      item.lore.some((line) => /Click to select/.test(withoutCodes(line))),
+      item.lore.some((line) => /Click to select/.test(removeFormatting(line))),
     );
     return {
       mini: entries.some((item) =>
-        withoutCodes(item.name).startsWith(SKYWARS_MINI_KIT),
+        removeFormatting(item.name).startsWith(SKYWARS_MINI_KIT),
       ),
       entries,
     };
@@ -471,7 +471,7 @@ const skyWarsPages = screens
 
 // The selected kit's copy of the lore lacks the blank line ending the list
 function itemList(lore: string[]) {
-  const end = lore.findIndex((line) => withoutCodes(line) === "");
+  const end = lore.findIndex((line) => removeFormatting(line) === "");
   return JSON.stringify(end === -1 ? lore : lore.slice(0, end));
 }
 
@@ -479,7 +479,7 @@ function skyWarsGroup(name: string, lore: string[]) {
   const page = skyWarsPages.find(({ entries }) =>
     entries.some(
       (item) =>
-        withoutCodes(item.name).replace(/ - .+$/, "") === name &&
+        removeFormatting(item.name).replace(/ - .+$/, "") === name &&
         itemList(item.lore) === itemList(lore),
     ),
   );
@@ -494,7 +494,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   const kits: Record<string, Kit> = {};
 
   for (const [index, screen] of screens.entries()) {
-    if (withoutCodes(screen.title) !== title) continue;
+    if (removeFormatting(screen.title) !== title) continue;
     const kit = screens
       .slice(index + 1)
       .map(selected)
@@ -591,9 +591,9 @@ function skyWarsToken(id: number, damage: number, enchantments: number[]) {
 }
 
 const backTo = (screen: Screen) =>
-  withoutCodes(
+  removeFormatting(
     screen.slots.find(
-      ({ item }) => item && withoutCodes(item.name) === "Go Back",
+      ({ item }) => item && removeFormatting(item.name) === "Go Back",
     )?.item?.lore[0] ?? "",
   ).replace(/^To /, "");
 
@@ -605,13 +605,13 @@ const skyWarsCustomizers = new Map<
 >();
 
 for (const [index, screen] of screens.entries()) {
-  const kit = /^(.+) Kit Customizer$/.exec(withoutCodes(screen.title))?.[1];
+  const kit = /^(.+) Kit Customizer$/.exec(removeFormatting(screen.title))?.[1];
   // A screen without its buttons was captured before it finished loading
   if (!kit || backTo(screen) !== `${kit} Kit`) continue;
 
   const page = screens
     .slice(0, index)
-    .findLast((shown) => withoutCodes(shown.title) === `${kit} Kit`);
+    .findLast((shown) => removeFormatting(shown.title) === `${kit} Kit`);
   const menu = page && SKYWARS_MENU.exec(backTo(page))?.[1];
   if (!menu) throw new Error(`No SkyWars kit menu before ${screen.title}`);
 
@@ -638,7 +638,7 @@ function listedItems(lore: string[]) {
     const last = listed.at(-1);
 
     if (enchantment && last) {
-      last.enchantments.push(withoutCodes(enchantment[1]));
+      last.enchantments.push(removeFormatting(enchantment[1]));
       if (enchantment[2]) last.count = Number(enchantment[2]);
     } else if (text) {
       // A §7§7 note that wraps ends its first line with a comma
@@ -693,12 +693,12 @@ function dumpedListed(listed: Listed, pool: Pooled[]) {
   );
   const described = potions.filter(({ item }) =>
     [item.name, ...item.lore].some(
-      (line) => potion && withoutCodes(line).includes(potion[2]),
+      (line) => potion && removeFormatting(line).includes(potion[2]),
     ),
   );
 
   const match =
-    fits.find(({ item }) => withoutCodes(item.name) === listed.text) ??
+    fits.find(({ item }) => removeFormatting(item.name) === listed.text) ??
     (named && fits.find(({ item }) => legacyId(item) === named.id));
   if (match) return match;
 
@@ -739,18 +739,18 @@ function lobbyItem(listed: Listed, dumped?: Pooled) {
 const skyWarsKits: Record<string, SkyWarsKit> = {};
 
 for (const screen of screens) {
-  const menu = SKYWARS_MENU.exec(withoutCodes(screen.title))?.[1];
+  const menu = SKYWARS_MENU.exec(removeFormatting(screen.title))?.[1];
   if (!menu) continue;
 
   for (const entry of pickerEntries(screen)) {
     if (
       !entry.lore.some(
-        (line) => withoutCodes(line) === "Right-click to open breakdown!",
+        (line) => removeFormatting(line) === "Right-click to open breakdown!",
       )
     )
       continue;
-    const name = `${menu} ${withoutCodes(entry.name)}`;
-    const key = `${menu.toLowerCase()}_${kitKey(withoutCodes(entry.name))}`;
+    const name = `${menu} ${removeFormatting(entry.name)}`;
+    const key = `${menu.toLowerCase()}_${kitKey(removeFormatting(entry.name))}`;
     if (skyWarsKits[key]) continue;
 
     const listed = listedItems(entry.lore);
@@ -847,7 +847,7 @@ for (const screen of screens) {
 
 function withoutRename(item: DumpItem, kit: string, level: number): DumpItem {
   const lore = item.lore.filter(
-    (line) => !withoutCodes(line).startsWith("Owner: "),
+    (line) => !removeFormatting(line).startsWith("Owner: "),
   );
   if (lore.length === item.lore.length) return item;
 
@@ -876,12 +876,13 @@ function legacyKitLevel(
     for (const item of entries) {
       const level =
         ROMAN.indexOf(
-          new RegExp(`^${kit} ([IVX]+)$`).exec(withoutCodes(item.name))?.[1] ??
-            "",
+          new RegExp(`^${kit} ([IVX]+)$`).exec(
+            removeFormatting(item.name),
+          )?.[1] ?? "",
         ) + 1;
       if (
         level > 0 &&
-        item.lore.some((line) => withoutCodes(line) === "UNLOCKED")
+        item.lore.some((line) => removeFormatting(line) === "UNLOCKED")
       )
         unlocked.push(level);
     }
@@ -891,10 +892,10 @@ function legacyKitLevel(
   }
 
   const upgrade = entries.find(
-    (item) => withoutCodes(item.name) === `Kit - ${kit}`,
+    (item) => removeFormatting(item.name) === `Kit - ${kit}`,
   );
   const tier = upgrade?.lore
-    .map((line) => /^Tier: ([IVX]+)$/.exec(withoutCodes(line))?.[1])
+    .map((line) => /^Tier: ([IVX]+)$/.exec(removeFormatting(line))?.[1])
     .find(Boolean);
   if (!upgrade || !tier) throw new Error(`${page.title} shows no Kit tier`);
   return {
@@ -904,7 +905,7 @@ function legacyKitLevel(
 }
 
 for (const [index, screen] of screens.entries()) {
-  const kit = /^Edit (.+) Layout$/.exec(withoutCodes(screen.title))?.[1];
+  const kit = /^Edit (.+) Layout$/.exec(removeFormatting(screen.title))?.[1];
   const page = /^(.+) (Upgrades|Class)$/.exec(backTo(screen));
   // A screen without its buttons was captured before it finished loading
   if (!kit || !page || page[1] !== kit) continue;
@@ -917,7 +918,7 @@ for (const [index, screen] of screens.entries()) {
   const pageTitle = `${kit} ${page[2]}`;
   const shownPage = screens
     .slice(0, index)
-    .findLast((shown) => withoutCodes(shown.title) === pageTitle);
+    .findLast((shown) => removeFormatting(shown.title) === pageTitle);
   if (!shownPage)
     throw new Error(`No ${pageTitle} page before ${screen.title}`);
   const { level, armor } = legacyKitLevel(shownPage, game, kit);
@@ -951,13 +952,14 @@ for (const [index, screen] of screens.entries()) {
 const blitzArmor: Record<string, Record<number, ItemStack>[]> = {};
 
 for (const screen of screens) {
-  const kit = /^(.+) Upgrades$/.exec(withoutCodes(screen.title))?.[1];
+  const kit = /^(.+) Upgrades$/.exec(removeFormatting(screen.title))?.[1];
   if (!kit) continue;
   const key = kitKey(kit);
 
   for (const entry of pickerEntries(screen)) {
     const tier = ROMAN.indexOf(
-      new RegExp(`^${kit} ([IVX]+)$`).exec(withoutCodes(entry.name))?.[1] ?? "",
+      new RegExp(`^${kit} ([IVX]+)$`).exec(removeFormatting(entry.name))?.[1] ??
+        "",
     );
     if (tier === -1 || blitzArmor[key]?.[tier]) continue;
 
@@ -977,12 +979,13 @@ for (const [kit, levels] of Object.entries(blitzArmor)) {
 }
 
 const isMenu = (shown: Screen, title: string, back?: string) =>
-  withoutCodes(shown.title) === title &&
+  removeFormatting(shown.title) === title &&
   shown.slots.some(
     ({ item }) =>
       item &&
-      withoutCodes(item.name) === "Go Back" &&
-      (back === undefined || withoutCodes(item.lore[0] ?? "") === `To ${back}`),
+      removeFormatting(item.name) === "Go Back" &&
+      (back === undefined ||
+        removeFormatting(item.lore[0] ?? "") === `To ${back}`),
   );
 
 function menuScreen(title: string, back?: string) {
@@ -998,7 +1001,7 @@ function menu(title: string, back?: string) {
   return pickerEntries(screen).filter(
     (item) =>
       !/^(Go Back|Close|Reset .+|Left-click for (next|previous) page!|.+ Coins: .+)$/.test(
-        withoutCodes(item.name),
+        removeFormatting(item.name),
       ),
   );
 }
@@ -1013,9 +1016,9 @@ function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
   let dropping = false;
 
   for (const line of dumped.lore) {
-    const text = withoutCodes(line).trim();
+    const text = removeFormatting(line).trim();
     const continuesStatus: boolean =
-      dropping && /^\s/.test(withoutCodes(line)) && text !== "";
+      dropping && /^\s/.test(removeFormatting(line)) && text !== "";
     dropping = MENU_STATUS.test(text) || continuesStatus;
 
     const extraBlank =
@@ -1069,7 +1072,7 @@ const DIGITS = [
 ];
 
 function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
-  const name = withoutCodes(item.name);
+  const name = removeFormatting(item.name);
 
   // Triggers are stored spelled out: 0.85s is ZERO_POINT_EIGHT_FIVE
   if (part === "trigger") {
@@ -1117,7 +1120,7 @@ const arena: Record<string, Record<string, ItemStack>> = {};
 for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
   arena[slot] = byKey(
     menu(title).map((item) => [
-      kitKey(withoutCodes(item.name)),
+      kitKey(removeFormatting(item.name)),
       menuItem(item, true),
     ]),
     `Arena ${title}`,
@@ -1128,7 +1131,7 @@ for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
 const runes: [string, ItemStack][] = [];
 
 for (const item of menu("Runes")) {
-  const rune = /^Rune of ([A-Za-z]+)$/.exec(withoutCodes(item.name))?.[1];
+  const rune = /^Rune of ([A-Za-z]+)$/.exec(removeFormatting(item.name))?.[1];
   if (rune)
     runes.push([
       kitKey(rune),
@@ -1155,13 +1158,13 @@ for (const [type, title] of Object.entries(KART_SELECTORS)) {
     .filter((screen) => isMenu(screen, title))
     .flatMap(pickerEntries);
   for (const item of shown.filter((item) =>
-    withoutCodes(item.name).endsWith(suffix),
+    removeFormatting(item.name).endsWith(suffix),
   )) {
-    const rarity = withoutCodes(item.name).split(" ").at(-2)!.toUpperCase();
+    const rarity = removeFormatting(item.name).split(" ").at(-2)!.toUpperCase();
     const attributes: Record<string, number> = {};
 
     for (const line of item.lore) {
-      const name = /^>+\s+(.+)$/.exec(withoutCodes(line))?.[1];
+      const name = /^>+\s+(.+)$/.exec(removeFormatting(line))?.[1];
       if (name)
         attributes[name.toUpperCase().replaceAll(" ", "_")] =
           line.match(/§a>/g)?.length ?? 0;
@@ -1185,7 +1188,7 @@ function speedUhcKit(kit: DumpItem) {
   const end = lines.findIndex(isBlank);
 
   for (const line of lines.slice(0, end === -1 ? undefined : end)) {
-    const enchantment = /^\s+∙ (.+)$/.exec(withoutCodes(line))?.[1];
+    const enchantment = /^\s+∙ (.+)$/.exec(removeFormatting(line))?.[1];
     const last = items.at(-1);
     if (enchantment) {
       if (last)
@@ -1196,10 +1199,11 @@ function speedUhcKit(kit: DumpItem) {
       continue;
     }
 
-    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(withoutCodes(line))!;
+    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(removeFormatting(line))!;
     const named = namedItem(name);
     const item = named && legacyItem(named.id, named.damage);
-    if (!item) unmatched.push(`Speed UHC ${withoutCodes(kit.name)}'s ${name}`);
+    if (!item)
+      unmatched.push(`Speed UHC ${removeFormatting(kit.name)}'s ${name}`);
     items.push(
       item ? { ...item, count: count ? Number(count) : undefined } : null,
     );
@@ -1213,10 +1217,10 @@ const kitsPage = menuScreen("Kits", "Speed UHC Shop");
 if (kitsPage !== -1) {
   const mode = screens
     .slice(0, kitsPage)
-    .filter((screen) => withoutCodes(screen.title) === "Speed UHC Shop")
+    .filter((screen) => removeFormatting(screen.title) === "Speed UHC Shop")
     .flatMap(pickerEntries)
-    .findLast((item) => withoutCodes(item.name) === "Kits")
-    ?.lore.map(withoutCodes)
+    .findLast((item) => removeFormatting(item.name) === "Kits")
+    ?.lore.map(removeFormatting)
     .join(" ")
     .match(/kits for (\w+) Mode/)?.[1];
   if (!mode)
@@ -1224,7 +1228,7 @@ if (kitsPage !== -1) {
 
   speedUhc[mode.toLowerCase()] = Object.fromEntries(
     menu("Kits", "Speed UHC Shop").map((kit) => [
-      kitKey(withoutCodes(kit.name)),
+      kitKey(removeFormatting(kit.name)),
       speedUhcKit(kit),
     ]),
   );
@@ -1232,12 +1236,12 @@ if (kitsPage !== -1) {
 
 // Only a game's Gear Selector lists the free Default kit
 const gearSelector = screens.find(
-  (screen) => withoutCodes(screen.title) === "Gear Selector",
+  (screen) => removeFormatting(screen.title) === "Gear Selector",
 );
 const defaultKit =
   gearSelector &&
   pickerEntries(gearSelector).find(
-    (item) => withoutCodes(item.name) === "Default",
+    (item) => removeFormatting(item.name) === "Default",
   );
 if (defaultKit && speedUhc.normal)
   speedUhc.normal.default = speedUhcKit(defaultKit);
