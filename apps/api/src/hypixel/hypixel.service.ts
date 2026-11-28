@@ -17,17 +17,30 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
+import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { type Observable, catchError, defer, lastValueFrom, map, mergeMap, of, tap, throwError } from "rxjs";
 import type { APIData } from "@statsify/util";
+import type { Redis } from "ioredis";
+
+const DEFAULT_RATE_LIMIT_SECONDS = 60;
+const RATE_LIMIT_KEY = "hypixel:rate-limited";
+
+const parseHeader = (value: unknown) => {
+  const parsed = Number.parseInt(String(value), 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
 
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    @InjectRedis() private readonly redis: Redis
+  ) {}
 
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
@@ -90,7 +103,7 @@ export class HypixelService {
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -105,7 +118,7 @@ export class HypixelService {
           return null;
         }),
         catchError((err) => {
-          this.logger.error(err);
+          if (!(err instanceof HypixelUnavailableException)) this.logger.error(err);
           return of(null);
         })
       )
@@ -142,7 +155,36 @@ export class HypixelService {
     return throwError(() => new HypixelUnavailableException());
   }
 
+  private async startRateLimit(headers: Record<string, unknown>) {
+    const resetSeconds =
+      parseHeader(headers["ratelimit-reset"]) ??
+      parseHeader(headers["retry-after"]) ??
+      DEFAULT_RATE_LIMIT_SECONDS;
+
+    const seconds = Math.max(1, resetSeconds);
+
+    const started = await this.redis.set(RATE_LIMIT_KEY, 1, "PX", seconds * 1000, "NX");
+    if (started) this.logger.warn(`Hypixel is rate limiting requests for the next ${seconds} seconds`);
+
+    return seconds;
+  }
+
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+    const isKeyed = !url.startsWith("/resources/");
+    const pausedMs$ = isKeyed ? defer(() => this.redis.pttl(RATE_LIMIT_KEY)) : of(0);
+
+    return pausedMs$.pipe(
+      mergeMap((pausedMs) => {
+        if (pausedMs > 0) {
+          return throwError(() => new HypixelUnavailableException(Math.ceil(pausedMs / 1000)));
+        }
+
+        return this.fetch<T>(url, isKeyed, params);
+      })
+    );
+  }
+
+  private fetch<T>(url: string, isKeyed: boolean, params?: Record<string, unknown>): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -155,15 +197,26 @@ export class HypixelService {
         child?.setHttpStatus(res.status);
         child?.finish();
       }),
-      map((res) => res.data),
-      catchError((err) =>
-        throwError(
-          () =>
-            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
-              cause: err,
-            })
-        )
-      )
+      catchError(async (err) => {
+        const outOfRequests =
+          err.response?.status === 429 &&
+          (parseHeader(err.response.headers["ratelimit-remaining"]) ?? 0) === 0;
+
+        if (isKeyed && outOfRequests) {
+          throw new HypixelUnavailableException(await this.startRateLimit(err.response.headers));
+        }
+
+        throw new Error(`Fetching ${url} failed with reason: ${err.message}`, {
+          cause: err,
+        });
+      }),
+      mergeMap(async (res) => {
+        if (isKeyed && parseHeader(res.headers["ratelimit-remaining"]) === 0) {
+          await this.startRateLimit(res.headers);
+        }
+
+        return res.data;
+      })
     );
   }
 }

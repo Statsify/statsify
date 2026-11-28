@@ -55,7 +55,7 @@ export class ApiService extends StatsifyApiService {
         const error = err.response.data as PlayerNotFoundException;
 
         if (error.message === "player") throw this.missingPlayer(type, tag);
-        if (error.message === "hypixel") throw this.hypixelUnavailable();
+        if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
         throw this.unknownError();
       });
@@ -74,7 +74,7 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
-      if (error.message === "hypixel") throw this.hypixelUnavailable();
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       if (error.message === "session") {
         const { displayName } = error as SessionNotFoundException;
@@ -106,7 +106,7 @@ export class ApiService extends StatsifyApiService {
         PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
-      if (error.message === "hypixel") throw this.hypixelUnavailable();
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       if (error.message === "status") {
         const { displayName } = error as StatusNotFoundException;
@@ -183,7 +183,7 @@ export class ApiService extends StatsifyApiService {
       }
 
       if (error.message === "player") throw this.missingPlayer(playerType, input);
-      if (error.message === "hypixel") throw this.hypixelUnavailable();
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
 
       throw this.unknownError();
     });
@@ -198,7 +198,7 @@ export class ApiService extends StatsifyApiService {
       if (!err.response || !err.response.data) throw this.unknownError();
 
       const error = err.response.data as PlayerNotFoundException | HypixelUnavailableException;
-      if (error.message === "hypixel") throw this.hypixelUnavailable();
+      if (error.message === "hypixel") throw this.hypixelUnavailable(error);
       if (error.statusCode === 404) return null;
 
       throw new ErrorMessage("errors.leaderboardNotFound");
@@ -240,7 +240,7 @@ export class ApiService extends StatsifyApiService {
   public override resetPlayerSession(tag: string) {
     return super.resetPlayerSession(tag).catch((err: AxiosError) => {
       const error = err.response?.data as HypixelUnavailableException | undefined;
-      if (error?.message === "hypixel") throw this.hypixelUnavailable();
+      if (error?.message === "hypixel") throw this.hypixelUnavailable(error);
 
       throw err;
     });
@@ -334,8 +334,15 @@ export class ApiService extends StatsifyApiService {
     return new ErrorMessage("errors.unknown");
   }
 
-  public hypixelUnavailable() {
-    return new ErrorMessage("errors.hypixelUnavailable");
+  public hypixelUnavailable({ retryAfter }: HypixelUnavailableException) {
+    if (!retryAfter) return new ErrorMessage("errors.hypixelUnavailable");
+
+    const seconds = retryAfter > 60 ? Math.ceil(retryAfter / 60) * 60 : retryAfter;
+
+    return new ErrorMessage(
+      (t) => t("errors.hypixelRateLimited.title"),
+      (t) => t("errors.hypixelRateLimited.description", { time: seconds * 1000 })
+    );
   }
 
   private isDiscordId(tag: string) {
