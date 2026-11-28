@@ -84,11 +84,19 @@ const TAGGED_ATTRIBUTES = new Set<string>([
 ] satisfies (keyof RequestAttributes)[]);
 
 type CountAttribute = {
-  [K in keyof RequestAttributes]-?: NonNullable<RequestAttributes[K]> extends number ? K : never;
+  [K in keyof RequestAttributes]-?: NonNullable<
+    RequestAttributes[K]
+  > extends number
+    ? K
+    : never;
 }[keyof RequestAttributes];
 
 type StringAttribute = {
-  [K in keyof RequestAttributes]-?: string extends NonNullable<RequestAttributes[K]> ? K : never;
+  [K in keyof RequestAttributes]-?: string extends NonNullable<
+    RequestAttributes[K]
+  >
+    ? K
+    : never;
 }[keyof RequestAttributes];
 
 const logger = new Logger("Event");
@@ -99,30 +107,47 @@ const defaultScope = Sentry.getIsolationScope();
 export const setRequestAttributes = (attributes: RequestAttributes) => {
   if (Sentry.getIsolationScope() === defaultScope) return;
 
-  const entries = Object.entries(attributes).filter(([, value]) => value !== undefined);
+  const entries = Object.entries(attributes).filter(
+    ([, value]) => value !== undefined,
+  );
 
   Sentry.setAttributes(Object.fromEntries(entries));
-  Sentry.setTags(Object.fromEntries(entries.filter(([key]) => TAGGED_ATTRIBUTES.has(key))));
+  Sentry.setTags(
+    Object.fromEntries(entries.filter(([key]) => TAGGED_ATTRIBUTES.has(key))),
+  );
 };
 
 export const getRequestAttributes = () =>
   Sentry.getIsolationScope().getScopeData().attributes as RequestAttributes;
 
 export const setDefaultOutcome = (outcome: RequestOutcome) =>
-  setRequestAttributes({ "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? outcome });
+  setRequestAttributes({
+    "statsify.outcome": getRequestAttributes()["statsify.outcome"] ?? outcome,
+  });
 
-export const appendRequestAttribute = (key: StringAttribute, value: string, separator: string) => {
+export const appendRequestAttribute = (
+  key: StringAttribute,
+  value: string,
+  separator: string,
+) => {
   const current = getRequestAttributes()[key];
-  setRequestAttributes({ [key]: current ? `${current}${separator}${value}` : value });
+  setRequestAttributes({
+    [key]: current ? `${current}${separator}${value}` : value,
+  });
 };
 
-export const incrementRequestAttributes = (counts: Partial<Record<CountAttribute, number>>) => {
+export const incrementRequestAttributes = (
+  counts: Partial<Record<CountAttribute, number>>,
+) => {
   const attributes = getRequestAttributes();
 
   setRequestAttributes(
     Object.fromEntries(
-      Object.entries(counts).map(([key, count]) => [key, (attributes[key as CountAttribute] ?? 0) + count])
-    )
+      Object.entries(counts).map(([key, count]) => [
+        key,
+        (attributes[key as CountAttribute] ?? 0) + count,
+      ]),
+    ),
   );
 };
 
@@ -131,21 +156,31 @@ type ErrorDetails = { code?: string | number; retryable?: boolean };
 export const isRetryableStatus = (status: number | undefined) =>
   status === undefined || status === 429 || status >= 500;
 
-export const setUncapturedRequestError = (error: unknown, details: ErrorDetails = {}) => {
-  const code = details.code ?? (
-    error instanceof Error && "code" in error && (typeof error.code === "number" || typeof error.code === "string") ?
-      error.code :
-      undefined
-  );
+export const setUncapturedRequestError = (
+  error: unknown,
+  details: ErrorDetails = {},
+) => {
+  const code =
+    details.code ??
+    (error instanceof Error &&
+    "code" in error &&
+    (typeof error.code === "number" || typeof error.code === "string")
+      ? error.code
+      : undefined);
 
-  const retryable = details.retryable ?? (
-    error instanceof Error && "retryable" in error && typeof error.retryable === "boolean" ? error.retryable : undefined
-  );
+  const retryable =
+    details.retryable ??
+    (error instanceof Error &&
+    "retryable" in error &&
+    typeof error.retryable === "boolean"
+      ? error.retryable
+      : undefined);
 
   // An earlier error's code and retryable must not stay attached to this one
   const scope = Sentry.getIsolationScope();
   if (code === undefined) scope.removeAttribute("statsify.error.code");
-  if (retryable === undefined) scope.removeAttribute("statsify.error.retryable");
+  if (retryable === undefined)
+    scope.removeAttribute("statsify.error.retryable");
 
   setRequestAttributes({
     "statsify.outcome": "error",
@@ -168,11 +203,21 @@ const recordError = (error: unknown) => {
 
 const getSampleReason = (
   attributes: RequestAttributes,
-  { durationMs, slowMs = Number.POSITIVE_INFINITY, alwaysKeep = false, sampleRate = SAMPLE_RATE }: RequestEvent
+  {
+    durationMs,
+    slowMs = Number.POSITIVE_INFINITY,
+    alwaysKeep = false,
+    sampleRate = SAMPLE_RATE,
+  }: RequestEvent,
 ): SampleReason | undefined => {
   if (attributes["statsify.outcome"] === "error") return "error";
-  if (durationMs >= slowMs || (attributes["discord.interaction.ack_ms"] ?? 0) >= SLOW_ACK_MS) return "slow";
-  if ((attributes["statsify.guild.members.unresolved"] ?? 0) > 0) return "unresolved";
+  if (
+    durationMs >= slowMs ||
+    (attributes["discord.interaction.ack_ms"] ?? 0) >= SLOW_ACK_MS
+  )
+    return "slow";
+  if ((attributes["statsify.guild.members.unresolved"] ?? 0) > 0)
+    return "unresolved";
   if (alwaysKeep) return "user";
   if (Math.random() < sampleRate) return "sampled";
   return undefined;
@@ -196,7 +241,7 @@ export const emitRequestEvent = (event: RequestEvent) => {
 
 export const withRequestEvent = (
   request: () => unknown,
-  getEvent: (attributes: RequestAttributes) => Omit<RequestEvent, "durationMs">
+  getEvent: (attributes: RequestAttributes) => Omit<RequestEvent, "durationMs">,
 ) =>
   Sentry.withIsolationScope(async () => {
     const start = performance.now();
@@ -206,7 +251,10 @@ export const withRequestEvent = (
     } catch (error) {
       recordError(error);
     } finally {
-      emitRequestEvent({ ...getEvent(getRequestAttributes()), durationMs: performance.now() - start });
+      emitRequestEvent({
+        ...getEvent(getRequestAttributes()),
+        durationMs: performance.now() - start,
+      });
     }
   });
 
