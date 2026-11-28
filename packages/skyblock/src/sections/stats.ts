@@ -306,7 +306,7 @@ const getTreeStats = (nodes: TreeNode[], layout: TreeLayout) =>
       ),
   );
 
-// The wiki puts base Magic Find at 0 where NEU has 10, so it's unverified.
+// Base stats NEU leaves out, plus its Magic Find, which the wiki puts at 0.
 const { magic_find: baseMagicFind, ...BASE } = STAT_TABLES.base;
 const WIKI_BASE: Stats = {
   swing_range: 3,
