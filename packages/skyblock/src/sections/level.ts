@@ -6,11 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PET_RARITIES, getPetMaxLevel, toSkyBlockLevel } from "#leveling";
+import {
+  PET_RARITIES,
+  getPetMaxLevel,
+  getPetScore,
+  getPetScorePoints,
+  toSkyBlockLevel,
+} from "#leveling";
 import { PET_TEXTURES, SKYBLOCK_XP, getPetName } from "#data";
 import { getAccessorySteps, keepBestPerChain } from "./accessories.js";
 import { getItemCost, getPetKeyName, parsePetKey } from "#prices";
-import { getPetScore, getPetScorePoints } from "./pets.js";
 import { getPetTexture } from "#textures";
 import { prettify } from "@statsify/util";
 import type { ItemsResource, PriceMap, SkyBlockLevelSection } from "#types";
@@ -61,19 +66,12 @@ function getAccessorySources(
     return source;
   });
 
-  // A step that pays no XP goes last in its chain, even when it's free.
-  const ranked = candidates.toSorted(
-    (a, b) => Number(a.xp === 0) - Number(b.xp === 0) || compareSources(a, b),
+  const ranked = candidates.filter(({ xp }) => xp > 0).toSorted(compareSources);
+
+  // An unpriced step still wins its chain, so the steps under it stay hidden.
+  return keepBestPerChain(ranked).filter(
+    ({ outsideBag, cost }) => !market || outsideBag || cost,
   );
-
-  const sources: Source[] = [];
-  for (const source of keepBestPerChain(ranked)) {
-    if (source.xp === 0) continue;
-    if (market && !source.outsideBag && !source.cost) continue;
-    sources.push(source);
-  }
-
-  return sources;
 }
 
 function getPetSources(member: RawMember, prices: PriceMap, market: boolean) {
