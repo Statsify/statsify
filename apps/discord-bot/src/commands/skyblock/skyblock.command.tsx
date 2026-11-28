@@ -52,17 +52,33 @@ export interface SkyBlockProfileProps {
 }
 
 // A new profile reads every API setting as off and has no museum yet
-function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCard) {
-  const off = view.newProfile ? [] : card.settings.filter((setting) => view.member.apiSettings[setting] === false);
+function notes(
+  t: LocalizeFunction,
+  view: SkyBlockProfileView,
+  card: SkyBlockCard,
+) {
+  const off = view.newProfile
+    ? []
+    : card.settings.filter(
+        (setting) => view.member.apiSettings[setting] === false,
+      );
   const apiOff = off.filter((setting) => setting !== "banking");
 
   return [
-    view.stale ? t("skyblock.stale", { time: Math.floor(view.fetchedAt / 1000) }) : "",
-    apiOff.length > 0 ?
-      t("skyblock.apiOffNote", { settings: apiOff.map((setting) => t(`skyblock.apiSettings.${setting}`)).join(", ") }) :
-      "",
+    view.stale
+      ? t("skyblock.stale", { time: Math.floor(view.fetchedAt / 1000) })
+      : "",
+    apiOff.length > 0
+      ? t("skyblock.apiOffNote", {
+          settings: apiOff
+            .map((setting) => t(`skyblock.apiSettings.${setting}`))
+            .join(", "),
+        })
+      : "",
     off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    !view.newProfile && view.member.networth?.museumIncluded === false ? t("skyblock.museumNotCounted") : "",
+    !view.newProfile && view.member.networth?.museumIncluded === false
+      ? t("skyblock.museumNotCounted")
+      : "",
   ]
     .filter(Boolean)
     .join("\n");
@@ -72,80 +88,127 @@ function notes(t: LocalizeFunction, view: SkyBlockProfileView, card: SkyBlockCar
 export class SkyBlockCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t("commands.skyblock-profile"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-profile"),
+    args: [PlayerArgument],
+  })
   public profile(context: CommandContext) {
     return this.run(context, "profile");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-networth"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-networth"),
+    args: [PlayerArgument],
+  })
   public networth(context: CommandContext) {
     return this.run(context, "networth");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-skills"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-skills"),
+    args: [PlayerArgument],
+  })
   public skills(context: CommandContext) {
     return this.run(context, "skills");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-pets"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-pets"),
+    args: [PlayerArgument],
+  })
   public pets(context: CommandContext) {
     return this.run(context, "pets");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-hotm"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-hotm"),
+    args: [PlayerArgument],
+  })
   public hotm(context: CommandContext) {
     return this.run(context, "hotm");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-slayers"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-slayers"),
+    args: [PlayerArgument],
+  })
   public slayers(context: CommandContext) {
     return this.run(context, "slayers");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-dungeons"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-dungeons"),
+    args: [PlayerArgument],
+  })
   public dungeons(context: CommandContext) {
     return this.run(context, "dungeons");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-accessories"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-accessories"),
+    args: [PlayerArgument],
+  })
   public accessories(context: CommandContext) {
     return this.run(context, "accessories");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-level"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-level"),
+    args: [PlayerArgument],
+  })
   public level(context: CommandContext) {
     return this.run(context, "level");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-crimson"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-crimson"),
+    args: [PlayerArgument],
+  })
   public crimson(context: CommandContext) {
     return this.run(context, "crimson");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-fishing"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-fishing"),
+    args: [PlayerArgument],
+  })
   public fishing(context: CommandContext) {
     return this.run(context, "fishing");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-jacob"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-jacob"),
+    args: [PlayerArgument],
+  })
   public jacob(context: CommandContext) {
     return this.run(context, "jacob");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-chocolate"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-chocolate"),
+    args: [PlayerArgument],
+  })
   public chocolate(context: CommandContext) {
     return this.run(context, "chocolate");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-hotf"), args: [PlayerArgument] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-hotf"),
+    args: [PlayerArgument],
+  })
   public hotf(context: CommandContext) {
     return this.run(context, "hotf");
   }
 
-  @SubCommand({ description: (t) => t("commands.skyblock-price"), args: [new ItemArgument()] })
+  @SubCommand({
+    description: (t) => t("commands.skyblock-price"),
+    args: [new ItemArgument()],
+  })
   public async price(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
-    const price = await this.apiService.getSkyBlockPrice(context.option("item"));
+    const price = await this.apiService.getSkyBlockPrice(
+      context.option("item"),
+    );
 
     const [icon, logo, background] = await Promise.all([
       price.texture && getItemIcon(price.texture, { size: PRICE_ICON_SIZE }),
@@ -154,27 +217,51 @@ export class SkyBlockCommand {
     ]);
 
     const canvas = render(
-      <SkyBlockPriceProfile price={price} icon={icon} background={background} logo={logo} user={user} t={context.t()} />,
-      getTheme(user)
+      <SkyBlockPriceProfile
+        price={price}
+        icon={icon}
+        background={background}
+        logo={logo}
+        user={user}
+        t={context.t()}
+      />,
+      getTheme(user),
     );
 
     return {
-      files: [{ name: "price.png", data: await canvas.toBuffer("png"), type: "image/png" }],
+      files: [
+        {
+          name: "price.png",
+          data: await canvas.toBuffer("png"),
+          type: "image/png",
+        },
+      ],
     };
   }
 
   private async run(context: CommandContext, name: SkyBlockCardName) {
     const card: SkyBlockCard = SKYBLOCK_CARDS[name];
     const user = context.getUser();
-    const player = await this.apiService.getSkyBlockProfiles(context.option("player"), user);
+    const player = await this.apiService.getSkyBlockProfiles(
+      context.option("player"),
+      user,
+    );
 
-    const summaries = player.profiles.toSorted((a, b) => Number(b.selected) - Number(a.selected));
-    if (summaries.length === 0) throw new ErrorMessage("errors.skyblockNoProfiles");
+    const summaries = player.profiles.toSorted(
+      (a, b) => Number(b.selected) - Number(a.selected),
+    );
+    if (summaries.length === 0)
+      throw new ErrorMessage("errors.skyblockNoProfiles");
 
     const views = new Map<string, Promise<SkyBlockProfileView>>();
     const getView = (id: string) => {
       if (!views.has(id)) {
-        const view = this.apiService.getSkyBlockProfile(player.uuid, card.sections, user, id);
+        const view = this.apiService.getSkyBlockProfile(
+          player.uuid,
+          card.sections,
+          user,
+          id,
+        );
         view.catch(() => views.delete(id));
         views.set(id, view);
       }
@@ -190,39 +277,50 @@ export class SkyBlockCommand {
       getView(summaries[0].id),
     ]);
 
-    const generator = (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) => async (t: LocalizeFunction) => {
-      const view = await getView(id);
-      const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
-      const title = skyBlockTitle(t, view, name);
+    const generator =
+      (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) =>
+      async (t: LocalizeFunction) => {
+        const view = await getView(id);
+        const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
+        const title = skyBlockTitle(t, view, name);
 
-      const canvas = render(
-        <Profile
-          profile={view}
-          title={title}
-          skin={skin}
-          badge={badge}
-          background={background}
-          logo={logo}
-          user={user}
-          t={t}
-          icons={icons}
-        />,
-        getTheme(user)
-      );
+        const canvas = render(
+          <Profile
+            profile={view}
+            title={title}
+            skin={skin}
+            badge={badge}
+            background={background}
+            logo={logo}
+            user={user}
+            t={t}
+            icons={icons}
+          />,
+          getTheme(user),
+        );
 
-      return new Message({
-        content: notes(t, view, card),
-        files: [{ name: "skyblock.png", data: await canvas.toBuffer("png"), type: "image/png" }],
-        attachments: [],
-        embeds: [],
-      });
-    };
+        return new Message({
+          content: notes(t, view, card),
+          files: [
+            {
+              name: "skyblock.png",
+              data: await canvas.toBuffer("png"),
+              type: "image/png",
+            },
+          ],
+          attachments: [],
+          embeds: [],
+        });
+      };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
       const page = { label: cuteName, emoji: GAME_MODES[gameMode].emoji };
 
       if (Array.isArray(card.profile)) {
-        const subPages = card.profile.map(({ label, profile, icons }) => ({ label, generator: generator(id, profile, icons) }));
+        const subPages = card.profile.map(({ label, profile, icons }) => ({
+          label,
+          generator: generator(id, profile, icons),
+        }));
         return { ...page, subPages };
       }
 

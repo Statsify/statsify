@@ -20,17 +20,44 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
-  const { level, coreLevel, loadout, tokens, ability, powder, nodes, crystals, nucleusRuns, glacite } =
-    profile.member.hotm!;
+export const SkyBlockHotmProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
+  const {
+    level,
+    coreLevel,
+    loadout,
+    tokens,
+    ability,
+    powder,
+    nodes,
+    crystals,
+    nucleusRuns,
+    glacite,
+  } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), `${t(tokens.spent)}§7/§5${t(tokens.total)}`, "§5"],
+    [
+      t("skyblock.tokensSpent"),
+      `${t(tokens.spent)}§7/§5${t(tokens.total)}`,
+      "§5",
+    ],
     [t("skyblock.coreOfTheMountain"), t(coreLevel), "§6"],
-    [t("skyblock.pickaxeAbility"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.pickaxeAbility"),
+      ability ? prettify(ability) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (loadout.total > 1)
+    sidebar.unshift([
+      t("skyblock.loadout"),
+      t("skyblock.loadoutOf", loadout),
+      "§b",
+    ]);
 
   const powders = POWDERS.map((type) => (
     <PerkCurrency
@@ -55,7 +82,12 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
+          <LevelBar
+            title={t("skyblock.hotmLevel")}
+            level={level}
+            color="§5"
+            t={t}
+          />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
         <Table.tr>
@@ -64,7 +96,9 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
           </box>
           <box direction="column" location="center" width="100%">
             {stats.map(([name, value, color]) => (
-              <text margin={{ top: 2, bottom: 2, left: 10, right: 10 }}>{`§7${name}: ${color}${t(value)}`}</text>
+              <text
+                margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
+              >{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
         </Table.tr>

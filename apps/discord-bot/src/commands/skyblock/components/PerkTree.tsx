@@ -21,7 +21,9 @@ const perkColor = ({ level, maxLevel, enabled }: TreeNode) => {
 };
 
 export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
-  const byPosition = new Map(nodes.map((node) => [`${node.x},${node.y}`, node]));
+  const byPosition = new Map(
+    nodes.map((node) => [`${node.x},${node.y}`, node]),
+  );
   const height = Math.max(...nodes.map(({ y }) => y)) + 1;
 
   return (
@@ -30,19 +32,24 @@ export const PerkTree = ({ nodes }: { nodes: TreeNode[] }) => {
         <div>
           {Array.from({ length: TREE_WIDTH }, (_, x) => {
             const node = byPosition.get(`${x},${y}`);
-            return node ?
-              (
-                <box
-                  width={PERK_SIZE}
-                  height={PERK_SIZE}
-                  color={perkColor(node)}
-                  padding={0}
-                  margin={1}
-                  border={{ topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 }}
-                  shadowDistance={0}
-                />
-              ) :
-              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
+            return node ? (
+              <box
+                width={PERK_SIZE}
+                height={PERK_SIZE}
+                color={perkColor(node)}
+                padding={0}
+                margin={1}
+                border={{
+                  topLeft: 0,
+                  topRight: 0,
+                  bottomLeft: 0,
+                  bottomRight: 0,
+                }}
+                shadowDistance={0}
+              />
+            ) : (
+              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />
+            );
           })}
         </div>
       ))}
@@ -58,10 +65,22 @@ interface PerkCurrencyProps {
   t: LocalizeFunction;
 }
 
-export const PerkCurrency = ({ name, color, earned, spent, t }: PerkCurrencyProps) => (
+export const PerkCurrency = ({
+  name,
+  color,
+  earned,
+  spent,
+  t,
+}: PerkCurrencyProps) => (
   <box direction="column" location="center" width="100%">
-    <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${name}`}</text>
-    <text margin={{ top: 0, bottom: 2, left: 10, right: 10 }}>{`§7${t("skyblock.earned")}: ${color}${t(earned)}`}</text>
-    <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
+    <text
+      margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+    >{`${color}${name}`}</text>
+    <text
+      margin={{ top: 0, bottom: 2, left: 10, right: 10 }}
+    >{`§7${t("skyblock.earned")}: ${color}${t(earned)}`}</text>
+    <text
+      margin={{ top: 0, bottom: 8, left: 10, right: 10 }}
+    >{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
   </box>
 );

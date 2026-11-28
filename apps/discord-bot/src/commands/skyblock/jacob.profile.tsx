@@ -17,17 +17,38 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 export const jacobIcons = ({ jacob }: MemberView) =>
   jacob?.crops.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
 
-export const SkyBlockJacobProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockJacobProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const jacob = profile.member.jacob;
 
   if (!jacob) {
-    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noJacob")} />;
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noJacob")}
+      />
+    );
   }
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.contests"), t(jacob.contests), "§e"],
-    ...JACOB_MEDALS.map((medal): SidebarItem => [t(`skyblock.medals.${medal}`), t(jacob.medals[medal]), MEDAL_COLORS[medal]]),
-    [t("skyblock.extraFarmingFortune"), `+${t(jacob.perks.farmingFortune)}`, "§a"],
+    ...JACOB_MEDALS.map(
+      (medal): SidebarItem => [
+        t(`skyblock.medals.${medal}`),
+        t(jacob.medals[medal]),
+        MEDAL_COLORS[medal],
+      ],
+    ),
+    [
+      t("skyblock.extraFarmingFortune"),
+      `+${t(jacob.perks.farmingFortune)}`,
+      "§a",
+    ],
     [t("skyblock.farmingLevelCap"), `+${t(jacob.perks.farmingLevelCap)}`, "§a"],
   ];
 
@@ -35,16 +56,22 @@ export const SkyBlockJacobProfile = ({ profile, t, icons, ...card }: SkyBlockPro
     texture,
     name: `${bracket ? MEDAL_COLORS[bracket] : "§7"}${name}`,
     value: [
-      bracket ? `${MEDAL_COLORS[bracket]}${prettify(bracket)}` : `§8${t("skyblock.none")}`,
-      ...(personalBest === undefined ? [] : [`§7${t("skyblock.personalBest", { amount: t(personalBest) })}`]),
+      bracket
+        ? `${MEDAL_COLORS[bracket]}${prettify(bracket)}`
+        : `§8${t("skyblock.none")}`,
+      ...(personalBest === undefined
+        ? []
+        : [`§7${t("skyblock.personalBest", { amount: t(personalBest) })}`]),
     ].join(" §8• "),
   }));
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={2} /> :
-        <Empty text={t("skyblock.noJacobCrops")} />}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} columns={2} />
+      ) : (
+        <Empty text={t("skyblock.noJacobCrops")} />
+      )}
     </Card>
   );
 };

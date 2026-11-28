@@ -21,7 +21,10 @@ export function getFishing(member: RawMember): FishingSection | null {
   // Hypixel can send both with every count at 0
   if (!fished.total && !caught("total_caught")) return null;
 
-  const seaCreatures = SEA_CREATURES.map(({ name, ids }) => ({ name, kills: add(...ids.map((id) => kills[id] ?? 0)) }))
+  const seaCreatures = SEA_CREATURES.map(({ name, ids }) => ({
+    name,
+    kills: add(...ids.map((id) => kills[id] ?? 0)),
+  }))
     .filter(({ kills }) => kills > 0)
     .toSorted((a, b) => b.kills - a.kills);
 
@@ -30,7 +33,10 @@ export function getFishing(member: RawMember): FishingSection | null {
       id,
       name,
       tiers: Object.fromEntries(
-        TROPHY_TIERS.map((tier) => [tier, caught(`${id.toLowerCase()}_${tier}`)])
+        TROPHY_TIERS.map((tier) => [
+          tier,
+          caught(`${id.toLowerCase()}_${tier}`),
+        ]),
       ) as TrophyFish["tiers"],
     })),
     trophyFishCaught: caught("total_caught"),
@@ -53,7 +59,9 @@ if (import.meta.vitest) {
   test("getFishing ranks sea creatures by their bestiary kills, leaving out other mobs", () => {
     const fishing = getFishing({
       trophy_fish: { total_caught: 5, rewards: [] },
-      bestiary: { kills: { zombie_miner_150: 3, great_white_shark_180: 7, zombie: 1000 } },
+      bestiary: {
+        kills: { zombie_miner_150: 3, great_white_shark_180: 7, zombie: 1000 },
+      },
       player_stats: { sea_creature_kills: 162 },
     });
 
