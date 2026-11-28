@@ -555,7 +555,9 @@ async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMoun
 
   const horse = join(VANILLA_PACK.path, "textures/entity/horse");
 
-  const layers = await Promise.all(textures.map((texture) => readFile(join(horse, `${texture}.png`))));
+  const layers = await Promise.all(
+    textures.map((texture) => readFile(join(horse, `${texture}.png`)))
+  );
 
   return { entity, textures: layers };
 }
@@ -565,7 +567,9 @@ export function renderWarlords(
   { models }: WarlordsScene,
   { player, mount, extruded = false, ...camera }: WarlordsRenderOptions
 ): Promise<Buffer> {
-  const defaults = mount ? WARLORDS_CAMERA.mount : player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
+  let defaults = WARLORDS_CAMERA.weapon;
+  if (player) defaults = WARLORDS_CAMERA.player;
+  if (mount) defaults = WARLORDS_CAMERA.mount;
 
   const output = {
     width: camera.width ?? defaults.width,

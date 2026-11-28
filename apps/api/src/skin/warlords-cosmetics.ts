@@ -98,12 +98,11 @@ export const WARLORDS_ARMOR = {
 } as const satisfies Record<number, Record<"blue" | "red", ArmorPieceDto>>;
 
 export interface WarlordsMount extends Pick<SceneMount, "entity"> {
-  /** Texture layers under textures/entity/horse, in the order the game layers them */
-  textures: readonly string[];
+  // Layers under textures/entity/horse, in the order the game draws them
+  textures: string[];
 }
 
-// Unconfirmed in game: the kinds and armor follow each mount's menu icon and name, and the coats
-// are picks except Raging Stallion's black, which its lore names
+// Unconfirmed: each mount's look is guessed from its menu icon, name and lore
 export const WARLORDS_MOUNTS = {
   noble_steed: { entity: "horse", textures: ["horse_brown"] },
   undying_mare: { entity: "horse", textures: ["horse_skeleton"] },
@@ -121,7 +120,7 @@ export const WARLORDS_MOUNTS = {
     textures: ["horse_black", "armor/horse_armor_gold"],
   },
   molly_the_donkey: { entity: "donkey", textures: ["donkey"] },
-} as const satisfies Record<string, WarlordsMount>;
+} satisfies Record<string, WarlordsMount>;
 
 export const getWarlordsWeaponModel = (weapon: string) =>
   lookup(WARLORDS_WEAPONS, weapon, `Unknown weapon ${weapon}`);
