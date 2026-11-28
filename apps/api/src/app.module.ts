@@ -18,7 +18,7 @@ import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 
 const mongoUri = await config("database.mongoUri");
 const redisUrl = await config("database.redisUrl");

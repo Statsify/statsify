@@ -25,7 +25,7 @@ A Hypixel and Minecraft focused Discord Bot
 
 ### 🚀 Running
 * The codebase is split into apps and packages
-* Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
+* Set up a `config.ts` file in the root of the project following the `config.schema.ts` file (copy paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
 * Use `pnpm build` to build all packages and apps,
 * Use `pnpm build:watch` to watch files and build them while you code

@@ -8,7 +8,7 @@
 
 import { Container, Service } from "typedi";
 import { Tag, Ticket, User } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { createConnection } from "mongoose";
 import { getModelForClass } from "@typegoose/typegoose";
 

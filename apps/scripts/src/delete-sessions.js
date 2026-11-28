@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { connect } from "mongoose";
 
-const mongo = await connect(config("database.mongoUri"));
+const mongo = await connect(await config("database.mongoUri"));
 
 const session = mongo.connection.db.collection("session");
 

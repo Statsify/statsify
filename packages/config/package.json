@@ -1,0 +1,17 @@
+{
+  "name": "@statsify/config",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "lint:ci": "oxlint --format=github"
+  },
+  "dependencies": {
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.23"
+  }
+}

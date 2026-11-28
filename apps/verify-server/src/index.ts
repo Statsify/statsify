@@ -9,7 +9,8 @@
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
-import { config, formatTime } from "@statsify/util";
+import { formatTime } from "@statsify/util";
+import { config } from "@statsify/config";
 import { connect } from "mongoose";
 import { createServer } from "minecraft-protocol";
 import { generateCode } from "./generate-code.js";

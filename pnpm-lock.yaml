@@ -247,6 +247,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../../packages/config
       '@statsify/logger':
         specifier: workspace:^
         version: link:../../packages/logger
@@ -320,6 +323,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../../packages/config
       '@statsify/discord':
         specifier: workspace:^
         version: link:../../packages/discord
@@ -384,6 +390,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../../packages/config
       '@statsify/logger':
         specifier: workspace:^
         version: link:../../packages/logger
@@ -505,6 +514,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../../packages/config
       '@statsify/discord':
         specifier: workspace:^
         version: link:../../packages/discord
@@ -566,6 +578,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../../packages/assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../../packages/config
       '@statsify/logger':
         specifier: workspace:^
         version: link:../../packages/logger
@@ -599,15 +614,15 @@ importers:
       '@sentry/node':
         specifier: ^7.118.0
         version: 7.120.4
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../config
       '@statsify/rendering':
         specifier: workspace:^
         version: link:../rendering
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
-      '@statsify/util':
-        specifier: workspace:^
-        version: link:../util
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.24
@@ -633,6 +648,15 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
+  packages/config:
+    dependencies:
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.23
+
   packages/discord:
     dependencies:
       '@sentry/node':
@@ -644,6 +668,9 @@ importers:
       '@statsify/assets':
         specifier: workspace:^
         version: link:../assets
+      '@statsify/config':
+        specifier: workspace:^
+        version: link:../config
       '@statsify/logger':
         specifier: workspace:^
         version: link:../logger
@@ -690,9 +717,9 @@ importers:
       '@sentry/node':
         specifier: ^7.118.0
         version: 7.120.4
-      '@statsify/util':
+      '@statsify/config':
         specifier: workspace:^
-        version: link:../util
+        version: link:../config
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.24

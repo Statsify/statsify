@@ -6,12 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { join } from "node:path";
+import { resolve } from "node:path";
 import { existsSync } from "node:fs";
-import type { DeepFlatten } from "./flatten.js";
+import type { DeepFlatten } from "@statsify/util";
 import { pathToFileURL } from "node:url";
-
-const directory = import.meta.dirname;
 
 export interface Config {
   database: {
@@ -281,8 +279,13 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  for (const file of ["config.json", "config.js"]) {
-    const path = join(directory, "../../../", file);
+  for (const file of [
+    "config.json",
+    "config.ts",
+    "../../config.json",
+    "../../config.ts",
+  ]) {
+    const path = resolve(process.cwd(), file);
 
     if (existsSync(path)) {
       return import(pathToFileURL(path).href);

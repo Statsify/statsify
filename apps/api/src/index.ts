@@ -18,7 +18,7 @@ import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { cleanupOpenApiDoc, createZodValidationPipe } from "nestjs-zod";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 import type { ZodError } from "zod";

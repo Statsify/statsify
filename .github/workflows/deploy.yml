@@ -31,7 +31,7 @@ jobs:
         run: pnpm scripts blur-backgrounds
 
       - name: Move Config
-        run: cp /home/config.js ./config.js
+        run: cp /home/config.ts ./config.ts
 
       - name: Restart PM2
         run: npx pm2 restart pm2.config.cjs

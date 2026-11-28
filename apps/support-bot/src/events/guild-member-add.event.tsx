@@ -23,7 +23,7 @@ import {
 import { STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { WelcomeProfile } from "#lib";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import { getBackground } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";

@@ -9,7 +9,8 @@
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, VerifyCode } from "@statsify/schemas";
-import { config, flatten } from "@statsify/util";
+import { flatten } from "@statsify/util";
+import { config } from "@statsify/config";
 import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import type { ReturnModelType } from "@typegoose/typegoose";

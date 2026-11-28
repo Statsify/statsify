@@ -15,7 +15,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { config } from "@statsify/util";
+import { config } from "@statsify/config";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 @Injectable()

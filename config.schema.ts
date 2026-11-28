@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/**
- * @type {import("@statsify/util").Config}
- */
+import type { Config } from "./packages/config/src/index.js";
+
 export default {
   database: {
-    mongoUri: "mongodb://statsify:statsify@localhost:27017/statsify?authSource=admin",
+    mongoUri:
+      "mongodb://statsify:statsify@localhost:27017/statsify?authSource=admin",
     redisUrl: "redis://:statsify@localhost:6379",
   },
   hypixelApi: {
@@ -70,4 +70,4 @@ export default {
     tracesSampleRate: 1,
   },
   environment: "dev",
-};
+} satisfies Config;
