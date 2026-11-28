@@ -72,7 +72,7 @@ export type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
 
 export interface SkyBlockCard {
   sections: SkyBlockSection[];
-  /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
+  // Never museum, since its response leaves out members who donated nothing.
   settings: Exclude<keyof ApiSettings, "museum">[];
   icons?: (member: MemberView) => ItemTexture[];
   profile: SkyBlockProfile | SkyBlockSubPage[];
@@ -171,10 +171,12 @@ export function skyBlockTitle(
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,
 ) {
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName}${GAME_MODES[profile.gameMode].badge}§r)`;
+  const cuteName = FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName;
+  const { badge } = GAME_MODES[profile.gameMode];
+  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${cuteName}${badge}§r)`;
 }
 
 export function getSkyBlockBackground() {
-  // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
+  // getBackground throws for SkyBlock, which has no backgrounds yet.
   return getBackground("hypixel", "overall");
 }

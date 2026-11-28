@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { z } from "zod";
-
-// On a section, `undefined` means it wasn't requested and `null` means the player's API setting hides it.
+import type { DungeonClass } from "./sections/dungeons.js";
+import type { Powder } from "./sections/hotm.js";
+import type { Skill } from "./sections/skills.js";
+import type { SlayerBoss } from "./sections/slayers.js";
 
 export const RARITIES = [
   "COMMON",
@@ -49,9 +50,9 @@ export interface ProfileSummary {
   selected: boolean;
   members: { uuid: string; removed: boolean }[];
   level: number;
-  levelColor: string; // the § code of the level's bracket
+  levelColor: string; // a § code
   xp: number;
-  newProfile: boolean; // brand new, so missing data is empty rather than hidden by an API setting
+  newProfile: boolean; // so missing data is empty, not hidden by an API setting
   purse: number;
   bank?: number;
   personalBank?: number;
@@ -65,6 +66,7 @@ export interface SkyBlockProfileView
   museumFetchedAt?: number;
 }
 
+// A null section is one the player's API settings hide.
 export interface MemberView {
   apiSettings: ApiSettings;
   accessories?: AccessoriesSection | null;
@@ -90,47 +92,19 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
-  xpCurrent: number; // into the next level; at the max, everything past it
+  xpCurrent: number; // at the max level, all the XP past it
   xpForNext?: number;
   progress: number;
 }
 
 export interface SkillLevel extends Level {
-  unverified: boolean; // the level rests on a cap the API can't confirm (foraging past 53)
+  unverified: boolean; // the API can't confirm the cap (Foraging past 53)
 }
-
-export const SKILLS = [
-  "farming",
-  "mining",
-  "combat",
-  "foraging",
-  "fishing",
-  "enchanting",
-  "alchemy",
-  "taming",
-  "carpentry",
-  "hunting",
-  "runecrafting",
-  "social",
-] as const;
-
-export type Skill = (typeof SKILLS)[number];
 
 export interface SkillsSection {
   average: number;
   skills: Record<Skill, SkillLevel>;
 }
-
-export const SLAYER_BOSSES = [
-  "zombie",
-  "spider",
-  "wolf",
-  "enderman",
-  "blaze",
-  "vampire",
-] as const;
-
-export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
 export interface SlayersSection {
   xp: number;
@@ -149,16 +123,6 @@ export interface DungeonFloor {
   fastestSPlus?: number;
 }
 
-export const DUNGEON_CLASSES = [
-  "healer",
-  "mage",
-  "berserk",
-  "archer",
-  "tank",
-] as const;
-
-export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
-
 export interface DungeonsSection {
   catacombs: Level;
   classes: Record<DungeonClass, Level>;
@@ -167,25 +131,22 @@ export interface DungeonsSection {
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
-  mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>; // 0 for a class never played
+  // 0 for a class never played
+  mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>;
   watcherKills: number;
   essence: Essence[];
 }
 
 export interface Essence {
   type: string; // WITHER, CRIMSON…
-  amount?: number; // 0 when Hypixel sends none; missing for the types in UNSENT_ESSENCE
-  perks: number; // shop perk levels bought
+  amount?: number; // missing for a shop Hypixel sends no balance for
+  perks: number;
   maxPerks: number;
 }
 
-export const POWDERS = ["mithril", "gemstone", "glacite"] as const;
-
-export type Powder = (typeof POWDERS)[number];
-
 export interface HotmSection {
   level: Level;
-  coreLevel: number; // Core of the Mountain's
+  coreLevel: number;
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
@@ -199,16 +160,16 @@ export interface HotmSection {
     y: number;
     enabled: boolean;
   }[];
-  crystals: { found: number; placed: number }; // over every gem
+  crystals: { found: number; placed: number };
   nucleusRuns: number;
-  glacite: { corpses: number; fossils: number; mineshafts: number }; // corpses looted, fossils donated
+  glacite: { corpses: number; fossils: number; mineshafts: number };
 }
 
 export interface PetsSection {
   score: number;
   active?: PetView;
   pets: PetView[];
-  totalXp: number; // every pet's XP ever gained
+  totalXp: number;
 }
 
 export interface PetView {
@@ -225,10 +186,10 @@ export interface PetView {
   texture: ItemTexture;
 }
 
-/** One price per unit; listings is the BIN count behind it. */
+// coins is per unit, and a bazaar entry's coins is its sell price.
 export type PriceEntry =
   | { coins: number; source: "bin"; listings: number }
-  | { coins: number; source: "bazaar"; buy: number } // coins is the sell price, buy what buying one costs
+  | { coins: number; source: "bazaar"; buy: number }
   | { coins: number; source: "npc" };
 
 export interface PriceMap {
@@ -261,8 +222,8 @@ export interface MissingAccessory {
   name: string;
   rarity: Rarity;
   accessoryPower: number; // over the tier in the bag it replaces
-  outsideBag: boolean;
-  cost?: ItemCost;
+  outsideBag: boolean; // in the inventory, ender chest, a backpack or the vault
+  cost?: ItemCost; // none for one outside the bag
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
@@ -272,24 +233,24 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  powerStats?: PowerStat[]; // at this Accessory Power, plus the stone's Unique Power Bonus; only for stone Powers
+  powerStats?: PowerStat[]; // only for a Power learned from a stone
   tuning: Record<string, number>;
-  tuningPoints: number; // spent
-  enrichments: number; // on active accessories
+  tuningPoints: number;
+  enrichments: number;
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
   inactive: InactiveAccessory[];
-  missing: MissingAccessory[];
+  missing: MissingAccessory[]; // outside the bag first, then the cheapest per AP
 }
 
 export interface PowerStat {
   name: string; // Strength, Crit Damage…
-  color: string; // its § code
+  color: string; // a § code
   value: number;
 }
 
-/** A duplicate, or a lower tier or variant that another accessory in the bag replaces. */
+// A duplicate, or a lower tier or variant another accessory in the bag replaces
 export type InactiveAccessory = ItemView &
   (
     | { reason: "duplicate" }
@@ -303,7 +264,7 @@ export interface NetworthSection {
   bank: number;
   personalBank: number;
   coins: number;
-  nonCosmetic: { total: number; unsoulbound: number }; // cosmetic items and modifiers left out
+  nonCosmetic: { total: number; unsoulbound: number };
   noInventory: boolean;
   museumIncluded: boolean;
   pricesAsOf: number;
@@ -361,55 +322,9 @@ export type ItemTexture =
   | { kind: "item"; id: number; damage: number; color?: number } // 1.8 numeric id
   | { kind: "head"; skin: string }; // skin texture hash
 
-/** prismarine-nbt `simplify()` of one slot. */
-export const RawItem = z.object({
-  id: z.number(),
-  Count: z.number(),
-  Damage: z.number(),
-  tag: z
-    .object({
-      display: z
-        .object({
-          Name: z.string().optional(),
-          Lore: z.array(z.string()).optional(),
-          color: z.number().optional(),
-        })
-        .optional(),
-      ExtraAttributes: z
-        .object({
-          id: z.string().optional(),
-          uuid: z.string().optional(),
-          modifier: z.string().optional(),
-          upgrade_level: z.number().optional(),
-          // A few items store it as a long, which the decode leaves as `[high, low]`
-          dungeon_item_level: z
-            .union([z.number(), z.tuple([z.number(), z.number()])])
-            .optional(),
-          rarity_upgrades: z.number().optional(),
-          enchantments: z.record(z.string(), z.number()).optional(),
-          talisman_enrichment: z.string().optional(),
-        })
-        .catchall(z.unknown())
-        .optional(),
-      SkullOwner: z
-        .object({
-          Properties: z
-            .object({
-              textures: z.array(z.object({ Value: z.string() })).optional(),
-            })
-            .optional(),
-        })
-        .optional(),
-      ench: z.array(z.unknown()).optional(),
-    })
-    .optional(),
-});
-export type RawItem = z.infer<typeof RawItem>;
-
+// The API keeps this to itself and never sends it to clients.
 export interface ItemsResource {
-  // API-internal, never sent to clients
   lastUpdated: number;
-  raw: object[]; // as Hypixel sent it, for the networth library
   items: Record<
     string,
     {
@@ -426,7 +341,7 @@ export interface ItemsResource {
   >;
 }
 
-/** texture is missing for a material the 1.8 table doesn't map yet. */
+// texture is missing for a material the 1.8 table doesn't map yet.
 export interface PriceView {
   id: string;
   name: string;
@@ -438,7 +353,7 @@ export interface PriceView {
   asOf: number;
 }
 
-/** An item search result: an items-resource id, an enchanted book or a pet price key. */
+// The id of a search result is a price key, so books and pets have their own.
 export interface ItemMatch {
   id: string;
   name: string;

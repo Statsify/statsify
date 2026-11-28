@@ -26,12 +26,12 @@ export const RARITY_COLORS: Record<Rarity, string> = {
   ADMIN: "§4",
 };
 
-export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
+export const formatPriceAge = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", {
     time: formatTime(Date.now() - asOf, { entries: 1 }),
   });
 
-// Table.tr splits its width by its cells, so a short last row is padded to keep the columns
+// Table.tr splits its width by cell, so a short last row gets padding.
 export const gridRows = (cells: JSX.Element[], columns: number) =>
   arrayGroup(cells, columns).map((row) => (
     <Table.tr>

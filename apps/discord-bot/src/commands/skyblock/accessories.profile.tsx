@@ -10,14 +10,18 @@ import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  RARITY_COLORS,
+  formatPriceAge,
+} from "./components/ItemGrid.js";
 import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
-import type { LocalizeFunction } from "@statsify/discord";
 import type {
   InactiveAccessory,
   MemberView,
   PowerStat,
 } from "@statsify/skyblock";
+import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
@@ -26,48 +30,54 @@ const MAX_POWER_STATS_PER_LINE = 5; // more is wider than the card
 
 const topMissing = ({ accessories }: MemberView) =>
   accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
-const baseName = ({ name, reforge }: InactiveAccessory) => {
+
+function getBaseName({ name, reforge }: InactiveAccessory) {
   const plain = removeFormatting(name);
   const prefix = reforge ? `${prettify(reforge)} ` : "";
-  return prefix && plain.startsWith(prefix)
-    ? plain.slice(prefix.length)
-    : plain;
-};
+  if (prefix && plain.startsWith(prefix)) return plain.slice(prefix.length);
+  return plain;
+}
 
-// One row per accessory, so a stack of duplicates doesn't fill the page. Copies with different names (Abicase colors)
-// share the name they have in common, or the item's.
+// Abicase colors share an id, so copies show the name they have in common.
+function getSharedName(id: string, copies: InactiveAccessory[]) {
+  const [first] = copies;
+  if (copies.every((view) => view.name === first.name)) return first.name;
+
+  const color = /^(?:§.)*/.exec(first.name)?.[0] ?? "";
+  const bases = new Set(copies.map(getBaseName));
+  const name = bases.size === 1 ? getBaseName(first) : prettify(id);
+  return `${color}${name}`;
+}
+
+// One row per accessory keeps a stack of duplicates from filling the page.
 function topInactive({ accessories }: MemberView) {
   const copies = Map.groupBy(accessories?.inactive ?? [], (view) => view.id);
 
-  return [...copies].slice(0, INACTIVE_SHOWN).map(([id, [first, ...rest]]) => {
-    const bases = new Set([first, ...rest].map(baseName));
-    const color = /^(?:§.)*/.exec(first.name)?.[0] ?? "";
-    const name = rest.every((view) => view.name === first.name)
-      ? first.name
-      : `${color}${bases.size === 1 ? baseName(first) : prettify(id)}`;
-    return { ...first, name, count: rest.length + 1 };
-  });
+  return [...copies].slice(0, INACTIVE_SHOWN).map(([id, views]) => ({
+    ...views[0],
+    name: getSharedName(id, views),
+    count: views.length,
+  }));
 }
 
-export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
+interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
   page: "missing" | "inactive";
 }
 
 export const accessoryIcons =
-  (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
-    (page === "missing" ? topMissing(member) : topInactive(member)).map(
-      ({ texture }) => texture,
-    );
+  (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) => {
+    const shown = page === "missing" ? topMissing(member) : topInactive(member);
+    return shown.map(({ texture }) => texture);
+  };
 
-const PowerStats = ({
-  power,
-  stats,
-  t,
-}: {
+interface PowerStatsProps {
   power: string;
   stats: PowerStat[];
   t: LocalizeFunction;
-}) => {
+}
+
+const PowerStats = ({ power, stats, t }: PowerStatsProps) => {
+  const label = `§7${t("skyblock.powerStats", { power: prettify(power) })}:`;
   const lineCount = Math.ceil(stats.length / MAX_POWER_STATS_PER_LINE);
   const lines = arrayGroup(
     stats.map(
@@ -80,7 +90,7 @@ const PowerStats = ({
   return (
     <box width="100%" direction="column">
       {lines.map((line, index) => (
-        <text>{`${index === 0 ? `§7${t("skyblock.powerStats", { power: prettify(power) })}: ` : ""}${line.join(" ")}`}</text>
+        <text>{(index === 0 ? [label, ...line] : line).join(" ")}</text>
       ))}
     </box>
   );
@@ -129,10 +139,11 @@ export const SkyBlockAccessoriesProfile = ({
         view.reason === "duplicate"
           ? t("skyblock.duplicate")
           : t("skyblock.replacedBy", { name: view.replacedBy.name });
+      const count = view.count > 1 ? ` §8×${t(view.count)}` : "";
       return {
         texture: view.texture,
         name: view.name,
-        value: `§7${reason}${view.count > 1 ? ` §8×${t(view.count)}` : ""}`,
+        value: `§7${reason}${count}`,
       };
     });
 
@@ -172,7 +183,7 @@ export const SkyBlockAccessoriesProfile = ({
   );
 
   const footnote = accessories.market
-    ? pricesAsOf(t, accessories.pricesAsOf)
+    ? formatPriceAge(t, accessories.pricesAsOf)
     : t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (

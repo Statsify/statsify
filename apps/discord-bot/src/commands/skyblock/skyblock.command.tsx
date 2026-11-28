@@ -51,37 +51,39 @@ export interface SkyBlockProfileProps {
   icons: ItemIcons;
 }
 
-// A new profile reads every API setting as off and has no museum yet
-function notes(
+function getNotes(
   t: LocalizeFunction,
   view: SkyBlockProfileView,
   card: SkyBlockCard,
 ) {
-  const off = view.newProfile
-    ? []
-    : card.settings.filter(
-        (setting) => view.member.apiSettings[setting] === false,
-      );
+  const notes: string[] = [];
+
+  if (view.stale) {
+    const time = Math.floor(view.fetchedAt / 1000);
+    notes.push(t("skyblock.stale", { time }));
+  }
+
+  // A new profile reads every API setting as off and has no museum yet.
+  if (view.newProfile) return notes.join("\n");
+
+  const off = card.settings.filter(
+    (setting) => view.member.apiSettings[setting] === false,
+  );
   const apiOff = off.filter((setting) => setting !== "banking");
 
-  return [
-    view.stale
-      ? t("skyblock.stale", { time: Math.floor(view.fetchedAt / 1000) })
-      : "",
-    apiOff.length > 0
-      ? t("skyblock.apiOffNote", {
-          settings: apiOff
-            .map((setting) => t(`skyblock.apiSettings.${setting}`))
-            .join(", "),
-        })
-      : "",
-    off.includes("banking") ? t("skyblock.bankingOffNote") : "",
-    !view.newProfile && view.member.networth?.museumIncluded === false
-      ? t("skyblock.museumNotCounted")
-      : "",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  if (apiOff.length > 0) {
+    const settings = apiOff
+      .map((setting) => t(`skyblock.apiSettings.${setting}`))
+      .join(", ");
+    notes.push(t("skyblock.apiOffNote", { settings }));
+  }
+
+  if (off.includes("banking")) notes.push(t("skyblock.bankingOffNote"));
+
+  if (view.member.networth?.museumIncluded === false)
+    notes.push(t("skyblock.museumNotCounted"));
+
+  return notes.join("\n");
 }
 
 @Command({ description: (t) => t("commands.skyblock"), cooldown: 10 })
@@ -238,10 +240,10 @@ export class SkyBlockCommand {
     ]);
 
     const generator =
-      (id: string, Profile: SkyBlockProfile, iconsOf = card.icons) =>
+      (id: string, Profile: SkyBlockProfile, getIcons = card.icons) =>
       async (t: LocalizeFunction) => {
         const view = await getView(id);
-        const icons = await loadItemIcons(iconsOf?.(view.member) ?? []);
+        const icons = await loadItemIcons(getIcons?.(view.member) ?? []);
         const title = skyBlockTitle(t, view, name);
 
         const canvas = render(
@@ -260,7 +262,7 @@ export class SkyBlockCommand {
         );
 
         return new Message({
-          content: notes(t, view, card),
+          content: getNotes(t, view, card),
           files: [
             {
               name: "skyblock.png",

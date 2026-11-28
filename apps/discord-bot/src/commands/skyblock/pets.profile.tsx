@@ -44,20 +44,17 @@ export const SkyBlockPetsProfile = ({
     ],
   ];
 
-  const items = topPets(profile.member).map(
-    ({ name, rarity, level, texture, heldItemTexture, candyUsed }) => {
-      const candy =
-        candyUsed > 0
-          ? ` §8• §c${t("skyblock.candyUsed", { candy: t(candyUsed) })}`
-          : "";
-      return {
-        texture,
-        badge: heldItemTexture,
-        name: `${RARITY_COLORS[rarity]}${name}`,
-        value: `§7${t("skyblock.petLevel", { level: t(level.level) })}${candy}`,
-      };
-    },
-  );
+  const items = topPets(profile.member).map((pet) => {
+    const level = `§7${t("skyblock.petLevel", { level: t(pet.level.level) })}`;
+    const candy = t("skyblock.candyUsed", { candy: t(pet.candyUsed) });
+
+    return {
+      texture: pet.texture,
+      badge: pet.heldItemTexture,
+      name: `${RARITY_COLORS[pet.rarity]}${pet.name}`,
+      value: pet.candyUsed > 0 ? `${level} §8• §c${candy}` : level,
+    };
+  });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>

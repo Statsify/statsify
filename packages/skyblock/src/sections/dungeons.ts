@@ -6,23 +6,33 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  DUNGEON_CLASSES,
-  type DungeonFloor,
-  type DungeonGrade,
-  type DungeonsSection,
-} from "#types";
 import { ESSENCE_SHOPS, LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { fractionalLevel, getLevel } from "#leveling";
+import type {
+  DungeonFloor,
+  DungeonGrade,
+  DungeonsSection,
+  Essence,
+} from "#types";
 import type { RawDungeonType, RawMember } from "#raw";
+
+export const DUNGEON_CLASSES = [
+  "healer",
+  "mage",
+  "berserk",
+  "archer",
+  "tank",
+] as const;
+
+export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
-// Hypixel's currencies carry no balance for these shops' essence, only the perks bought in them
+// Hypixel sends no balance for these shops' essence.
 const UNSENT_ESSENCE = new Set(["FOREST", "FOSSIL", "SUN_GECKO"]);
 
-// Each grade by the lowest Dungeon Score that earns it
+// Each grade with the lowest score that earns it.
 const GRADES: [DungeonGrade, number][] = [
   ["S+", 300],
   ["S", 269.5],
@@ -32,10 +42,11 @@ const GRADES: [DungeonGrade, number][] = [
   ["D", 0],
 ];
 
-const dungeonGrade = (score: number) =>
-  GRADES.find(([, lowest]) => score >= lowest)![0];
+function getGrade(score: number) {
+  return GRADES.find(([, lowest]) => score >= lowest)![0];
+}
 
-function floorsOf(
+function getFloors(
   type: RawDungeonType | undefined,
   first: number,
 ): DungeonFloor[] {
@@ -45,11 +56,10 @@ function floorsOf(
     const score = type?.best_score?.[key];
     return {
       floor: first + i,
-      // Master Mode often has no times_played, though every completion was a run
+      // Master Mode often has no times_played, though each clear was a run.
       played: Math.max(type?.times_played?.[key] ?? 0, completions),
       completions,
-      best:
-        score === undefined ? undefined : { score, grade: dungeonGrade(score) },
+      best: score === undefined ? undefined : { score, grade: getGrade(score) },
       fastest: type?.fastest_time?.[key],
       fastestS: type?.fastest_time_s?.[key],
       fastestSPlus: type?.fastest_time_s_plus?.[key],
@@ -57,24 +67,36 @@ function floorsOf(
   });
 }
 
-const mostDamage = (type: RawDungeonType | undefined) =>
-  Object.fromEntries(
+function getMostDamage(type: RawDungeonType | undefined) {
+  return Object.fromEntries(
     DUNGEON_CLASSES.map((name) => [
       name,
       Math.max(0, ...Object.values(type?.[`most_damage_${name}`] ?? {})),
     ]),
-  ) as DungeonsSection["mostDamage"]["normal"];
+  ) as Record<DungeonClass, number>;
+}
 
-// catacombs' counts include Master Mode runs, and master_catacombs never has any. The API's own "total" is often
-// below the floors' sum, so it's left out.
-const watcherKills = (type: RawDungeonType | undefined) =>
-  add(
-    ...Object.entries(type?.watcher_kills ?? {}).flatMap(([floor, kills]) =>
-      floor === "total" ? [] : [kills],
-    ),
+function getWatcherKills(type: RawDungeonType | undefined) {
+  // Hypixel's "total" often falls short of the floors' sum.
+  const floors = Object.entries(type?.watcher_kills ?? {}).filter(
+    ([floor]) => floor !== "total",
   );
+  return add(...floors.map(([, kills]) => kills));
+}
 
-/** Catacombs and classes keep leveling past 50. Floor 0 is the Entrance. */
+function getEssence(member: RawMember): Essence[] {
+  const perks = member.player_data?.perks;
+
+  return Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
+    type,
+    amount: UNSENT_ESSENCE.has(type)
+      ? undefined
+      : (member.currencies?.essence?.[type]?.current ?? 0),
+    perks: add(...Object.keys(shop).map((perk) => Number(perks?.[perk] ?? 0))),
+    maxPerks: add(...Object.values(shop)),
+  }));
+}
+
 export function getDungeons(member: RawMember): DungeonsSection {
   const dungeons = member.dungeons;
   const types = dungeons?.dungeon_types;
@@ -86,7 +108,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
         dungeons?.player_classes?.[name]?.experience ?? 0,
         LEVELING.catacombs,
         MAX_LEVEL,
-        true,
+        { overflow: true },
       ),
     ]),
   ) as DungeonsSection["classes"];
@@ -96,7 +118,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
       types?.catacombs?.experience ?? 0,
       LEVELING.catacombs,
       MAX_LEVEL,
-      true,
+      { overflow: true },
     ),
     classes,
     classAverage:
@@ -105,39 +127,38 @@ export function getDungeons(member: RawMember): DungeonsSection {
     selectedClass: dungeons?.selected_dungeon_class,
     secrets: dungeons?.secrets ?? 0,
     floors: {
-      normal: floorsOf(types?.catacombs, 0),
-      master: floorsOf(types?.master_catacombs, 1),
+      // Floor 0 is the Entrance.
+      normal: getFloors(types?.catacombs, 0),
+      master: getFloors(types?.master_catacombs, 1),
     },
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
       master: types?.master_catacombs?.highest_tier_completed,
     },
     mostDamage: {
-      normal: mostDamage(types?.catacombs),
-      master: mostDamage(types?.master_catacombs),
+      normal: getMostDamage(types?.catacombs),
+      master: getMostDamage(types?.master_catacombs),
     },
-    watcherKills: watcherKills(types?.catacombs),
-    essence: Object.entries(ESSENCE_SHOPS).map(([type, shop]) => ({
-      type,
-      amount: UNSENT_ESSENCE.has(type)
-        ? undefined
-        : (member.currencies?.essence?.[type]?.current ?? 0),
-      perks: add(
-        ...Object.keys(shop).map(
-          (perk) => member.player_data?.perks?.[perk] ?? 0,
-        ),
-      ),
-      maxPerks: add(...Object.values(shop)),
-    })),
+    // Catacombs counts Master Mode's kills too.
+    watcherKills: getWatcherKills(types?.catacombs),
+    essence: getEssence(member),
   };
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("dungeonGrade starts each grade at its lowest score", () => {
-    expect(
-      [300, 299, 269.5, 269, 230, 160, 159, 100, 99].map(dungeonGrade),
-    ).toEqual(["S+", "S", "S", "A", "A", "B", "C", "C", "D"]);
+  suite("getGrade", () => {
+    it("should start each grade at its lowest score", () => {
+      expect(getGrade(300)).toBe("S+");
+      expect(getGrade(299)).toBe("S");
+      expect(getGrade(269.5)).toBe("S");
+      expect(getGrade(269)).toBe("A");
+      expect(getGrade(230)).toBe("A");
+      expect(getGrade(160)).toBe("B");
+      expect(getGrade(159)).toBe("C");
+      expect(getGrade(100)).toBe("C");
+      expect(getGrade(99)).toBe("D");
+    });
   });
 }
