@@ -209,6 +209,14 @@ export class ApiService {
     );
   }
 
+  // The hero and master are the player's stored active_class and masterArmor_<hero>
+  public getSmashRender(hero: string, { master }: { master?: boolean } = {}) {
+    return this.requestImage(
+      isProduction ? "https://api.statsify.net/skin/smash" : "/skin/smash",
+      { hero, master }
+    );
+  }
+
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
       player: tag,

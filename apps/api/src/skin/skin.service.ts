@@ -30,6 +30,7 @@ import {
   getWarlordsWeaponModel,
 } from "./warlords-cosmetics.js";
 import { join } from "node:path";
+import { type SmashHero, getSmashHero } from "./smash-cosmetics.js";
 import {
   type Armor,
   type ArmorPiece,
@@ -43,8 +44,10 @@ import {
   type ArmorPieceDto,
   KART_CAMERA,
   type KartRenderDto,
+  SMASH_CAMERA,
   type SKULLS,
   type SkinRenderDto,
+  type SmashRenderDto,
   WARLORDS_CAMERA,
   type WarlordsRenderDto,
 } from "#dtos";
@@ -140,6 +143,18 @@ export class SkinService {
       ...options,
       player: player && { ...player, armor },
     });
+  }
+
+  public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
+    const smash = resolveSmash(hero, master);
+
+    const [library, skin, armor] = await Promise.all([
+      this.getLibrary(SMASH_PACK),
+      drawHeroSkin(smash.skinColor),
+      resolvePackArmor(SMASH_PACK, smash),
+    ]);
+
+    return renderSmash(library, smash, { ...options, skin, armor });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -350,6 +365,7 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
+export const SMASH_PACK = resourcePack("Smash Heroes", "smash");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset
 // (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
@@ -533,6 +549,58 @@ export function renderWarlords(
     { player: { ...player, extruded, pose: "standing" }, models },
     output
   );
+}
+
+export interface SmashScene
+  extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
+  models: ModelInstance[];
+}
+
+export function resolveSmash(hero: string, master = false): SmashScene {
+  const { head, held, framesHeld, ...worn } = getSmashHero(hero, master);
+
+  return {
+    ...worn,
+    models: [
+      { model: head, bone: "head", display: "head" },
+      { model: held, bone: "rightHand", display: "thirdperson", framed: framesHeld },
+    ],
+  };
+}
+
+function drawHeroSkin(color: number) {
+  const canvas = createCanvas(64, 64);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+  ctx.fillRect(0, 0, 64, 64);
+  return canvas.toBuffer("png");
+}
+
+type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> &
+  Pick<ArmoredPlayer, "skin" | "armor">;
+
+export function renderSmash(
+  library: ModelLibrary,
+  { models }: SmashScene,
+  {
+    skin,
+    armor,
+    width = SMASH_CAMERA.width,
+    height = SMASH_CAMERA.height,
+    yaw = SMASH_CAMERA.yaw,
+    pitch = SMASH_CAMERA.pitch,
+  }: SmashRenderOptions
+): Promise<Buffer> {
+  const player = {
+    skin,
+    // Every lobby stand's skin uses the classic arms
+    slim: false,
+    extruded: false,
+    armor,
+    pose: "standing",
+  } as const;
+
+  return renderScene(library, { player, models }, { width, height, yaw, pitch });
 }
 
 interface MojangProfile {
