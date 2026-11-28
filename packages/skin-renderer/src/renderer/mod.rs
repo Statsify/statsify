@@ -24,13 +24,15 @@ use crate::skin_loader::{load_cape_from_memory, load_skin_from_memory, load_text
 use crate::texture::Texture;
 
 #[cfg(not(target_arch = "wasm32"))]
-pub type SkinRender = Vec<u8>;
+pub type PngBytes = Vec<u8>;
 
 pub struct SkinRenderer<T: Backend> {
   backend: T,
   config: wgpu::SurfaceConfiguration,
 
   texture_bind_group_layout: wgpu::BindGroupLayout,
+  sampler: wgpu::Sampler,
+  glint_sampler: wgpu::Sampler,
 
   camera: Camera,
   camera_uniform: CameraUniform,
@@ -85,6 +87,24 @@ impl<T: Backend> SkinRenderer<T> {
       usage: wgpu::BufferUsages::VERTEX | wgpu::BufferUsages::COPY_DST,
     });
 
+    let sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+      address_mode_u: wgpu::AddressMode::ClampToEdge,
+      address_mode_v: wgpu::AddressMode::ClampToEdge,
+      address_mode_w: wgpu::AddressMode::ClampToEdge,
+      mag_filter: wgpu::FilterMode::Nearest,
+      min_filter: wgpu::FilterMode::Nearest,
+      mipmap_filter: wgpu::FilterMode::Nearest,
+      ..Default::default()
+    });
+
+    let glint_sampler = device.create_sampler(&wgpu::SamplerDescriptor {
+      address_mode_u: wgpu::AddressMode::Repeat,
+      address_mode_v: wgpu::AddressMode::Repeat,
+      mag_filter: wgpu::FilterMode::Linear,
+      min_filter: wgpu::FilterMode::Linear,
+      ..Default::default()
+    });
+
     let (camera, camera_uniform, camera_buffer, camera_bind_group_layout, camera_bind_group) =
       Self::create_camera(device, &config);
 
@@ -122,6 +142,8 @@ impl<T: Backend> SkinRenderer<T> {
       config,
 
       texture_bind_group_layout,
+      sampler,
+      glint_sampler,
 
       camera,
       camera_uniform,
@@ -372,6 +394,7 @@ impl<T: Backend> SkinRenderer<T> {
       device,
       queue,
       &self.texture_bind_group_layout,
+      &self.sampler,
       load_skin_from_memory(skin)?,
       model_kind,
       model_outer_layer,
@@ -381,7 +404,13 @@ impl<T: Backend> SkinRenderer<T> {
 
     if armor.pieces().any(|(piece, ..)| piece.enchanted) {
       let glint = load_texture_from_memory(glint.ok_or(Error::MissingGlint)?)?;
-      model.attach_glint(device, queue, &self.texture_bind_group_layout, &glint)?;
+      model.attach_glint(
+        device,
+        queue,
+        &self.texture_bind_group_layout,
+        &self.glint_sampler,
+        &glint,
+      )?;
     }
 
     if let Some(cape) = cape {
@@ -389,6 +418,7 @@ impl<T: Backend> SkinRenderer<T> {
         device,
         queue,
         &self.texture_bind_group_layout,
+        &self.sampler,
         &load_cape_from_memory(cape)?,
         armor.chestplate.is_some(),
       )?;
@@ -481,7 +511,7 @@ impl SkinRenderer<native::NativeBackend> {
 
   // Renders run on several threads at once, so each gets its own camera and light
   // instead of rewriting the shared ones
-  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<SkinRender> {
+  pub async fn render(&self, model: &Model, yaw: Option<f32>) -> Result<PngBytes> {
     let camera = OrbitalCamera::new(
       (0.0, 0.0, 0.0).into(),
       self.config.width as f32,
