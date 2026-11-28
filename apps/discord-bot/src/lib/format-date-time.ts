@@ -15,7 +15,10 @@ const getDayPeriodFormat = (locale: string) => {
   let dayPeriodFormat = dayPeriodFormats.get(locale);
 
   if (!dayPeriodFormat) {
-    dayPeriodFormat = new Intl.DateTimeFormat(locale, { hour: "numeric", hourCycle: "h12" });
+    dayPeriodFormat = new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+      hourCycle: "h12",
+    });
     dayPeriodFormats.set(locale, dayPeriodFormat);
   }
 
