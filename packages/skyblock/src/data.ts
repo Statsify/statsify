@@ -26,7 +26,8 @@ export const LEVELING = leveling as {
   leveling_xp: number[];
   max_levels: Record<string, number>;
   runecrafting_xp: number[];
-  sblevel_colours: Record<string, string>; // a bracket's first level → color id
+  // Each key is a level bracket's first level, and each value a color id.
+  sblevel_colours: Record<string, string>;
   slayer_to_highest_tier: Record<string, number>;
   slayer_xp: Record<string, number[]>;
   social: number[];

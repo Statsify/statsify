@@ -7,19 +7,31 @@
  */
 
 import { Progression } from "@statsify/schemas";
-import { formatProgression, lineXpBar } from "#components";
+import { Table, formatProgression, lineXpBar } from "#components";
+import { arrayGroup } from "@statsify/util";
 import type { Level } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
+
+// Size 2 text is 20px tall.
+const NOTE_HEIGHT = 20;
 
 export interface LevelBarProps {
   title: string;
   level: Level;
   color: string;
   t: LocalizeFunction;
-  note?: string;
+  notes?: string[];
+  lines?: number; // note lines to fit, blank past the notes
 }
 
-export const LevelBar = ({ title, level, color, t, note }: LevelBarProps) => {
+export const LevelBar = ({
+  title,
+  level,
+  color,
+  t,
+  notes = [],
+  lines = notes.length,
+}: LevelBarProps) => {
   const progression = new Progression(level.xpCurrent, level.xpForNext ?? 0);
 
   return (
@@ -30,7 +42,7 @@ export const LevelBar = ({ title, level, color, t, note }: LevelBarProps) => {
       <text
         margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
       >{`§^4^${color}${t(level.level)}`}</text>
-      <text margin={{ top: 0, bottom: note ? 4 : 8, left: 10, right: 10 }}>
+      <text margin={{ top: 0, bottom: lines > 0 ? 4 : 8, left: 10, right: 10 }}>
         {formatProgression({
           t,
           progression,
@@ -40,11 +52,30 @@ export const LevelBar = ({ title, level, color, t, note }: LevelBarProps) => {
           renderXp: lineXpBar(color),
         })}
       </text>
-      {note ? (
-        <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{note}</text>
-      ) : (
-        <></>
-      )}
+      <>
+        {Array.from({ length: lines }, (_, index) => {
+          const bottom = index === lines - 1 ? 8 : 2;
+          const margin = { top: 0, bottom, left: 10, right: 10 };
+          return index < notes.length ? (
+            <text margin={margin}>{notes[index]}</text>
+          ) : (
+            <div height={NOTE_HEIGHT} margin={margin} />
+          );
+        })}
+      </>
     </box>
   );
 };
+
+// Each bar fits its row's most notes, so the row's boxes end level.
+export const getLevelBarRows = (bars: LevelBarProps[], columns: number) =>
+  arrayGroup(bars, columns).map((row) => {
+    const lines = Math.max(...row.map(({ notes = [] }) => notes.length));
+    return (
+      <Table.tr>
+        {row.map((bar) => (
+          <LevelBar {...bar} lines={lines} />
+        ))}
+      </Table.tr>
+    );
+  });
