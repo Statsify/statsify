@@ -580,18 +580,19 @@ if (import.meta.vitest) {
     expect(await get("1", async () => 5)).toBe(5);
   });
 
-  const toSkin = (height: number) =>
-    ({
-      width: 64,
-      height,
-      data: new Uint8ClampedArray(64 * height * 4).fill(255),
-    }) as ImageData;
-
   suite("withoutFilledHat", () => {
     const hat = (4 * 64 + 40) * 4 + 3;
+    const [old, seeThrough, modern] = [32, 32, 64].map(
+      (height) =>
+        ({
+          width: 64,
+          height,
+          data: new Uint8ClampedArray(64 * height * 4).fill(255),
+        }) as ImageData,
+    );
+    seeThrough.data[(20 * 64 + 60) * 4 + 3] = 0;
 
     it("should drop an old skin's hat when none of it is see-through", () => {
-      const old = toSkin(32);
       const face = (12 * 64 + 12) * 4 + 3;
 
       expect(withoutFilledHat(old).data[hat]).toBe(0);
@@ -599,11 +600,8 @@ if (import.meta.vitest) {
     });
 
     it("should keep a see-through hat and a modern skin's hat", () => {
-      const seeThrough = toSkin(32);
-      seeThrough.data[(20 * 64 + 60) * 4 + 3] = 0;
-
       expect(withoutFilledHat(seeThrough).data[hat]).toBe(255);
-      expect(withoutFilledHat(toSkin(64)).data[hat]).toBe(255);
+      expect(withoutFilledHat(modern).data[hat]).toBe(255);
     });
   });
 }
