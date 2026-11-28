@@ -10,7 +10,11 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, formatProgress, gridRows } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  formatProgress,
+  getGridRows,
+} from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import type { CollectionCategory } from "@statsify/skyblock/display";
 import type { MemberView } from "@statsify/skyblock";
@@ -21,14 +25,14 @@ const getCategoryItems = (
   category: CollectionCategory,
 ) => collections?.categories.find(({ id }) => id === category)?.items ?? [];
 
-export const collectionIcons =
+export const getCollectionIcons =
   (category: CollectionCategory) =>
   ({ collections }: MemberView) =>
     getCategoryItems(collections, category)
       .map(({ texture }) => texture)
       .filter((texture) => texture !== undefined);
 
-export const minionIcons = ({ minions }: MemberView) =>
+export const getMinionIcons = ({ minions }: MemberView) =>
   minions?.minions
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined) ?? [];
@@ -163,7 +167,9 @@ export const SkyBlockBestiaryProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      <Table.table>{gridRows(pages, 3, { spreadLastRow: true })}</Table.table>
+      <Table.table>
+        {getGridRows(pages, 3, { spreadLastRow: true })}
+      </Table.table>
     </Card>
   );
 };

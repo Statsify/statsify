@@ -23,7 +23,7 @@ import {
 import {
   HypixelService,
   HypixelUnavailableError,
-  SKYBLOCK_TIMEOUT,
+  SKYBLOCK_TIMEOUT_MS,
 } from "#hypixel";
 import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
@@ -280,7 +280,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       }
 
       const result = await this.build({
-        timeout: SKYBLOCK_TIMEOUT,
+        timeout: SKYBLOCK_TIMEOUT_MS,
         bazaar,
         items: loaded.parsed,
       });

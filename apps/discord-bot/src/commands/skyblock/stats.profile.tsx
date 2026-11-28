@@ -10,7 +10,7 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { PLAYER_STATS, RARITY_COLORS } from "@statsify/skyblock/display";
-import { gridRows, formatProgress } from "./components/ItemGrid.js";
+import { getGridRows, formatProgress } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 import type { StatGroup } from "@statsify/skyblock";
@@ -68,7 +68,7 @@ export const SkyBlockStatsProfile = ({
     if (cells.length === 0) continue;
     groups.push(
       <Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>
-        {gridRows(cells, COLUMNS[page], { spreadLastRow: true })}
+        {getGridRows(cells, COLUMNS[page], { spreadLastRow: true })}
       </Table.ts>,
     );
   }
@@ -122,7 +122,9 @@ export const SkyBlockAttributesProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {cells.length > 0 ? (
-        <Table.table>{gridRows(cells, 3, { spreadLastRow: true })}</Table.table>
+        <Table.table>
+          {getGridRows(cells, 3, { spreadLastRow: true })}
+        </Table.table>
       ) : (
         <Empty text={t("skyblock.noAttributes")} />
       )}
