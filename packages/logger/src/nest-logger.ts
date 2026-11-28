@@ -39,7 +39,10 @@ export class NestLogger implements LoggerService {
   public error(message: unknown, ...parameters: unknown[]) {
     const [stack, ...rest] = parameters;
 
-    if (typeof stack === "string" && (rest.length > 0 || STACK_PATTERN.test(stack))) {
+    if (
+      typeof stack === "string" &&
+      (rest.length > 0 || STACK_PATTERN.test(stack))
+    ) {
       this.write("error", `${message}\n${stack}`, rest);
     } else {
       this.write("error", message, parameters);
@@ -48,6 +51,8 @@ export class NestLogger implements LoggerService {
 
   private write(level: LogLevel, message: unknown, parameters: unknown[]) {
     const context = parameters.at(-1);
-    new Logger(typeof context === "string" ? context : undefined)[level](message);
+    new Logger(typeof context === "string" ? context : undefined)[level](
+      message,
+    );
   }
 }
