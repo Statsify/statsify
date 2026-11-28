@@ -18,21 +18,21 @@ import type { StatGroup } from "@statsify/skyblock";
 const STATS = new Map(PLAYER_STATS.map((stat) => [stat.id, stat]));
 const ATTRIBUTES = 30;
 
-// Seven groups as seven buttons crowd the profile menu, so the gathering skills share a page
+// Seven pages would crowd the profile menu, so gathering skills share one.
 export const STAT_PAGES = {
   combat: ["combat"],
   gathering: ["mining", "farming", "foraging", "fishing"],
   misc: ["misc", "wisdoms"],
 } as const satisfies Record<string, StatGroup[]>;
 
-// Gathering's long fortune names set its width four a row; elsewhere the header usually does, so three would only add height
+// Gathering's long fortune names would widen the card at four to a row.
 const COLUMNS: Record<keyof typeof STAT_PAGES, number> = {
   combat: 4,
   gathering: 3,
   misc: 4,
 };
 
-export interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
+interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
   page: keyof typeof STAT_PAGES;
 }
 
@@ -47,29 +47,31 @@ export const SkyBlockStatsProfile = ({
     ? [[t("skyblock.weapon"), stats.weapon, "§f"]]
     : [];
 
-  const groups = STAT_PAGES[page].flatMap((group) => {
-    const cells = (stats?.stats ?? []).flatMap(({ stat, total }) => {
+  const groups: JSX.Element[] = [];
+  for (const group of STAT_PAGES[page]) {
+    const cells: JSX.Element[] = [];
+    for (const { stat, total } of stats?.stats ?? []) {
       const info = STATS.get(stat);
-      if (!info || info.group !== group) return [];
-      const value = `${t(Math.round(total * 10) / 10)}${"percent" in info && info.percent ? "%" : ""}`;
-      return [
+      if (!info || info.group !== group) continue;
+
+      const unit = "percent" in info && info.percent ? "%" : "";
+      cells.push(
         <Table.td
           title={`${info.symbol} ${prettify(stat)}`}
-          value={value}
+          value={`${t(Math.round(total * 10) / 10)}${unit}`}
           color={info.color}
           size="small"
         />,
-      ];
-    });
+      );
+    }
 
-    return cells.length > 0
-      ? [
-          <Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>
-            {gridRows(cells, COLUMNS[page], { spreadLastRow: true })}
-          </Table.ts>,
-        ]
-      : [];
-  });
+    if (cells.length === 0) continue;
+    groups.push(
+      <Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>
+        {gridRows(cells, COLUMNS[page], { spreadLastRow: true })}
+      </Table.ts>,
+    );
+  }
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>

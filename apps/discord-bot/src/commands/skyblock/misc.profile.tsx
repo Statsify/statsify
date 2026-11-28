@@ -19,7 +19,9 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 const TOP = 9;
 
 export const consumableIcons = ({ misc }: MemberView) =>
-  misc?.consumables.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
+  misc?.consumables
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined) ?? [];
 
 export const SkyBlockMiscProfile = ({
   profile,

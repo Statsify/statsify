@@ -19,7 +19,7 @@ import type { LocalizeFunction } from "@statsify/discord";
 import type { MayorView } from "@statsify/skyblock";
 import type { User } from "@statsify/schemas";
 
-export interface SkyBlockCalendarProfileProps {
+interface SkyBlockCalendarProfileProps {
   now: number;
   mayor: MayorView;
   background: Image;

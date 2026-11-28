@@ -72,6 +72,16 @@ function toSkyBlockError(error: Error) {
   return new HypixelThrottledError(retryAfter, response.data?.global === true);
 }
 
+// Hypixel answers a profile with no Garden, or a player with no Bingo, with a 404.
+const catchNotFound = <T>(source: Observable<T>) =>
+  source.pipe(
+    catchError((error: Error) =>
+      getErrorResponse(error)?.status === 404
+        ? of(null)
+        : throwError(() => toSkyBlockError(error))
+    )
+  );
+
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
@@ -207,18 +217,27 @@ export class HypixelService {
   }
 
   public getSkyBlockGarden(profileId: string) {
-    return this.getSkyBlockOrNull(
+    const request = this.request<{ garden: RawGarden }>(
       "/v2/skyblock/garden",
       { profile: profileId },
-      ({ garden }: { garden: RawGarden }) => garden
+      { timeout: SKYBLOCK_TIMEOUT }
     );
+
+    return lastValueFrom(request.pipe(map(({ garden }) => garden), catchNotFound));
   }
 
   public getSkyBlockBingo(uuid: string) {
-    return this.getSkyBlockOrNull(
+    const request = this.request<RawPlayerBingo>(
       "/v2/skyblock/bingo",
       { uuid },
-      ({ events }: RawPlayerBingo): RawPlayerBingo => ({ events })
+      { timeout: SKYBLOCK_TIMEOUT }
+    );
+
+    return lastValueFrom(
+      request.pipe(
+        map(({ events }): RawPlayerBingo => ({ events })),
+        catchNotFound
+      )
     );
   }
 
@@ -251,26 +270,6 @@ export class HypixelService {
     return lastValueFrom(
       this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT, keyless }).pipe(
         catchError((error) => throwError(() => toSkyBlockError(error)))
-      )
-    );
-  }
-
-  // Hypixel answers a profile with no Garden, or a player with no Bingo, with a 404.
-  private getSkyBlockOrNull<T, R>(
-    url: string,
-    params: Record<string, unknown>,
-    read: (data: T) => R
-  ) {
-    const request = this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT });
-
-    return lastValueFrom(
-      request.pipe(
-        map(read),
-        catchError((error) =>
-          getErrorResponse(error)?.status === 404
-            ? of(null)
-            : throwError(() => toSkyBlockError(error))
-        )
       )
     );
   }

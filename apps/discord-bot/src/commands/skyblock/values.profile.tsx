@@ -30,8 +30,6 @@ const RANKS = 16;
 const SKYBLOCK_PREFIX = new RegExp(
   `^${removeFormatting(FormattedGame.SKYBLOCK)} `,
 );
-const boardName = (name: string) =>
-  removeFormatting(name).replace(SKYBLOCK_PREFIX, "");
 
 export const missingPetIcons = ({ values }: MemberView) =>
   values?.missingPets.slice(0, MISSING_PETS).map(({ texture }) => texture) ??
@@ -56,31 +54,30 @@ export const SkyBlockValuesProfile = ({
     ]);
   sidebar.push([t("skyblock.missingPets"), t(values.missingPets.length), "§d"]);
 
-  const cells = [
-    ...INVENTORIES.flatMap((id) => {
-      const total = totals[id];
-      return total
-        ? [
-            <Table.td
-              title={t(`skyblock.inventories.${id}`)}
-              value={t(Math.floor(total))}
-              color="§6"
-              size="small"
-            />,
-          ]
-        : [];
-    }),
-    ...(sacks > 0
-      ? [
-          <Table.td
-            title={t("skyblock.inventories.sacks")}
-            value={t(Math.floor(sacks))}
-            color="§6"
-            size="small"
-          />,
-        ]
-      : []),
-  ];
+  const cells: JSX.Element[] = [];
+  for (const id of INVENTORIES) {
+    const total = totals[id];
+    if (!total) continue;
+    cells.push(
+      <Table.td
+        title={t(`skyblock.inventories.${id}`)}
+        value={t(Math.floor(total))}
+        color="§6"
+        size="small"
+      />,
+    );
+  }
+
+  if (sacks > 0) {
+    cells.push(
+      <Table.td
+        title={t("skyblock.inventories.sacks")}
+        value={t(Math.floor(sacks))}
+        color="§6"
+        size="small"
+      />,
+    );
+  }
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
@@ -111,7 +108,7 @@ export const SkyBlockValuesProfile = ({
   );
 };
 
-export interface SkyBlockRanksProfileProps {
+interface SkyBlockRanksProfileProps {
   rankings: PostSkyBlockRankingsResponse[];
   profiles: ProfileSummary[];
   displayName: string;
@@ -135,23 +132,24 @@ export const SkyBlockRanksProfile = ({
     profiles.map((profile) => [profile.id, formatProfileName(profile)]),
   );
 
-  // A row on a profile the player has since left lingers until the boards next drop it
-  const cells = rankings
-    .flatMap(({ name, rank, value, id }) => {
-      const profileName = profileNames.get(id.split(":")[1]);
-      if (!profileName) return [];
+  const cells: JSX.Element[] = [];
+  for (const { name, rank, value, id } of rankings) {
+    // A row lingers on a profile the player left until the boards drop it.
+    const profileName = profileNames.get(id.split(":")[1]);
+    if (!profileName) continue;
 
-      const shown = typeof value === "number" ? t(value) : value;
-      return [
-        <Table.td
-          title={`§f${boardName(name)}`}
-          value={`§e#${t(rank)} §7${shown} §7(${profileName}§7)`}
-          color="§f"
-          size="small"
-        />,
-      ];
-    })
-    .slice(0, RANKS);
+    const board = removeFormatting(name).replace(SKYBLOCK_PREFIX, "");
+    const shown = typeof value === "number" ? t(value) : value;
+    cells.push(
+      <Table.td
+        title={`§f${board}`}
+        value={`§e#${t(rank)} §7${shown} §7(${profileName}§7)`}
+        color="§f"
+        size="small"
+      />,
+    );
+    if (cells.length === RANKS) break;
+  }
 
   return (
     <Card {...card} name={displayName}>

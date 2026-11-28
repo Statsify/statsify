@@ -488,7 +488,7 @@ export interface RawElection {
   };
 }
 
-export interface RawBingoGoal {
+interface RawBingoGoal {
   id: string;
   name: string;
   lore?: string; // Hypixel's docs require only the id and name

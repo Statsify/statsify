@@ -16,7 +16,7 @@ import type { CollectionCategory } from "@statsify/skyblock/display";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-const categoryItems = (
+const getCategoryItems = (
   collections: MemberView["collections"],
   category: CollectionCategory,
 ) => collections?.categories.find(({ id }) => id === category)?.items ?? [];
@@ -24,14 +24,16 @@ const categoryItems = (
 export const collectionIcons =
   (category: CollectionCategory) =>
   ({ collections }: MemberView) =>
-    categoryItems(collections, category).flatMap(({ texture }) =>
-      texture ? [texture] : [],
-    );
+    getCategoryItems(collections, category)
+      .map(({ texture }) => texture)
+      .filter((texture) => texture !== undefined);
 
 export const minionIcons = ({ minions }: MemberView) =>
-  minions?.minions.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
+  minions?.minions
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined) ?? [];
 
-export interface SkyBlockCollectionsProfileProps extends SkyBlockProfileProps {
+interface SkyBlockCollectionsProfileProps extends SkyBlockProfileProps {
   category: CollectionCategory;
 }
 
@@ -43,7 +45,7 @@ export const SkyBlockCollectionsProfile = ({
   ...card
 }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
-  const items = categoryItems(collections, category);
+  const items = getCategoryItems(collections, category);
 
   const sidebar: SidebarItem[] = collections
     ? [

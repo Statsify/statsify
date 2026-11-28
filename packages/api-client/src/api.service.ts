@@ -163,11 +163,20 @@ export class ApiService {
   }
 
   public getSkyBlockBingo(player: string) {
-    return this.requestKey<GetSkyBlockBingoResponse, "bingo">("/skyblock/bingo", "bingo", { player });
+    return this.requestKey<GetSkyBlockBingoResponse, "bingo">(
+      "/skyblock/bingo",
+      "bingo",
+      { player }
+    );
   }
 
   public getSkyBlockRankings(player: string) {
-    return this.request<PostSkyBlockRankingsResponse[]>("/skyblock/leaderboards/rankings", {}, "POST", { body: { player } });
+    return this.request<PostSkyBlockRankingsResponse[]>(
+      "/skyblock/leaderboards/rankings",
+      {},
+      "POST",
+      { body: { player } }
+    );
   }
 
   public getSkyBlockItems(query: string) {
