@@ -39,14 +39,19 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
 
     return {
       id: damage & SPLASH ? "minecraft:splash_potion" : "minecraft:potion",
-      effects: effect ? [{ id: effect, amplifier: damage & LEVEL_II ? 1 : 0 }] : [],
+      effects: effect
+        ? [{ id: effect, amplifier: damage & LEVEL_II ? 1 : 0 }]
+        : [],
     };
   }
 
   const name = items[`${id}:${damage}`] ?? items[id];
   if (!name) return;
 
-  return { id: namespaced(name), damage: durability[name] && damage > 0 ? damage : undefined };
+  return {
+    id: namespaced(name),
+    damage: durability[name] && damage > 0 ? damage : undefined,
+  };
 }
 
 /** How much wear a 26.3 item takes before it breaks */
