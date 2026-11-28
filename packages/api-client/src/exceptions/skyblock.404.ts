@@ -16,6 +16,7 @@ export class SkyBlockNotFoundException extends NotFoundException {
   })
   public itemName?: string;
 
+  // not_fetched: a CACHE_ONLY lookup found no stored copy to read.
   public constructor(
     message: "skyblock" | "not_fetched" | "profile" | "item" | "price",
     itemName?: string,

@@ -200,6 +200,7 @@ export class SkyBlockService {
     };
   }
 
+  // undefined means a lookup would refetch now.
   public async getNextRefetchAt(uuid: string): Promise<number | undefined> {
     const [stored, failedFor] = await Promise.all([
       this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec(),
