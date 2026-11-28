@@ -34,7 +34,8 @@ import type { SlayerBoss } from "./sections/slayers.js";
 
 export const LEVELING = leveling as {
   catacombs: number[];
-  fairy_souls: number; // the most a profile can collect
+  // fairy_souls is the most a profile can collect.
+  fairy_souls: number;
   HOTF: number[];
   HOTM: number[];
   leveling_caps: Record<string, number>;
@@ -115,14 +116,17 @@ export const TROPHY_FISH = trophyFish as Record<string, string>;
 
 interface BestiaryFamily {
   name: string;
-  ids: string[]; // one per level it spawns at
-  cap: number; // kills past it don't count
+  // Each level the mob spawns at has its own id.
+  ids: string[];
+  // Kills past the cap don't count.
+  cap: number;
   bracket: string;
 }
 
 // A page with a category, like Fishing, is a subpage of it.
 export const BESTIARY = bestiary as {
-  brackets: Record<string, number[]>; // the kills each tier needs
+  // Each bracket lists the kills every tier needs.
+  brackets: Record<string, number[]>;
   pages: { category?: string; name: string; families: BestiaryFamily[] }[];
 };
 
@@ -180,7 +184,8 @@ export const ATTRIBUTE_SHARDS = attributeShards as {
     attribute: string;
     attributeName: string;
     rarity: Rarity;
-    grants?: { stat: PlayerStat; value: number }[]; // level I's stats
+    // The grants are level I's stats.
+    grants?: { stat: PlayerStat; value: number }[];
     families?: string[];
     unconsumable?: boolean;
   }[];
