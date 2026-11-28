@@ -58,6 +58,7 @@ export interface ProfileSummary {
   bank?: number;
   personalBank?: number;
   firstJoin?: number;
+  fairySouls: number;
 }
 
 export interface SkyBlockProfileView
