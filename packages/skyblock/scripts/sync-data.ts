@@ -624,20 +624,20 @@ function readPetItem(lore: string[]) {
   ).replaceAll(/\s+/g, " ");
   const sentences = text.split(/(?<=[.!]) /);
 
-  const flat = sentences
-    .filter(
-      (sentence) =>
-        sentence.startsWith("Grants ") &&
-        !/\b(?:when|while|for each|for every|per)\b/.test(sentence),
-    )
-    .flatMap((sentence) => [
+  const flat: StatValue[] = [];
+  for (const sentence of sentences) {
+    if (!sentence.startsWith("Grants ")) continue;
+    if (/\b(?:when|while|for each|for every|per)\b/.test(sentence)) continue;
+
+    flat.push(
       ...parseStatRewards(sentence),
       ...readNamedStats(
         sentence,
         /reduces your \W*([A-Z][\w ]+?) by ([\d.]+)/g,
         -1,
       ),
-    ]);
+    );
+  }
 
   const raised = sentences.flatMap((sentence) => {
     const list = /^Increases (?:the|this) pet's (.+)\.$/.exec(sentence)?.[1];
