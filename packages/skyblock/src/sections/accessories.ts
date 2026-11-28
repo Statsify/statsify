@@ -46,7 +46,11 @@ const getUpgrades = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 const isVariant = (a: string, b: string) => getUpgrades(b).includes(a);
 
 // Of two variants, the one with more accessory power counts, then the first id.
-const outranks = (variant: string, id: string, power: (id: string) => number) =>
+const isPreferredVariant = (
+  variant: string,
+  id: string,
+  power: (id: string) => number,
+) =>
   power(variant) > power(id) || (power(variant) === power(id) && variant < id);
 
 function getAccessoryPower(
@@ -182,7 +186,7 @@ function getMissing(
           (upgrade) =>
             bestStored.has(upgrade) &&
             isVariant(id, upgrade) &&
-            outranks(upgrade, id, storedPower),
+            isPreferredVariant(upgrade, id, storedPower),
         ),
     ),
   );
@@ -210,7 +214,7 @@ function getMissing(
   const supersedes = (upgrade: string, id: string) =>
     !outsideBag.has(id) &&
     unowned.has(upgrade) &&
-    (!isVariant(id, upgrade) || outranks(upgrade, id, power));
+    (!isVariant(id, upgrade) || isPreferredVariant(upgrade, id, power));
 
   const missing: MissingAccessory[] = [];
   for (const [id, item] of unowned) {
