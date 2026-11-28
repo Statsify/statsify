@@ -31,6 +31,9 @@ import type {
 // A big co-op's profiles run to several MB, past the default timeout.
 export const SKYBLOCK_TIMEOUT = 10_000;
 
+// Axios leaves out a null header, so this drops the module's API-Key.
+const KEYLESS_HEADERS = { "API-Key": null };
+
 export class HypixelUnavailableError extends Error {}
 
 export class HypixelThrottledError extends HypixelUnavailableError {
@@ -182,27 +185,34 @@ export class HypixelService {
   public async getSkyBlockProfiles(uuid: string) {
     const { profiles } = await this.getSkyBlock<{ profiles?: RawProfile[] | null }>(
       "/v2/skyblock/profiles",
-      { uuid }
+      { params: { uuid } }
     );
 
     return profiles ?? null;
   }
 
   public getSkyBlockMuseum(profileId: string) {
-    return this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", { profile: profileId });
+    return this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", {
+      params: { profile: profileId },
+    });
   }
 
   public getSkyBlockBazaar() {
-    return this.getSkyBlock<RawBazaar>("/v2/skyblock/bazaar");
+    return this.getSkyBlock<RawBazaar>("/v2/skyblock/bazaar", { keyless: true });
   }
 
   public getSkyBlockItems() {
-    return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items");
+    return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items", {
+      keyless: true,
+    });
   }
 
-  private getSkyBlock<T>(url: string, params?: Record<string, unknown>) {
+  private getSkyBlock<T>(
+    url: string,
+    { params, keyless }: { params?: Record<string, unknown>; keyless?: boolean } = {}
+  ) {
     return lastValueFrom(
-      this.request<T>(url, params, SKYBLOCK_TIMEOUT).pipe(
+      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT, keyless }).pipe(
         catchError((error) => throwError(() => toSkyBlockError(error)))
       )
     );
@@ -211,7 +221,7 @@ export class HypixelService {
   private request<T>(
     url: string,
     params?: Record<string, unknown>,
-    timeout?: number
+    { timeout, keyless }: { timeout?: number; keyless?: boolean } = {}
   ): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
@@ -220,7 +230,8 @@ export class HypixelService {
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
     });
 
-    return this.httpService.get(url, { params, timeout }).pipe(
+    const headers = keyless ? KEYLESS_HEADERS : undefined;
+    return this.httpService.get(url, { params, timeout, headers }).pipe(
       tap((res) => {
         child?.setHttpStatus(res.status);
         child?.finish();
