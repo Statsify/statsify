@@ -14,7 +14,6 @@ import {
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
-  type BedWarsModes,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
@@ -53,7 +52,7 @@ import {
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
-import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
+import { BedWarsProfile, type BedWarsProfileProps } from "../bedwars/bedwars.profile.js";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
@@ -126,8 +125,8 @@ export class SessionCommand {
     return this.run({
       context,
       modes: BEDWARS_MODES,
-      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as Exclude<GameMode<BedWarsModes>, { api:"challenges" }>} />,
-      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges")
+      getProfile: (base, mode) => <BedWarsProfile {...base} mode={mode as BedWarsProfileProps["mode"]} />,
+      filterModes: (_, modes) => modes.filter((mode) => mode.api !== "challenges" && mode.api !== "practice")
     });
   }
 
