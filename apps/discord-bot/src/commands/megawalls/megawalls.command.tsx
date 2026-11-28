@@ -11,7 +11,7 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "#commands/base.hypixel-command";
-import { Command, CommandContext, PlayerArgument } from "@statsify/discord";
+import { Command, type CommandContext, PlayerArgument } from "@statsify/discord";
 import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
 import { KitArgument, filterKits } from "#commands/kit.argument";
 import { MegaWallsProfile } from "./megawalls.profile.js";

@@ -13,7 +13,7 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { BlitzSGProfile } from "./blitzsg.profile.js";
-import { Command, CommandContext, PlayerArgument } from "@statsify/discord";
+import { Command, type CommandContext, PlayerArgument } from "@statsify/discord";
 import { KitArgument, filterKits } from "#commands/kit.argument";
 
 @Command({

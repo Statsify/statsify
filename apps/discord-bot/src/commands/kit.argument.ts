@@ -8,14 +8,14 @@
 
 import Fuse from "fuse.js";
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import {
   AbstractArgument,
-  CommandContext,
+  type CommandContext,
   ErrorMessage,
-  LocalizationString,
+  type LocalizationString,
 } from "@statsify/discord";
 import type { GameModeWithSubModes, GameModes, Mode } from "@statsify/schemas";
 
