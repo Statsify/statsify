@@ -62,9 +62,13 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
-    const rankings = await this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
+    const rankings = await this.playerLeaderboardService.getLeaderboardRankings(
+      Player,
+      fields,
+      uuid
+    );
 
-    await this.playerLeaderboardService.countDemand(
+    this.playerLeaderboardService.countDemand(
       Player,
       "rankings",
       rankings.map(({ field, rank }) => [field, rank])

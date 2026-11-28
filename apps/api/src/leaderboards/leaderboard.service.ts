@@ -13,6 +13,7 @@ import { InjectRedis, pipelineValues } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
 
 const DAYS_IN_WEEK = {
@@ -25,7 +26,6 @@ const DAYS_IN_WEEK = {
   sunday: 6,
 };
 
-/** Positions 1 to 10 count under 10, 11 to 100 under 100, and so on */
 const getDepthBucket = (position: number) => {
   let bucket = 10;
   while (bucket < position) bucket *= 10;
@@ -36,6 +36,8 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
+  private readonly logger = new Logger("LeaderboardService");
+
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
@@ -128,10 +130,15 @@ export abstract class LeaderboardService {
       }
     }
 
-    const [leaderboard] = await Promise.all([
-      this.getLeaderboardFromRedis(constructor, field, top, bottom - 1, sort),
-      this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]),
-    ]);
+    this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]);
+
+    const leaderboard = await this.getLeaderboardFromRedis(
+      constructor,
+      field,
+      top,
+      bottom - 1,
+      sort
+    );
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       getLeaderboardField(constructor, k, false)
@@ -262,7 +269,7 @@ export abstract class LeaderboardService {
     return rankings;
   }
 
-  public async countDemand<T>(
+  public countDemand<T>(
     constructor: Constructor<T>,
     request: "page" | "rankings",
     positions: [field: string, position: number][]
@@ -279,7 +286,11 @@ export abstract class LeaderboardService {
 
     for (const counter of counters) pipeline.hincrby(key, counter, 1);
 
-    pipelineValues(await pipeline.exec());
+    // A failed count must not fail the read it counts
+    pipeline
+      .exec()
+      .then(pipelineValues)
+      .catch((error) => this.logger.error(error));
   }
 
   protected abstract searchLeaderboardInput(
