@@ -77,14 +77,23 @@ export const SkyBlockHotfProfile = ({
             t={t}
           />
         </Table.tr>
-        <Table.tr>
-          <div direction="column" width="100%">
+        {/* A Table.tr won't stretch the tree's box to the whispers' height. */}
+        <div width="100%">
+          <div direction="column" width="1/2">
             {pools}
           </div>
-          <box width="100%" location="center">
+          <box
+            direction="column"
+            width="1/2"
+            height="remaining"
+            location="center"
+          >
+            <text
+              margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+            >{`§a${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
     </Card>
   );

@@ -74,10 +74,10 @@ export const SkyBlockChocolateProfile = ({
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.ts title={`§a${t("skyblock.rabbits")}`}>
-          {getGridRows(rabbits, COLUMNS)}
+          {getGridRows(rabbits, COLUMNS, { spreadLastRow: true })}
         </Table.ts>
         <Table.ts title={`§a${t("skyblock.employees")}`}>
-          {getGridRows(employees, COLUMNS)}
+          {getGridRows(employees, COLUMNS, { spreadLastRow: true })}
         </Table.ts>
       </Table.table>
     </Card>

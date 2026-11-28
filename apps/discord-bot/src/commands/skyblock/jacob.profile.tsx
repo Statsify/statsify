@@ -73,7 +73,7 @@ export const SkyBlockJacobProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {items.length > 0 ? (
-        <ItemGrid items={items} icons={icons} columns={2} />
+        <ItemGrid items={items} icons={icons} columns={2} spreadLastRow />
       ) : (
         <Empty text={t("skyblock.noJacobCrops")} />
       )}

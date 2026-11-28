@@ -9,7 +9,7 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { ItemSlot } from "./components/ItemSlot.js";
-import { prettify } from "@statsify/util";
+import { arrayGroup, prettify } from "@statsify/util";
 import type { Faction, MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -86,17 +86,20 @@ export const SkyBlockCrimsonProfile = ({
             ))}
           </Table.tr>
         </Table.ts>
+        {/* Five minibosses in one row set the card's width, so they wrap. */}
         <Table.ts title={`§e${t("skyblock.minibosses")}`}>
-          <Table.tr>
-            {crimson.minibosses.map(({ boss, kills }) => (
-              <Table.td
-                title={prettify(boss)}
-                value={t(kills)}
-                color="§e"
-                size="small"
-              />
-            ))}
-          </Table.tr>
+          {arrayGroup(crimson.minibosses, 3).map((row) => (
+            <Table.tr>
+              {row.map(({ boss, kills }) => (
+                <Table.td
+                  title={prettify(boss)}
+                  value={t(kills)}
+                  color="§e"
+                  size="small"
+                />
+              ))}
+            </Table.tr>
+          ))}
         </Table.ts>
       </Table.table>
     </Card>

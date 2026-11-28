@@ -90,18 +90,27 @@ export const SkyBlockHotmProfile = ({
           />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
-        <Table.tr>
-          <box width="100%" location="center">
+        {/* A Table.tr won't stretch the stats' box to the tree's height. */}
+        <div width="100%">
+          <box direction="column" width="1/2" location="center">
+            <text
+              margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+            >{`§5${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-          <box direction="column" location="center" width="100%">
+          <box
+            direction="column"
+            width="1/2"
+            height="remaining"
+            location="center"
+          >
             {stats.map(([name, value, color]) => (
               <text
                 margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
               >{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
     </Card>
   );
