@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARMOR } from "./kits.js";
+import type { ARMOR } from "./kits.js";
 import type { ItemStack } from "@statsify/textures";
 import { SKIN_HOST } from "./hypixel.js";
 
@@ -14,7 +14,6 @@ type ArmorMaterial = "leather" | "chainmail" | "iron" | "gold" | "diamond";
 
 type Skull = "skeleton" | "wither_skeleton" | "zombie" | "creeper";
 
-/** A worn piece as a skin render draws it: armor, a player head by its textures.minecraft.net hash, or a mob skull */
 export type ArmorPiece =
   | { material: ArmorMaterial; color?: number; enchanted?: boolean }
   | { head: string; enchanted?: boolean }
@@ -43,11 +42,7 @@ const SKIN_HASH = new RegExp(
   `^https://${SKIN_HOST.replaceAll(".", "\\.")}/texture/([\\da-f]+)$`,
 );
 
-/**
- * The armor among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the
- * first of its kind. Anything else on the head, like a block, is left out
- */
-export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
+export function findArmor(items: Iterable<ItemStack | undefined>): Armor {
   const armor: Armor = {};
 
   for (const item of items) {
@@ -78,7 +73,7 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
   return armor;
 }
 
-// The dyes kit pickers name are Bukkit's Color constants, as Hypixel's kit leather uses, not 1.8's dye colors
+// Kit pickers name Bukkit's Color constants, not 1.8's dye colors
 const LEATHER_COLORS: Record<string, number | undefined> = {
   White: 0xff_ff_ff,
   Silver: 0xc0_c0_c0,
@@ -100,7 +95,6 @@ const LEATHER_COLORS: Record<string, number | undefined> = {
   Orange: 0xff_a5_00,
 };
 
-/** The dye a kit picker names on a leather piece, like "White Leather Chestplate" */
 export function leatherColor(name: string) {
   const dye = /^(\w+) Leather (?:Helmet|Chestplate|Leggings|Boots)$/.exec(
     name,
@@ -125,7 +119,7 @@ if (import.meta.vitest) {
       const head =
         "51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40";
       expect(
-        armorOf([
+        findArmor([
           { id: "minecraft:leather_boots", color: 0 },
           undefined,
           { id: "minecraft:golden_chestplate", enchanted: true },
@@ -142,14 +136,14 @@ if (import.meta.vitest) {
         helmet: { head, enchanted: true },
       });
       expect(
-        armorOf([
+        findArmor([
           { id: "minecraft:carved_pumpkin" },
           { id: "minecraft:wither_skeleton_skull" },
         ]),
       ).toEqual({
         helmet: { skull: "wither_skeleton" },
       });
-      expect(armorOf([{ id: "minecraft:dragon_head" }])).toEqual({});
+      expect(findArmor([{ id: "minecraft:dragon_head" }])).toEqual({});
     });
   });
 }

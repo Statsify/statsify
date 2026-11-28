@@ -8,8 +8,7 @@
 
 import { legacyItem, legacyMaterialId } from "@statsify/textures";
 
-// A player inventory and its armor: the hotbar is slots 0 to 8, the main rows 9 to 35, then
-// boots, leggings, chestplate and helmet in 36 to 39
+// Hotbar 0 to 8, main rows 9 to 35, then boots to helmet in 36 to 39
 export const HOTBAR = 9;
 export const ARMOR = {
   boots: 36,
@@ -19,7 +18,6 @@ export const ARMOR = {
 } as const;
 export const SLOTS = 40;
 
-/** The armor slots top to bottom, as the inventory screen shows them */
 export const ARMOR_SLOTS = [
   ARMOR.helmet,
   ARMOR.chestplate,
@@ -30,17 +28,14 @@ export const ARMOR_SLOTS = [
 export const inRange = (slot: number, length: number) =>
   slot >= 0 && slot < length;
 
-/** Kit names as keys: "Hype Train" and hype_train are both hypetrain */
 export const kitKey = (name: string) =>
   name.toLowerCase().replaceAll(/[^a-z]/g, "");
 
 const SPAWN_EGG = 383;
 
-/** A spawn egg 26.3 has no item for, like 1.8's untyped one (Damage 0, SkyWars' Mystery Egg) */
 export const isUntypedEgg = (id: number, damage: number) =>
   id === SPAWN_EGG && !legacyItem(id, damage);
 
-/** The 26.3 item for a 1.8 id and Damage value as Hypixel stores them. An untyped egg is undefined; any other id the table lacks throws */
 export function hypixelItem(id: number, damage = 0) {
   const item = legacyItem(id, damage);
   if (!item && !isUntypedEgg(id, damage))
@@ -48,7 +43,6 @@ export function hypixelItem(id: number, damage = 0) {
   return item;
 }
 
-/** As hypixelItem, by Bukkit material name, like GOLD_CHESTPLATE */
 export function hypixelMaterial(name: string, damage = 0) {
   const id = legacyMaterialId(name);
   if (id === undefined) throw new Error(`No 1.8 material ${name}`);

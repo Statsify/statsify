@@ -8,26 +8,21 @@
 
 import type { ItemStack, PotionEffect } from "@statsify/textures";
 
-// The BedWars item shop as Hypixel's NBT had it in game on 2026-10-26, with 26.3 ids. The shop
-// shows white wool and plain clay and glass whatever your team.
+// The shop as Hypixel's NBT had it in game on 2026-10-26, with 26.3 ids
 
 type Currency = "iron" | "gold" | "emerald";
 
 export interface ShopItem {
-  /** Without "minecraft:", when it isn't the token */
   id?: string;
   name: string;
   count?: number;
-  cost: readonly [amount: number, currency: Currency];
-  /** Gray lines under the cost */
-  description?: readonly string[];
-  /** A tool bought in tiers, which the shop shows at its first */
+  cost: [amount: number, currency: Currency];
+  description?: string[];
   upgradable?: boolean;
   enchanted?: boolean;
   effects?: PotionEffect[];
 }
 
-/** favourites_2's tokens */
 export const SHOP_ITEMS: Record<string, ShopItem> = {
   wool: {
     id: "white_wool",
@@ -301,7 +296,6 @@ export const SHOP_CATEGORIES = [
 
 export const NOT_SELECTED_LORE = ["§eClick to view!"];
 
-/** The second row's panes, lime under the open category */
 export const PANES = {
   selected: "minecraft:lime_stained_glass_pane",
   notSelected: "minecraft:gray_stained_glass_pane",
@@ -318,7 +312,6 @@ export const EMPTY_SLOT: ItemStack = {
   ],
 };
 
-/** Quick Buy's bottom row, which the other categories don't have */
 export const TRACKER_SHOP: ItemStack = {
   id: "minecraft:compass",
   name: "§aTracker Shop",
@@ -340,18 +333,14 @@ export const HOTBAR_MANAGER: ItemStack = {
   ],
 };
 
-// Not dumped from an unedited account: the first 14 slots as saved players have them
+// The first 14 slots as saved players have them, not from an unedited account
 export const DEFAULT_QUICK_BUY =
   "wool,stone_sword,chainmail_boots,wooden_pickaxe,bow,speed_ii_potion_(45_seconds),tnt,oak_wood_planks,iron_sword,iron_boots,shears,arrow,invisibility_potion_(30_seconds),water_bucket";
 
-/** The favorite_slots a player who never saved a hotbar gets, from the Hotbar Manager */
 export const DEFAULT_HOTBAR =
   "Melee,null,null,null,null,null,null,null,Compass";
 
-/**
- * favorite_slots' categories as the Hotbar Manager shows them. Some saves hold Tools and Beds, which today's Hotbar
- * Manager doesn't list: Tools is the shop's Tools category icon, and Beds 1.8's bed
- */
+// Some saves hold Tools and Beds, which today's Hotbar Manager doesn't list
 export const HOTBAR_CATEGORIES: Record<string, string> = {
   Blocks: "minecraft:terracotta",
   Melee: "minecraft:golden_sword",

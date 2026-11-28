@@ -20,7 +20,6 @@ import { gunzipSync } from "fflate";
 const base64Bytes = (base64: string) =>
   Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
 
-// The parts of a 1.8 item compound read here. An empty slot is {}
 interface LegacyItem {
   id?: number;
   Count?: number;
@@ -41,7 +40,6 @@ interface LegacyItem {
 
 export const SKIN_HOST = "textures.minecraft.net";
 
-/** A skin's textures.minecraft.net URL from a head's SkullOwner textures value, which is base64 JSON */
 export function skinUrl(value: string) {
   const profile = JSON.parse(new TextDecoder().decode(base64Bytes(value))) as {
     textures?: { SKIN?: { url?: string } };
@@ -54,12 +52,11 @@ export function skinUrl(value: string) {
   if (skin.hostname !== SKIN_HOST)
     throw new Error(`${url} isn't on ${SKIN_HOST}`);
 
-  // The texture server allows cross-origin reads, but an https page can't fetch an http URL
+  // An https page can't fetch the texture server's http URLs
   skin.protocol = "https:";
   return skin.href;
 }
 
-/** One 1.8 item compound as an ItemStack, or undefined for an empty slot or a spawn egg 26.3 has no item for */
 function itemStack({
   id,
   Count,
@@ -96,7 +93,7 @@ function itemStack({
     name: tag?.display?.Name,
     lore: tag?.display?.Lore,
     color: tag?.display?.color,
-    // 1.8 glints any item with an ench list, and Hypixel adds an empty one for the glint
+    // Hypixel adds an empty ench list for the glint, which 1.8 draws for any
     enchanted: tag?.ench !== undefined || undefined,
     effects: effects?.length ? effects : item.effects,
     unbreakable: tag?.Unbreakable === 1 || undefined,
@@ -105,7 +102,6 @@ function itemStack({
   };
 }
 
-/** Items from Hypixel's gzipped NBT as /player sends it, like the Pit's inv_contents, in their stored order */
 export function fromHypixelNBT({
   data,
 }: {
@@ -119,7 +115,6 @@ export function fromHypixelNBT({
   return (items as LegacyItem[]).map(itemStack);
 }
 
-/** A player inventory as the game shows it: the three main rows, then the hotbar */
 export const playerInventoryOrder = <T>(slots: T[]) => [
   ...slots.slice(HOTBAR, ARMOR.boots),
   ...slots.slice(0, HOTBAR),
