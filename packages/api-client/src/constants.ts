@@ -44,6 +44,9 @@ export const CacheLevel = {
 
 export type CacheLevel = (typeof CacheLevel)[keyof typeof CacheLevel];
 
+export const PLAYER_CACHE_TIME_MS = 120_000;
+export const GUILD_CACHE_TIME_MS = 600_000;
+
 export const LeaderboardQuery = {
   PAGE: "page",
   INPUT: "input",

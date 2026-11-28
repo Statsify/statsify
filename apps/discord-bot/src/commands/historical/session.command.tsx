@@ -381,6 +381,8 @@ export class SessionCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
+    const notice = this.apiService.hypixelBusyNotice(player);
+
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
     const modeEmojis = getModeEmojis ? getModeEmojis(displayedModes) : [];
@@ -389,7 +391,7 @@ export class SessionCommand {
       if (player.isNew)
         return t("historical.newSession", { displayName: this.apiService.emojiDisplayName(t, player.displayName) });
 
-      return Math.random() < 0.1 ? t("tips.resetSession") : undefined;
+      return !notice && Math.random() < 0.1 ? t("tips.resetSession") : undefined;
     };
 
     const pages: Page[] = displayedModes.map((mode, index) => {
@@ -476,6 +478,7 @@ export class SessionCommand {
       };
     });
 
-    return paginate(context, pages);
+    const message = await paginate(context, pages);
+    return { ...message, ...notice };
   }
 }

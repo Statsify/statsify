@@ -8,6 +8,7 @@
 
 import {
   CacheLevel,
+  GUILD_CACHE_TIME_MS,
   GuildNotFoundException,
   GuildQuery,
   HypixelUnavailableException,
@@ -25,7 +26,6 @@ import type { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-const GUILD_CACHE_TIME_MS = 600_000;
 const guildlessKey = (uuid: string) => `guildless:${uuid}`;
 
 @Injectable()
