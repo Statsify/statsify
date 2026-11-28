@@ -25,7 +25,11 @@ export type InventoryLayout = keyof typeof LAYOUTS;
 
 /** Where an inventory's icons come from, like an ItemRenderer over a pack stack */
 export interface IconSource {
-  render(item: ItemStack, scale: number, tick?: number): Promise<OffscreenCanvas>;
+  render(
+    item: ItemStack,
+    scale: number,
+    tick?: number,
+  ): Promise<OffscreenCanvas>;
   /** Whether an item's icon changes from tick to tick */
   animates(item: ItemStack): boolean;
 }
@@ -55,7 +59,10 @@ const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 
 /** A slot's top left, in GUI pixels */
 export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
-  [EDGE + (slot % cols) * SLOT, slotsTop(title) + Math.floor(slot / cols) * SLOT] as const;
+  [
+    EDGE + (slot % cols) * SLOT,
+    slotsTop(title) + Math.floor(slot / cols) * SLOT,
+  ] as const;
 
 /** Where the title's text starts, in GUI pixels */
 export const TITLE_ORIGIN = [8, 6] as const;
@@ -67,14 +74,28 @@ export function countOrigin(size: InventorySize, slot: number) {
 }
 
 /** The slot under a point, in GUI pixels from the inventory's top left, or -1 */
-export function slotAt({ rows, cols, title }: InventorySize, x: number, y: number) {
+export function slotAt(
+  { rows, cols, title }: InventorySize,
+  x: number,
+  y: number,
+) {
   const col = Math.floor((x - EDGE) / SLOT);
   const row = Math.floor((y - slotsTop(title)) / SLOT);
-  return col >= 0 && col < cols && row >= 0 && row < rows ? row * cols + col : -1;
+  return col >= 0 && col < cols && row >= 0 && row < rows
+    ? row * cols + col
+    : -1;
 }
 
 /** Fills a rectangle given in GUI pixels */
-function fill(ctx: OffscreenCanvasRenderingContext2D, scale: number, x: number, y: number, w: number, h: number, color: string) {
+function fill(
+  ctx: OffscreenCanvasRenderingContext2D,
+  scale: number,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  color: string,
+) {
   ctx.fillStyle = color;
   ctx.fillRect(x * scale, y * scale, w * scale, h * scale);
 }
@@ -88,7 +109,10 @@ export class InventoryRenderer {
     private chestScreen?: OffscreenCanvas,
   ) {}
 
-  public static async load(pack: PackStack, icons: IconSource = new ItemRenderer(pack)) {
+  public static async load(
+    pack: PackStack,
+    icons: IconSource = new ItemRenderer(pack),
+  ) {
     const chestScreen = pack.get(assetPath(CHEST_SCREEN, "textures", ".png"));
 
     const [text, panel] = await Promise.all([
@@ -99,19 +123,29 @@ export class InventoryRenderer {
     return new InventoryRenderer(icons, text, loadNames(pack), panel);
   }
 
-  public async draw(slots: (ItemStack | undefined)[], size: InventorySize, tick = 0) {
+  public async draw(
+    slots: (ItemStack | undefined)[],
+    size: InventorySize,
+    tick = 0,
+  ) {
     const shown = slots.slice(0, size.rows * size.cols);
-    const icons = await Promise.all(shown.map((item) => item && this.icons.render(item, size.scale, tick)));
+    const icons = await Promise.all(
+      shown.map((item) => item && this.icons.render(item, size.scale, tick)),
+    );
 
     const canvas = this.background(size);
     const ctx = context(canvas);
-    for (const [slot, item] of shown.entries()) this.drawSlot(ctx, size, slot, item, icons[slot]);
+    for (const [slot, item] of shown.entries())
+      this.drawSlot(ctx, size, slot, item, icons[slot]);
 
     return canvas;
   }
 
   public tooltip(item: ItemStack, scale: number, tick: number) {
-    if (!this.text) throw new Error("An atlas has no font, so the page draws its tooltips from lines()");
+    if (!this.text)
+      throw new Error(
+        "An atlas has no font, so the page draws its tooltips from lines()",
+      );
     return drawTooltip(this.text, this.lines(item), scale, tick);
   }
 
@@ -146,7 +180,13 @@ export class InventoryRenderer {
     if (this.text && item?.count !== undefined && item.count > 1) {
       const count = `${item.count}`;
       const [right, top] = countOrigin(size, slot);
-      this.text.draw(ctx, count, (right - this.text.width(count)) * scale, top * scale, { scale });
+      this.text.draw(
+        ctx,
+        count,
+        (right - this.text.width(count)) * scale,
+        top * scale,
+        { scale },
+      );
     }
 
     // 1.8.9 colors the worn strip separately from the remaining durability
@@ -155,8 +195,24 @@ export class InventoryRenderer {
       const width = Math.round(13 - (item.damage * 13) / max);
       const green = Math.round(255 - (item.damage * 255) / max);
       fill(ctx, scale, x + 3, y + 14, 13, 2, "#000000");
-      fill(ctx, scale, x + 3, y + 14, 12, 1, `rgb(${Math.floor((255 - green) / 4)}, 64, 0)`);
-      fill(ctx, scale, x + 3, y + 14, width, 1, `rgb(${255 - green}, ${green}, 0)`);
+      fill(
+        ctx,
+        scale,
+        x + 3,
+        y + 14,
+        12,
+        1,
+        `rgb(${Math.floor((255 - green) / 4)}, 64, 0)`,
+      );
+      fill(
+        ctx,
+        scale,
+        x + 3,
+        y + 14,
+        width,
+        1,
+        `rgb(${255 - green}, ${green}, 0)`,
+      );
     }
   }
 
@@ -176,7 +232,17 @@ export class InventoryRenderer {
       // then the bottom edge, so a pack that restyles chests restyles this too
       const texel = panel.width / CHEST_SCREEN_SIZE;
       const strip = (from: number, rowsHigh: number, to: number) =>
-        ctx.drawImage(panel, 0, from * texel, width * texel, rowsHigh * texel, 0, to * scale, width * scale, rowsHigh * scale);
+        ctx.drawImage(
+          panel,
+          0,
+          from * texel,
+          width * texel,
+          rowsHigh * texel,
+          0,
+          to * scale,
+          width * scale,
+          rowsHigh * scale,
+        );
 
       strip(0, top, 0);
       strip(TITLE_HEIGHT, SLOT * rows, top);
@@ -199,7 +265,11 @@ export class InventoryRenderer {
 
     if (title && this.text) {
       const [x, y] = TITLE_ORIGIN;
-      this.text.draw(ctx, title, x * scale, y * scale, { scale, shadow: false, color: 0x40_40_40 });
+      this.text.draw(ctx, title, x * scale, y * scale, {
+        scale,
+        shadow: false,
+        color: 0x40_40_40,
+      });
     }
 
     return canvas;

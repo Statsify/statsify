@@ -21,7 +21,8 @@ interface Icons extends DBSchema {
 function open(onClose: () => void) {
   const db = openDB<Icons>("statsify-textures", VERSION, {
     upgrade(database) {
-      if (database.objectStoreNames.contains(STORE)) database.deleteObjectStore(STORE);
+      if (database.objectStoreNames.contains(STORE))
+        database.deleteObjectStore(STORE);
       database.createObjectStore(STORE);
     },
     // A tab with newer code can't upgrade the database until every other tab lets go of it
@@ -38,7 +39,11 @@ function open(onClose: () => void) {
 async function keepStack(db: IDBPDatabase<Icons>, stack: string) {
   const store = db.transaction(STORE, "readwrite").store;
   const keys = await store.getAllKeys();
-  await Promise.all(keys.filter((key) => !key.startsWith(`${stack}/`)).map((key) => store.delete(key)));
+  await Promise.all(
+    keys
+      .filter((key) => !key.startsWith(`${stack}/`))
+      .map((key) => store.delete(key)),
+  );
 }
 
 /** Keyed by their pack stack's hash first. The first stack to open it after a page load drops the others' icons */

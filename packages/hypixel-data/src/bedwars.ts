@@ -33,11 +33,18 @@ const RENAMED: Record<string, string | undefined> = { wood: "oak_wood_planks" };
 
 // The quick buy's 21 slots: rows 3 to 5 of the shop, less their first and last columns
 const QUICK_BUY_SLOTS = [2, 3, 4].flatMap((row) =>
-  Array.from({ length: SHOP_COLUMNS - 2 }, (_, column) => row * SHOP_COLUMNS + column + 1),
+  Array.from(
+    { length: SHOP_COLUMNS - 2 },
+    (_, column) => row * SHOP_COLUMNS + column + 1,
+  ),
 );
 
 /** An item's tooltip on Quick Buy, when you have enough to buy it */
-function quickBuyLore({ cost: [amount, currency], description = [], upgradable }: ShopItem) {
+function quickBuyLore({
+  cost: [amount, currency],
+  description = [],
+  upgradable,
+}: ShopItem) {
   const { color, name } = CURRENCIES[currency];
   const text = upgradable ? UPGRADABLE : description;
 
@@ -53,13 +60,20 @@ function quickBuyLore({ cost: [amount, currency], description = [], upgradable }
 }
 
 /** The BedWars item shop open on Quick Buy, as 54 slots, with a player's quick buy from favourites_2 or else the default */
-export function fromBedwarsQuickBuy(favorites: string | null | undefined): (ItemStack | undefined)[] {
+export function fromBedwarsQuickBuy(
+  favorites: string | null | undefined,
+): (ItemStack | undefined)[] {
   const tokens = (favorites ?? DEFAULT_QUICK_BUY).split(",");
-  const slots: (ItemStack | undefined)[] = Array.from({ length: SHOP_ROWS * SHOP_COLUMNS });
+  const slots: (ItemStack | undefined)[] = Array.from({
+    length: SHOP_ROWS * SHOP_COLUMNS,
+  });
 
   for (const [index, category] of SHOP_CATEGORIES.entries()) {
     // Quick Buy is the open category, so it alone has no "Click to view!"
-    slots[index] = { ...category, lore: index === 0 ? undefined : NOT_SELECTED_LORE };
+    slots[index] = {
+      ...category,
+      lore: index === 0 ? undefined : NOT_SELECTED_LORE,
+    };
   }
 
   for (let column = 0; column < SHOP_COLUMNS; column++) {
@@ -98,7 +112,9 @@ export function fromBedwarsQuickBuy(favorites: string | null | undefined): (Item
 }
 
 /** A BedWars hotbar as the Hotbar Manager shows it, from favorite_slots ("Melee,null,…") or else the default */
-export function fromBedwarsHotbar(favoriteSlots: string | null | undefined): (ItemStack | undefined)[] {
+export function fromBedwarsHotbar(
+  favoriteSlots: string | null | undefined,
+): (ItemStack | undefined)[] {
   const categories = (favoriteSlots ?? DEFAULT_HOTBAR).split(",");
 
   return Array.from({ length: HOTBAR }, (_, slot) => {
@@ -111,7 +127,11 @@ export function fromBedwarsHotbar(favoriteSlots: string | null | undefined): (It
     return {
       id,
       name: `§a${category}`,
-      lore: [`§7${category} items will prioritize this slot!`, "", "§eClick to remove!"],
+      lore: [
+        `§7${category} items will prioritize this slot!`,
+        "",
+        "§eClick to remove!",
+      ],
     };
   });
 }

@@ -105,12 +105,18 @@ function potionColor(effects: PotionEffect[]) {
   }
 
   return (
-    (Math.round(red / total) << 16) | (Math.round(green / total) << 8) | Math.round(blue / total)
+    (Math.round(red / total) << 16) |
+    (Math.round(green / total) << 8) |
+    Math.round(blue / total)
   );
 }
 
 /** A grass color from the pack's colormap/grass.png */
-function grassColor(colormap: ImageData, temperature: number, downfall: number) {
+function grassColor(
+  colormap: ImageData,
+  temperature: number,
+  downfall: number,
+) {
   const x = Math.floor((1 - temperature) * 255);
   const y = Math.floor((1 - downfall * temperature) * 255);
   const pixel = (y * colormap.width + x) * 4;
@@ -120,7 +126,11 @@ function grassColor(colormap: ImageData, temperature: number, downfall: number) 
 }
 
 /** The color a tint source gives this item, as 0xRRGGBB */
-export function tintColor(tint: TintSource, item: ItemStack, grass?: ImageData): number {
+export function tintColor(
+  tint: TintSource,
+  item: ItemStack,
+  grass?: ImageData,
+): number {
   switch (tint.type) {
     case "minecraft:constant":
       return rgb(tint.value);
@@ -129,7 +139,9 @@ export function tintColor(tint: TintSource, item: ItemStack, grass?: ImageData):
       return item.color ?? rgb(tint.default);
 
     case "minecraft:potion":
-      return item.effects?.length ? potionColor(item.effects) : rgb(tint.default);
+      return item.effects?.length
+        ? potionColor(item.effects)
+        : rgb(tint.default);
 
     case "minecraft:firework":
     case "minecraft:map_color":

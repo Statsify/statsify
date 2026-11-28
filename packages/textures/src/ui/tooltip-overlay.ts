@@ -28,7 +28,8 @@ class TooltipOverlay {
 
     // A tap opens a tooltip until the next tap outside its inventory
     document.addEventListener("pointerdown", (event) => {
-      if (this.owner && !event.composedPath().includes(this.owner)) this.owner.unhover();
+      if (this.owner && !event.composedPath().includes(this.owner))
+        this.owner.unhover();
     });
   }
 
@@ -38,7 +39,12 @@ class TooltipOverlay {
     this.owner = owner;
   }
 
-  public show(tooltip: OffscreenCanvas, scale: number, event: PointerEvent, owner: McInventory) {
+  public show(
+    tooltip: OffscreenCanvas,
+    scale: number,
+    event: PointerEvent,
+    owner: McInventory,
+  ) {
     this.claim(owner);
 
     this.canvas.width = tooltip.width;
@@ -54,7 +60,8 @@ class TooltipOverlay {
     let left = event.clientX + (12 - TOOLTIP_PADDING) * this.scale;
     let top = event.clientY - (12 + TOOLTIP_PADDING) * this.scale;
 
-    if (left + width > innerWidth) left = event.clientX - width - 12 * this.scale;
+    if (left + width > innerWidth)
+      left = event.clientX - width - 12 * this.scale;
     if (top + height > innerHeight) top = innerHeight - height - 2 * this.scale;
 
     this.canvas.style.left = `${Math.max(0, left)}px`;

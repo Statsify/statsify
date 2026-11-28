@@ -17,11 +17,14 @@ const effects: Record<string, string | undefined> = data.effects;
 const materials: Record<string, number | undefined> = data.materials;
 const names: Record<string, string | undefined> = data.legacyNames;
 
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+const MINECRAFT_DATA =
+  "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
 
 /** A file from the minecraft-data release these tables are built from, like "1.8/items.json" */
 export async function fetchMinecraftData<T>(path: string): Promise<T> {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, {
+    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+  });
   if (!response.ok) throw new Error(`${path}: ${response.status}`);
   return response.json() as Promise<T>;
 }
@@ -104,14 +107,19 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
 
     return {
       id: damage & SPLASH ? "minecraft:splash_potion" : "minecraft:potion",
-      effects: effect ? [{ id: effect, amplifier: damage & LEVEL_II ? 1 : 0 }] : [],
+      effects: effect
+        ? [{ id: effect, amplifier: damage & LEVEL_II ? 1 : 0 }]
+        : [],
     };
   }
 
   const name = items[`${id}:${damage}`] ?? items[id];
   if (!name) return;
 
-  return { id: namespaced(name), damage: durability[name] && damage > 0 ? damage : undefined };
+  return {
+    id: namespaced(name),
+    damage: durability[name] && damage > 0 ? damage : undefined,
+  };
 }
 
 /** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */

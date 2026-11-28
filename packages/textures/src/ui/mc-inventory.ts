@@ -60,7 +60,8 @@ const resources = new WeakMap<PackStack | Atlas, Resources>();
 /** A player head's skin from the texture server, which allows cross-origin reads */
 async function fetchSkin(url: string) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  if (!response.ok)
+    throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 }
 
@@ -72,7 +73,10 @@ function resourcesFor(pack: PackStack | Atlas) {
       renderer:
         pack instanceof Atlas
           ? Promise.resolve(pack.inventoryRenderer(cache, fetchSkin))
-          : InventoryRenderer.load(pack, new ItemRenderer(pack, cache, fetchSkin)),
+          : InventoryRenderer.load(
+              pack,
+              new ItemRenderer(pack, cache, fetchSkin),
+            ),
       tooltips: new WeakMap(),
     };
     resources.set(pack, shared);
@@ -99,7 +103,14 @@ interface View {
  * With an atlas, the title and counts are HTML, and the page draws tooltips from `mc-tooltip-change`
  */
 export class McInventory extends HTMLElement {
-  public static observedAttributes = ["rows", "cols", "scale", "label", "layout", "freeze"];
+  public static observedAttributes = [
+    "rows",
+    "cols",
+    "scale",
+    "label",
+    "layout",
+    "freeze",
+  ];
 
   // Inventories with moving slots share one clock, so their animations stay in step. It runs on
   // animation frames, which browsers pause in background tabs
@@ -135,7 +146,10 @@ export class McInventory extends HTMLElement {
       for (const inventory of McInventory.playing) void inventory.step();
     }
 
-    McInventory.frame = McInventory.playing.size > 0 ? requestAnimationFrame(McInventory.run) : undefined;
+    McInventory.frame =
+      McInventory.playing.size > 0
+        ? requestAnimationFrame(McInventory.run)
+        : undefined;
   }
 
   public constructor() {
@@ -210,7 +224,8 @@ export class McInventory extends HTMLElement {
   }
 
   private get size(): InventorySize {
-    const layout = LAYOUTS[this.getAttribute("layout") as InventoryLayout] ?? LAYOUTS.chest;
+    const layout =
+      LAYOUTS[this.getAttribute("layout") as InventoryLayout] ?? LAYOUTS.chest;
     return {
       rows: Number(this.getAttribute("rows") ?? layout.rows),
       cols: Number(this.getAttribute("cols") ?? layout.cols),
@@ -230,8 +245,10 @@ export class McInventory extends HTMLElement {
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(
       size,
-      (event.clientX - bounds.left) / (size.scale * (bounds.width / this.canvas.width)),
-      (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
+      (event.clientX - bounds.left) /
+        (size.scale * (bounds.width / this.canvas.width)),
+      (event.clientY - bounds.top) /
+        (size.scale * (bounds.height / this.canvas.height)),
     );
     const overlay = tooltipOverlay();
 
@@ -260,7 +277,10 @@ export class McInventory extends HTMLElement {
     let tooltip = tooltips.get(item);
 
     if (tooltip?.scale !== size.scale) {
-      tooltip = { scale: size.scale, canvas: renderer.tooltip(item, size.scale, this.tick) };
+      tooltip = {
+        scale: size.scale,
+        canvas: renderer.tooltip(item, size.scale, this.tick),
+      };
       tooltips.set(item, tooltip);
     }
 
@@ -285,16 +305,31 @@ export class McInventory extends HTMLElement {
           }
         : null;
 
-    const change = () => new CustomEvent("mc-tooltip-change", { detail, bubbles: true, composed: true });
+    const change = () =>
+      new CustomEvent("mc-tooltip-change", {
+        detail,
+        bubbles: true,
+        composed: true,
+      });
     this.dispatchEvent(change());
     // A removed element's events no longer reach the page, so its last close goes to the document too
     if (!this.isConnected) document.dispatchEvent(change());
   }
 
-  private placeText(size: InventorySize, shown: (ItemStack | undefined)[], width: number) {
+  private placeText(
+    size: InventorySize,
+    shown: (ItemStack | undefined)[],
+    width: number,
+  ) {
     const labels: HTMLSpanElement[] = [];
 
-    const place = (part: string, text: string, top: number, side: "left" | "right", offset: number) => {
+    const place = (
+      part: string,
+      text: string,
+      top: number,
+      side: "left" | "right",
+      offset: number,
+    ) => {
       const label = document.createElement("span");
       label.setAttribute("part", part);
       label.textContent = text;
@@ -330,11 +365,19 @@ export class McInventory extends HTMLElement {
 
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
-    const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
+    const moving = shown.flatMap((item, slot) =>
+      item && !frozen && renderer.animates(item) ? [slot] : [],
+    );
 
     const [still, icons] = await Promise.all([
-      renderer.draw(shown.map((item, slot) => (moving.includes(slot) ? undefined : item)), size, tick),
-      Promise.all(moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick))),
+      renderer.draw(
+        shown.map((item, slot) => (moving.includes(slot) ? undefined : item)),
+        size,
+        tick,
+      ),
+      Promise.all(
+        moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick)),
+      ),
     ]);
 
     if (drawing !== this.drawing) return;
@@ -367,7 +410,11 @@ export class McInventory extends HTMLElement {
     const { renderer, size, items } = view;
 
     try {
-      const icons = await Promise.all(this.moving.map((slot) => renderer.icon(items[slot]!, size.scale, this.tick)));
+      const icons = await Promise.all(
+        this.moving.map((slot) =>
+          renderer.icon(items[slot]!, size.scale, this.tick),
+        ),
+      );
 
       if (view === this.view) {
         this.movingIcons = icons;
@@ -391,15 +438,25 @@ export class McInventory extends HTMLElement {
       renderer.drawSlot(ctx, size, slot, items[slot], this.movingIcons[index]);
     }
 
-    const origin = this.hovered >= 0 ? slotOrigin(size, this.hovered) : undefined;
+    const origin =
+      this.hovered >= 0 ? slotOrigin(size, this.hovered) : undefined;
     this.highlight.style.display = atlas && origin ? "block" : "none";
 
     if (origin) {
-      const [left, top, side] = [(origin[0] + 1) * size.scale, (origin[1] + 1) * size.scale, 16 * size.scale];
+      const [left, top, side] = [
+        (origin[0] + 1) * size.scale,
+        (origin[1] + 1) * size.scale,
+        16 * size.scale,
+      ];
 
       // An atlas's counts are HTML over the canvas, so its highlight has to be too, to dim them as 1.8 does
       if (atlas) {
-        Object.assign(this.highlight.style, { left: `${left}px`, top: `${top}px`, width: `${side}px`, height: `${side}px` });
+        Object.assign(this.highlight.style, {
+          left: `${left}px`,
+          top: `${top}px`,
+          width: `${side}px`,
+          height: `${side}px`,
+        });
       } else {
         ctx.fillStyle = HIGHLIGHT;
         ctx.fillRect(left, top, side, side);
@@ -421,4 +478,5 @@ export class McInventory extends HTMLElement {
   }
 }
 
-if (!customElements.get("mc-inventory")) customElements.define("mc-inventory", McInventory);
+if (!customElements.get("mc-inventory"))
+  customElements.define("mc-inventory", McInventory);
