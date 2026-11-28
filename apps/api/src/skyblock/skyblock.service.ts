@@ -18,7 +18,7 @@ import {
   HypixelUnavailableError,
 } from "#hypixel";
 import { ALL_SECTIONS } from "@statsify/skyblock/networth";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
@@ -57,6 +57,7 @@ import type {
   SkyBlockProfilesView,
   SkyBlockSection,
 } from "@statsify/skyblock";
+import type { Circular } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 export const STORED_FRESH_MS = 300_000;
@@ -129,7 +130,8 @@ export class SkyBlockService {
   private readonly rankings = new Map<string, Promise<void>>();
 
   public constructor(
-    private readonly playerService: PlayerService,
+    @Inject(forwardRef(() => PlayerService))
+    private readonly playerService: Circular<PlayerService>,
     private readonly hypixelService: HypixelService,
     private readonly pricesService: SkyBlockPricesService,
     private readonly leaderboardService: SkyBlockLeaderboardService,
@@ -140,12 +142,10 @@ export class SkyBlockService {
     @InjectModel(SkyBlockGarden)
     private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
     @InjectRedis() private readonly redis: Redis,
-  ) {
-    playerService.onDelete((uuid) => this.deletePlayer(uuid));
-  }
+  ) {}
 
   // Museums and Gardens belong to the profile, so they stay.
-  private async deletePlayer(uuid: string) {
+  public async deletePlayer(uuid: string) {
     await Promise.all([
       this.profilesModel.deleteOne({ uuid }).exec(),
       this.leaderboardService.removePlayer(uuid),

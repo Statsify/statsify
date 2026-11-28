@@ -6,10 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Constructor, type Flatten, flatten } from "@statsify/util";
+import {
+  type Circular,
+  type Constructor,
+  type Flatten,
+  flatten,
+} from "@statsify/util";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { Injectable } from "@nestjs/common";
 import {
   type LeaderboardAdditionalStats,
   LeaderboardService,
@@ -51,7 +56,8 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
     @InjectModel(Player) private readonly playerModel: ReturnModelType<
       typeof Player
     >,
-    private readonly playerService: PlayerService,
+    @Inject(forwardRef(() => PlayerService))
+    private readonly playerService: Circular<PlayerService>,
     @InjectRedis() redis: Redis,
   ) {
     super(redis);

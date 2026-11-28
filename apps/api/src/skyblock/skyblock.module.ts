@@ -9,7 +9,7 @@
 import { HttpModule } from "@nestjs/axios";
 import { HypixelModule } from "#hypixel";
 import { IMAGE_DOWNLOAD_TIMEOUT } from "@statsify/rendering";
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { Player, SkyBlockStats } from "@statsify/schemas";
 import { PlayerModule } from "#player";
 import { SkyBlockController } from "./skyblock.controller.js";
@@ -30,7 +30,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     HypixelModule,
-    PlayerModule,
+    forwardRef(() => PlayerModule),
     TypegooseModule.forFeature([
       SkyBlockProfiles,
       SkyBlockMuseum,

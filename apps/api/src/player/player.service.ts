@@ -27,26 +27,22 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { SkyBlockService } from "#skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class PlayerService {
-  private readonly deleteHooks: ((uuid: string) => Promise<unknown>)[] = [];
-
   public constructor(
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
+    @Inject(forwardRef(() => SkyBlockService))
+    private readonly skyblockService: Circular<SkyBlockService>,
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
-
-  // SkyBlock imports this module, so it registers its delete work here.
-  public onDelete(hook: (uuid: string) => Promise<unknown>) {
-    this.deleteHooks.push(hook);
-  }
 
   /**
    *
@@ -172,7 +168,7 @@ export class PlayerService {
         "uuid",
         true
       ),
-      ...this.deleteHooks.map((hook) => hook(player.uuid)),
+      this.skyblockService.deletePlayer(player.uuid),
     ]);
 
     return true;
