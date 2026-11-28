@@ -17,37 +17,23 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
-import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
-import { Redis } from "ioredis";
-import { type APIData, config } from "@statsify/util";
-import { RawMuseum, type RawProfile, RawProfilesResponse } from "@statsify/skyblock";
-import type { Span } from "@sentry/node";
-import type { ZodType } from "zod";
+import type { APIData } from "@statsify/util";
+import type {
+  RawBazaar,
+  RawItemsResource,
+  RawMuseum,
+  RawProfile,
+} from "@statsify/skyblock";
 
-const RATE_LIMIT_KEY = "hypixel:ratelimit";
-const KEY_HEADERS = { "API-Key": await config("hypixelApi.key") };
+// A big co-op's profiles run to several MB, past the default timeout.
+export const SKYBLOCK_TIMEOUT = 10_000;
 
-// A large co-op's profiles response runs to several MB, more than the default timeout allows.
-export const SKYBLOCK_TIMEOUT = await config("skyblock.timeout", { default: 10_000 });
+export class HypixelUnavailableError extends Error {}
 
-/** Hypixel's 5-minute window starts at the key's first call; times are epoch ms. */
-export interface RateLimit {
-  limit: number;
-  remaining: number;
-  resetAt: number;
-  at: number;
-}
-
-export class HypixelUnavailableError extends Error {
-  public constructor(cause: unknown) {
-    super(`Hypixel did not answer (${String(cause)})`, { cause });
-  }
-}
-
-export class HypixelThrottledError extends Error {
+export class HypixelThrottledError extends HypixelUnavailableError {
   public constructor(
     public readonly retryAfter: number | undefined,
     global: boolean
@@ -58,24 +44,28 @@ export class HypixelThrottledError extends Error {
 
 function toSkyBlockError(error: Error) {
   const { response } = (error.cause ?? {}) as {
-    response?: { status: number; headers: Record<string, unknown>; data?: { global?: boolean } };
+    response?: {
+      status: number;
+      headers: Record<string, unknown>;
+      data?: { global?: boolean };
+    };
   };
-  if (response?.status !== 429) return new HypixelUnavailableError(error);
+  if (response?.status !== 429) {
+    const message = `Hypixel did not answer (${String(error)})`;
+    return new HypixelUnavailableError(message, { cause: error });
+  }
 
   const reset = Number(response.headers["ratelimit-reset"]);
-  return new HypixelThrottledError(Number.isNaN(reset) ? undefined : reset * 1000, response.data?.global === true);
+  const retryAfter = Number.isNaN(reset) ? undefined : reset * 1000;
+  return new HypixelThrottledError(retryAfter, response.data?.global === true);
 }
 
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
-  private rateLimit?: RateLimit;
 
-  public constructor(
-    private readonly httpService: HttpService,
-    @InjectRedis() private readonly redis: Redis
-  ) {}
+  public constructor(private readonly httpService: HttpService) {}
 
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
@@ -189,81 +179,39 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
-  /** null when the player never played SkyBlock. */
-  public async getSkyBlockProfiles(uuid: string): Promise<RawProfile[] | null> {
+  public async getSkyBlockProfiles(uuid: string) {
     const { profiles } = await this.getSkyBlock<{ profiles?: RawProfile[] | null }>(
       "/v2/skyblock/profiles",
-      { uuid },
-      RawProfilesResponse
+      { uuid }
     );
 
     return profiles ?? null;
   }
 
-  public async getSkyBlockMuseum(profileId: string): Promise<RawMuseum> {
-    const { members } = await this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", { profile: profileId }, RawMuseum);
-    return { members };
+  public getSkyBlockMuseum(profileId: string) {
+    return this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", { profile: profileId });
   }
 
-  /**
-   * Checked outside the catch, so a reshaped response reaches Sentry instead of reading as Hypixel being down. Returns
-   * Hypixel's own object rather than the parsed copy, which drops the keys we don't read, since the API stores it.
-   */
-  private async getSkyBlock<T>(url: string, params: Record<string, unknown>, schema: ZodType): Promise<T> {
-    const data = await lastValueFrom(
-      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT }).pipe(
+  public getSkyBlockBazaar() {
+    return this.getSkyBlock<RawBazaar>("/v2/skyblock/bazaar");
+  }
+
+  public getSkyBlockItems() {
+    return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items");
+  }
+
+  private getSkyBlock<T>(url: string, params?: Record<string, unknown>) {
+    return lastValueFrom(
+      this.request<T>(url, params, SKYBLOCK_TIMEOUT).pipe(
         catchError((error) => throwError(() => toSkyBlockError(error)))
       )
     );
-
-    schema.parse(data);
-    return data;
   }
 
-  /** For SkyBlock endpoints that take no key, like the bazaar and the items resource. */
-  public getSkyBlockKeyless<T>(url: string): Promise<T> {
-    return lastValueFrom(this.request<T>(url, undefined, { timeout: SKYBLOCK_TIMEOUT, keyless: true }));
-  }
-
-  public async getRateLimit(): Promise<RateLimit | undefined> {
-    const stored = await this.redis.hgetall(RATE_LIMIT_KEY);
-    const shared = stored.at
-      ? {
-        limit: Number(stored.limit),
-        remaining: Number(stored.remaining),
-        resetAt: Number(stored.resetAt),
-        at: Number(stored.at),
-      }
-      : undefined;
-
-    if (!shared || !this.rateLimit) return shared ?? this.rateLimit;
-    return shared.at > this.rateLimit.at ? shared : this.rateLimit;
-  }
-
-  /** Keeps the key's latest RateLimit-* headers, so the SkyBlock budget sees what every caller spent. */
-  private recordRateLimit(headers: Record<string, unknown> | undefined, span: Span | undefined) {
-    const [limit, remaining, reset] = ["limit", "remaining", "reset"].map((name) => Number(headers?.[`ratelimit-${name}`]));
-
-    if ([limit, remaining, reset].some(Number.isNaN)) return;
-
-    const at = Date.now();
-    const rateLimit = { limit, remaining, resetAt: at + reset * 1000, at };
-    this.rateLimit = rateLimit;
-    span?.setTag("hypixel.ratelimit.remaining", remaining);
-
-    this.redis
-      .pipeline()
-      .hset(RATE_LIMIT_KEY, rateLimit)
-      .pexpireat(RATE_LIMIT_KEY, rateLimit.resetAt)
-      .exec()
-      .catch((error) => this.logger.error(error));
-  }
-
-  /** A keyless request doesn't count against the key, so its RateLimit-* headers aren't the key's. */
   private request<T>(
     url: string,
     params?: Record<string, unknown>,
-    { timeout, keyless = false }: { timeout?: number; keyless?: boolean } = {}
+    timeout?: number
   ): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
@@ -272,23 +220,20 @@ export class HypixelService {
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
     });
 
-    return this.httpService.get(url, { params, timeout, headers: keyless ? undefined : KEY_HEADERS }).pipe(
+    return this.httpService.get(url, { params, timeout }).pipe(
       tap((res) => {
-        if (!keyless) this.recordRateLimit(res.headers, child);
         child?.setHttpStatus(res.status);
         child?.finish();
       }),
       map((res) => res.data),
-      catchError((err) => {
-        if (!keyless) this.recordRateLimit(err.response?.headers, child);
-
-        return throwError(
+      catchError((err) =>
+        throwError(
           () =>
             new Error(`Fetching ${url} failed with reason: ${err.message}`, {
               cause: err,
             })
-        );
-      })
+        )
+      )
     );
   }
 }

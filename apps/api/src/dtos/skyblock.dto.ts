@@ -15,7 +15,8 @@ export class SkyBlockProfileDto extends createZodDto(
   CachedPlayerDto.schema.extend({
     profile: z.string().max(36).optional().meta({
       example: "Strawberry",
-      description: "A profile id or cute name; the player's selected profile by default",
+      description:
+        "A profile id or cute name; the player's selected profile by default",
     }),
     sections: z
       .string()
@@ -25,17 +26,20 @@ export class SkyBlockProfileDto extends createZodDto(
         example: "skills,networth",
         description: `Comma-separated sections of the member to compute: ${SKYBLOCK_SECTIONS.join(", ")}`,
       }),
-  })
+  }),
 ) {}
 
 export class SkyBlockPriceDto extends createZodDto(
   z.object({
-    item: z.string().max(100).meta({ example: "HYPERION", description: "A price key from /skyblock/items" }),
-  })
+    item: z.string().max(100).meta({
+      example: "HYPERION",
+      description: "A price key from /skyblock/items",
+    }),
+  }),
 ) {}
 
 export class SkyBlockItemsDto extends createZodDto(
   z.object({
     query: z.string().max(100).meta({ example: "hyperion" }),
-  })
+  }),
 ) {}
