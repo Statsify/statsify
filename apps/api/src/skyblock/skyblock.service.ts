@@ -33,6 +33,7 @@ import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.
 import {
   FAILURE_BACKOFF_MS,
   SkyBlockPricesService,
+  getFailureKey,
 } from "./skyblock-prices.service.js";
 import {
   MEMBER_STATS_SECTIONS,
@@ -123,8 +124,6 @@ const readGarden = async ({ data, fetchedAt }: SkyBlockGarden) => ({
   garden: await gunzipJson<RawGarden | null>(data),
   fetchedAt,
 });
-
-const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 @Injectable()
 export class SkyBlockService {
