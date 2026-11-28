@@ -92,7 +92,7 @@ export function legacyBannerPattern(code: string) {
 }
 
 // A banner's dye Damage runs the reverse of wool's order
-export const legacyDye =(damage: number) => WOOL_DYES[15 - damage];
+export const legacyDye = (damage: number) => WOOL_DYES[15 - damage];
 
 // Damage on a tool or armor piece is kept as wear
 export function legacyItem(id: number, damage = 0): ItemStack | undefined {
