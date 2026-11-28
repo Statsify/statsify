@@ -6,7 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export type Tag = number | bigint | string | Tag[] | Compound | Int8Array | Int32Array | BigInt64Array;
+export type Tag =
+  | number
+  | bigint
+  | string
+  | Tag[]
+  | Compound
+  | Int8Array
+  | Int32Array
+  | BigInt64Array;
 export interface Compound {
   [name: string]: Tag;
 }
@@ -28,7 +36,10 @@ export function readNbt(data: Uint8Array): Compound {
 
   const string = () => {
     const length = advance(2, view.getUint16(offset));
-    return advance(length, decoder.decode(data.subarray(offset, offset + length)));
+    return advance(
+      length,
+      decoder.decode(data.subarray(offset, offset + length)),
+    );
   };
 
   const read = (type: number): Tag => {
@@ -53,7 +64,10 @@ export function readNbt(data: Uint8Array): Compound {
 
       case 7: {
         const length = int();
-        return advance(length, new Int8Array(data.slice(offset, offset + length).buffer));
+        return advance(
+          length,
+          new Int8Array(data.slice(offset, offset + length).buffer),
+        );
       }
 
       case 8:
@@ -67,7 +81,11 @@ export function readNbt(data: Uint8Array): Compound {
       case 10: {
         const compound: Compound = {};
 
-        for (let child = view.getInt8(offset++); child !== 0; child = view.getInt8(offset++)) {
+        for (
+          let child = view.getInt8(offset++);
+          child !== 0;
+          child = view.getInt8(offset++)
+        ) {
           compound[string()] = read(child);
         }
 
@@ -86,7 +104,8 @@ export function readNbt(data: Uint8Array): Compound {
   };
 
   const type = view.getInt8(offset++);
-  if (type !== 10) throw new Error(`NBT should start with a compound, not tag type ${type}`);
+  if (type !== 10)
+    throw new Error(`NBT should start with a compound, not tag type ${type}`);
 
   string();
   return read(10) as Compound;
@@ -99,16 +118,10 @@ if (import.meta.vitest) {
     it("reads compounds, lists, strings and numbers", () => {
       // {"": {i: [{id: 276s, Count: 1b, tag: {display: {Name: "Hi"}}}, {}]}}
       const bytes = [
-        10, 0, 0,
-        9, 0, 1, 0x69, 10, 0, 0, 0, 2,
-        2, 0, 2, 0x69, 0x64, 0x01, 0x14,
-        1, 0, 5, 0x43, 0x6f, 0x75, 0x6e, 0x74, 1,
-        10, 0, 3, 0x74, 0x61, 0x67,
-        10, 0, 7, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79,
-        8, 0, 4, 0x4e, 0x61, 0x6d, 0x65, 0, 2, 0x48, 0x69,
-        0, 0, 0,
-        0,
-        0,
+        10, 0, 0, 9, 0, 1, 0x69, 10, 0, 0, 0, 2, 2, 0, 2, 0x69, 0x64, 0x01,
+        0x14, 1, 0, 5, 0x43, 0x6f, 0x75, 0x6e, 0x74, 1, 10, 0, 3, 0x74, 0x61,
+        0x67, 10, 0, 7, 0x64, 0x69, 0x73, 0x70, 0x6c, 0x61, 0x79, 8, 0, 4, 0x4e,
+        0x61, 0x6d, 0x65, 0, 2, 0x48, 0x69, 0, 0, 0, 0, 0,
       ];
 
       expect(readNbt(new Uint8Array(bytes))).toEqual({

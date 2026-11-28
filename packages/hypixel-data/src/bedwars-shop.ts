@@ -34,7 +34,10 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     name: "Wool",
     count: 16,
     cost: [4, "iron"],
-    description: ["Great for bridging across islands.", "Turns into your team's color."],
+    description: [
+      "Great for bridging across islands.",
+      "Turns into your team's color.",
+    ],
   },
   hardened_clay: {
     id: "terracotta",
@@ -50,8 +53,18 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     cost: [12, "iron"],
     description: ["Immune to explosions."],
   },
-  end_stone: { name: "End Stone", count: 12, cost: [24, "iron"], description: ["Solid block to defend your bed."] },
-  ladder: { name: "Ladder", count: 8, cost: [4, "iron"], description: ["Useful to save cats stuck in trees."] },
+  end_stone: {
+    name: "End Stone",
+    count: 12,
+    cost: [24, "iron"],
+    description: ["Solid block to defend your bed."],
+  },
+  ladder: {
+    name: "Ladder",
+    count: 8,
+    cost: [4, "iron"],
+    description: ["Useful to save cats stuck in trees."],
+  },
   oak_wood_planks: {
     id: "oak_planks",
     name: "Wood",
@@ -59,42 +72,89 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     cost: [4, "gold"],
     description: ["Good block to defend your bed.", "Strong against pickaxes."],
   },
-  obsidian: { name: "Obsidian", count: 4, cost: [4, "emerald"], description: ["Extreme protection for your bed."] },
-  packed_ice: { name: "Packed Ice", count: 8, cost: [8, "iron"], description: ["Just normal ice. Good way to make a", "speedway."] },
+  obsidian: {
+    name: "Obsidian",
+    count: 4,
+    cost: [4, "emerald"],
+    description: ["Extreme protection for your bed."],
+  },
+  packed_ice: {
+    name: "Packed Ice",
+    count: 8,
+    cost: [8, "iron"],
+    description: ["Just normal ice. Good way to make a", "speedway."],
+  },
 
   stone_sword: { name: "Stone Sword", cost: [10, "iron"] },
   iron_sword: { name: "Iron Sword", cost: [7, "gold"] },
   diamond_sword: { name: "Diamond Sword", cost: [4, "emerald"] },
-  "stick_(knockback_i)": { id: "stick", name: "Stick (Knockback I)", cost: [5, "gold"], enchanted: true },
+  "stick_(knockback_i)": {
+    id: "stick",
+    name: "Stick (Knockback I)",
+    cost: [5, "gold"],
+    enchanted: true,
+  },
 
   chainmail_boots: {
     name: "Permanent Chainmail Armor",
     cost: [24, "iron"],
-    description: ["Chainmail leggings and boots which", "you will always spawn with."],
+    description: [
+      "Chainmail leggings and boots which",
+      "you will always spawn with.",
+    ],
   },
   iron_boots: {
     name: "Permanent Iron Armor",
     cost: [12, "gold"],
-    description: ["Iron leggings and boots which you", "will always spawn with."],
+    description: [
+      "Iron leggings and boots which you",
+      "will always spawn with.",
+    ],
   },
   diamond_boots: {
     name: "Permanent Diamond Armor",
     cost: [6, "emerald"],
-    description: ["Diamond leggings and boots which", "you will always crush with."],
+    description: [
+      "Diamond leggings and boots which",
+      "you will always crush with.",
+    ],
   },
 
   shears: {
     name: "Permanent Shears",
     cost: [20, "iron"],
-    description: ["Great to get rid of wool. You will", "always spawn with these shears."],
+    description: [
+      "Great to get rid of wool. You will",
+      "always spawn with these shears.",
+    ],
   },
-  wooden_pickaxe: { name: "Wooden Pickaxe (Efficiency I)", cost: [10, "iron"], upgradable: true, enchanted: true },
-  wooden_axe: { name: "Wooden Axe (Efficiency I)", cost: [10, "iron"], upgradable: true, enchanted: true },
+  wooden_pickaxe: {
+    name: "Wooden Pickaxe (Efficiency I)",
+    cost: [10, "iron"],
+    upgradable: true,
+    enchanted: true,
+  },
+  wooden_axe: {
+    name: "Wooden Axe (Efficiency I)",
+    cost: [10, "iron"],
+    upgradable: true,
+    enchanted: true,
+  },
 
   arrow: { name: "Arrow", count: 6, cost: [2, "gold"] },
   bow: { name: "Bow", cost: [12, "gold"] },
-  "bow_(power_i)": { id: "bow", name: "Bow (Power I)", cost: [20, "gold"], enchanted: true },
-  "bow_(power_i__punch_i)": { id: "bow", name: "Bow (Power I, Punch I)", cost: [6, "emerald"], enchanted: true },
+  "bow_(power_i)": {
+    id: "bow",
+    name: "Bow (Power I)",
+    cost: [20, "gold"],
+    enchanted: true,
+  },
+  "bow_(power_i__punch_i)": {
+    id: "bow",
+    name: "Bow (Power I, Punch I)",
+    cost: [6, "emerald"],
+    enchanted: true,
+  },
 
   "speed_ii_potion_(45_seconds)": {
     id: "potion",
@@ -118,12 +178,20 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     effects: [{ id: "minecraft:invisibility" }],
   },
 
-  golden_apple: { name: "Golden Apple", cost: [3, "gold"], description: ["Well-rounded healing."] },
+  golden_apple: {
+    name: "Golden Apple",
+    cost: [3, "gold"],
+    description: ["Well-rounded healing."],
+  },
   bedbug: {
     id: "snowball",
     name: "Bedbug",
     cost: [24, "iron"],
-    description: ["Spawns silverfish where the snowball", "lands to distract your enemies.", "Lasts 15 seconds."],
+    description: [
+      "Spawns silverfish where the snowball",
+      "lands to distract your enemies.",
+      "Lasts 15 seconds.",
+    ],
   },
   dream_defender: {
     id: "iron_golem_spawn_egg",
@@ -135,9 +203,16 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     id: "fire_charge",
     name: "Fireball",
     cost: [40, "iron"],
-    description: ["Right-click to launch! Great to knock", "back enemies walking on thin bridges."],
+    description: [
+      "Right-click to launch! Great to knock",
+      "back enemies walking on thin bridges.",
+    ],
   },
-  tnt: { name: "TNT", cost: [4, "gold"], description: ["Instantly ignites, appropriate to", "explode things!"] },
+  tnt: {
+    name: "TNT",
+    cost: [4, "gold"],
+    description: ["Instantly ignites, appropriate to", "explode things!"],
+  },
   ender_pearl: {
     name: "Ender Pearl",
     cost: [4, "emerald"],
@@ -146,13 +221,20 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
   water_bucket: {
     name: "Water Bucket",
     cost: [2, "gold"],
-    description: ["Great to slow down approaching", "enemies. Can also protect against", "TNT."],
+    description: [
+      "Great to slow down approaching",
+      "enemies. Can also protect against",
+      "TNT.",
+    ],
   },
   bridge_egg: {
     id: "egg",
     name: "Bridge Egg",
     cost: [1, "emerald"],
-    description: ["This egg creates a bridge in its trail", "after being thrown."],
+    description: [
+      "This egg creates a bridge in its trail",
+      "after being thrown.",
+    ],
   },
   magic_milk: {
     id: "milk_bucket",
@@ -160,7 +242,12 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     cost: [4, "gold"],
     description: ["Avoid triggering traps for 30", "seconds after consuming."],
   },
-  sponge: { name: "Sponge", count: 4, cost: [2, "gold"], description: ["Great for soaking up water."] },
+  sponge: {
+    name: "Sponge",
+    count: 4,
+    cost: [2, "gold"],
+    description: ["Great for soaking up water."],
+  },
   "compact_pop-up_tower": {
     id: "trapped_chest",
     name: "Compact Pop-up Tower",
@@ -178,7 +265,11 @@ export const SHOP_ITEMS: Record<string, ShopItem> = {
     id: "ender_pearl",
     name: "Time Warp Pearl",
     cost: [3, "emerald"],
-    description: ["After 5 seconds you will be", "teleported back to your original", "location."],
+    description: [
+      "After 5 seconds you will be",
+      "teleported back to your original",
+      "location.",
+    ],
   },
 };
 
@@ -221,7 +312,10 @@ export const PANES = {
 export const EMPTY_SLOT: ItemStack = {
   id: "minecraft:red_stained_glass_pane",
   name: "§cEmpty slot!",
-  lore: ["§7This is a Quick Buy Slot! §bShift Click", "§b§7any item in the shop to add it here."],
+  lore: [
+    "§7This is a Quick Buy Slot! §bShift Click",
+    "§b§7any item in the shop to add it here.",
+  ],
 };
 
 /** Quick Buy's bottom row, which the other categories don't have */
@@ -238,7 +332,12 @@ export const TRACKER_SHOP: ItemStack = {
 export const HOTBAR_MANAGER: ItemStack = {
   id: "minecraft:blaze_powder",
   name: "§aHotbar Manager",
-  lore: ["§7Edit preferred slots for your items", "§7per category.", "", "§eClick to edit!"],
+  lore: [
+    "§7Edit preferred slots for your items",
+    "§7per category.",
+    "",
+    "§eClick to edit!",
+  ],
 };
 
 // Not dumped from an unedited account: the first 14 slots as saved players have them
@@ -246,7 +345,8 @@ export const DEFAULT_QUICK_BUY =
   "wool,stone_sword,chainmail_boots,wooden_pickaxe,bow,speed_ii_potion_(45_seconds),tnt,oak_wood_planks,iron_sword,iron_boots,shears,arrow,invisibility_potion_(30_seconds),water_bucket";
 
 /** The favorite_slots a player who never saved a hotbar gets, from the Hotbar Manager */
-export const DEFAULT_HOTBAR = "Melee,null,null,null,null,null,null,null,Compass";
+export const DEFAULT_HOTBAR =
+  "Melee,null,null,null,null,null,null,null,Compass";
 
 /**
  * favorite_slots' categories as the Hotbar Manager shows them. Some saves hold Tools and Beds, which today's Hotbar
