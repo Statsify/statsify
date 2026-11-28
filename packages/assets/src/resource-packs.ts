@@ -355,6 +355,9 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
     await rm(join(ROOT, HELD), { force: true });
     if (active) await writeGeneration(PREVIOUS, active);
 
+    // A newer update may have taken the lease while this one pruned
+    if (!lease.owned()) throw new Error("Another update took over the lock");
+
     // Writing active.json activates the packs, so it comes last
     await writeGeneration(ACTIVE, generation);
 
