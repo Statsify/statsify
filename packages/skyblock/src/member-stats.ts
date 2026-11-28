@@ -53,7 +53,9 @@ const KUUDRA_STATS = {
 
 // The page's Social is the co-op's sum and level, so its board ranks the member's own XP, with no level
 type LeveledSkill = Exclude<Skill, "social">;
-const LEVELED_SKILLS = SKILLS.filter((skill): skill is LeveledSkill => skill !== "social");
+const LEVELED_SKILLS = SKILLS.filter(
+  (skill): skill is LeveledSkill => skill !== "social",
+);
 
 export type MemberStat =
   | "xp"
@@ -123,20 +125,34 @@ const CROP_BOARDS = {
 
 type CropBoard = (typeof CROP_BOARDS)[keyof typeof CROP_BOARDS];
 
-const slug = (text: string) => text.toLowerCase().replaceAll(/[^\da-z]+/g, "_").replaceAll(/^_|_$/g, "");
+const slug = (text: string) =>
+  text
+    .toLowerCase()
+    .replaceAll(/[^\da-z]+/g, "_")
+    .replaceAll(/^_|_$/g, "");
 
 /**
  * A board per collection item, keyed by its id (LOG:2 and LOG_2 are both logs, so only the colon changes), and per
  * bestiary family, keyed by its page and name since two pages share a family name.
  */
-export const collectionBoards = (collections: { items: { id: string; name: string }[] }[]) =>
-  collections.flatMap(({ items }) => items.map(({ id, name }) => ({ key: id.replace(":", "-"), id, name })));
+export const collectionBoards = (
+  collections: { items: { id: string; name: string }[] }[],
+) =>
+  collections.flatMap(({ items }) =>
+    items.map(({ id, name }) => ({ key: id.replace(":", "-"), id, name })),
+  );
 
-const bestiaryKey = (page: string, family: string) => `${slug(page)}_${slug(family)}`;
+const bestiaryKey = (page: string, family: string) =>
+  `${slug(page)}_${slug(family)}`;
 
-export const bestiaryBoards = (bestiary: { pages: { name: string; families: { name: string }[] }[] }) =>
+export const bestiaryBoards = (bestiary: {
+  pages: { name: string; families: { name: string }[] }[];
+}) =>
   bestiary.pages.flatMap((page) =>
-    page.families.map((family) => ({ key: bestiaryKey(page.name, family.name), name: `${family.name} (${page.name})` }))
+    page.families.map((family) => ({
+      key: bestiaryKey(page.name, family.name),
+      name: `${family.name} (${page.name})`,
+    })),
   );
 
 const COLLECTION_BOARDS = collectionBoards(COLLECTIONS);
@@ -164,23 +180,56 @@ const cappedLevel = ({ level, maxLevel }: Level) => Math.min(level, maxLevel);
  * hide counts 0. What a co-op shares counts the member's own part: their own Social XP, and their share of the bank.
  */
 export function toMemberStats(
-  { uuid, profile, member, items, prices }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
-  view: MemberView
+  {
+    uuid,
+    profile,
+    member,
+    items,
+    prices,
+  }: Pick<SectionInput, "uuid" | "profile" | "member" | "items" | "prices">,
+  view: MemberView,
 ): Partial<MemberStats> {
-  const { bestiary, chocolate, collections, crimson, dungeons, fishing, hotm, jacob, networth, pets, skills, slayers } = view;
+  const {
+    bestiary,
+    chocolate,
+    collections,
+    crimson,
+    dungeons,
+    fishing,
+    hotm,
+    jacob,
+    networth,
+    pets,
+    skills,
+    slayers,
+  } = view;
   const summary = toProfileSummary(profile, uuid);
-  const stats: Partial<MemberStats> = { xp: summary.xp, level: summary.level, fairySouls: summary.fairySouls };
+  const stats: Partial<MemberStats> = {
+    xp: summary.xp,
+    level: summary.level,
+    fairySouls: summary.fairySouls,
+  };
 
   if (networth) {
-    const members = Object.keys(profile.members).filter((other) => isMember(profile, other)).length;
+    const members = Object.keys(profile.members).filter((other) =>
+      isMember(profile, other),
+    ).length;
     const othersBank = networth.bank - networth.bank / members;
-    stats.networth = networth.noInventory ? 0 : Math.floor(networth.total - othersBank);
-    stats.nonCosmeticNetworth = networth.noInventory ? 0 : Math.floor(networth.nonCosmetic.total - othersBank);
-    stats.unsoulboundNetworth = networth.noInventory ? 0 : Math.floor(networth.unsoulbound - othersBank);
+    stats.networth = networth.noInventory
+      ? 0
+      : Math.floor(networth.total - othersBank);
+    stats.nonCosmeticNetworth = networth.noInventory
+      ? 0
+      : Math.floor(networth.nonCosmetic.total - othersBank);
+    stats.unsoulboundNetworth = networth.noInventory
+      ? 0
+      : Math.floor(networth.unsoulbound - othersBank);
   }
 
   if (skills !== undefined) {
-    const averagedXp = skills ? add(...AVERAGED.map((skill) => skills.skills[skill].xp)) : 0;
+    const averagedXp = skills
+      ? add(...AVERAGED.map((skill) => skills.skills[skill].xp))
+      : 0;
     stats.skillAverage = skills?.average ?? 0;
     stats.skillAverageOrder = skillAverageOrder(stats.skillAverage, averagedXp);
 
@@ -207,8 +256,11 @@ export function toMemberStats(
     stats.floors = Object.fromEntries(
       FLOOR_BOARDS.map((board, index) => [
         board,
-        { completions: floors[index].completions, fastestSPlus: floors[index].fastestSPlus ?? 0 },
-      ])
+        {
+          completions: floors[index].completions,
+          fastestSPlus: floors[index].fastestSPlus ?? 0,
+        },
+      ]),
     ) as MemberStats["floors"];
   }
 
@@ -223,7 +275,9 @@ export function toMemberStats(
 
   if (crimson !== undefined) {
     for (const tier of KUUDRA_TIERS) {
-      stats[KUUDRA_STATS[tier]] = crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ?? 0;
+      stats[KUUDRA_STATS[tier]] =
+        crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ??
+        0;
     }
 
     stats.magesReputation = crimson?.reputation.mages ?? 0;
@@ -233,20 +287,27 @@ export function toMemberStats(
   if (hotm) {
     stats.hotmXp = Math.floor(hotm.level.xp);
     stats.hotmLevel = hotm.level.level;
-    for (const powder of POWDERS) stats[`${powder}Powder`] = hotm.powder[powder].total;
+    for (const powder of POWDERS)
+      stats[`${powder}Powder`] = hotm.powder[powder].total;
   }
 
   // The bag alone, without the accessories section's stored items and upgrades. It waits for prices as that section
   // does, so the board and the page agree
-  if (items && prices) stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
+  if (items && prices)
+    stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
   if (pets) stats.petScore = pets.score;
   if (fishing !== undefined) stats.trophyFish = fishing?.trophyFishCaught ?? 0;
   if (chocolate !== undefined) stats.chocolate = chocolate?.total ?? 0;
 
   if (jacob !== undefined) {
-    const bests = new Map(jacob?.crops.map(({ id, personalBest }) => [id, personalBest ?? 0]));
+    const bests = new Map(
+      jacob?.crops.map(({ id, personalBest }) => [id, personalBest ?? 0]),
+    );
     stats.crops = Object.fromEntries(
-      Object.entries(CROP_BOARDS).map(([id, board]) => [board, bests.get(id) ?? 0])
+      Object.entries(CROP_BOARDS).map(([id, board]) => [
+        board,
+        bests.get(id) ?? 0,
+      ]),
     ) as MemberStats["crops"];
   }
 
@@ -254,15 +315,27 @@ export function toMemberStats(
   if (collections !== undefined) {
     const amounts = new Map(
       collections?.categories.flatMap(({ items }) =>
-        items.map(({ id, members }) => [id, members.find((part) => part.uuid === uuid)?.amount ?? 0] as const)
-      )
+        items.map(
+          ({ id, members }) =>
+            [
+              id,
+              members.find((part) => part.uuid === uuid)?.amount ?? 0,
+            ] as const,
+        ),
+      ),
     );
-    stats.collections = Object.fromEntries(COLLECTION_BOARDS.map(({ key, id }) => [key, amounts.get(id) ?? 0]));
+    stats.collections = Object.fromEntries(
+      COLLECTION_BOARDS.map(({ key, id }) => [key, amounts.get(id) ?? 0]),
+    );
   }
 
   if (bestiary) {
     stats.bestiary = Object.fromEntries(
-      bestiary.pages.flatMap((page) => page.families.map(({ name, kills }) => [bestiaryKey(page.name, name), kills] as const))
+      bestiary.pages.flatMap((page) =>
+        page.families.map(
+          ({ name, kills }) => [bestiaryKey(page.name, name), kills] as const,
+        ),
+      ),
     );
   }
 
@@ -273,9 +346,15 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("skillAverageOrder ranks by the shown average, then by the XP under it", () => {
-    expect(skillAverageOrder(55.7, 0)).toBeGreaterThan(skillAverageOrder(55.69, 1e11));
-    expect(skillAverageOrder(55.704, 2)).toBeGreaterThan(skillAverageOrder(55.696, 1));
-    expect(skillAverageOrder(55.7, 1e13)).toBe(skillAverageOrder(55.7, 2 ** 40));
+    expect(skillAverageOrder(55.7, 0)).toBeGreaterThan(
+      skillAverageOrder(55.69, 1e11),
+    );
+    expect(skillAverageOrder(55.704, 2)).toBeGreaterThan(
+      skillAverageOrder(55.696, 1),
+    );
+    expect(skillAverageOrder(55.7, 1e13)).toBe(
+      skillAverageOrder(55.7, 2 ** 40),
+    );
     expect(Number.isSafeInteger(skillAverageOrder(60, 1e13))).toBe(true);
   });
 }
