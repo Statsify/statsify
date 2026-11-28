@@ -8,9 +8,19 @@
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
 import textures from "../generated/textures-1.8.json" with { type: "json" };
-import { ItemRenderer, type ItemStack, type PackStack, legacyItem, setCanvasBackend } from "@statsify/textures";
+import {
+  ItemRenderer,
+  type ItemStack,
+  type PackStack,
+  legacyItem,
+  setCanvasBackend,
+} from "@statsify/textures";
 import { LRUCache } from "lru-cache";
-import { IMAGE_DOWNLOAD_TIMEOUT, createCanvas, loadImage } from "@statsify/rendering";
+import {
+  IMAGE_DOWNLOAD_TIMEOUT,
+  createCanvas,
+  loadImage,
+} from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { skiaCanvas } from "@statsify/textures/node";
 import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
@@ -63,8 +73,22 @@ const LILY_PAD_COLOR = 0x71_c3_5c;
 
 // 1.8 potions keep their effect in Damage's low four bits.
 const POTION_EFFECTS = [
-  undefined, "regeneration", "moveSpeed", "fireResistance", "poison", "heal", "nightVision", undefined,
-  "weakness", "damageBoost", "moveSlowdown", "jump", "harm", "waterBreathing", "invisibility", undefined,
+  undefined,
+  "regeneration",
+  "moveSpeed",
+  "fireResistance",
+  "poison",
+  "heal",
+  "nightVision",
+  undefined,
+  "weakness",
+  "damageBoost",
+  "moveSlowdown",
+  "jump",
+  "harm",
+  "waterBreathing",
+  "invisibility",
+  undefined,
 ];
 const SPLASH = 0x40_00;
 
@@ -82,9 +106,14 @@ type Plan =
   | { kind: "head"; skin: string };
 
 const blockTint = (id: number, damage: number): Tint | undefined => {
-  if (id === LEAVES) return [undefined, PINE_COLOR, BIRCH_COLOR][damage & 3] ?? "foliage";
+  if (id === LEAVES)
+    return [undefined, PINE_COLOR, BIRCH_COLOR][damage & 3] ?? "foliage";
   if (id === LEAVES_2) return "foliage";
-  if ((id === TALL_GRASS && damage > 0) || (id === DOUBLE_PLANT && (damage === 2 || damage === 3))) return "grass";
+  if (
+    (id === TALL_GRASS && damage > 0) ||
+    (id === DOUBLE_PLANT && (damage === 2 || damage === 3))
+  )
+    return "grass";
   if (id === VINE) return VINE_COLOR;
   if (id === LILY_PAD) return LILY_PAD_COLOR;
   return undefined;
@@ -97,7 +126,14 @@ function planOf(texture: ItemTexture): Plan | undefined {
   const path = TEXTURES[`${id}:${damage}`] ?? TEXTURES[id];
   if (!path) return undefined;
 
-  if (LEATHER.has(id)) return { kind: "layers", layers: [{ path, tint: color ?? LEATHER_COLOR }, { path: `${path}_overlay` }] };
+  if (LEATHER.has(id))
+    return {
+      kind: "layers",
+      layers: [
+        { path, tint: color ?? LEATHER_COLOR },
+        { path: `${path}_overlay` },
+      ],
+    };
   if (CHESTS.has(id)) return { kind: "chest", path };
   if (id === BANNER) return { kind: "banner", path };
   if (id === SKULL) return { kind: "face", path };
@@ -105,14 +141,41 @@ function planOf(texture: ItemTexture): Plan | undefined {
   if (id === POTION) {
     const effect = POTION_EFFECTS[damage & 15];
     const splash = (damage & SPLASH) !== 0;
-    if (effect) return { kind: "layers", layers: [{ path: `items/potion_bottle_${splash ? "splash_" : ""}${effect}` }] };
-    return { kind: "layers", layers: [{ path: "items/potion_overlay", tint: WATER_COLOR }, { path: `items/potion_bottle_${splash ? "splash" : "drinkable"}` }] };
+    if (effect)
+      return {
+        kind: "layers",
+        layers: [
+          { path: `items/potion_bottle_${splash ? "splash_" : ""}${effect}` },
+        ],
+      };
+    return {
+      kind: "layers",
+      layers: [
+        { path: "items/potion_overlay", tint: WATER_COLOR },
+        { path: `items/potion_bottle_${splash ? "splash" : "drinkable"}` },
+      ],
+    };
   }
 
   // Without 1.8's egg colors, eggs draw white, as the game draws one for an entity it has no colors for.
-  if (id === SPAWN_EGG) return { kind: "layers", layers: [{ path }, { path: "items/spawn_egg_overlay" }] };
-  if (id === FIREWORK_CHARGE) return { kind: "layers", layers: [{ path }, { path: "items/fireworks_charge_overlay", tint: FIREWORK_COLOR }] };
-  if (id === GRASS) return { kind: "layers", layers: [{ path }, { path: "blocks/grass_side_overlay", tint: "grass" }] };
+  if (id === SPAWN_EGG)
+    return {
+      kind: "layers",
+      layers: [{ path }, { path: "items/spawn_egg_overlay" }],
+    };
+  if (id === FIREWORK_CHARGE)
+    return {
+      kind: "layers",
+      layers: [
+        { path },
+        { path: "items/fireworks_charge_overlay", tint: FIREWORK_COLOR },
+      ],
+    };
+  if (id === GRASS)
+    return {
+      kind: "layers",
+      layers: [{ path }, { path: "blocks/grass_side_overlay", tint: "grass" }],
+    };
 
   return { kind: "layers", layers: [{ path, tint: blockTint(id, damage) }] };
 }
@@ -120,7 +183,11 @@ function planOf(texture: ItemTexture): Plan | undefined {
 const images = new Map<string, Promise<Image>>();
 const loadTexture = (path: string) => {
   let image = images.get(path);
-  if (!image) images.set(path, (image = loadImage(getMinecraftTexturePath(`textures/${path}.png`))));
+  if (!image)
+    images.set(
+      path,
+      (image = loadImage(getMinecraftTexturePath(`textures/${path}.png`))),
+    );
   return image;
 };
 
@@ -150,14 +217,36 @@ async function drawLayer({ path, tint }: Layer) {
   const layer = createCanvas(BASE_SIZE, BASE_SIZE);
   const ctx = layer.getContext("2d");
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(image, 0, 0, image.width, image.width, 0, 0, BASE_SIZE, BASE_SIZE);
+  ctx.drawImage(
+    image,
+    0,
+    0,
+    image.width,
+    image.width,
+    0,
+    0,
+    BASE_SIZE,
+    BASE_SIZE,
+  );
 
   if (tint !== undefined) {
     ctx.globalCompositeOperation = "multiply";
-    ctx.fillStyle = hex(typeof tint === "number" ? tint : await colormapColor(tint));
+    ctx.fillStyle = hex(
+      typeof tint === "number" ? tint : await colormapColor(tint),
+    );
     ctx.fillRect(0, 0, BASE_SIZE, BASE_SIZE);
     ctx.globalCompositeOperation = "destination-in";
-    ctx.drawImage(image, 0, 0, image.width, image.width, 0, 0, BASE_SIZE, BASE_SIZE);
+    ctx.drawImage(
+      image,
+      0,
+      0,
+      image.width,
+      image.width,
+      0,
+      0,
+      BASE_SIZE,
+      BASE_SIZE,
+    );
   }
 
   return layer;
@@ -174,12 +263,19 @@ const hasHat = (skin: Image) => {
   const corner = createCanvas(32, 32);
   const ctx = corner.getContext("2d");
   ctx.drawImage(skin, 32, 0, 32, 32, 0, 0, 32, 32);
-  return ctx.getImageData(0, 0, 32, 32).data.some((value, index) => index % 4 === 3 && value < 128);
+  return ctx
+    .getImageData(0, 0, 32, 32)
+    .data.some((value, index) => index % 4 === 3 && value < 128);
 };
 
 let headSource: HeadSource = async (hash) => {
-  const response = await fetch(`${SKIN_URL}${hash}`, { signal: AbortSignal.timeout(IMAGE_DOWNLOAD_TIMEOUT) });
-  if (!response.ok) throw new Error(`textures.minecraft.net answered ${response.status} for ${hash}`);
+  const response = await fetch(`${SKIN_URL}${hash}`, {
+    signal: AbortSignal.timeout(IMAGE_DOWNLOAD_TIMEOUT),
+  });
+  if (!response.ok)
+    throw new Error(
+      `textures.minecraft.net answered ${response.status} for ${hash}`,
+    );
   return Buffer.from(await response.arrayBuffer());
 };
 
@@ -197,7 +293,8 @@ async function drawBase(plan: Plan, key: string) {
 
   switch (plan.kind) {
     case "layers": {
-      for (const layer of await Promise.all(plan.layers.map(drawLayer))) ctx.drawImage(layer, 0, 0);
+      for (const layer of await Promise.all(plan.layers.map(drawLayer)))
+        ctx.drawImage(layer, 0, 0);
       break;
     }
 
@@ -273,7 +370,14 @@ async function drawGlint(icon: Canvas) {
     const determinant = a11 * a22 - a12 * a21;
 
     const pattern = ctx.createPattern(glint, "repeat")!;
-    pattern.setTransform(a22 / determinant, -a21 / determinant, -a12 / determinant, a11 / determinant, 0, 0);
+    pattern.setTransform(
+      a22 / determinant,
+      -a21 / determinant,
+      -a12 / determinant,
+      a11 / determinant,
+      0,
+      0,
+    );
     ctx.fillStyle = pattern;
     ctx.fillRect(0, 0, width, height);
   }
@@ -286,12 +390,19 @@ async function drawGlint(icon: Canvas) {
   iconCtx.drawImage(layer, 0, 0);
 }
 
-const icons = new LRUCache<string, Promise<Canvas | undefined>>({ max: CACHE_SIZE });
+const icons = new LRUCache<string, Promise<Canvas | undefined>>({
+  max: CACHE_SIZE,
+});
 
 const cacheKey = (texture: ItemTexture, size: number, glint: boolean) =>
   `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}:${glint}`;
 
-async function drawIcon(texture: ItemTexture, size: number, glint: boolean, key: string) {
+async function drawIcon(
+  texture: ItemTexture,
+  size: number,
+  glint: boolean,
+  key: string,
+) {
   const plan = planOf(texture);
   if (!plan) return undefined;
 
@@ -324,19 +435,40 @@ let packs: ItemRenderer | undefined;
 /** Draws every icon from these resource packs, or from the 1.8 textures again when undefined. */
 export function setResourcePacks(stack: PackStack | undefined) {
   setCanvasBackend(skiaCanvas);
-  packs = stack && new ItemRenderer(stack, undefined, (url) => headSource(url.slice(SKIN_URL.length)));
+  packs =
+    stack &&
+    new ItemRenderer(stack, undefined, (url) =>
+      headSource(url.slice(SKIN_URL.length)),
+    );
 }
 
 function packItem(texture: ItemTexture, glint: boolean): ItemStack | undefined {
   const { model: itemModel, customData } = texture;
-  if (texture.kind === "head") return { id: "minecraft:player_head", itemModel, skin: `${SKIN_URL}${texture.skin}`, enchanted: glint };
+  if (texture.kind === "head")
+    return {
+      id: "minecraft:player_head",
+      itemModel,
+      skin: `${SKIN_URL}${texture.skin}`,
+      enchanted: glint,
+    };
 
   const item = legacyItem(texture.id, texture.damage);
-  return item && { ...item, itemModel, customData, color: texture.color, enchanted: glint };
+  return (
+    item && {
+      ...item,
+      itemModel,
+      customData,
+      color: texture.color,
+      enchanted: glint,
+    }
+  );
 }
 
 /** undefined when neither the resource packs nor the 1.8 textures have the item (a barrier). */
-export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = false }: IconOptions = {}): Promise<Canvas | undefined> {
+export function getItemIcon(
+  texture: ItemTexture,
+  { size = BASE_SIZE, glint = false }: IconOptions = {},
+): Promise<Canvas | undefined> {
   const renderer = packs;
   const item = packItem(texture, glint);
   if (!renderer || !item) return legacyIcon(texture, size, glint);
@@ -344,6 +476,6 @@ export function getItemIcon(texture: ItemTexture, { size = BASE_SIZE, glint = fa
   // The 1.8 icon stands in for an item the packs can't draw yet, like a banner. Node's canvas backend is skia-canvas.
   return renderer.render(item, size / BASE_SIZE).then(
     (icon) => icon as unknown as Canvas,
-    () => legacyIcon(texture, size, glint)
+    () => legacyIcon(texture, size, glint),
   );
 }

@@ -57,7 +57,12 @@ export interface StoredPlayerSkyBlock {
   freeCookie?: number;
 }
 
-export const PLAYER_CLAIMS = ["centuryCake", "centuryCake200", "potatoTalisman", "freeCookie"] as const;
+export const PLAYER_CLAIMS = [
+  "centuryCake",
+  "centuryCake200",
+  "potatoTalisman",
+  "freeCookie",
+] as const;
 
 export type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
 
@@ -71,7 +76,15 @@ export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
 
-export const BANK_TIERS = ["STARTER", "GOLD", "DELUXE", "SUPER_DELUXE", "PREMIER", "LUXURIOUS", "PALATIAL"] as const;
+export const BANK_TIERS = [
+  "STARTER",
+  "GOLD",
+  "DELUXE",
+  "SUPER_DELUXE",
+  "PREMIER",
+  "LUXURIOUS",
+  "PALATIAL",
+] as const;
 
 export type BankTier = (typeof BANK_TIERS)[number];
 
@@ -81,7 +94,14 @@ export interface ProfileSummary {
   gameMode: GameMode;
   selected: boolean;
   // The site adds the names from stored players
-  members: { uuid: string; removed: boolean; invited: boolean; firstJoin?: number; username?: string; displayName?: string }[];
+  members: {
+    uuid: string;
+    removed: boolean;
+    invited: boolean;
+    firstJoin?: number;
+    username?: string;
+    displayName?: string;
+  }[];
   level: number;
   levelColor: string; // the § code of the level's bracket
   xp: number;
@@ -97,7 +117,8 @@ export interface ProfileSummary {
   maxFairySouls?: number; // missing on Stranded and Bingo, whose islands hold fewer
 }
 
-export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
+export interface SkyBlockProfileView
+  extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   player?: PlayerExtras; // missing until the player's /player is stored
   museumFetchedAt?: number;
@@ -183,7 +204,14 @@ export type InventoryId = (typeof INVENTORIES)[number];
 export interface InventoriesSection {
   pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
   backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
-  sacks: { id: string; name: string; count: number; rarity?: Rarity; glint: boolean; texture?: ItemTexture }[]; // largest first
+  sacks: {
+    id: string;
+    name: string;
+    count: number;
+    rarity?: Rarity;
+    glint: boolean;
+    texture?: ItemTexture;
+  }[]; // largest first
 }
 
 /** What the inventories are worth, laid out as InventoriesSection, and the pets not owned yet. */
@@ -275,12 +303,21 @@ export interface SkillsSection {
   skills: Record<Skill, SkillLevel>;
 }
 
-export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "vampire"] as const;
+export const SLAYER_BOSSES = [
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
+  "blaze",
+  "vampire",
+] as const;
 
 export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
 // Vampire's level stats are Rift Time, a Rift-only stat
-export const STAT_SLAYERS = SLAYER_BOSSES.filter((boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire");
+export const STAT_SLAYERS = SLAYER_BOSSES.filter(
+  (boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire",
+);
 
 export interface SlayersSection {
   xp: number;
@@ -322,7 +359,13 @@ export interface DungeonRun {
   at: number;
 }
 
-export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+export const DUNGEON_CLASSES = [
+  "healer",
+  "mage",
+  "berserk",
+  "archer",
+  "tank",
+] as const;
 
 export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
 
@@ -394,7 +437,13 @@ export interface TreeNode {
 /** A perk's stats, when it grants them outright: base + perLevel × its level. */
 export type TreeLayout = Record<
   string,
-  { name: string; x: number; y: number; maxLevel: number; stats?: { id: PlayerStat; base: number; perLevel: number }[] }
+  {
+    name: string;
+    x: number;
+    y: number;
+    maxLevel: number;
+    stats?: { id: PlayerStat; base: number; perLevel: number }[];
+  }
 >;
 
 export const WHISPERS = ["forest", "desert"] as const;
@@ -422,12 +471,24 @@ export interface CrimsonSection {
   minibosses: { boss: string; kills: number }[];
 }
 
-export const REPUTATION_RANKS = ["neutral", "friendly", "trusted", "honored", "hero"] as const;
+export const REPUTATION_RANKS = [
+  "neutral",
+  "friendly",
+  "trusted",
+  "honored",
+  "hero",
+] as const;
 
 export type ReputationRank = (typeof REPUTATION_RANKS)[number];
 
 export type DojoGrade = "S" | "A" | "B" | "C" | "D" | "F";
-export type DojoBelt = "white" | "yellow" | "green" | "blue" | "brown" | "black";
+export type DojoBelt =
+  | "white"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "brown"
+  | "black";
 
 /** A Dojo test's best points, their grade (none before it's taken) and its best time (ms), which Hypixel keeps apart. */
 export interface DojoTest {
@@ -442,7 +503,13 @@ export const FACTIONS = ["mages", "barbarians"] as const;
 export type Faction = (typeof FACTIONS)[number];
 
 // The API's names: "none" is the basic tier
-export const KUUDRA_TIERS = ["none", "hot", "burning", "fiery", "infernal"] as const;
+export const KUUDRA_TIERS = [
+  "none",
+  "hot",
+  "burning",
+  "fiery",
+  "infernal",
+] as const;
 
 export interface KuudraTier {
   tier: string;
@@ -451,7 +518,12 @@ export interface KuudraTier {
   texture: ItemTexture; // its key
 }
 
-export const CATCHES = ["normal", "treasure", "largeTreasure", "outstanding"] as const;
+export const CATCHES = [
+  "normal",
+  "treasure",
+  "largeTreasure",
+  "outstanding",
+] as const;
 
 export type Catch = (typeof CATCHES)[number];
 
@@ -466,7 +538,12 @@ export interface FishingSection {
   trophyHunter?: TrophyHunterRank; // the highest of Odger's ranks claimed
 }
 
-export const TROPHY_HUNTER_RANKS = ["novice", "adept", "expert", "master"] as const;
+export const TROPHY_HUNTER_RANKS = [
+  "novice",
+  "adept",
+  "expert",
+  "master",
+] as const;
 
 export type TrophyHunterRank = (typeof TROPHY_HUNTER_RANKS)[number];
 
@@ -487,7 +564,13 @@ export interface TrophyFrog {
   tiers: Record<TrophyTier, boolean>; // caught at least once
 }
 
-export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
+export const JACOB_BRACKETS = [
+  "bronze",
+  "silver",
+  "gold",
+  "platinum",
+  "diamond",
+] as const;
 
 export type JacobBracket = (typeof JACOB_BRACKETS)[number];
 
@@ -495,7 +578,14 @@ export const JACOB_MEDALS = ["gold", "silver", "bronze"] as const;
 
 export type JacobMedal = (typeof JACOB_MEDALS)[number];
 
-export const COLLECTION_CATEGORIES = ["FARMING", "MINING", "COMBAT", "FORAGING", "FISHING", "RIFT"] as const;
+export const COLLECTION_CATEGORIES = [
+  "FARMING",
+  "MINING",
+  "COMBAT",
+  "FORAGING",
+  "FISHING",
+  "RIFT",
+] as const;
 
 export type CollectionCategory = (typeof COLLECTION_CATEGORIES)[number];
 
@@ -531,7 +621,13 @@ export interface CollectionView {
 
 /** The co-op's crafted minions: every member who accepted their invite, ex-members included (unverified). */
 export interface MinionsSection {
-  minions: { id: string; name: string; texture?: ItemTexture; tiers: number[]; maxTier: number }[]; // every minion, by name
+  minions: {
+    id: string;
+    name: string;
+    texture?: ItemTexture;
+    tiers: number[];
+    maxTier: number;
+  }[]; // every minion, by name
   unique: number; // tiers crafted, each once
   total: number; // every tier of every minion
   slots: { total: number; crafts: number; community: number; next?: number }; // from unique crafts (the wiki's table) and the Community Shop; next: the unique crafts the next slot needs
@@ -681,7 +777,15 @@ export interface RiftSection {
   catsFound: number;
 }
 
-export const STAT_GROUPS = ["combat", "mining", "farming", "foraging", "fishing", "misc", "wisdoms"] as const;
+export const STAT_GROUPS = [
+  "combat",
+  "mining",
+  "farming",
+  "foraging",
+  "fishing",
+  "misc",
+  "wisdoms",
+] as const;
 
 export type StatGroup = (typeof STAT_GROUPS)[number];
 
@@ -694,13 +798,38 @@ export const PLAYER_STATS = [
   { id: "defense", symbol: "❈", color: "§a", group: "combat" },
   { id: "true_defense", symbol: "❂", color: "§f", group: "combat" },
   { id: "strength", symbol: "❁", color: "§c", group: "combat" },
-  { id: "crit_damage", symbol: "☠", color: "§9", group: "combat", percent: true },
-  { id: "crit_chance", symbol: "☣", color: "§9", group: "combat", percent: true },
-  { id: "attack_speed", symbol: "⚔", color: "§e", group: "combat", percent: true, aliases: ["Bonus Attack Speed"] },
+  {
+    id: "crit_damage",
+    symbol: "☠",
+    color: "§9",
+    group: "combat",
+    percent: true,
+  },
+  {
+    id: "crit_chance",
+    symbol: "☣",
+    color: "§9",
+    group: "combat",
+    percent: true,
+  },
+  {
+    id: "attack_speed",
+    symbol: "⚔",
+    color: "§e",
+    group: "combat",
+    percent: true,
+    aliases: ["Bonus Attack Speed"],
+  },
   { id: "swing_range", symbol: "Ⓢ", color: "§e", group: "combat" },
   { id: "intelligence", symbol: "✎", color: "§b", group: "combat" },
   { id: "ferocity", symbol: "⫽", color: "§c", group: "combat" },
-  { id: "ability_damage", symbol: "๑", color: "§c", group: "combat", percent: true },
+  {
+    id: "ability_damage",
+    symbol: "๑",
+    color: "§c",
+    group: "combat",
+    percent: true,
+  },
   { id: "health_regen", symbol: "❣", color: "§c", group: "combat" },
   { id: "vitality", symbol: "♨", color: "§4", group: "combat" },
   { id: "mending", symbol: "☄", color: "§a", group: "combat" },
@@ -721,7 +850,13 @@ export const PLAYER_STATS = [
   { id: "carrot_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "potato_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "pumpkin_fortune", symbol: "☘", color: "§6", group: "farming" },
-  { id: "melon_slice_fortune", symbol: "☘", color: "§6", group: "farming", aliases: ["Melon Fortune"] },
+  {
+    id: "melon_slice_fortune",
+    symbol: "☘",
+    color: "§6",
+    group: "farming",
+    aliases: ["Melon Fortune"],
+  },
   { id: "mushroom_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "cactus_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "sugar_cane_fortune", symbol: "☘", color: "§6", group: "farming" },
@@ -730,7 +865,13 @@ export const PLAYER_STATS = [
   { id: "sunflower_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "moonflower_fortune", symbol: "☘", color: "§6", group: "farming" },
   { id: "wild_rose_fortune", symbol: "☘", color: "§6", group: "farming" },
-  { id: "bonus_pest_chance", symbol: "ൠ", color: "§2", group: "farming", percent: true },
+  {
+    id: "bonus_pest_chance",
+    symbol: "ൠ",
+    color: "§2",
+    group: "farming",
+    percent: true,
+  },
   { id: "overbloom", symbol: "☀", color: "§e", group: "farming" },
   { id: "sweep", symbol: "∮", color: "§2", group: "foraging" },
   { id: "foraging_fortune", symbol: "☘", color: "§6", group: "foraging" },
@@ -738,11 +879,36 @@ export const PLAYER_STATS = [
   { id: "mangrove_fortune", symbol: "☘", color: "§6", group: "foraging" },
   { id: "helix_fortune", symbol: "☘", color: "§6", group: "foraging" },
   { id: "timber", symbol: "", color: "§4", group: "foraging", percent: true },
-  { id: "sea_creature_chance", symbol: "α", color: "§3", group: "fishing", percent: true },
+  {
+    id: "sea_creature_chance",
+    symbol: "α",
+    color: "§3",
+    group: "fishing",
+    percent: true,
+  },
   { id: "fishing_speed", symbol: "☂", color: "§b", group: "fishing" },
-  { id: "double_hook_chance", symbol: "⚓", color: "§9", group: "fishing", percent: true },
-  { id: "treasure_chance", symbol: "⛃", color: "§6", group: "fishing", percent: true },
-  { id: "trophy_chance", symbol: "♔", color: "§6", group: "fishing", percent: true, aliases: ["Trophy Fish Chance"] },
+  {
+    id: "double_hook_chance",
+    symbol: "⚓",
+    color: "§9",
+    group: "fishing",
+    percent: true,
+  },
+  {
+    id: "treasure_chance",
+    symbol: "⛃",
+    color: "§6",
+    group: "fishing",
+    percent: true,
+  },
+  {
+    id: "trophy_chance",
+    symbol: "♔",
+    color: "§6",
+    group: "fishing",
+    percent: true,
+    aliases: ["Trophy Fish Chance"],
+  },
   { id: "speed", symbol: "✦", color: "§f", group: "misc" },
   { id: "magic_find", symbol: "✯", color: "§b", group: "misc" },
   { id: "pet_luck", symbol: "♣", color: "§d", group: "misc" },
@@ -750,7 +916,13 @@ export const PLAYER_STATS = [
   { id: "respiration", symbol: "⚶", color: "§3", group: "misc" },
   { id: "pressure_resistance", symbol: "❍", color: "§9", group: "misc" },
   { id: "fear", symbol: "", color: "§5", group: "misc" },
-  { id: "hunting_fortune", symbol: "", color: "§d", group: "misc", aliases: ["Hunter Fortune"] },
+  {
+    id: "hunting_fortune",
+    symbol: "",
+    color: "§d",
+    group: "misc",
+    aliases: ["Hunter Fortune"],
+  },
   { id: "pull", symbol: "", color: "§b", group: "misc" },
   { id: "charm_chance", symbol: "", color: "§d", group: "misc" },
   { id: "combat_wisdom", symbol: "☯", color: "§3", group: "wisdoms" },
@@ -824,7 +996,16 @@ export interface StatsSection {
   unverified: StatSource[]; // sources whose numbers here aren't checked in game
 }
 
-export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;
+export const AUCTION_STATS = [
+  "created",
+  "completed",
+  "won",
+  "bids",
+  "highestBid",
+  "goldSpent",
+  "goldEarned",
+  "fees",
+] as const;
 
 export type AuctionStat = (typeof AUCTION_STATS)[number];
 
@@ -840,10 +1021,23 @@ export interface MiscSection {
   mythological: { kills: number; chains: number }; // burrow chains completed
   candy: number; // collected at Spooky Festivals
   soulflow: number;
-  jerry: Partial<Record<"mostDamage" | "mostSnowballsHit" | "mostMagmaDamage" | "mostCannonballsHit", number>>; // per Season of Jerry
+  jerry: Partial<
+    Record<
+      | "mostDamage"
+      | "mostSnowballsHit"
+      | "mostMagmaDamage"
+      | "mostCannonballsHit",
+      number
+    >
+  >; // per Season of Jerry
   dragons: Dragons;
   harp: { song: string; completions: number; perfect: number; best: number }[]; // best: the share of notes hit, 0 to 1
-  galatea: { fishFamily: number; hinaTasks: number; treeGifts: Record<string, number>; starlyn: Record<string, number> };
+  galatea: {
+    fishFamily: number;
+    hinaTasks: number;
+    treeGifts: Record<string, number>;
+    starlyn: Record<string, number>;
+  };
   consumables: Consumable[];
   upgrades: { upgrade: string; tier: number }[]; // the profile's community upgrades, highest tier bought
 }
@@ -940,7 +1134,12 @@ export interface MissingAccessory {
   nextTier?: { unit: TierUnit; has: number; at: number }; // one in the bag that rises a rarity in place (unverified)
 }
 
-export type TierUnit = "level" | "milestone" | "charges" | "perfectGems" | "runicKills";
+export type TierUnit =
+  | "level"
+  | "milestone"
+  | "charges"
+  | "perfectGems"
+  | "runicKills";
 
 export interface AccessoriesSection {
   accessoryPower: number;
@@ -970,7 +1169,10 @@ export interface PowerStat {
 
 /** A duplicate, or a lower tier or variant that another accessory in the bag replaces. */
 export type InactiveAccessory = ItemView &
-  ({ reason: "duplicate" } | { reason: "replaced"; replacedBy: { id: string; name: string } });
+  (
+    | { reason: "duplicate" }
+    | { reason: "replaced"; replacedBy: { id: string; name: string } }
+  );
 
 export interface NetworthSection {
   total: number;
@@ -983,7 +1185,10 @@ export interface NetworthSection {
   noInventory: boolean;
   museumIncluded: boolean;
   pricesAsOf: number;
-  categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  categories: Record<
+    string,
+    { total: number; unsoulbound: number; top: NetworthItem[] }
+  >;
   petPrices: Record<string, number>; // by the pet's uuid, for every pet the pets category priced
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
@@ -1043,7 +1248,10 @@ export interface ItemView {
 }
 
 /** model: the item_model a modern client draws in its place, and customData the ExtraAttributes that pick its look. */
-export type ItemTexture = { model?: string; customData?: Record<string, number> } & (
+export type ItemTexture = {
+  model?: string;
+  customData?: Record<string, number>;
+} & (
   | { kind: "item"; id: number; damage: number; color?: number } // 1.8 numeric id
   | { kind: "head"; skin: string } // skin texture hash
 );
@@ -1055,7 +1263,9 @@ export const ItemAttributes = z
     modifier: z.string().optional(),
     upgrade_level: z.number().optional(),
     // A few items store it as a long, which the decode leaves as `[high, low]`
-    dungeon_item_level: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+    dungeon_item_level: z
+      .union([z.number(), z.tuple([z.number(), z.number()])])
+      .optional(),
     rarity_upgrades: z.number().optional(),
     enchantments: z.record(z.string(), z.number()).optional(),
     talisman_enrichment: z.string().optional(),
@@ -1075,11 +1285,21 @@ export const RawItem = z.object({
   tag: z
     .object({
       display: z
-        .object({ Name: z.string().optional(), Lore: z.array(z.string()).optional(), color: z.number().optional() })
+        .object({
+          Name: z.string().optional(),
+          Lore: z.array(z.string()).optional(),
+          color: z.number().optional(),
+        })
         .optional(),
       ExtraAttributes: ItemAttributes.optional(),
       SkullOwner: z
-        .object({ Properties: z.object({ textures: z.array(z.object({ Value: z.string() })).optional() }).optional() })
+        .object({
+          Properties: z
+            .object({
+              textures: z.array(z.object({ Value: z.string() })).optional(),
+            })
+            .optional(),
+        })
         .optional(),
       ItemModel: z.string().optional(),
       ench: z.array(z.unknown()).optional(),

@@ -7,15 +7,40 @@
  */
 
 import { FormattedGame } from "@statsify/schemas";
-import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
-import { STAT_PAGES, SkyBlockAttributesProfile, SkyBlockStatsProfile } from "./stats.profile.js";
-import { SkyBlockBestiaryProfile, SkyBlockCollectionsProfile, SkyBlockMinionsProfile, collectionIcons, minionIcons } from "./collections.profile.js";
+import {
+  SkyBlockAccessoriesProfile,
+  accessoryIcons,
+} from "./accessories.profile.js";
+import {
+  STAT_PAGES,
+  SkyBlockAttributesProfile,
+  SkyBlockStatsProfile,
+} from "./stats.profile.js";
+import {
+  SkyBlockBestiaryProfile,
+  SkyBlockCollectionsProfile,
+  SkyBlockMinionsProfile,
+  collectionIcons,
+  minionIcons,
+} from "./collections.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
-import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
-import { SkyBlockExperimentsProfile, SkyBlockMiscProfile, SkyBlockRiftProfile, consumableIcons } from "./misc.profile.js";
+import {
+  SkyBlockDungeonsProfile,
+  SkyBlockEssenceProfile,
+} from "./dungeons.profile.js";
+import {
+  SkyBlockExperimentsProfile,
+  SkyBlockMiscProfile,
+  SkyBlockRiftProfile,
+  consumableIcons,
+} from "./misc.profile.js";
 import { SkyBlockFishingProfile, trophyFishIcons } from "./fishing.profile.js";
-import { SkyBlockGearProfile, SkyBlockMuseumProfile, gearIcons } from "./gear.profile.js";
+import {
+  SkyBlockGearProfile,
+  SkyBlockMuseumProfile,
+  gearIcons,
+} from "./gear.profile.js";
 import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
@@ -28,9 +53,18 @@ import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
 import { prettify } from "@statsify/util";
-import { COLLECTION_CATEGORIES, formatProfileName } from "@statsify/skyblock/display";
+import {
+  COLLECTION_CATEGORIES,
+  formatProfileName,
+} from "@statsify/skyblock/display";
 import { getBackground } from "@statsify/assets";
-import type { ApiSettings, ItemTexture, MemberView, SkyBlockProfileView, SkyBlockSection } from "@statsify/skyblock";
+import type {
+  ApiSettings,
+  ItemTexture,
+  MemberView,
+  SkyBlockProfileView,
+  SkyBlockSection,
+} from "@statsify/skyblock";
 import type { LocalizationString, LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -87,8 +121,18 @@ export const SKYBLOCK_CARDS = {
     sections: ["dungeons"],
     settings: [],
     profile: [
-      { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
-      { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
+      {
+        label: (t) => t("skyblock.catacombs"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="normal" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.masterMode"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="master" />
+        ),
+      },
       { label: (t) => t("skyblock.essence"), profile: SkyBlockEssenceProfile },
     ],
   },
@@ -98,12 +142,16 @@ export const SKYBLOCK_CARDS = {
     profile: [
       {
         label: (t) => t("skyblock.accessories"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="missing" />,
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="missing" />
+        ),
         icons: accessoryIcons("missing"),
       },
       {
         label: (t) => t("skyblock.inactive"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="inactive" />,
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="inactive" />
+        ),
         icons: accessoryIcons("inactive"),
       },
     ],
@@ -126,11 +174,23 @@ export const SKYBLOCK_CARDS = {
     profile: [
       {
         label: (t) => t("skyblock.trophyFish"),
-        profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" />,
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="trophyFish" />
+        ),
         icons: trophyFishIcons,
       },
-      { label: (t) => t("skyblock.trophyFrogs"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFrogs" /> },
-      { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
+      {
+        label: (t) => t("skyblock.trophyFrogs"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="trophyFrogs" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.seaCreatures"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="seaCreatures" />
+        ),
+      },
     ],
   },
   jacob: {
@@ -160,7 +220,9 @@ export const SKYBLOCK_CARDS = {
     settings: ["collections"],
     profile: COLLECTION_CATEGORIES.map((category) => ({
       label: () => prettify(category),
-      profile: (props: SkyBlockProfileProps) => <SkyBlockCollectionsProfile {...props} category={category} />,
+      profile: (props: SkyBlockProfileProps) => (
+        <SkyBlockCollectionsProfile {...props} category={category} />
+      ),
       icons: collectionIcons(category),
     })),
   },
@@ -178,10 +240,12 @@ export const SKYBLOCK_CARDS = {
   stats: {
     sections: ["stats"],
     settings: ["skills", "inventory"],
-    profile: (Object.keys(STAT_PAGES) as (keyof typeof STAT_PAGES)[]).map((page): SkyBlockSubPage => ({
-      label: (t) => t(`skyblock.statPages.${page}`),
-      profile: (props) => <SkyBlockStatsProfile {...props} page={page} />,
-    })),
+    profile: (Object.keys(STAT_PAGES) as (keyof typeof STAT_PAGES)[]).map(
+      (page): SkyBlockSubPage => ({
+        label: (t) => t(`skyblock.statPages.${page}`),
+        profile: (props) => <SkyBlockStatsProfile {...props} page={page} />,
+      }),
+    ),
   },
   attributes: {
     sections: ["attributes"],
@@ -225,10 +289,16 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
-export const skyBlockHeading = (t: LocalizeFunction, name: SkyBlockCardName | "bingo" | "calendar" | "ranks") =>
-  `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
+export const skyBlockHeading = (
+  t: LocalizeFunction,
+  name: SkyBlockCardName | "bingo" | "calendar" | "ranks",
+) => `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
 
-export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
+export function skyBlockTitle(
+  t: LocalizeFunction,
+  profile: SkyBlockProfileView,
+  name: SkyBlockCardName,
+) {
   // The Header moves the profile onto its own line where that narrows the card
   return `${skyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
 }

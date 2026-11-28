@@ -6,7 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type FishingSection, TROPHY_HUNTER_RANKS, TROPHY_TIERS, type TrophyFish, type TrophyFrog } from "#types";
+import {
+  type FishingSection,
+  TROPHY_HUNTER_RANKS,
+  TROPHY_TIERS,
+  type TrophyFish,
+  type TrophyFrog,
+} from "#types";
 import { SEA_CREATURES, TROPHY_FISH } from "#data";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
@@ -32,7 +38,8 @@ const TROPHY_FROGS = [
 
 // `rewards` lists the ranks claimed from Odger, read as 1 (Novice) to 4 (Master), the wiki's order (an owner exception,
 // unverified). One save also has a 99, left out.
-const trophyHunter = (rewards: number[] = []) => TROPHY_HUNTER_RANKS[Math.max(0, ...rewards.filter((rank) => rank <= 4)) - 1];
+const trophyHunter = (rewards: number[] = []) =>
+  TROPHY_HUNTER_RANKS[Math.max(0, ...rewards.filter((rank) => rank <= 4)) - 1];
 
 /** null before the member's first catch. */
 export function getFishing(member: RawMember): FishingSection | null {
@@ -45,16 +52,23 @@ export function getFishing(member: RawMember): FishingSection | null {
   // Hypixel can send both with every count at 0
   if (!fished.total && !caught("total_caught")) return null;
 
-  const seaCreatures = SEA_CREATURES.map(({ name, ids }) => ({ name, kills: add(...ids.map((id) => kills[id] ?? 0)) }))
+  const seaCreatures = SEA_CREATURES.map(({ name, ids }) => ({
+    name,
+    kills: add(...ids.map((id) => kills[id] ?? 0)),
+  }))
     .filter(({ kills }) => kills > 0)
     .toSorted((a, b) => b.kills - a.kills);
 
   return {
     trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => {
       const tiers = Object.fromEntries(
-        TROPHY_TIERS.map((tier) => [tier, caught(`${id.toLowerCase()}_${tier}`)])
+        TROPHY_TIERS.map((tier) => [
+          tier,
+          caught(`${id.toLowerCase()}_${tier}`),
+        ]),
       ) as TrophyFish["tiers"];
-      const best = TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? TROPHY_TIERS[0];
+      const best =
+        TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? TROPHY_TIERS[0];
 
       return { id, name, tiers, texture: trophyFishTexture(id, best) };
     }),
@@ -63,7 +77,10 @@ export function getFishing(member: RawMember): FishingSection | null {
       id,
       name: prettify(id),
       tiers: Object.fromEntries(
-        TROPHY_TIERS.map((tier) => [tier, tasks.has(`TROPHY_${id}_${tier.toUpperCase()}`)])
+        TROPHY_TIERS.map((tier) => [
+          tier,
+          tasks.has(`TROPHY_${id}_${tier.toUpperCase()}`),
+        ]),
       ) as TrophyFrog["tiers"],
     })),
     trophyFrogsCaught: fished.trophy_frog,
@@ -87,7 +104,9 @@ if (import.meta.vitest) {
   test("getFishing ranks sea creatures by their bestiary kills, leaving out other mobs", () => {
     const fishing = getFishing({
       trophy_fish: { total_caught: 5, rewards: [] },
-      bestiary: { kills: { zombie_miner_150: 3, great_white_shark_180: 7, zombie: 1000 } },
+      bestiary: {
+        kills: { zombie_miner_150: 3, great_white_shark_180: 7, zombie: 1000 },
+      },
       player_stats: { sea_creature_kills: 162 },
     });
 
@@ -99,12 +118,10 @@ if (import.meta.vitest) {
   });
 
   test("trophyHunter takes the highest rank claimed", () => {
-    expect([undefined, [], [1], [1, 2, 3, 99, 4], [2, 1]].map((rewards) => trophyHunter(rewards))).toEqual([
-      undefined,
-      undefined,
-      "novice",
-      "master",
-      "adept",
-    ]);
+    expect(
+      [undefined, [], [1], [1, 2, 3, 99, 4], [2, 1]].map((rewards) =>
+        trophyHunter(rewards),
+      ),
+    ).toEqual([undefined, undefined, "novice", "master", "adept"]);
   });
 }

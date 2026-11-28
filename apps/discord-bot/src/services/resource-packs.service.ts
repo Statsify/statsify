@@ -8,7 +8,11 @@
 
 import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
-import { activeResourcePacks, loadResourcePacks, updateResourcePacks } from "@statsify/assets/resource-packs";
+import {
+  activeResourcePacks,
+  loadResourcePacks,
+  updateResourcePacks,
+} from "@statsify/assets/resource-packs";
 import { setResourcePacks } from "@statsify/skyblock/icons";
 
 const UPDATE_INTERVAL = 6 * 60 * 60 * 1000;
@@ -31,11 +35,15 @@ export class ResourcePacksService {
       const update = await updateResourcePacks();
 
       if (update.status === "held") {
-        this.logger.warn(`Hypixel's new pack has a changed license (${update.license}), so it waits for a review`);
+        this.logger.warn(
+          `Hypixel's new pack has a changed license (${update.license}), so it waits for a review`,
+        );
       }
 
       if (update.status === "activated" && update.failedItems.length > 0) {
-        this.logger.warn(`The new packs can't draw ${update.failedItems.length} items: ${update.failedItems.join(", ")}`);
+        this.logger.warn(
+          `The new packs can't draw ${update.failedItems.length} items: ${update.failedItems.join(", ")}`,
+        );
       }
 
       // Another process may have activated packs too
