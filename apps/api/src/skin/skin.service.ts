@@ -24,7 +24,11 @@ import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
-import { getWarlordsArmor, getWarlordsHelmetModel, getWarlordsWeaponModel } from "./warlords-cosmetics.js";
+import {
+  getWarlordsArmor,
+  getWarlordsHelmetModel,
+  getWarlordsWeaponModel,
+} from "./warlords-cosmetics.js";
 import { join } from "node:path";
 import {
   type Armor,
@@ -49,6 +53,7 @@ import { access, readFile, readdir } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
+  // A library holds native GPU resources, so each process loads its own
   private readonly libraries = new Map<ResourcePack, Promise<ModelLibrary>>();
 
   public constructor(
@@ -111,20 +116,30 @@ export class SkinService {
       resolvePackArmor(KART_PACK, kart.suit),
     ]);
 
-    return renderKart(library, kart, { ...options, player: player && { ...player, armor } });
+    return renderKart(library, kart, {
+      ...options,
+      player: player && { ...player, armor },
+    });
   }
 
-  public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
+  public async getWarlordsRender({
+    uuid,
+    ...options
+  }: WarlordsRenderDto): Promise<Buffer> {
     const warlords = resolveWarlords(options, uuid !== undefined);
     const { armor: piece } = warlords;
+    const suit = { chestplate: piece, leggings: piece, boots: piece };
 
     const [library, player, armor] = await Promise.all([
       this.getLibrary(WARLORDS_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
-      resolvePackArmor(WARLORDS_PACK, { chestplate: piece, leggings: piece, boots: piece }),
+      resolvePackArmor(WARLORDS_PACK, suit),
     ]);
 
-    return renderWarlords(library, warlords, { ...options, player: player && { ...player, armor } });
+    return renderWarlords(library, warlords, {
+      ...options,
+      player: player && { ...player, armor },
+    });
   }
 
   public async getSkin(tag: string): Promise<Skin> {
@@ -324,7 +339,6 @@ async function resolveArmorPiece(
 
 interface ResourcePack {
   name: string;
-  /** The pack's assets/minecraft folder */
   path: string;
 }
 
@@ -341,16 +355,28 @@ export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 // (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
 const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
 
-async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: string, read: (path: string) => Promise<T>) {
-  const files = (await readdir(join(pack.path, folder), { recursive: true })).filter((file) => file.endsWith(extension));
+async function readPackFiles<T>(
+  pack: ResourcePack,
+  folder: string,
+  extension: string,
+  read: (path: string) => Promise<T>
+) {
+  const entries = await readdir(join(pack.path, folder), { recursive: true });
+  const files = entries.filter((file) => file.endsWith(extension));
   const contents = await Promise.all(files.map((file) => read(join(pack.path, folder, file))));
-  return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
+
+  return Object.fromEntries(
+    files.map((file, index) => [file.slice(0, -extension.length), contents[index]])
+  );
 }
 
 export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
-  // Only a missing pack is a 503. Anything else is broken state, and Sentry skips 503s.
+  // Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
   await access(pack.path).catch((error: NodeJS.ErrnoException) => {
-    if (error.code === "ENOENT") throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
+    if (error.code === "ENOENT") {
+      throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
+    }
+
     throw error;
   });
 
@@ -407,11 +433,15 @@ interface ArmoredPlayer extends PlayerSkin {
   armor: Armor;
 }
 
-export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+export interface KartRenderOptions
+  extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
 }
 
-async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+async function resolvePackArmor(
+  pack: ResourcePack,
+  pieces: Omit<ArmorDto, "helmet">
+): Promise<Armor> {
   const textures = join(pack.path, "textures");
   const [chestplate, leggings, boots] = await Promise.all([
     pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
@@ -455,13 +485,18 @@ export function resolveWarlords(
 
   if (!standing) {
     const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
-    if (worn.some((value) => value !== undefined)) throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
+    if (worn.some((value) => value !== undefined)) {
+      throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
+    }
+
     if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon");
 
     return { models: [{ model: weaponModel, bone: "root" }] };
   }
 
-  if (playerClass === undefined) throw new BadRequestException("A player render needs the player's class");
+  if (playerClass === undefined) {
+    throw new BadRequestException("A player render needs the player's class");
+  }
 
   const models: ModelInstance[] = [
     { model: getWarlordsHelmetModel(playerClass, helmet, team), bone: "head", display: "head" },
@@ -472,7 +507,8 @@ export function resolveWarlords(
   return { models, armor: getWarlordsArmor(armor, team) };
 }
 
-export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+export interface WarlordsRenderOptions
+  extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
 }
 
@@ -492,7 +528,11 @@ export function renderWarlords(
 
   if (!player) return renderScene(library, { models }, output);
 
-  return renderScene(library, { player: { ...player, extruded, pose: "standing" }, models }, output);
+  return renderScene(
+    library,
+    { player: { ...player, extruded, pose: "standing" }, models },
+    output
+  );
 }
 
 interface MojangProfile {
