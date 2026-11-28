@@ -32,7 +32,6 @@ const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 // Hypixel sends no balance for these shops' essence.
 const UNSENT_ESSENCE = new Set(["FOREST", "FOSSIL", "SUN_GECKO"]);
 
-// Each grade with the lowest score that earns it.
 const GRADES: [DungeonGrade, number][] = [
   ["S+", 300],
   ["S", 269.5],

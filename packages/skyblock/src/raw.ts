@@ -34,7 +34,7 @@ export interface RawDungeonType {
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
-  watcher_kills?: Record<string, number>; // per floor, plus "total"
+  watcher_kills?: Record<string, number>;
   [damage: `most_damage_${string}`]: Record<string, number> | undefined;
 }
 

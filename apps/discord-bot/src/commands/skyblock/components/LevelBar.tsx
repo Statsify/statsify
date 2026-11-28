@@ -16,7 +16,7 @@ export interface LevelBarProps {
   level: Level;
   color: string;
   t: LocalizeFunction;
-  note?: string; // a line under the bar
+  note?: string;
 }
 
 export const LevelBar = ({ title, level, color, t, note }: LevelBarProps) => {

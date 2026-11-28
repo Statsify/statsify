@@ -81,7 +81,7 @@ export interface SkyBlockCard {
 interface SkyBlockSubPage {
   label: LocalizationString;
   profile: SkyBlockProfile;
-  icons?: SkyBlockCard["icons"]; // in place of the card's
+  icons?: SkyBlockCard["icons"];
 }
 
 export const SKYBLOCK_CARDS = {

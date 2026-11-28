@@ -49,7 +49,6 @@ function getSharedName(id: string, copies: InactiveAccessory[]) {
   return `${color}${name}`;
 }
 
-// One row per accessory keeps a stack of duplicates from filling the page.
 function topInactive({ accessories }: MemberView) {
   const copies = Map.groupBy(accessories?.inactive ?? [], (view) => view.id);
 

@@ -41,7 +41,7 @@ export const gridRows = (cells: JSX.Element[], columns: number) =>
 
 export interface ItemGridEntry {
   texture?: ItemTexture;
-  badge?: ItemTexture; // drawn small over the slot's corner
+  badge?: ItemTexture;
   name: string;
   value: string;
 }

@@ -20,7 +20,6 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-// The menu lays the tree out 7 wide, with the top tier first.
 const TREE_WIDTH = 7;
 const TREE_HEIGHT = 10;
 const PERK_SIZE = 14;

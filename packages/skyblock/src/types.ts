@@ -131,14 +131,13 @@ export interface DungeonsSection {
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
-  // 0 for a class never played
   mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>;
   watcherKills: number;
   essence: Essence[];
 }
 
 export interface Essence {
-  type: string; // WITHER, CRIMSON…
+  type: string;
   amount?: number; // missing for a shop Hypixel sends no balance for
   perks: number;
   maxPerks: number;
@@ -245,12 +244,11 @@ export interface AccessoriesSection {
 }
 
 export interface PowerStat {
-  name: string; // Strength, Crit Damage…
+  name: string;
   color: string; // a § code
   value: number;
 }
 
-// A duplicate, or a lower tier or variant another accessory in the bag replaces
 export type InactiveAccessory = ItemView &
   (
     | { reason: "duplicate" }
