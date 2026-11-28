@@ -9,24 +9,18 @@
 import type { TextComponent } from "./text.js";
 
 export interface PotionEffect {
-  /** A namespaced 26.3 effect id, like "minecraft:speed" */
   id: string;
   amplifier?: number;
 }
 
 export interface ItemStack {
-  /** A namespaced 26.3 item id, like "minecraft:stone_sword" */
   id: string;
   count?: number;
-  /** Durability used up, for tools and armor */
   damage?: number;
-  /** Leather armor dye as 0xRRGGBB */
   color?: number;
   effects?: PotionEffect[];
   enchanted?: boolean;
-  /** A player head's skin texture URL, from its profile's textures */
   skin?: string;
-  /** § codes or a JSON text component */
   name?: TextComponent;
   lore?: TextComponent[];
   /** The lines under the name as the game drew them, which replace lore and Unbreakable */

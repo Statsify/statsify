@@ -116,7 +116,7 @@ function legacyGlint(tick: number): Glint {
   };
 }
 
-/** The glint texture tinted and squared, so adding it with "lighter" is Minecraft's src² + dst */
+// Squared, so adding it with "lighter" matches the game's src² + dst
 function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
   const squared = createImageData(texture.width, texture.height);
 
@@ -139,8 +139,7 @@ const translucent = (icon: OffscreenCanvas) =>
     .getImageData(0, 0, icon.width, icon.height)
     .data.some((value, i) => i % 4 === 3 && value > 0 && value < 255);
 
-// "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
-// to their pixels' colors one by one
+// "lighter" adds alpha too, so translucent icons add the glint per pixel
 function addGlint(
   ctx: OffscreenCanvasRenderingContext2D,
   glint: ImageData,
@@ -187,7 +186,6 @@ function drawGlint(
   layerCtx.globalCompositeOperation = "lighter";
 
   for (const { angle, scrollU, scrollV } of passes) {
-    // A pixel center c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
     const a11 = (glint.width * Math.cos(angle)) / (8 * width);
     const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
     const a21 = (glint.height * Math.sin(angle)) / (8 * width);
@@ -195,7 +193,6 @@ function drawGlint(
     const offsetX = scrollU * glint.width;
     const offsetY = scrollV * glint.height;
 
-    // The pattern's transform goes the other way, from texels to pixels
     const determinant = a11 * a22 - a12 * a21;
     const a = a22 / determinant;
     const b = -a21 / determinant;
@@ -222,8 +219,7 @@ function drawGlint(
   ctx.drawImage(layer, 0, 0);
 }
 
-// Mixed pixel by pixel like the texels, since drawing one icon over the other at an alpha isn't a
-// linear blend: two identical translucent icons would come out more opaque
+// Drawing one icon over the other at an alpha isn't a linear blend
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
   const pixels = context(from).getImageData(0, 0, from.width, from.height);
   mixPixels(pixels, context(to).getImageData(0, 0, to.width, to.height), blend);
@@ -241,7 +237,6 @@ function faceTexture(model: Model, reference: string) {
   return id;
 }
 
-/** The pack sprites a layer draws: layer0, layer1, … when generated, or its faces' textures */
 function textureIds({ model, special }: ItemLayer) {
   if (special) return [];
 
@@ -258,10 +253,7 @@ function textureIds({ model, special }: ItemLayer) {
   return [...new Set(faces.map((face) => faceTexture(model, face.texture)))];
 }
 
-/**
- * A player head's skin texture as PNG bytes, by its URL. The renderer never fetches skins itself, so the caller
- * picks where they come from and how long they're kept, and a failed load throws
- */
+// The renderer never fetches skins, so the caller picks where they come from
 export type SkinLoader = (url: string) => Promise<Uint8Array>;
 
 export class ItemRenderer {
@@ -302,7 +294,6 @@ export class ItemRenderer {
     );
   }
 
-  /** Draws an item 16 × scale pixels square, at a game tick for animated textures and the glint */
   public async render(
     item: ItemStack,
     scale: number,
@@ -311,7 +302,7 @@ export class ItemRenderer {
     const icon = await this.base(item, scale, tick);
     if (!item.enchanted) return icon;
 
-    // The glint moves every tick, so it goes over the cached icon rather than into it
+    // The glint moves every tick, so it's drawn over the cached icon
     const canvas = createCanvas(icon.width, icon.height);
     const ctx = context(canvas);
     ctx.drawImage(icon, 0, 0);
@@ -344,8 +335,7 @@ export class ItemRenderer {
       .map((id) => this.textures.frame(id, tick))
       .filter((frame) => frame !== undefined);
 
-    // Blending two frames' texels blends the icons drawn from them, so when every texture fades
-    // between the same two ticks, the frame is a cross-fade of those two cached icons
+    // Fading between the same two ticks is a cross-fade of two cached icons
     const [first] = animated;
     const fades =
       first !== undefined &&
@@ -373,14 +363,13 @@ export class ItemRenderer {
       colors: layer.tints.map((tint) => tintColor(tint, item, grass)),
     }));
 
-    // Textures blending on different timings change every tick, so they're drawn fresh each time
+    // Textures blending on different timings are drawn fresh every tick
     if (animated.some(({ blend }) => blend > 0)) {
       return this.draw(layers, item, scale, tick);
     }
 
     const frames = animated.map(({ index }) => index);
 
-    // Items that resolve to the same models and colors share an icon
     const key = [
       this.stack.hash,
       ...layers.map(({ model, colors, special }) =>
@@ -501,7 +490,6 @@ export class ItemRenderer {
     special: SpecialModel,
     item: ItemStack,
   ): Promise<Quad[]> {
-    // Ender and trapped chests are chests with another texture
     if (special.type === "minecraft:chest" && special.texture) {
       const [namespace, name] = namespaced(special.texture).split(":");
       const texture = await this.textures.get(
@@ -518,12 +506,10 @@ export class ItemRenderer {
       );
     }
 
-    const head =
-      special.type === "minecraft:player_head"
-        ? { texture: undefined, hat: true }
-        : special.type === "minecraft:head"
-          ? HEADS[special.kind ?? ""]
-          : undefined;
+    let head: { texture?: string; hat: boolean } | undefined;
+    if (special.type === "minecraft:player_head") head = { hat: true };
+    else if (special.type === "minecraft:head")
+      head = HEADS[special.kind ?? ""];
 
     if (!head) {
       const name = special.kind
