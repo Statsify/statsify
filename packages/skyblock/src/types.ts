@@ -616,7 +616,8 @@ export interface StatTotal {
 }
 
 export interface StatsSection {
-  stats: StatTotal[]; // in PLAYER_STATS' order
+  // Stats follow PLAYER_STATS' order.
+  stats: StatTotal[];
   weapon?: string;
   unverified: StatSource[];
 }
