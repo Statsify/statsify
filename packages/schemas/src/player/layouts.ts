@@ -9,24 +9,22 @@
 import type { APIData } from "@statsify/util";
 import { Field } from "#metadata";
 
-// A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`. A run of four or more empty
-// slots is `*N`, and a SkyWars slot can hold several tokens joined by `+`
+// A game's layouts are one string, `name=slot0,slot1,,slot3;name=…`
+// with `*N` for four or more empty slots and `+` between a slot's tokens
 type Slots = (string | undefined)[];
 
-/** How a game sends its layouts, as slot tokens and back */
 export interface LayoutShape<T> {
   slots(layout: T): Slots;
   layout(slots: string[]): T;
 }
 
-/** Comma-separated lists with "null" for an empty slot, like BedWars' quick buy */
+// Lists use "null" for an empty slot, like BedWars' quick buy
 export const LIST_LAYOUT: LayoutShape<string> = {
   slots: (list) =>
     list.split(",").map((slot) => (slot === "null" ? undefined : slot)),
   layout: (slots) => slots.map((slot) => slot || "null").join(","),
 };
 
-/** `{ slot: token }`, as Duels sends layouts */
 export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
   slots(layout) {
     const slots: Slots = [];
@@ -34,13 +32,15 @@ export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
       slots[Number(slot)] = String(token);
     return slots;
   },
-  layout: (slots) =>
-    Object.fromEntries(
-      slots.flatMap((token, slot) => (token ? [[slot, token]] : [])),
-    ),
+  layout(slots) {
+    const layout: Record<string, string> = {};
+    for (const [slot, token] of slots.entries())
+      if (token) layout[slot] = token;
+    return layout;
+  },
 };
 
-/** `{ slot: "id,damage" }`, as Blitz and Mega Walls send layouts, stored as `id:damage` without a damage of 0 */
+// Stored as `id:damage`, without a damage of 0
 export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
   slots: (layout) =>
     SLOT_LAYOUT.slots(layout).map((token) =>
@@ -55,10 +55,7 @@ export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
   },
 };
 
-/**
- * `{ "ITEM:damage:enchantments": slot | slot[] }`, as SkyWars sends kit layouts, stored with the
- * enchantment ids joined by `/`, since commas separate slots
- */
+// Stored with enchantment ids joined by `/`, since commas separate slots
 export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
   slots(layout) {
     const slots: Slots = [];
@@ -85,8 +82,7 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
     );
     const layout: Record<string, number[]> = {};
 
-    // A shared slot keeps its items in Hypixel's key order, which decides the one the game shows,
-    // so an item goes in once it's first in every slot it shares
+    // Hypixel's key order decides which item a shared slot shows
     for (;;) {
       const item = stacks
         .map((stack) => stack[0])
@@ -132,7 +128,7 @@ function packSlots(slots: Slots) {
   return packed.join(",");
 }
 
-// A saved layout with every slot emptied is kept as `name=`, since a missing one means the default
+// An emptied layout is kept as `name=`, since a missing one means the default
 function encodeLayouts(layouts: [name: string, slots: Slots][]) {
   return layouts
     .map(([name, slots]) => `${name}=${packSlots(slots)}`)
@@ -144,17 +140,17 @@ function collectLayouts<T>(
   pattern: RegExp,
   shape: LayoutShape<T>,
 ) {
-  return encodeLayouts(
-    Object.entries(data).flatMap(([key, layout]): [string, Slots][] => {
-      const match = pattern.exec(key);
-      return match && typeof layout === "object" && layout !== null
-        ? [[match[1], shape.slots(layout)]]
-        : [];
-    }),
-  );
+  const layouts: [string, Slots][] = [];
+
+  for (const [key, layout] of Object.entries(data)) {
+    const match = pattern.exec(key);
+    if (match && typeof layout === "object" && layout !== null)
+      layouts.push([match[1], shape.slots(layout)]);
+  }
+
+  return encodeLayouts(layouts);
 }
 
-/** Stored layouts by name, each back in the shape Hypixel sends it */
 export function decodeLayouts<T>(layouts: string, shape: LayoutShape<T>) {
   return new Map(
     (layouts ? layouts.split(";") : []).map((layout) => {
@@ -202,12 +198,10 @@ export class PlayerLayouts {
   public constructor(stats: APIData) {
     const { favourites_2: quickBuy, favorite_slots: hotbar } =
       stats.Bedwars ?? {};
-    this.bedwars = encodeLayouts(
-      Object.entries({ quickBuy, hotbar }).flatMap(
-        ([name, list]): [string, Slots][] =>
-          typeof list === "string" ? [[name, LIST_LAYOUT.slots(list)]] : [],
-      ),
-    );
+    const lists: [string, Slots][] = [];
+    for (const [name, list] of Object.entries({ quickBuy, hotbar }))
+      if (typeof list === "string") lists.push([name, LIST_LAYOUT.slots(list)]);
+    this.bedwars = encodeLayouts(lists);
 
     this.duels = collectLayouts(
       stats.Duels ?? {},
