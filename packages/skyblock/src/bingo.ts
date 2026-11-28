@@ -12,7 +12,8 @@ import type { RawBingoResource, RawPlayerBingo } from "#raw";
 export interface BingoGoal {
   id: string;
   name: string;
-  lore?: string; // with § codes
+  // The lore keeps its § codes.
+  lore?: string;
   // The tier the whole network has reached, which only community goals have.
   community?: { tier: number; tiers: number };
   completed: boolean;

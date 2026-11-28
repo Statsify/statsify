@@ -85,8 +85,10 @@ type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
 
 export interface PlayerExtras {
   highestSkills: Partial<Record<Skill, number>>;
-  commissions: number; // over every profile
-  claimed: Partial<Record<PlayerClaim, number>>; // when each was claimed
+  // Commissions count over every profile.
+  commissions: number;
+  // Each claim maps to when it was claimed.
+  claimed: Partial<Record<PlayerClaim, number>>;
 }
 
 export interface SkyBlockProfilesView extends PlayerRef, Freshness {
@@ -125,19 +127,22 @@ export interface ProfileSummary {
   newProfile: boolean;
   purse: number;
   bank?: number;
-  bankTier: BankTier; // the highest any member has
+  // The bank tier is the highest any member has.
+  bankTier: BankTier;
   bankLimit: number;
   personalBank?: number;
   personalBankLimit?: number;
   firstJoin?: number;
   fairySouls: number;
-  maxFairySouls?: number; // missing on Stranded and Bingo
+  // Stranded and Bingo profiles have no fairy soul cap.
+  maxFairySouls?: number;
 }
 
 export interface SkyBlockProfileView
   extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
-  player?: PlayerExtras; // missing until the player's /player is stored
+  // The player is missing until their /player is stored.
+  player?: PlayerExtras;
   museumFetchedAt?: number;
   gardenFetchedAt?: number;
   // Sections asked for but left out until the price map and items are built.
@@ -188,16 +193,19 @@ export interface GearSection {
   wardrobeSlot?: number;
   equipmentSets: { slot: number; equipment: Slots }[];
   equipmentSlot?: number;
-  weapons: ItemView[]; // the inventory's, then the other storage's
+  // Weapons list the inventory's first, then the other storage's.
+  weapons: ItemView[];
   loadouts: Loadout[];
 }
 
 export interface Loadout {
   id: number;
   name: string;
-  armorSet?: number; // a wardrobe slot
+  // The armor set is a wardrobe slot.
+  armorSet?: number;
   equipmentSet?: number;
-  pet?: string; // the pet's uniqueId
+  // The pet is named by its uniqueId.
+  pet?: string;
   power?: string;
   tuning?: Record<string, number>;
 }
@@ -239,25 +247,32 @@ export interface InventoriesSection {
 
 // Each slot's worth as networth prices it, laid out as InventoriesSection.
 export interface InventoryValues {
-  pages: Partial<Record<InventoryId, (number | null)[][]>>; // null: unpriced
+  // A null slot has no price.
+  pages: Partial<Record<InventoryId, (number | null)[][]>>;
   backpackIcons: (number | null)[];
-  totals: Partial<Record<InventoryId, number>>; // backpacks add their icons
-  sacks: Record<string, number>; // only priced ones, by id
+  // A backpack's total adds its icon.
+  totals: Partial<Record<InventoryId, number>>;
+  // Sacks list only the priced items, by id.
+  sacks: Record<string, number>;
 }
 
 export interface MissingPet {
   type: string;
   name: string;
   rarity: Rarity;
-  price?: number; // unset on a profile without the market
-  points: number; // the pet score it would add
+  // The price is unset on a profile without the market.
+  price?: number;
+  // points is the pet score the pet would add.
+  points: number;
   texture: ItemTexture;
 }
 
 export interface ValuesSection {
   pricesAsOf: number;
-  inventories: InventoryValues | null; // null with the inventory API off
-  missingPets: MissingPet[]; // cheapest first, or by name without the market
+  // The inventories are null with the inventory API off.
+  inventories: InventoryValues | null;
+  // Missing pets are cheapest first, or by name without the market.
+  missingPets: MissingPet[];
 }
 
 export interface MuseumView {
@@ -266,9 +281,11 @@ export interface MuseumView {
   // An id is an item or an armor set.
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[];
   special: { donatedAt?: number; items: Slots }[];
-  donated: MuseumCategory[]; // every category, most donated first
+  // Every category is listed, most donated first.
+  donated: MuseumCategory[];
   xp: number;
-  maxXp: number; // what every key in the items resource pays
+  // maxXp is what every key in the items resource pays.
+  maxXp: number;
   milestone: number;
 }
 
@@ -317,9 +334,12 @@ export interface SlayersSection {
 
 interface SlayerBossView {
   level: Level;
-  kills: number[]; // kills[tier - 1]
-  attempts: number[]; // as kills
-  unclaimedLevels: number; // reached, with the reward not claimed
+  // kills[tier - 1] is the kills at that tier.
+  kills: number[];
+  // Attempts are indexed like kills.
+  attempts: number[];
+  // An unclaimed level is reached with its reward not claimed.
+  unclaimedLevels: number;
 }
 
 export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
@@ -337,13 +357,15 @@ export interface DungeonFloor {
   mostMobsKilled?: number;
   mostHealing?: number;
   milestoneCompletions: number;
-  bestRun?: DungeonRun; // the best scoring of the runs Hypixel keeps
+  // The best run is the best scoring of the runs Hypixel keeps.
+  bestRun?: DungeonRun;
 }
 
 export interface DungeonRun {
   score: number;
   grade: DungeonGrade;
-  time: number; // ms
+  // The time is in milliseconds.
+  time: number;
   dungeonClass: DungeonClass;
   secrets: number;
   deaths: number;
@@ -450,8 +472,10 @@ export interface CrimsonSection {
 interface DojoTest {
   test: string;
   points: number;
-  grade?: DojoGrade; // missing before the test is taken
-  time?: number; // ms
+  // The grade is missing before the test is taken.
+  grade?: DojoGrade;
+  // The time is in milliseconds.
+  time?: number;
 }
 
 // The API calls the basic tier "none".
@@ -475,12 +499,14 @@ export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
   trophyFrogs: TrophyFrog[];
-  trophyFrogsCaught?: number; // missing on some saves with frogs caught
+  // Some saves with frogs caught don't have this count.
+  trophyFrogsCaught?: number;
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   // Sea creatures sort by the most kills first.
   seaCreatures: { name: string; kills: number }[];
-  trophyHunter?: TrophyHunterRank; // the highest of Odger's ranks claimed
+  // trophyHunter is the highest of Odger's ranks claimed.
+  trophyHunter?: TrophyHunterRank;
 }
 
 export interface TrophyFish {
@@ -493,26 +519,33 @@ export interface TrophyFish {
 export interface TrophyFrog {
   id: string;
   name: string;
-  tiers: Record<TrophyTier, boolean>; // caught at least once
+  // A tier is true once it's caught at least once.
+  tiers: Record<TrophyTier, boolean>;
 }
 
 export interface JacobSection {
   // Medals count only the unspent ones.
   medals: Record<JacobMedal, number>;
-  medalsEarned: Record<JacobBracket, number>; // over every contest claimed
+  // Medals earned count over every contest claimed.
+  medalsEarned: Record<JacobBracket, number>;
   contests: number;
-  uniqueGolds: number; // crops with a gold bracket or better
+  // uniqueGolds counts the crops with a gold bracket or better.
+  uniqueGolds: number;
   crops: JacobCrop[];
   // These perks are the ones bought from Anita.
   perks: { farmingFortune: number; farmingLevelCap: number };
-  history: JacobContest[]; // the latest, newest first
+  // The history holds the latest contests, newest first.
+  history: JacobContest[];
 }
 
 export interface JacobContest {
-  at: number; // when the contest's SkyBlock day began
-  crop: string; // as JacobCrop's id
+  // at is when the contest's SkyBlock day began.
+  at: number;
+  // The crop is a JacobCrop id.
+  crop: string;
   collected: number;
-  place?: number; // from 1, once the rewards are claimed
+  // The place counts from 1, once the rewards are claimed.
+  place?: number;
   participants?: number;
   medal?: JacobBracket;
 }
@@ -533,7 +566,8 @@ export interface CollectionsSection {
   total: number;
   // Members Hypixel sends no collection for, so their part isn't counted.
   hidden: string[];
-  bosses: BossCollection[]; // the member's own
+  // The bosses are the member's own.
+  bosses: BossCollection[];
 }
 
 export interface BossCollection {
@@ -541,7 +575,8 @@ export interface BossCollection {
   amount: number;
   tier: number;
   maxTier: number;
-  next?: number; // the amount the next tier needs
+  // next is the amount the next tier needs.
+  next?: number;
 }
 
 // A collection's amount is the co-op's, ex-members included.
@@ -549,11 +584,14 @@ export interface CollectionView {
   id: string;
   name: string;
   texture?: ItemTexture;
-  amount?: number; // missing with the Collections API off
+  // The amount is missing with the Collections API off.
+  amount?: number;
   tier: number;
   maxTier: number;
-  next?: number; // the amount the next tier needs
-  members: { uuid: string; amount: number }[]; // most first
+  // next is the amount the next tier needs.
+  next?: number;
+  // Members are sorted most first.
+  members: { uuid: string; amount: number }[];
 }
 
 export interface MinionsSection {
@@ -564,11 +602,14 @@ export interface MinionsSection {
     tiers: number[];
     maxTier: number;
   }[];
-  unique: number; // tiers crafted, each once
-  total: number; // every tier of every minion
+  // unique counts each tier crafted once.
+  unique: number;
+  // total counts every tier of every minion.
+  total: number;
   // next is the unique crafts the next slot needs.
   slots: { total: number; crafts: number; community: number; next?: number };
-  members: { uuid: string; amount: number }[]; // unique crafts, most first
+  // Members are sorted by unique crafts, most first.
+  members: { uuid: string; amount: number }[];
 }
 
 export interface BestiarySection {
@@ -585,7 +626,8 @@ export interface BestiaryFamilyView {
   kills: number;
   tier: number;
   maxTier: number;
-  next?: number; // the kills the next tier needs
+  // next is the kills the next tier needs.
+  next?: number;
 }
 
 export interface AttributesSection {
@@ -596,13 +638,16 @@ export interface AttributesSection {
     rarity: Rarity;
     families: string[];
     level: number;
-    maxLevel: number; // 0 for a shard that can't be syphoned
+    // A shard that can't be syphoned has a maxLevel of 0.
+    maxLevel: number;
     owned: number;
   }[];
   unlocked: number;
   maxed: number;
-  total: number; // attributes with levels
-  owned: number; // shards held
+  // total counts the attributes with levels.
+  total: number;
+  // owned counts the shards held.
+  owned: number;
 }
 
 export interface GardenSection {
@@ -661,8 +706,10 @@ export interface ChocolateSection {
   rabbits: { rarity: Rarity; found: number; total: number }[];
   employees: { employee: string; level: number }[];
   timeTower: number;
-  duplicates: number; // rabbits found again
-  eggLocations: number; // hidden egg spots found across the islands
+  // Duplicates are rabbits found again.
+  duplicates: number;
+  // Egg locations are the hidden egg spots found across the islands.
+  eggLocations: number;
 }
 
 export interface ExperimentsSection {
@@ -867,7 +914,8 @@ export interface StatTotal {
   stat: PlayerStat;
   total: number;
   bySource: Partial<Record<StatSource, number>>;
-  byAttribute?: Record<string, number>; // by the Hunting attribute's name
+  // byAttribute is keyed by the Hunting attribute's name.
+  byAttribute?: Record<string, number>;
 }
 
 export interface StatsSection {
@@ -880,7 +928,8 @@ export interface StatsSection {
 export interface MiscSection {
   kills: number;
   deaths: number;
-  topKills: { name: string; count: number }[]; // the 20 most
+  // topKills holds the 20 mobs with the most kills.
+  topKills: { name: string; count: number }[];
   topDeaths: { name: string; count: number }[];
   highestDamage?: number;
   highestCriticalDamage?: number;
@@ -890,7 +939,8 @@ export interface MiscSection {
   mythological: { kills: number; chains: number };
   candy: number;
   soulflow: number;
-  jerry: Partial<Record<JerryStat, number>>; // per Season of Jerry
+  // Each Jerry stat is per Season of Jerry.
+  jerry: Partial<Record<JerryStat, number>>;
   dragons: Dragons;
   // best is the share of notes hit, from 0 to 1.
   harp: { song: string; completions: number; perfect: number; best: number }[];
@@ -901,18 +951,22 @@ export interface MiscSection {
     starlyn: Record<string, number>;
   };
   consumables: Consumable[];
-  upgrades: { upgrade: string; tier: number }[]; // the profile's community ones
+  // The upgrades are the profile's community upgrades.
+  upgrades: { upgrade: string; tier: number }[];
 }
 
 export interface Dragons {
   summoned: number;
   eyesPlaced: number;
   crystalsDestroyed: number;
-  fastestKill?: number; // ms
+  // The fastest kill is in milliseconds.
+  fastestKill?: number;
   mostDamage?: number;
-  bestRank?: number; // the best place on a fight's damage list
+  // The best rank is the best place on a fight's damage list.
+  bestRank?: number;
   specialZealotLoot: number;
-  summoningEyes: number; // collected from Zealots
+  // Summoning eyes are the ones collected from Zealots.
+  summoningEyes: number;
 }
 
 export interface Consumable {
@@ -932,7 +986,8 @@ export interface PetsSection {
   totalXp: number;
   skinned: number;
   candyUsed: number;
-  activeStats?: Stats; // with its held item, as the stat totals count them
+  // activeStats count the held item, as the stat totals do.
+  activeStats?: Stats;
 }
 
 export interface PetView {
@@ -945,7 +1000,8 @@ export interface PetView {
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
-  skinColor?: string; // the color of the ✦ after a skinned pet's name
+  // skinColor is the color of the ✦ after a skinned pet's name.
+  skinColor?: string;
   candyUsed: number;
   active: boolean;
   texture: ItemTexture;
@@ -995,7 +1051,8 @@ export interface MissingAccessory {
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
-  nextTier?: { unit: TierUnit; has: number; at: number }; // an in-place upgrade
+  // nextTier is set for an in-place upgrade.
+  nextTier?: { unit: TierUnit; has: number; at: number };
 }
 
 export type TierUnit =
@@ -1012,13 +1069,16 @@ export interface AccessoriesSection {
   powerStats?: PowerStat[];
   tuning: Record<string, number>;
   tuningPoints: number;
-  tuningTotal?: number; // missing when no Tuning Box tier explains the points
+  // The total is missing when no Tuning Box tier explains the points.
+  tuningTotal?: number;
   enrichments: number;
   // Only Legendary and higher accessories can take an enrichment.
   unenriched: number;
   recombobulated: number;
-  unique: number; // one per chain, and a consumed Rift Prism
-  chains: number; // in the items resource
+  // unique counts one per chain, and a consumed Rift Prism.
+  unique: number;
+  // chains counts the chains in the items resource.
+  chains: number;
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
@@ -1112,12 +1172,16 @@ export interface ItemView {
   obtainedAt?: number;
   // slot is the slot's type (RUBY, COMBAT), and gem what's in it.
   gems?: { slot: string; gem: string; quality: string }[];
-  counters?: Record<string, number>; // by API key, like champion_combat_xp
-  dye?: string; // an item id
+  // Counters are keyed by API key, like champion_combat_xp.
+  counters?: Record<string, number>;
+  // The dye is an item id.
+  dye?: string;
   rune?: { id: string; level: number };
   skin?: string;
-  origin?: string; // how it was made or bought, like CRAFTING_GRID
-  drillParts?: string[]; // item ids
+  // The origin is how it was made or bought, like CRAFTING_GRID.
+  origin?: string;
+  // Drill parts are item ids.
+  drillParts?: string[];
 }
 
 // model is the item_model a modern client draws in the item's place.
@@ -1149,7 +1213,8 @@ export interface ItemsResource {
       riftOnly?: boolean;
       npcPrice?: number;
       glowing?: boolean;
-      generator?: string; // a minion's type, on each of its tiers
+      // Each of a minion's tiers carries the minion's type.
+      generator?: string;
       generatorTier?: number;
     }
   >;

@@ -53,7 +53,8 @@ export interface SectionInput {
   prices?: PriceMap;
   items?: ItemsResource;
   rawItems?: RawItemsResource;
-  ranked?: boolean; // false only for a player known to have no rank
+  // ranked is false only for a player known to have no rank.
+  ranked?: boolean;
 }
 
 export interface Section<K extends keyof MemberView> {
