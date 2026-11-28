@@ -25,7 +25,6 @@ import type { PackStack } from "../core/pack.js";
 import type { TextComponent } from "../core/text.js";
 import { tooltipOverlay } from "./tooltip-overlay.js";
 
-/** What an atlas inventory's `mc-tooltip-change` events carry while a slot with an item is hovered */
 export interface TooltipChange {
   item: ItemStack;
   slot: number;
@@ -37,8 +36,7 @@ export interface TooltipChange {
 
 const HIGHLIGHT = "rgba(255, 255, 255, 0.5)";
 
-// The site's Minecraft.ttf has 16 GUI pixels to the em, and trimming each line to its cap height
-// puts a glyph's top where the game draws it
+// The site's Minecraft.ttf has 16 GUI pixels to the em
 const STYLE = `
   .frame { position: relative; width: fit-content; }
   canvas { display: block; image-rendering: pixelated; }
@@ -96,10 +94,7 @@ interface View {
   composed: OffscreenCanvas;
 }
 
-/**
- * <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack or an atlas.
- * With an atlas, the title and counts are HTML, and the page draws tooltips from `mc-tooltip-change`
- */
+// With an atlas, the title and counts are HTML and the page draws tooltips
 export class McInventory extends HTMLElement {
   public static observedAttributes = [
     "rows",
@@ -283,7 +278,6 @@ export class McInventory extends HTMLElement {
     overlay.show(tooltip.canvas, size.scale, event, this);
   }
 
-  /** Tells the page which item's tooltip to show, or null once none is */
   private changeTooltip(event?: PointerEvent) {
     const item = event && this.view?.items[this.hovered];
     if (!item && !this.tooltipOpen) return;
@@ -308,7 +302,7 @@ export class McInventory extends HTMLElement {
         composed: true,
       });
     this.dispatchEvent(change());
-    // A removed element's events no longer reach the page, so its last close goes to the document too
+    // A removed element's events don't reach the page, so close on the document
     if (!this.isConnected) document.dispatchEvent(change());
   }
 
@@ -443,7 +437,7 @@ export class McInventory extends HTMLElement {
         16 * size.scale,
       ];
 
-      // An atlas's counts are HTML over the canvas, so its highlight has to be too, to dim them as 1.8 does
+      // An atlas's counts are HTML, so the highlight is too, to dim them
       if (atlas) {
         Object.assign(this.highlight.style, {
           left: `${left}px`,

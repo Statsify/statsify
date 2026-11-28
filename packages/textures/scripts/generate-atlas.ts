@@ -52,7 +52,7 @@ if (!name || packPaths.length === 0)
 const OUT = new URL("../atlas/", import.meta.url);
 const ITEM_FILE = /^assets\/([^/]+)\/items\/(.+)\.json$/;
 
-// Tints and models that read the stack, so these items are drawn in the browser from their models
+// These items' tints and models read the stack, so the browser draws them
 const STACK_TINTS = new Set(["minecraft:dye", "minecraft:potion"]);
 const STACK_MODELS = new Set([
   "minecraft:player_head",
@@ -96,7 +96,7 @@ const drawn = await Promise.all(
     try {
       const resolved = models.resolve({ id });
 
-      // A flat icon is its 16-pixel textures, which any whole scale draws exactly
+      // Any whole scale draws a flat icon's 16-pixel textures exactly
       const flat = resolved.every(
         ({ model, special }) => model.generated && !special,
       );
@@ -172,7 +172,7 @@ const sprite = (id: string, canvas: OffscreenCanvas) => ({
   w: canvas.width,
   h: canvas.height,
 });
-const rectOf = ({ x, y, w, h }: ReturnType<typeof sprite>): AtlasRect => [
+const toRect = ({ x, y, w, h }: ReturnType<typeof sprite>): AtlasRect => [
   x,
   y,
   w,
@@ -185,7 +185,6 @@ const iconSprites = [...icons].flatMap(([id, drawnAt]) =>
 const textureSprites = [...textures].map(([id, canvas]) => sprite(id, canvas));
 const sprites = [...iconSprites, ...textureSprites];
 
-// Sets each sprite's x and y
 const size = potpack(sprites);
 const image = new Canvas(size.w, size.h);
 const ctx = image.getContext("2d");
@@ -194,10 +193,10 @@ for (const { canvas, x, y } of sprites)
   ctx.drawImage(canvas as unknown as Canvas, x, y);
 
 const iconRects: Record<string, AtlasRect[]> = {};
-for (const icon of iconSprites) (iconRects[icon.id] ??= []).push(rectOf(icon));
+for (const icon of iconSprites) (iconRects[icon.id] ??= []).push(toRect(icon));
 
 const textureRects = Object.fromEntries(
-  textureSprites.map((texture) => [texture.id, rectOf(texture)]),
+  textureSprites.map((texture) => [texture.id, toRect(texture)]),
 );
 
 const png = await image.toBuffer("png");
@@ -221,7 +220,7 @@ const data: AtlasData = {
   names,
 };
 
-// Reads the image back the way a page does, so a misplaced icon or a missing texture fails here
+// Reading the image back as a page does catches misplaced or missing icons
 const atlas = new Atlas(data, await skiaCanvas.decodePng(png));
 
 const pixels = (canvas: OffscreenCanvas) =>

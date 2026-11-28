@@ -276,21 +276,16 @@ function textureIds({ model, special }: ItemLayer) {
 // The renderer never fetches skins, so the caller picks where they come from
 export type SkinLoader = (url: string) => Promise<Uint8Array>;
 
-/** What an ItemRenderer draws from in place of a pack stack, like an atlas of icons drawn ahead of time */
 export interface ItemSource {
-  /** Icon cache keys start with it */
   readonly hash: string;
   readonly legacyGlint: boolean;
   readonly models: Pick<ModelResolver, "resolve">;
   readonly textures: Pick<TextureLoader, "get" | "frame">;
-  /** Whether an item is drawn from its models, rather than taken from icon() */
   drawsFromModels(id: string): boolean;
-  /** An item's icon drawn ahead of time, 16 × scale pixels square */
   icon(id: string, scale: number): OffscreenCanvas;
 }
 
 export class ItemRenderer {
-  /** Whether the glint moves the way 1.8's does, which a 1.8 pack's glint texture picks */
   public readonly legacyGlint: boolean;
   private hash: string;
   private source?: ItemSource;

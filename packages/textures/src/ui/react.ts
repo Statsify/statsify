@@ -24,7 +24,6 @@ export interface InventoryProps {
   label?: string;
   layout?: InventoryLayout;
   freeze?: boolean;
-  /** With an atlas, the item to show a tooltip for as the pointer moves, or null to close it */
   onTooltipChange?: (change: TooltipChange | null) => void;
 }
 

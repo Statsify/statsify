@@ -58,10 +58,8 @@ export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
     slotsTop(title) + Math.floor(slot / cols) * SLOT,
   ] as const;
 
-/** Where the title's text starts, in GUI pixels */
 export const TITLE_ORIGIN = [8, 6] as const;
 
-/** Where a slot's count ends on the right and starts at the top, in GUI pixels */
 export function countOrigin(size: InventorySize, slot: number) {
   const [x, y] = slotOrigin(size, slot);
   return [x + 18, y + 10] as const;
@@ -140,7 +138,6 @@ export class InventoryRenderer {
     return drawTooltip(this.text, this.lines(item), scale, tick);
   }
 
-  /** An item's tooltip text, for pages that draw tooltips themselves */
   public lines(item: ItemStack) {
     return tooltipLines(item, this.names);
   }

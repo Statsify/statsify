@@ -81,7 +81,6 @@ export interface ItemLayer {
   special?: SpecialModel;
 }
 
-/** The layers on each side of a definition's check for a component, like wolf armor's dye */
 export interface ComponentBranches {
   component: string;
   on_true: ItemLayer[];
@@ -121,7 +120,6 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-/** Whether the stack has the component, for the components an item stack carries */
 export const hasComponent = (item: ItemStack, component: string | undefined) =>
   component === "minecraft:dyed_color" && item.color !== undefined;
 
@@ -155,7 +153,6 @@ export class ModelResolver {
     return this.layers(this.definition(item.id), item);
   }
 
-  /** Both branches of an item's definition when it starts with a check for a component */
   public branches(id: string): ComponentBranches | undefined {
     const model = this.definition(id);
     if (
