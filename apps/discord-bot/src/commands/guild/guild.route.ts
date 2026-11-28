@@ -18,10 +18,18 @@ export const GUILD_ROUTE = "g";
 
 export function guildRoute(listener: AbstractCommandListener): ComponentRoute {
   return (interaction, { ownerId, values: [subcommand, guildId] }) =>
-    listener.rerunCommand(interaction, ownerId, ["guild", subcommand], { query: guildId });
+    listener.rerunCommand(interaction, ownerId, ["guild", subcommand], {
+      query: guildId,
+    });
 }
 
 export function getGuildCustomId(context: CommandContext, guildId: string) {
   return (...values: (string | number)[]) =>
-    createCustomId(GUILD_ROUTE, context.getInteraction().getUserId(), context.getCommandName(), guildId, ...values);
+    createCustomId(
+      GUILD_ROUTE,
+      context.getInteraction().getUserId(),
+      context.getCommandName(),
+      guildId,
+      ...values,
+    );
 }

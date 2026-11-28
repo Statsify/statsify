@@ -16,11 +16,17 @@ export interface CustomId {
   values: string[];
 }
 
-export function createCustomId(route: string, ownerId: string, ...values: (string | number)[]) {
+export function createCustomId(
+  route: string,
+  ownerId: string,
+  ...values: (string | number)[]
+) {
   const customId = [route, ownerId, ...values].join(":");
 
   if (customId.length > MAX_CUSTOM_ID_LENGTH)
-    throw new Error(`The custom id "${customId}" is over Discord's ${MAX_CUSTOM_ID_LENGTH} character limit`);
+    throw new Error(
+      `The custom id "${customId}" is over Discord's ${MAX_CUSTOM_ID_LENGTH} character limit`,
+    );
 
   return customId;
 }
@@ -34,18 +40,25 @@ if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
   await import("reflect-metadata");
-  const { METADATA_KEY, PlayerStats, getLeaderboardFields } = await import("@statsify/schemas");
+  const { METADATA_KEY, PlayerStats, getLeaderboardFields } =
+    await import("@statsify/schemas");
 
   // Leaderboard buttons carry their field, so a new field that's too long would break its buttons
   it("fits the longest leaderboard field and rejects ids over 100 characters", () => {
-    const fields = Object.entries(Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype)).flatMap(
-      ([game, { type }]: [string, any]) => getLeaderboardFields(type.type).map(([key]) => `${game}.${key}`)
+    const fields = Object.entries(
+      Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype),
+    ).flatMap(([game, { type }]: [string, any]) =>
+      getLeaderboardFields(type.type).map(([key]) => `${game}.${key}`),
     );
 
-    const longest = fields.reduce((longest, field) => (field.length > longest.length ? field : longest));
+    const longest = fields.reduce((longest, field) =>
+      field.length > longest.length ? field : longest,
+    );
     const ownerId = "1".repeat(20);
 
-    expect(parseCustomId(createCustomId("lb", ownerId, "position", longest))).toEqual({
+    expect(
+      parseCustomId(createCustomId("lb", ownerId, "position", longest)),
+    ).toEqual({
       route: "lb",
       ownerId,
       values: ["position", longest],
