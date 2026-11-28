@@ -10,7 +10,8 @@ import { existsSync } from "node:fs";
 import type { SyncContext } from "../sync-data.ts";
 
 export const MINECRAFT_DATA = "PrismarineJS/minecraft-data";
-export const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb"; // 3.117.0
+// This is minecraft-data 3.117.0.
+export const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb";
 const PACK = new URL(
   "../../../../assets/public/minecraft-textures/default/assets/minecraft/textures/",
   import.meta.url,

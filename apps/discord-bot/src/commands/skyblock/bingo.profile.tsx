@@ -9,7 +9,7 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
-import { gridRows } from "./components/ItemGrid.js";
+import { getGridRows } from "./components/ItemGrid.js";
 import type { BingoGoal, BingoView, PlayerRef } from "@statsify/skyblock";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -125,7 +125,7 @@ export const SkyBlockBingoProfile = ({
 
   return (
     <Card {...card} name={bingo.displayName} sidebar={sidebar}>
-      <Table.table>{gridRows(cells, COLUMNS)}</Table.table>
+      <Table.table>{getGridRows(cells, COLUMNS)}</Table.table>
     </Card>
   );
 };

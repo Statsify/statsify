@@ -19,14 +19,14 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 const PETS_SHOWN = 18;
 
 // The section sorts the active pet first, then by rarity and XP
-const topPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
+const getTopPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
 
 // The game puts a ✦ in the skin's color after a skinned pet's name.
 const formatPetName = ({ name, rarity, skinColor }: PetView) =>
   `${RARITY_COLORS[rarity]}${name}${skinColor ? `${skinColor} ✦` : ""}`;
 
-export const petIcons = (member: MemberView) =>
-  topPets(member).flatMap(({ texture, heldItemTexture }) =>
+export const getPetIcons = (member: MemberView) =>
+  getTopPets(member).flatMap(({ texture, heldItemTexture }) =>
     heldItemTexture ? [texture, heldItemTexture] : [texture],
   );
 
@@ -60,7 +60,7 @@ export const SkyBlockPetsProfile = ({
     }),
   );
 
-  const items = topPets(profile.member).map((pet) => {
+  const items = getTopPets(profile.member).map((pet) => {
     const level = `§7${t("skyblock.petLevel", { level: t(pet.level.level) })}`;
     const candy = t("skyblock.candyUsed", { candy: t(pet.candyUsed) });
 

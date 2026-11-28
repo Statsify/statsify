@@ -9,7 +9,11 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, formatFraction, gridRows } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  formatFraction,
+  getGridRows,
+} from "./components/ItemGrid.js";
 import { MUSEUM_MILESTONES } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type {
@@ -22,18 +26,18 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const WEAPONS = 4;
 
-const filled = (slots: Slots) =>
+const getFilledSlots = (slots: Slots) =>
   slots.filter((item): item is ItemView => item !== null);
 
-const gearKinds = (gear: GearSection) => [
-  filled(gear.armor),
-  filled(gear.equipment),
+const getGearKinds = (gear: GearSection) => [
+  getFilledSlots(gear.armor),
+  getFilledSlots(gear.equipment),
   gear.weapons.slice(0, WEAPONS),
 ];
 
-export const gearIcons = ({ gear }: MemberView) =>
+export const getGearIcons = ({ gear }: MemberView) =>
   gear
-    ? gearKinds(gear)
+    ? getGearKinds(gear)
         .flat()
         .map(({ texture }) => texture)
     : [];
@@ -56,7 +60,7 @@ export const SkyBlockGearProfile = ({
 
   // Each kind starts a row
   const items = gear
-    ? gearKinds(gear).flatMap((kind) =>
+    ? getGearKinds(gear).flatMap((kind) =>
         kind.length % 2 === 0 ? kind : [...kind, undefined],
       )
     : [];
@@ -135,7 +139,7 @@ export const SkyBlockMuseumProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
-        {gridRows(categories, 3, { spreadLastRow: true })}
+        {getGridRows(categories, 3, { spreadLastRow: true })}
       </Table.table>
     </Card>
   );

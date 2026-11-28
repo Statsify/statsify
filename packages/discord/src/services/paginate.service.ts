@@ -49,7 +49,7 @@ interface PageInput {
 
 type PageId = `${number}|${number}`;
 
-export interface PaginateOptions {
+interface PaginateOptions {
   timeout?: number;
   menu?: boolean;
 }
@@ -93,7 +93,11 @@ export async function paginate(
   const getPickedMessage = (index: number, subIndex: number) =>
     getMessage(index, subIndex).catch((error) => {
       if (!(error instanceof Message)) throw error;
-      return new Message({ ...error, content: error.content ?? "", attachments: [] });
+      return new Message({
+        ...error,
+        content: error.content ?? "",
+        attachments: [],
+      });
     });
 
   // If there is only one page with no sub pages, return the message immediately without pagination

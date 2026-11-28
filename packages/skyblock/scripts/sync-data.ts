@@ -79,6 +79,7 @@ function pickUnits(names: string[]) {
   return picked;
 }
 
+// It runs on a full NEU-REPO commit SHA, so NOTICE.md pins what it read.
 const [sha = "", ...names] = process.argv.slice(2);
 if (!/^[\da-f]{40}$/.test(sha)) {
   throw new Error(
