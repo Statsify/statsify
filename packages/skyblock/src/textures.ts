@@ -9,6 +9,7 @@
 import { MATERIAL_IDS, PET_TEXTURES } from "#data";
 import { prettify } from "@statsify/util";
 import {
+  PET_SKIN_PREFIX,
   RARITIES,
   type ItemTexture,
   type ItemsResource,
@@ -79,7 +80,8 @@ export function getPetTexture(
   // The items resource has the skins newer than the NEU pin.
   const skinned =
     skin &&
-    (PET_TEXTURES.skins[skin] ?? items?.items[`PET_SKIN_${skin}`]?.skin);
+    (PET_TEXTURES.skins[skin] ??
+      items?.items[`${PET_SKIN_PREFIX}${skin}`]?.skin);
   if (skinned) return { kind: "head", skin: skinned };
 
   const textures = PET_TEXTURES.pets[type] ?? {};

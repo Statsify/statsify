@@ -13,6 +13,7 @@ import { getCoopMembers } from "../profiles.js";
 import { resourceTexture } from "#textures";
 import {
   type BossCollection,
+  type CollectionView,
   type CollectionsSection,
   type ItemsResource,
   KUUDRA_TIERS,
@@ -92,32 +93,47 @@ export function getCollections(
   member: RawMember,
   items?: ItemsResource,
 ): CollectionsSection | null {
-  if (!member.collection) return null;
+  const unlocked = member.player_data?.unlocked_coll_tiers;
+  if (!member.collection && !unlocked) return null;
 
   const members = getCoopMembers(profile);
   const counted = members.filter(([, other]) => other.collection);
   // A member with the API off can leave the sum under a tier already unlocked.
-  const unlocked = member.player_data?.unlocked_coll_tiers ?? [];
-  const reached = getUnlockedTiers(unlocked);
+  const reached = getUnlockedTiers(unlocked ?? []);
 
   const categories = COLLECTIONS.map(({ id, name, items: collections }) => ({
     id,
     name,
-    items: collections.map(({ id, name, tiers }) => {
+    items: collections.map(({ id, name, tiers }): CollectionView => {
+      const item = items?.items[id];
+      const texture = item && resourceTexture(item);
+      // Unlocked tiers can go past the resource's last one (Redstone 16 of 9).
+      const unlockedTier = Math.min(reached.get(id) ?? 0, tiers.length);
+
+      // With the Collections API off, only the unlocked tiers come.
+      if (!member.collection) {
+        return {
+          id,
+          name,
+          texture,
+          tier: unlockedTier,
+          maxTier: tiers.length,
+          next: tiers[unlockedTier],
+          members: [],
+        };
+      }
+
       const parts = counted
         .map(([uuid, other]) => ({ uuid, amount: other.collection?.[id] ?? 0 }))
         .filter(({ amount }) => amount > 0)
         .toSorted((a, b) => b.amount - a.amount);
       const amount = add(...parts.map(({ amount }) => amount));
-      // Unlocked tiers can go past the resource's last one (Redstone 16 of 9).
-      const unlockedTier = Math.min(reached.get(id) ?? 0, tiers.length);
       const tier = Math.max(countTiersReached(amount, tiers), unlockedTier);
-      const item = items?.items[id];
 
       return {
         id,
         name,
-        texture: item && resourceTexture(item),
+        texture,
         amount,
         tier,
         maxTier: tiers.length,

@@ -70,6 +70,7 @@ const COUNTERS = [
   "runic_kills",
   "spider_kills",
   "stats_book",
+  "thunder_charge",
   "toxophilite_combat_xp",
   "zombie_kills",
 ] as const;
@@ -186,12 +187,24 @@ export function decodeSlots(blob: RawNbt): Slots {
 
 export function parseItemsResource(raw: RawItemsResource): ItemsResource {
   // The museum keeps an armor set under the set's key, which its pieces name.
-  const museum: Record<string, string> = {};
+  const museum: ItemsResource["museum"] = {};
   for (const { id, museum_data: data } of raw.items) {
     if (!data?.category) continue;
-    if (data.donation_xp !== undefined) museum[id] = data.category;
-    for (const set of Object.keys(data.armor_set_donation_xp ?? {}))
-      museum[set] = data.category;
+
+    const { category, parent } = data;
+    if (data.donation_xp !== undefined) {
+      museum[id] = { category, xp: data.donation_xp, upgrade: parent?.[id] };
+    }
+
+    // Sponge's equipment gives a point less than its armor, with no upgrade.
+    for (const [set, xp] of Object.entries(data.armor_set_donation_xp ?? {})) {
+      const seen = museum[set];
+      museum[set] = {
+        category,
+        xp: Math.max(xp, seen?.xp ?? 0),
+        upgrade: parent?.[set] ?? seen?.upgrade,
+      };
+    }
   }
 
   return {
@@ -302,6 +315,40 @@ if (import.meta.vitest) {
     it("should keep an int and skip anything else", () => {
       expect(nbtNumber(5)).toBe(5);
       expect(nbtNumber("5")).toBeUndefined();
+    });
+  });
+
+  suite("parseItemsResource", () => {
+    it("should keep an armor set's most XP and its upgrade, in either order", () => {
+      const belt = {
+        id: "SPONGE_BELT",
+        name: "",
+        material: "",
+        museum_data: {
+          category: "FISHING",
+          armor_set_donation_xp: { SPONGE: 5 },
+        },
+      };
+      const helmet = {
+        id: "SPONGE_HELMET",
+        name: "",
+        material: "",
+        museum_data: {
+          category: "FISHING",
+          armor_set_donation_xp: { SPONGE: 6 },
+          parent: { SPONGE: "SHARK_SCALE" },
+        },
+      };
+      const sponge = { category: "FISHING", xp: 6, upgrade: "SHARK_SCALE" };
+
+      for (const items of [
+        [belt, helmet],
+        [helmet, belt],
+      ]) {
+        expect(
+          parseItemsResource({ lastUpdated: 0, items }).museum.SPONGE,
+        ).toEqual(sponge);
+      }
     });
   });
 }

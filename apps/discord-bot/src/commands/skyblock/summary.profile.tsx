@@ -9,6 +9,8 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { DateTime } from "luxon";
+import { formatFraction } from "./components/ItemGrid.js";
+import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSummaryProfile = ({
@@ -32,7 +34,15 @@ export const SkyBlockSummaryProfile = ({
   const bank =
     profile.bank === undefined
       ? missing("§6")
-      : { value: t(Math.floor(profile.bank)), color: "§6" };
+      : {
+          value: formatFraction(
+            t,
+            Math.floor(profile.bank),
+            profile.bankLimit,
+            "§6",
+          ),
+          color: "§6",
+        };
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.level"), t(profile.level), profile.levelColor],
@@ -40,12 +50,16 @@ export const SkyBlockSummaryProfile = ({
     [t("skyblock.bank"), bank.value, bank.color],
   ];
 
-  if (profile.personalBank !== undefined)
+  const { personalBank, personalBankLimit } = profile;
+  if (personalBank !== undefined && personalBankLimit !== undefined) {
     sidebar.push([
       t("skyblock.personalBank"),
-      t(Math.floor(profile.personalBank)),
+      formatFraction(t, Math.floor(personalBank), personalBankLimit, "§6"),
       "§6",
     ]);
+  }
+
+  sidebar.push([t("skyblock.bankTier"), prettify(profile.bankTier), "§6"]);
 
   const firstJoin = profile.firstJoin
     ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", {

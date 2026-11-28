@@ -108,6 +108,11 @@ const CONSUMABLES: {
     max: 5,
     getUsed: (member) => member.player_data?.isopod_husks_eaten,
   },
+  {
+    id: "MCGRUBBER_BURGER",
+    max: 5,
+    getUsed: (member) => member.rift?.castle?.grubber_stacks,
+  },
 ];
 
 export type JerryStat =

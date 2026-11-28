@@ -12,6 +12,7 @@ import attributeShards from "./generated/attribute-shards.json" with { type: "js
 import bestiary from "./generated/bestiary.json" with { type: "json" };
 import collections from "./generated/collections.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
+import essenceTextures from "./generated/essence-textures.json" with { type: "json" };
 import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
 import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
@@ -73,6 +74,7 @@ export const SKYBLOCK_XP = sblevels.core_task;
 export const PET_TEXTURES = petTextures as {
   pets: Record<string, Partial<Record<Rarity, string>>>;
   skins: Record<string, string>;
+  skinColors: Record<string, string>;
 };
 
 export const MATERIAL_IDS: Record<string, number | undefined> =
@@ -110,6 +112,8 @@ export const POWERS = powers as Record<
 export const RABBITS = hoppity as Record<string, string[]>;
 
 export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
+
+export const ESSENCE_TEXTURES = essenceTextures as Record<string, string>;
 
 // Trophy fish names by the API's id, uppercased.
 export const TROPHY_FISH = trophyFish as Record<string, string>;

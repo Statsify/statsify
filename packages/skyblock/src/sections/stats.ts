@@ -6,20 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ATTRIBUTE_SHARDS,
-  HOTF_LAYOUT,
-  HOTM_LAYOUT,
-  PET_ITEMS,
-  PET_STATS,
-  POWERS,
-  STAT_TABLES,
-} from "#data";
+import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, STAT_TABLES } from "#data";
 import {
   type ItemView,
   type ItemsResource,
   PLAYER_STATS,
-  type PetView,
   type PlayerStat,
   type Slots,
   type StatTotal,
@@ -36,11 +27,15 @@ import {
   TUNING,
   getHeldAccessories,
   getHighestTiers,
-  getPowerScale,
-  getPowerStats,
+  getSelectedPowerStats,
   readBag,
 } from "./accessories.js";
-import { parsePieceBonuses, parseStatLine, parseStatName } from "#lore";
+import {
+  parsePieceBonuses,
+  parseStatLine,
+  parseStatName,
+  sumStats,
+} from "#lore";
 import { decodeSlots } from "#items";
 import { getAttributeLevel } from "./attributes.js";
 import { getDungeons } from "./dungeons.js";
@@ -84,21 +79,6 @@ export const STAT_SOURCES = [
 
 export type StatSource = (typeof STAT_SOURCES)[number];
 
-function sumStats(all: Iterable<Stats>): Stats {
-  const sum: Stats = {};
-
-  for (const stats of all) {
-    for (const [stat, value] of Object.entries(stats) as [
-      PlayerStat,
-      number,
-    ][]) {
-      sum[stat] = add(sum[stat] ?? 0, value);
-    }
-  }
-
-  return sum;
-}
-
 const sumValues = (values: StatValue[]) =>
   sumStats(values.map(({ stat, value }) => ({ [stat]: value })));
 
@@ -127,107 +107,17 @@ function getLoreStats(items: Slots): Stats {
   return sumValues(values);
 }
 
-// Learned Powers' stats per unit of power scale, from the wiki's Powers page.
-const LEARNED_POWERS: Record<string, Stats> = {
-  fortuitous: {
-    health: 3.35,
-    defense: 1.2,
-    strength: 4.8,
-    crit_chance: 4.35,
-    crit_damage: 4.8,
-  },
-  pretty: {
-    health: 1.65,
-    defense: 1.2,
-    speed: 0.65,
-    strength: 4.8,
-    intelligence: 10.8,
-    crit_chance: 0.475,
-    crit_damage: 1.2,
-  },
-  protected: {
-    health: 11.75,
-    defense: 10.8,
-    strength: 2.4,
-    crit_chance: 0.475,
-    crit_damage: 1.2,
-  },
-  simple: {
-    health: 5.02,
-    defense: 3.6,
-    speed: 1.2,
-    strength: 3.6,
-    intelligence: 5.4,
-    crit_chance: 1.45,
-    crit_damage: 3.6,
-  },
-  warrior: {
-    health: 3.35,
-    defense: 1.2,
-    strength: 8.4,
-    crit_chance: 2.4,
-    crit_damage: 6,
-  },
-  commando: {
-    health: 5.02,
-    defense: 2.4,
-    strength: 8.4,
-    crit_chance: 0.475,
-    crit_damage: 8.4,
-  },
-  disciplined: {
-    health: 5.02,
-    defense: 2.4,
-    strength: 7.2,
-    crit_chance: 1.45,
-    crit_damage: 7.2,
-  },
-  inspired: {
-    health: 1.65,
-    defense: 1.2,
-    strength: 4.8,
-    intelligence: 16.2,
-    crit_chance: 0.95,
-    crit_damage: 3.6,
-  },
-  ominous: {
-    health: 5.02,
-    speed: 0.95,
-    strength: 3.6,
-    intelligence: 6.1,
-    crit_chance: 1.45,
-    crit_damage: 3.6,
-    attack_speed: 0.9,
-  },
-  prepared: {
-    health: 12.4,
-    defense: 11.3,
-    strength: 1.95,
-    crit_chance: 0.4,
-    crit_damage: 0.95,
-  },
-};
+function sumPowerStats(power: string | undefined, accessoryPower: number) {
+  const stats = getSelectedPowerStats(power, accessoryPower);
+  if (!stats) return undefined;
 
-function getSelectedPowerStats(
-  power: string | undefined,
-  accessoryPower: number,
-): Stats | undefined {
-  if (!power) return undefined;
-
-  const stone = POWERS[power];
-  if (stone) {
-    const values: StatValue[] = [];
-
-    for (const { name, value } of getPowerStats(stone, accessoryPower)) {
-      const stat = parseStatName(name);
-      if (stat) values.push({ stat, value });
-    }
-
-    return sumValues(values);
+  const values: StatValue[] = [];
+  for (const { name, value } of stats) {
+    const stat = parseStatName(name);
+    if (stat) values.push({ stat, value });
   }
 
-  const learned = LEARNED_POWERS[power];
-  return learned && scaleStats(learned, getPowerScale(accessoryPower));
+  return sumValues(values);
 }
 
 const getTuningStats = (points: Record<string, number>) =>
@@ -239,33 +129,6 @@ const getTuningStats = (points: Record<string, number>) =>
         return { [stat]: count * perPoint };
       }),
   );
-
-function getPetStats(pet: PetView | undefined): Stats | undefined {
-  if (!pet) return undefined;
-
-  const table = PET_STATS[pet.type]?.[pet.rarity];
-  const item = pet.heldItem ? PET_ITEMS[pet.heldItem] : undefined;
-  const [from, to] = table?.levels ?? [1, 100];
-  const progress = (Math.min(pet.level.level, to) - from) / (to - from);
-
-  // A dragon below its table's first level is an egg with no stats.
-  const keys =
-    pet.level.level < from
-      ? []
-      : Object.keys({ ...table?.first, ...table?.last });
-
-  const own = keys.map((key) => {
-    const stat = key as PlayerStat;
-    const first = table?.first[stat] ?? 0;
-    const last = table?.last[stat] ?? 0;
-    const percent = (item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0);
-    return {
-      [stat]: (first + (last - first) * progress) * (1 + percent / 100),
-    };
-  });
-
-  return sumStats([...own, item?.stats ?? {}]);
-}
 
 // Only the essence perks that count everywhere, per level.
 const ESSENCE_PERKS: Record<string, Stats> = {
@@ -471,7 +334,7 @@ export function getStats(
   const bag = readBag(member, items);
   const storage = member.accessory_bag_storage;
   const power = bag
-    ? getSelectedPowerStats(storage?.selected_power, bag.accessoryPower)
+    ? sumPowerStats(storage?.selected_power, bag.accessoryPower)
     : undefined;
   const tuning = getTuningStats(storage?.tuning?.slot_0 ?? {});
   const inventoryItems = inventory?.inv_contents
@@ -539,7 +402,7 @@ export function getStats(
       slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])]),
     ),
     slayerTiers: { combat_wisdom: slayerTiers },
-    pet: getPetStats(pets.active),
+    pet: pets.activeStats,
     petScore: { magic_find: getPetScoreMagicFind(pets.score) },
     essence,
     hotm: getTreeStats(getHotm(member).nodes, HOTM_LAYOUT),

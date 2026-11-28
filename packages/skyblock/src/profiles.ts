@@ -9,6 +9,8 @@
 import { LEVELING } from "#data";
 import { toSkyBlockLevel } from "#leveling";
 import {
+  BANK_TIERS,
+  type BankTier,
   type Freshness,
   type GameMode,
   PLAYER_CLAIMS,
@@ -80,6 +82,30 @@ function getLevelColor(level: number) {
   return bracket.code;
 }
 
+// A co-op member's personal bank holds a fifth of the co-op bank's limit.
+const BANK_LIMITS: Record<BankTier, number> = {
+  STARTER: 50e6,
+  GOLD: 100e6,
+  DELUXE: 250e6,
+  SUPER_DELUXE: 500e6,
+  PREMIER: 1e9,
+  LUXURIOUS: 6e9,
+  PALATIAL: 60e9,
+};
+
+// The members' tasks can disagree, so the highest tier any member has counts.
+function getBankTier(profile: RawProfile): BankTier {
+  const tasks = new Set<string>();
+  for (const member of Object.values(profile.members)) {
+    for (const task of member.leveling?.completed_tasks ?? []) tasks.add(task);
+  }
+
+  return (
+    BANK_TIERS.findLast((tier) => tasks.has(`BANK_UPGRADE_${tier}`)) ??
+    "STARTER"
+  );
+}
+
 export function toProfileSummary(
   profile: RawProfile,
   uuid: string,
@@ -88,6 +114,9 @@ export function toProfileSummary(
   const xp = member.leveling?.experience ?? 0;
   const { level } = toSkyBlockLevel(xp);
   const gameMode = getGameMode(profile);
+  const bankTier = getBankTier(profile);
+  const bankLimit = BANK_LIMITS[bankTier];
+  const personalBank = member.profile?.bank_account;
 
   return {
     id: profile.profile_id,
@@ -106,7 +135,10 @@ export function toProfileSummary(
     newProfile: isNew(member),
     purse: member.currencies?.coin_purse ?? 0,
     bank: profile.banking?.balance,
-    personalBank: member.profile?.bank_account,
+    bankTier,
+    bankLimit,
+    personalBank,
+    personalBankLimit: personalBank === undefined ? undefined : bankLimit / 5,
     firstJoin: member.profile?.first_join,
     fairySouls: member.fairy_soul?.total_collected ?? 0,
     // Stranded and Bingo islands hold fewer souls, and nothing says how many.

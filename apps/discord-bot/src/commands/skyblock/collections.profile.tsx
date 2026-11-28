@@ -50,6 +50,7 @@ export const SkyBlockCollectionsProfile = ({
 }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
   const items = getCategoryItems(collections, category);
+  const tiersOnly = items.some(({ amount }) => amount === undefined);
 
   const sidebar: SidebarItem[] = collections
     ? [
@@ -68,13 +69,18 @@ export const SkyBlockCollectionsProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
+      {tiersOnly ? <Empty text={t("skyblock.collectionTiersOnly")} /> : <></>}
       {collections ? (
         <ItemGrid
-          items={items.map(({ texture, name, amount, tier, maxTier }) => ({
-            texture,
-            name: `§f${name}`,
-            value: `§b${t(amount)} ${formatProgress(t, tier, maxTier)}`,
-          }))}
+          items={items.map(({ texture, name, amount, tier, maxTier }) => {
+            const progress = formatProgress(t, tier, maxTier);
+            return {
+              texture,
+              name: `§f${name}`,
+              value:
+                amount === undefined ? progress : `§b${t(amount)} ${progress}`,
+            };
+          })}
           icons={icons}
           columns={3}
           stacked

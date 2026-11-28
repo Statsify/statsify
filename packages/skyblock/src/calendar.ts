@@ -57,13 +57,66 @@ const EVENTS = [
   { key: "travelingZoo", month: 3, day: 1, days: 3 },
   { key: "electionOpens", month: 5, day: 27, days: 1 },
   { key: "harvestFeast", month: 6, day: 1, days: 93 },
+  { key: "spookyFishing", month: 7, day: 26, days: 9 },
   { key: "spookyFestival", month: 7, day: 29, days: 3 },
   { key: "travelingZoo", month: 9, day: 1, days: 3 },
+  { key: "jerrysWorkshop", month: 11, day: 1, days: 31 },
   { key: "seasonOfJerry", month: 11, day: 24, days: 3 },
   { key: "newYear", month: 11, day: 29, days: 3 },
 ] as const;
 
-export type SkyBlockEvent = (typeof EVENTS)[number]["key"];
+// A cycle starts `at` days into each `every` days, counted from the epoch.
+interface Cycle {
+  every: number;
+  at: number[];
+  days: number;
+}
+
+const getYearCycle = (year: number, every: number): Cycle => ({
+  every: every * YEAR_DAYS,
+  at: [((year - 1) % every) * YEAR_DAYS],
+  days: YEAR_DAYS,
+});
+
+const CYCLES = {
+  darkAuction: { every: 3, at: [0], days: 0 },
+  jacobsContest: { every: 3, at: [1], days: 1 },
+  cult: { every: MONTH_DAYS, at: [6, 13, 20, 27], days: 0.25 },
+  bankInterest: { every: 3 * MONTH_DAYS, at: [0], days: 0 },
+  yearOfTheSeal: getYearCycle(402, 12),
+  yearOfThePig: getYearCycle(407, 12),
+  yearOfTheWitch: getYearCycle(476, 12),
+  century: getYearCycle(100, 100),
+} satisfies Record<string, Cycle>;
+
+const getDayOfYear = (month: number, day: number) =>
+  month * MONTH_DAYS + day - 1;
+
+const TERM: Cycle = {
+  every: YEAR_DAYS,
+  at: [getDayOfYear(ELECTION_END.month, ELECTION_END.day)],
+  days: YEAR_DAYS,
+};
+
+// Foxy's Extra Event and Diaz's Stock Exchange have no set time.
+const PERK_EVENTS = {
+  fishingFestival: {
+    perk: "Fishing Festival",
+    every: MONTH_DAYS,
+    at: [0],
+    days: 3,
+  },
+  miningFiesta: { perk: "Mining Fiesta", ...TERM },
+  mythologicalRitual: { perk: "Mythological Ritual", ...TERM },
+  carnival: { perk: "Chivalrous Carnival", ...TERM },
+} satisfies Record<string, Cycle & { perk: string }>;
+
+type PerkEvent = keyof typeof PERK_EVENTS;
+
+export type SkyBlockEvent =
+  | (typeof EVENTS)[number]["key"]
+  | keyof typeof CYCLES
+  | PerkEvent;
 
 export interface EventTime {
   key: SkyBlockEvent;
@@ -80,29 +133,64 @@ export function getTerm(mayor: MayorView | undefined, time: number) {
   return end > time ? { start, end } : undefined;
 }
 
+// The events that start within a year, with a term's perk events to its end.
 export function getNextEvents(time: number, mayor?: MayorView): EventTime[] {
-  const { year } = toSkyBlockDate(time);
+  const now = (time - EPOCH_MS) / DAY_MS;
   const term = getTerm(mayor, time);
 
-  const perks = mayor ? [...mayor.mayor.perks] : [];
-  if (mayor?.minister) perks.push(mayor.minister.perk);
+  const perks = mayor && term ? [...mayor.mayor.perks] : [];
+  if (mayor?.minister && term) perks.push(mayor.minister.perk);
+
+  const perkEvents: PerkEvent[] = [];
+  for (const { name } of perks) {
+    const entry = Object.entries(PERK_EVENTS).find(
+      ([, event]) => event.perk === name,
+    );
+    if (entry) perkEvents.push(entry[0] as PerkEvent);
+  }
 
   // Finnegan's Grand Feast perk runs the Harvest Feast for his whole term.
-  const grandFeast = perks.some(({ name }) => name === "Grand Feast")
-    ? term
-    : undefined;
+  const grandFeast = perks.some(({ name }) => name === "Grand Feast");
 
-  return EVENTS.map(({ key, month, day, days }) => {
-    if (key === "harvestFeast" && grandFeast) return { key, ...grandFeast };
-    const start = [year, year + 1]
-      .map((at) => getDayStart({ year: at, month, day }))
-      .find((start) => start + days * DAY_MS > time)!;
-    return { key, start, end: start + days * DAY_MS };
-  }).toSorted((a, b) => a.start - b.start);
+  const cycles: (Cycle & { key: SkyBlockEvent })[] = [
+    ...EVENTS.map(({ key, month, day, days }) =>
+      key === "harvestFeast" && grandFeast
+        ? { key, ...TERM }
+        : { key, every: YEAR_DAYS, at: [getDayOfYear(month, day)], days },
+    ),
+    ...Object.entries(CYCLES).map(([key, cycle]) => ({
+      key: key as keyof typeof CYCLES,
+      ...cycle,
+    })),
+    ...perkEvents.map((key) => ({ key, ...PERK_EVENTS[key] })),
+  ];
+
+  const yearEnd = time + YEAR_DAYS * DAY_MS;
+  return cycles
+    .map(({ key, every, at, days }) => {
+      const starts = at.map(
+        (offset) =>
+          offset + every * (Math.floor((now - offset - days) / every) + 1),
+      );
+      const start = Math.min(...starts);
+      return {
+        key,
+        start: EPOCH_MS + start * DAY_MS,
+        end: EPOCH_MS + (start + days) * DAY_MS,
+      };
+    })
+    .filter(({ key, start }) => {
+      const isPerkEvent = perkEvents.includes(key as PerkEvent);
+      return start < (term && isPerkEvent ? term.end : yearEnd);
+    })
+    .toSorted((a, b) => a.start - b.start);
 }
 
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
+
+  const findAt = (key: SkyBlockEvent, time: number, mayor?: MayorView) =>
+    getNextEvents(time, mayor).find((event) => event.key === key)?.start;
 
   suite("toSkyBlockDate", () => {
     it("should count 20-minute days, 31-day months and 12-month years", () => {
@@ -131,13 +219,12 @@ if (import.meta.vitest) {
       getNextEvents(zoo).find((event) => event.key === key)?.start;
 
     it("should put an event on now first", () => {
-      const [first, second] = getNextEvents(zoo);
+      const [first] = getNextEvents(zoo);
       expect(first).toEqual({
         key: "travelingZoo",
         start: getDayStart({ year: 10, month: 3, day: 1 }),
         end: getDayStart({ year: 10, month: 3, day: 4 }),
       });
-      expect(second.key).toBe("electionOpens");
     });
 
     it("should move a past event to next year", () => {
@@ -168,6 +255,39 @@ if (import.meta.vitest) {
       expect(getFeast(getDayStart({ year: 10, month: 3, day: 1 }))?.start).toBe(
         getDayStart({ year: 10, month: 6, day: 1 }),
       );
+    });
+
+    it("should repeat the other cycles and list a 12-year event within a year of it", () => {
+      const spring8 = getDayStart({ year: 10, month: 0, day: 8 });
+      const marina = {
+        mayor: {
+          name: "Marina",
+          perks: [{ name: "Fishing Festival", description: "" }],
+        },
+        term: 9,
+      };
+      expect(findAt("darkAuction", spring8)).toBe(
+        getDayStart({ year: 10, month: 0, day: 10 }),
+      );
+      expect(findAt("cult", spring8)).toBe(
+        getDayStart({ year: 10, month: 0, day: 14 }),
+      );
+      expect(findAt("fishingFestival", spring8, marina)).toBe(
+        getDayStart({ year: 10, month: 1, day: 1 }),
+      );
+      expect(
+        findAt(
+          "fishingFestival",
+          getDayStart({ year: 10, month: 2, day: 5 }),
+          marina,
+        ),
+      ).toBeUndefined();
+      expect(
+        findAt("yearOfTheSeal", getDayStart({ year: 401, month: 1, day: 1 })),
+      ).toBe(getDayStart({ year: 402, month: 0, day: 1 }));
+      expect(
+        findAt("yearOfTheSeal", getDayStart({ year: 400, month: 11, day: 31 })),
+      ).toBeUndefined();
     });
   });
 }

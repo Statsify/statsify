@@ -23,6 +23,13 @@ export const formatProgress = (
   max: number,
 ) => `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
 
+export const formatFraction = (
+  t: LocalizeFunction,
+  value: number,
+  max: number,
+  color: string,
+) => `${t(value)}§7/${color}${t(max)}`;
+
 interface GridRowsOptions {
   spreadLastRow?: boolean;
 }

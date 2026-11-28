@@ -1611,10 +1611,10 @@
           "cap": 1000,
           "ids": [
             "minos_hunter_15",
+            "minos_hunter_25",
             "minos_hunter_60",
             "minos_hunter_125",
             "minos_hunter_200",
-            "minos_hunter_25",
             "minos_hunter_80"
           ],
           "name": "Minos Hunter"
@@ -1644,10 +1644,10 @@
           "ids": [
             "siamese_lynx_15",
             "siamese_lynx_25",
+            "siamese_lynx_55",
             "siamese_lynx_85",
             "siamese_lynx_155",
-            "siamese_lynx_200",
-            "siamese_lynx_55"
+            "siamese_lynx_200"
           ],
           "name": "Siamese Lynx"
         },
@@ -1655,10 +1655,10 @@
           "bracket": "5",
           "cap": 1000,
           "ids": [
-            "cretan_bull_150",
-            "cretan_bull_250",
             "cretan_bull_40",
             "cretan_bull_70",
+            "cretan_bull_150",
+            "cretan_bull_250",
             "cretan_bull_95"
           ],
           "name": "Cretan Bull"
@@ -1703,10 +1703,10 @@
           "bracket": "5",
           "cap": 1000,
           "ids": [
-            "stranded_nymph_150",
-            "stranded_nymph_250",
             "stranded_nymph_40",
             "stranded_nymph_70",
+            "stranded_nymph_150",
+            "stranded_nymph_250",
             "stranded_nymph_95"
           ],
           "name": "Stranded Nymph"

@@ -15,7 +15,7 @@ import {
   parseItems,
   setItems,
 } from "skyhelper-networth";
-import { PET_STATS, getPetName } from "#data";
+import { ESSENCE_TEXTURES, PET_STATS, getPetName } from "#data";
 import {
   type InventoryValues,
   type ItemTexture,
@@ -54,10 +54,6 @@ import {
 
 const TOP_ITEMS = 10;
 
-// Every essence type draws Wither Essence's head.
-const ESSENCE_HEAD =
-  "c4db4adfa9bf48ff5d41707ae34ea78bd2371659fcd8cd8934749af4cce9b";
-
 // Sacks and essence come back with neither item nor petData.
 type Priced = Omit<Item, "item"> & { item?: RawItem; petData?: RawPet };
 
@@ -90,7 +86,9 @@ function getPricedTexture(
     return getPetTexture(petData.type, rarity, { skin: petData.skin, items });
   }
 
-  if (id.startsWith("ESSENCE_")) return { kind: "head", skin: ESSENCE_HEAD };
+  if (Object.hasOwn(ESSENCE_TEXTURES, id)) {
+    return { kind: "head", skin: ESSENCE_TEXTURES[id] };
+  }
 
   // Runes of one tier, like RUNE_LIGHTNING_1, have no items resource id.
   const rune = id.startsWith("RUNE_") ? items.items.RUNE : undefined;

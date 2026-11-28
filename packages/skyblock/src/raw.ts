@@ -132,7 +132,11 @@ export interface RawMember {
     bank_account?: number;
     first_join?: number;
   };
-  leveling?: { experience?: number; highest_pet_score?: number };
+  leveling?: {
+    experience?: number;
+    highest_pet_score?: number;
+    completed_tasks?: string[];
+  };
   currencies?: {
     coin_purse?: number;
     motes_purse?: number;
@@ -334,6 +338,7 @@ export interface RawMember {
   };
   rift?: {
     access?: { consumed_prism?: boolean };
+    castle?: { grubber_stacks?: number };
     dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
     enigma?: { found_souls?: string[] };
     gallery?: { secured_trophies?: unknown[] };
@@ -447,6 +452,8 @@ export interface RawResourceItem {
     category?: string;
     donation_xp?: number;
     armor_set_donation_xp?: Record<string, number>;
+    // parent maps a museum key to its upgrade.
+    parent?: Record<string, string>;
   };
 }
 

@@ -326,184 +326,244 @@
     ],
     "combat": [
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.1
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.2
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.3
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.4
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       },
       {
-        "crit_chance": 0.5
+        "crit_chance": 0.5,
+        "magic_find": 0.5
       }
     ],
     "enchanting": [

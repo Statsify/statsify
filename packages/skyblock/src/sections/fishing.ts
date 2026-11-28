@@ -8,7 +8,8 @@
 
 import { SEA_CREATURES, TROPHY_FISH } from "#data";
 import { add } from "@statsify/math";
-import type { FishingSection, TrophyFish } from "#types";
+import { prettify } from "@statsify/util";
+import type { FishingSection, TrophyFish, TrophyFrog } from "#types";
 import type { RawMember } from "#raw";
 
 export const TROPHY_TIERS = ["bronze", "silver", "gold", "diamond"] as const;
@@ -33,6 +34,22 @@ export const TROPHY_HUNTER_RANKS = [
 
 export type TrophyHunterRank = (typeof TROPHY_HUNTER_RANKS)[number];
 
+// Hypixel keeps only each tier's first catch, as a TROPHY_<FROG>_<TIER> task.
+const TROPHY_FROGS = [
+  "COMMON_FROG",
+  "WETLANDS_FROG",
+  "BULLFROG",
+  "REALITY_HOPPER",
+  "BLESSED_FROG",
+  "CAVE_FROG",
+  "HIGHLANDS_FROG",
+  "SEA_FROG",
+  "TREE_FROG",
+  "LEAP_FROG",
+  "EXPLODING_FROG",
+  "PUDDLE_JUMPER",
+] as const;
+
 // Odger's rewards list the ranks claimed from 1, and a stray 99 isn't one.
 function getTrophyHunter(rewards: number[] = []) {
   const ranks = rewards.filter((rank) => rank <= TROPHY_HUNTER_RANKS.length);
@@ -44,6 +61,7 @@ export function getFishing(member: RawMember): FishingSection | null {
   const caught = (key: string) => Number(trophy[key] ?? 0);
   const fished = member.player_stats?.items_fished ?? {};
   const kills = member.bestiary?.kills ?? {};
+  const tasks = new Set(member.leveling?.completed_tasks);
 
   // Hypixel can send both with every count at 0.
   if (!fished.total && !caught("total_caught")) return null;
@@ -67,6 +85,17 @@ export function getFishing(member: RawMember): FishingSection | null {
       ) as TrophyFish["tiers"],
     })),
     trophyFishCaught: caught("total_caught"),
+    trophyFrogs: TROPHY_FROGS.map((id) => ({
+      id,
+      name: prettify(id),
+      tiers: Object.fromEntries(
+        TROPHY_TIERS.map((tier) => [
+          tier,
+          tasks.has(`TROPHY_${id}_${tier.toUpperCase()}`),
+        ]),
+      ) as TrophyFrog["tiers"],
+    })),
+    trophyFrogsCaught: fished.trophy_frog,
     itemsFished: {
       total: fished.total ?? 0,
       normal: fished.normal ?? 0,

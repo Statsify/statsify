@@ -10,24 +10,32 @@ import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, formatPriceAge } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  formatFraction,
+  formatPriceAge,
+} from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
-import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
+import { StatLines } from "./components/StatLines.js";
+import { prettify, removeFormatting } from "@statsify/util";
 import type {
   InactiveAccessory,
   MemberView,
-  PowerStat,
+  MissingAccessory,
 } from "@statsify/skyblock";
-import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
-// More power stats on a line would make the card wider.
-const MAX_POWER_STATS_PER_LINE = 3;
 
+// In-place steps have no price, so they get a grid of their own.
 const getTopMissing = ({ accessories }: MemberView) =>
-  accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
+  accessories?.missing
+    .filter(({ nextTier }) => !nextTier)
+    .slice(0, MISSING_SHOWN) ?? [];
+
+const getNextTiers = ({ accessories }: MemberView) =>
+  accessories?.missing.filter(({ nextTier }) => nextTier) ?? [];
 
 function getBaseName({ name, reforge }: InactiveAccessory) {
   const plain = removeFormatting(name);
@@ -64,35 +72,11 @@ interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
 export const getAccessoryIcons =
   (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) => {
     const shown =
-      page === "missing" ? getTopMissing(member) : topInactive(member);
+      page === "missing"
+        ? [...getNextTiers(member), ...getTopMissing(member)]
+        : topInactive(member);
     return shown.map(({ texture }) => texture);
   };
-
-interface PowerStatsProps {
-  power: string;
-  stats: PowerStat[];
-  t: LocalizeFunction;
-}
-
-const PowerStats = ({ power, stats, t }: PowerStatsProps) => {
-  const label = `§7${t("skyblock.powerStats", { power: prettify(power) })}:`;
-  const lineCount = Math.ceil(stats.length / MAX_POWER_STATS_PER_LINE);
-  const lines = arrayGroup(
-    stats.map(
-      ({ name, color, value }) =>
-        `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`,
-    ),
-    Math.ceil(stats.length / lineCount),
-  );
-
-  return (
-    <box width="100%" direction="column">
-      {lines.map((line, index) => (
-        <text>{(index === 0 ? [label, ...line] : line).join(" ")}</text>
-      ))}
-    </box>
-  );
-};
 
 export const SkyBlockAccessoriesProfile = ({
   profile,
@@ -125,9 +109,19 @@ export const SkyBlockAccessoriesProfile = ({
         : t("skyblock.none"),
       "§e",
     ],
-    [t("skyblock.accessories"), t(accessories.active.length), "§a"],
-    [t("skyblock.missing"), t(accessories.missing.length), "§c"],
+    [
+      t("skyblock.accessories"),
+      formatFraction(t, accessories.unique, accessories.chains, "§a"),
+      "§a",
+    ],
+    [
+      t("skyblock.missing"),
+      t(accessories.missing.filter(({ nextTier }) => !nextTier).length),
+      "§c",
+    ],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
+    [t("skyblock.unenriched"), t(accessories.unenriched), "§c"],
+    [t("skyblock.recombobulated"), t(accessories.recombobulated), "§d"],
     [
       t("skyblock.tuningPoints"),
       accessories.tuningTotal === undefined
@@ -167,29 +161,35 @@ export const SkyBlockAccessoriesProfile = ({
   const stacked =
     accessories.market || shown.some(({ outsideBag }) => outsideBag);
 
-  const missing = shown.map(
-    ({
-      name,
-      rarity,
-      accessoryPower,
-      outsideBag,
-      cost,
-      coinsPerAccessoryPower,
-      texture,
-    }) => {
-      const ap = t(accessoryPower);
-      const price =
-        cost && coinsPerAccessoryPower !== undefined
-          ? `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})`
-          : `§c${t("skyblock.noBinListing")}`;
+  const toEntry = (step: MissingAccessory) => {
+    const { name, rarity, accessoryPower, cost, coinsPerAccessoryPower } = step;
+    const ap = t(accessoryPower);
+    const gain = `§d${t("skyblock.apGain", { ap })}`;
+    const price =
+      cost && coinsPerAccessoryPower !== undefined
+        ? `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})`
+        : `§c${t("skyblock.noBinListing")}`;
 
-      let value = `§d${t("skyblock.apGain", { ap })} §8• ${price}`;
-      if (outsideBag) value = `§d${t("skyblock.apOnceInBag", { ap })}`;
-      else if (!accessories.market) value = `§d${t("skyblock.apGain", { ap })}`;
+    let value = `${gain} §8• ${price}`;
+    if (step.outsideBag) {
+      value = `§d${t("skyblock.apOnceInBag", { ap })}`;
+    } else if (step.nextTier) {
+      const { unit, has, at } = step.nextTier;
+      const progress = t(`skyblock.tierProgress.${unit}`, {
+        has: t(has),
+        at: t(at),
+      });
+      value = `${gain} §8• §7${progress}`;
+    } else if (!accessories.market) {
+      value = gain;
+    }
 
-      return { texture, name: `${RARITY_COLORS[rarity]}${name}`, value };
-    },
-  );
+    const shownName = `${RARITY_COLORS[rarity]}${name}`;
+    return { texture: step.texture, name: shownName, value };
+  };
+
+  const missing = shown.map(toEntry);
+  const nextTiers = getNextTiers(profile.member).map(toEntry);
 
   const footnote = accessories.market
     ? formatPriceAge(t, accessories.pricesAsOf)
@@ -198,11 +198,23 @@ export const SkyBlockAccessoriesProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {accessories.selectedPower && accessories.powerStats ? (
-        <PowerStats
-          power={accessories.selectedPower}
+        <StatLines
+          label={t("skyblock.powerStats", {
+            power: prettify(accessories.selectedPower),
+          })}
           stats={accessories.powerStats}
           t={t}
         />
+      ) : (
+        <></>
+      )}
+      {nextTiers.length > 0 ? (
+        <>
+          <box width="100%">
+            <text>{`§l${t("skyblock.nextTiers")}`}</text>
+          </box>
+          <ItemGrid items={nextTiers} icons={icons} stacked spreadLastRow />
+        </>
       ) : (
         <></>
       )}

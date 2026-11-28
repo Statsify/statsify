@@ -6,8 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PLAYER_STATS, type PlayerStat, type StatValue } from "#types";
+import {
+  PLAYER_STATS,
+  type PlayerStat,
+  type StatValue,
+  type Stats,
+} from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
+import { add } from "@statsify/math";
 
 // The 1.8 font lacks the pack's stat glyphs, so each maps to its old symbol.
 const STAT_GLYPHS: Record<string, [glyph: string, symbol: string]> = {
@@ -96,6 +102,21 @@ for (const stat of PLAYER_STATS) {
 }
 
 export const parseStatName = (name: string) => STAT_NAMES.get(name);
+
+export function sumStats(all: Iterable<Stats>): Stats {
+  const sum: Stats = {};
+
+  for (const stats of all) {
+    for (const [stat, value] of Object.entries(stats) as [
+      PlayerStat,
+      number,
+    ][]) {
+      sum[stat] = add(sum[stat] ?? 0, value);
+    }
+  }
+
+  return sum;
+}
 
 const parseAmount = (text: string) => Number(text.replaceAll(",", ""));
 

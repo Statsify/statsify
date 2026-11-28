@@ -9,7 +9,12 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, getGridRows } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  formatFraction,
+  getGridRows,
+} from "./components/ItemGrid.js";
+import { MUSEUM_MILESTONES } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type {
   GearSection,
@@ -110,12 +115,22 @@ export const SkyBlockMuseumProfile = ({
       t(museum.appraisal ? "skyblock.yes" : "skyblock.no"),
       museum.appraisal ? "§a" : "§c",
     ],
+    [
+      t("skyblock.museumXp"),
+      formatFraction(t, museum.xp, museum.maxXp, "§b"),
+      "§b",
+    ],
+    [
+      t("skyblock.museumMilestone"),
+      formatFraction(t, museum.milestone, MUSEUM_MILESTONES, "§e"),
+      "§e",
+    ],
   ];
 
-  const categories = museum.donated.map(({ category, count }) => (
+  const categories = museum.donated.map(({ category, count, total }) => (
     <Table.td
       title={prettify(category)}
-      value={t(count)}
+      value={formatFraction(t, count, total, "§a")}
       color="§a"
       size="small"
     />

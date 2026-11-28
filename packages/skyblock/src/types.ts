@@ -95,6 +95,20 @@ export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
 
+export const BANK_TIERS = [
+  "STARTER",
+  "GOLD",
+  "DELUXE",
+  "SUPER_DELUXE",
+  "PREMIER",
+  "LUXURIOUS",
+  "PALATIAL",
+] as const;
+
+export type BankTier = (typeof BANK_TIERS)[number];
+
+export const MUSEUM_MILESTONES = 25;
+
 export interface ProfileSummary {
   id: string;
   cuteName: string;
@@ -113,7 +127,11 @@ export interface ProfileSummary {
   newProfile: boolean;
   purse: number;
   bank?: number;
+  // The bank tier is the highest any member has.
+  bankTier: BankTier;
+  bankLimit: number;
   personalBank?: number;
+  personalBankLimit?: number;
   firstJoin?: number;
   fairySouls: number;
   // Stranded and Bingo profiles have no fairy soul cap.
@@ -263,8 +281,21 @@ export interface MuseumView {
   // An id is an item or an armor set.
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[];
   special: { donatedAt?: number; items: Slots }[];
-  // Categories sort by the most donated first.
-  donated: { category: string; count: number }[];
+  // Every category is listed, most donated first.
+  donated: MuseumCategory[];
+  xp: number;
+  // maxXp is what every key in the items resource pays.
+  maxXp: number;
+  milestone: number;
+}
+
+// An item counts as donated once it or an upgrade up its chain is.
+export interface MuseumCategory {
+  category: string;
+  count: number;
+  total: number;
+  xp: number;
+  maxXp: number;
 }
 
 export interface ApiSettings {
@@ -467,6 +498,9 @@ export interface KuudraTier {
 export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
+  trophyFrogs: TrophyFrog[];
+  // Some saves with frogs caught don't have this count.
+  trophyFrogsCaught?: number;
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   // Sea creatures sort by the most kills first.
@@ -479,6 +513,13 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
+}
+
+export interface TrophyFrog {
+  id: string;
+  name: string;
+  // A tier is true once it's caught at least once.
+  tiers: Record<TrophyTier, boolean>;
 }
 
 export interface JacobSection {
@@ -542,7 +583,8 @@ export interface CollectionView {
   id: string;
   name: string;
   texture?: ItemTexture;
-  amount: number;
+  // The amount is missing with the Collections API off.
+  amount?: number;
   tier: number;
   maxTier: number;
   // next is the amount the next tier needs.
@@ -934,6 +976,8 @@ export interface Consumable {
   max: number;
 }
 
+export const PET_SKIN_PREFIX = "PET_SKIN_";
+
 export interface PetsSection {
   score: number;
   active?: PetView;
@@ -941,6 +985,8 @@ export interface PetsSection {
   totalXp: number;
   skinned: number;
   candyUsed: number;
+  // activeStats count the held item, as the stat totals do.
+  activeStats?: Stats;
 }
 
 export interface PetView {
@@ -953,6 +999,8 @@ export interface PetView {
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
+  // skinColor is the color of the ✦ after a skinned pet's name.
+  skinColor?: string;
   candyUsed: number;
   active: boolean;
   texture: ItemTexture;
@@ -1002,13 +1050,21 @@ export interface MissingAccessory {
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
+  // nextTier is set for an in-place upgrade.
+  nextTier?: { unit: TierUnit; has: number; at: number };
 }
+
+export type TierUnit =
+  | "level"
+  | "milestone"
+  | "charges"
+  | "perfectGems"
+  | "runicKills";
 
 export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  // Only a Power learned from a stone has these.
   powerStats?: PowerStat[];
   tuning: Record<string, number>;
   tuningPoints: number;
@@ -1018,6 +1074,10 @@ export interface AccessoriesSection {
   // Only Legendary and higher accessories can take an enrichment.
   unenriched: number;
   recombobulated: number;
+  // unique counts one per chain, and a consumed Rift Prism.
+  unique: number;
+  // chains counts the chains in the items resource.
+  chains: number;
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
@@ -1131,8 +1191,8 @@ export type ItemTexture =
 // The API keeps this to itself and never sends it to clients.
 export interface ItemsResource {
   lastUpdated: number;
-  // The museum maps each item or armor set to its category.
-  museum: Record<string, string>;
+  // An item or armor set → its museum entry.
+  museum: Record<string, { category: string; xp: number; upgrade?: string }>;
   items: Record<
     string,
     {
