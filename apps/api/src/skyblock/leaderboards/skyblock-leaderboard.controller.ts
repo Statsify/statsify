@@ -6,10 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
-import { ErrorResponse, LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
+import {
+  ErrorResponse,
+  LeaderboardQuery,
+  PostLeaderboardResponse,
+} from "@statsify/api-client";
 import { SkyBlockLeaderboardDto } from "#dtos";
 import { SkyBlockLeaderboardService } from "./skyblock-leaderboard.service.js";
 import { SkyBlockStats } from "@statsify/schemas";
@@ -17,14 +26,21 @@ import { SkyBlockStats } from "@statsify/schemas";
 @Controller("/skyblock/leaderboards")
 @ApiTags("SkyBlock")
 export class SkyBlockLeaderboardController {
-  public constructor(private readonly skyblockLeaderboardService: SkyBlockLeaderboardService) {}
+  public constructor(
+    private readonly skyblockLeaderboardService: SkyBlockLeaderboardService,
+  ) {}
 
   @Post()
-  @ApiOperation({ summary: "Get a SkyBlock Leaderboard", description: "One row per member of a profile." })
+  @ApiOperation({
+    summary: "Get a SkyBlock Leaderboard",
+    description: "One row per member of a profile.",
+  })
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.WORKER, weight: 3 })
-  public getSkyBlockLeaderboard(@Body() { field, page, player, position }: SkyBlockLeaderboardDto) {
+  public getSkyBlockLeaderboard(
+    @Body() { field, page, player, position }: SkyBlockLeaderboardDto,
+  ) {
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -39,6 +55,11 @@ export class SkyBlockLeaderboardController {
       type = LeaderboardQuery.PAGE;
     }
 
-    return this.skyblockLeaderboardService.getLeaderboard(SkyBlockStats, field, input, type);
+    return this.skyblockLeaderboardService.getLeaderboard(
+      SkyBlockStats,
+      field,
+      input,
+      type,
+    );
   }
 }

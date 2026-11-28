@@ -8,173 +8,276 @@
 
 import {
   type Bazaar,
-  type ItemMatch,
   type ItemsResource,
   type MayorView,
   type PriceMap,
   type PriceView,
-  RawBazaar,
-  RawElection,
-  RawItemsResource,
+  type RawItemsResource,
   describeKey,
-  labelVariants,
   parseBazaar,
   parseItemsResource,
   toMayorView,
   toPriceView,
 } from "@statsify/skyblock";
-import { HypixelService, SKYBLOCK_TIMEOUT } from "#hypixel";
+import {
+  HypixelService,
+  HypixelUnavailableError,
+  SKYBLOCK_TIMEOUT,
+} from "#hypixel";
 import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
-import { SkyBlockNotFoundException, SkyBlockUnavailableException } from "@statsify/api-client";
-import { Singleflight } from "./singleflight.js";
+import {
+  SkyBlockNotFoundException,
+  SkyBlockUnavailableException,
+} from "@statsify/api-client";
+import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { Worker } from "node:worker_threads";
-import { arrayGroup, config } from "@statsify/util";
-import { termOf } from "@statsify/skyblock/display";
-import { unzip, zip } from "./zip.js";
-import type { RebuildRequest, RebuildResult } from "./skyblock-prices.worker.js";
+import { getTerm } from "@statsify/skyblock/display";
+import { gunzipJson, gzipJson } from "./zip.js";
+import type {
+  RebuildRequest,
+  RebuildResult,
+} from "./skyblock-prices.worker.js";
 
 const PRICES_KEY = "skyblock:prices";
 const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
 const ELECTION_KEY = "skyblock:resource:election";
-const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
-// Discord's cap on autocomplete choices
-const MAX_MATCHES = 25;
 
-const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
-const BAZAAR_REFRESH = 60_000;
-const ITEMS_REFRESH = 12 * 60 * 60_000;
-const ELECTION_REFRESH = 30 * 60_000;
-/** How long a failed refetch serves the stored copy, or nothing, before Hypixel is tried again. */
-export const SKYBLOCK_FAILED_FOR = 60_000;
-// Outlives the slowest rebuild, and holds the next pull back as long after each one, so a feed whose lastUpdated
-// stops moving isn't pulled back to back
+const PRICES_REFRESH_MS = 15 * 60_000;
+const BAZAAR_REFRESH_MS = 60_000;
+const ITEMS_REFRESH_MS = 12 * 60 * 60_000;
+const ELECTION_REFRESH_MS = 30 * 60_000;
+export const FAILURE_BACKOFF_MS = 60_000;
+// The lock spaces rebuilds out too, for when the feed's lastUpdated stops.
 const LOCK_MS = 300_000;
 
-const binCount = (map?: PriceMap) => Object.values(map?.entries ?? {}).filter(({ source }) => source === "bin").length;
+const binCount = (map: PriceMap) =>
+  Object.values(map.entries).filter(({ source }) => source === "bin").length;
 
 interface Copy<T> {
   value: T;
   fetchedAt: number;
 }
 
+function isCurrent<T>(copy: Copy<T> | undefined, maxAge: number) {
+  return copy !== undefined && Date.now() - copy.fetchedAt <= maxAge;
+}
+
+// Hypixel can still send the last mayor after a term ends, so only a copy
+// fetched during its term goes out of date when it ends.
+const isOutdated = ({ value, fetchedAt }: Copy<MayorView>) =>
+  getTerm(value, fetchedAt) !== undefined &&
+  getTerm(value, Date.now()) === undefined;
+
+const isMayorCurrent = (copy: Copy<MayorView> | undefined) =>
+  copy !== undefined &&
+  isCurrent(copy, ELECTION_REFRESH_MS) &&
+  !isOutdated(copy);
+
+interface LoadedItems {
+  raw: RawItemsResource;
+  parsed: ItemsResource;
+}
+
+const loadItems = ({ value, fetchedAt }: Copy<RawItemsResource>) => ({
+  value: { raw: value, parsed: parseItemsResource(value) },
+  fetchedAt,
+});
+
+interface MarketReads {
+  bazaar?: Promise<Bazaar | undefined>;
+  items?: Promise<LoadedItems | undefined>;
+}
+
 @Injectable()
 export class SkyBlockPricesService implements OnModuleDestroy {
   private readonly logger = new Logger("SkyBlockPricesService");
-  private readonly singleflight = new Singleflight();
-  private readonly copies = new Map<string, Copy<unknown>>();
+  // A process keeps what it unzipped, since unzipping per request is slow.
   private map?: PriceMap;
-  private items?: ItemsResource;
+  private bazaar?: Copy<Bazaar>;
+  private items?: Copy<LoadedItems>;
+  private mayor?: Copy<MayorView>;
   private worker?: Worker;
 
   public constructor(
     private readonly hypixelService: HypixelService,
-    @InjectRedis() private readonly redis: Redis
+    private readonly searchService: SkyBlockSearchService,
+    @InjectRedis() private readonly redis: Redis,
   ) {}
 
   public async onModuleDestroy() {
     await this.worker?.terminate();
   }
 
-  public async getPriceMap(): Promise<PriceMap | undefined> {
+  // A rebuild reuses the bazaar and items reads a caller already started.
+  public async getPriceMap(
+    reads: MarketReads = {},
+  ): Promise<PriceMap | undefined> {
     const asOf = Number(await this.redis.hget(PRICES_KEY, "asOf"));
     if (asOf > (this.map?.asOf ?? 0)) {
       const data = await this.redis.hgetBuffer(PRICES_KEY, "data");
-      if (data) this.map = await unzip<PriceMap>(data);
+      if (data) this.map = await gunzipJson<PriceMap>(data);
     }
 
-    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH) {
-      void this.rebuild().catch((error) => this.logger.error(error));
+    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH_MS) {
+      void this.rebuild(reads).catch((error) => this.logger.error(error));
     }
+
     return this.map;
   }
 
-  private getBazaar(): Promise<Bazaar | undefined> {
-    return this.getCopy(BAZAAR_KEY, BAZAAR_REFRESH, async () =>
-      parseBazaar(RawBazaar.parse(await this.hypixelService.getSkyBlockKeyless("/v2/skyblock/bazaar")))
-    );
-  }
+  public async getItems(): Promise<LoadedItems | undefined> {
+    if (!isCurrent(this.items, ITEMS_REFRESH_MS)) {
+      const stored = await this.readStored<RawItemsResource>(
+        ITEMS_KEY,
+        this.items?.fetchedAt,
+      );
+      if (stored) this.items = loadItems(stored);
+    }
 
-  public async getItems(): Promise<ItemsResource | undefined> {
-    const raw = await this.getCopy(ITEMS_KEY, ITEMS_REFRESH, async () => {
-      const resource = await this.hypixelService.getSkyBlockKeyless<RawItemsResource>("/v2/resources/skyblock/items");
-      RawItemsResource.parse(resource);
-      return resource;
+    if (this.items && isCurrent(this.items, ITEMS_REFRESH_MS)) {
+      return this.items.value;
+    }
+
+    if (await this.failedRecently(ITEMS_KEY)) return this.items?.value;
+
+    const refetch = this.hypixelService.getSkyBlockItems().then(async (raw) => {
+      const copy = { value: raw, fetchedAt: Date.now() };
+      const loaded = loadItems(copy);
+      await this.store(ITEMS_KEY, copy);
+      this.items = loaded;
+      return loaded.value;
     });
 
-    if (!raw) return;
-    if (raw.lastUpdated !== this.items?.lastUpdated) this.items = parseItemsResource(raw);
-    return this.items;
+    return this.staleOrRefetch(ITEMS_KEY, this.items, refetch);
   }
 
-  /** The mayor in office, from the keyless election resource. */
-  public getMayor(): Promise<MayorView | undefined> {
-    return this.getCopy(
-      ELECTION_KEY,
-      ELECTION_REFRESH,
-      async () => toMayorView(RawElection.parse(await this.hypixelService.getSkyBlockKeyless("/v2/resources/skyblock/election"))),
-      // Only a copy fetched inside its term goes out of date when the term ends, so one Hypixel sent after the end (the
-      // new mayor not in yet) isn't refetched on every request
-      ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
-    );
+  public async getMayor(): Promise<MayorView | undefined> {
+    if (!isMayorCurrent(this.mayor)) {
+      const stored = await this.readStored<MayorView>(
+        ELECTION_KEY,
+        this.mayor?.fetchedAt,
+      );
+      if (stored) this.mayor = stored;
+    }
+
+    if (this.mayor && isMayorCurrent(this.mayor)) return this.mayor.value;
+    if (await this.failedRecently(ELECTION_KEY)) return this.mayor?.value;
+
+    const refetch = this.hypixelService
+      .getSkyBlockElection()
+      .then(async (raw) => {
+        const copy = { value: toMayorView(raw), fetchedAt: Date.now() };
+        await this.store(ELECTION_KEY, copy);
+        this.mayor = copy;
+        return copy.value;
+      });
+
+    const last = this.mayor;
+    if (!last || !isOutdated(last)) {
+      return this.staleOrRefetch(ELECTION_KEY, last, refetch);
+    }
+
+    // A term that ended waits for the new mayor, or keeps the last on failure.
+    const mayor = await this.staleOrRefetch(ELECTION_KEY, undefined, refetch);
+    return mayor ?? last.value;
   }
 
   public async getPrice(id: string): Promise<PriceView> {
-    const [map, bazaar, items] = await Promise.all([this.getPriceMap(), this.getBazaar(), this.getItems()]);
-    if (!map || !bazaar || !items) throw new SkyBlockUnavailableException("market");
+    const reads = { bazaar: this.getBazaar(), items: this.getItems() };
+    const [map, bazaar, loaded] = await Promise.all([
+      this.getPriceMap(reads),
+      reads.bazaar,
+      reads.items,
+    ]);
+    if (!map || !bazaar || !loaded) {
+      throw new SkyBlockUnavailableException("market");
+    }
 
-    const price = toPriceView(id, map, bazaar, items);
+    const price = toPriceView(id, map, bazaar, loaded.parsed);
     if (price) return price;
-    const described = describeKey(id, items);
-    throw new SkyBlockNotFoundException(described ? "price" : "item", described?.name);
+
+    const described = describeKey(id, loaded.parsed);
+    throw new SkyBlockNotFoundException(
+      described ? "price" : "item",
+      described?.name,
+    );
   }
 
-  public async searchItems(query: string): Promise<ItemMatch[]> {
-    const reply = (await this.redis
-      .call("FT.SUGGET", AUTOCOMPLETE_KEY, query, "FUZZY", "MAX", String(MAX_MATCHES), "WITHPAYLOADS")
-      .catch((error) => {
-        this.logger.error(error);
-        throw new SkyBlockUnavailableException("market");
-      })) as string[] | null;
+  private async getBazaar(): Promise<Bazaar | undefined> {
+    if (!isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
+      const stored = await this.readStored<Bazaar>(
+        BAZAAR_KEY,
+        this.bazaar?.fetchedAt,
+      );
+      if (stored) this.bazaar = stored;
+    }
 
-    return arrayGroup(reply ?? [], 2)
-      .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
-      .slice(0, MAX_MATCHES);
+    if (this.bazaar && isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
+      return this.bazaar.value;
+    }
+
+    if (await this.failedRecently(BAZAAR_KEY)) return this.bazaar?.value;
+
+    const refetch = this.hypixelService
+      .getSkyBlockBazaar()
+      .then(async (raw) => {
+        const copy = { value: parseBazaar(raw), fetchedAt: Date.now() };
+        await this.store(BAZAAR_KEY, copy);
+        this.bazaar = copy;
+        return copy.value;
+      });
+
+    return this.staleOrRefetch(BAZAAR_KEY, this.bazaar, refetch);
   }
 
-  private async rebuild() {
-    if ((await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS, "NX")) !== "OK") return;
+  private async rebuild(reads: MarketReads) {
+    const lock = await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS, "NX");
+    if (lock !== "OK") return;
 
     try {
-      const [bazaar, items] = await Promise.all([this.getBazaar(), this.getItems()]);
-      if (!bazaar || !items) throw new Error("no bazaar or items resource to build prices with");
+      const [bazaar, loaded] = await Promise.all([
+        reads.bazaar ?? this.getBazaar(),
+        reads.items ?? this.getItems(),
+      ]);
+      if (!bazaar || !loaded) {
+        throw new Error("no bazaar or items resource to build prices with");
+      }
 
-      const result = await this.build({ timeout: SKYBLOCK_TIMEOUT, bazaar, items: { ...items, raw: [] } });
+      const result = await this.build({
+        timeout: SKYBLOCK_TIMEOUT,
+        bazaar,
+        items: loaded.parsed,
+      });
       if ("error" in result) throw new Error(result.error);
 
       const data = Buffer.from(result.data);
-      const map = await unzip<PriceMap>(data);
+      const map = await gunzipJson<PriceMap>(data);
 
-      // Under half the last map's BIN prices means a reshaped or partial pull; bazaar and NPC prices don't come from it
-      const [bins, previous] = [binCount(map), binCount(this.map)];
-      if (bins < previous / 2) throw new Error(`a rebuild priced ${bins} BIN keys, the last map ${previous}`);
+      // Under half the last map's BIN prices means the pull was cut short.
+      const bins = binCount(map);
+      const previous = this.map ? binCount(this.map) : 0;
+      if (bins < previous / 2) {
+        throw new Error(
+          `a rebuild priced ${bins} BIN keys, the last map ${previous}`,
+        );
+      }
 
       await this.redis.hset(PRICES_KEY, { data, asOf: result.asOf });
       this.map = map;
-      await this.updateAutocomplete(map, items);
-    } catch (error) {
-      this.logger.error(error);
+      await this.searchService.update(map, loaded.parsed);
     } finally {
       await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS);
     }
   }
 
   private build(request: RebuildRequest): Promise<RebuildResult> {
-    const worker = (this.worker ??= new Worker(new URL("skyblock-prices.worker.js", import.meta.url), {
+    const url = new URL("skyblock-prices.worker.js", import.meta.url);
+    const worker = (this.worker ??= new Worker(url, {
       resourceLimits: { maxOldGenerationSizeMb: 128 },
     }));
 
@@ -184,7 +287,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
         reject(error);
       };
 
-      const exit = (code: number) => fail(new Error(`the price worker exited with code ${code}`));
+      const exit = (code: number) =>
+        fail(new Error(`the price worker exited with code ${code}`));
 
       worker.once("error", fail);
       worker.once("exit", exit);
@@ -198,63 +302,53 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     });
   }
 
-  private async updateAutocomplete(map: PriceMap, items: ItemsResource) {
-    const next = `${AUTOCOMPLETE_KEY}:next`;
-    const pipeline = this.redis.pipeline().del(next);
-    const described = Object.keys(map.entries).flatMap((key) => describeKey(key, items) ?? []);
+  private async readStored<T>(
+    key: string,
+    since = 0,
+  ): Promise<Copy<T> | undefined> {
+    const [data, storedAt] = await this.redis.hmgetBuffer(
+      key,
+      "data",
+      "fetchedAt",
+    );
+    const fetchedAt = Number(storedAt?.toString());
+    if (!data || !(fetchedAt > since)) return;
 
-    // Redis keeps one suggestion per string, so a name's payload lists every key that has it
-    for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
-      const payload = JSON.stringify(keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })));
-      pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
-    }
-
-    await pipeline.rename(next, AUTOCOMPLETE_KEY).exec();
+    return { value: await gunzipJson<T>(data), fetchedAt };
   }
 
-  private async getCopy<T>(
+  private async store<T>(key: string, { value, fetchedAt }: Copy<T>) {
+    await this.redis.hset(key, { data: await gzipJson(value), fetchedAt });
+  }
+
+  private async failedRecently(key: string) {
+    const failedAt = Number(await this.redis.hget(key, "failedAt"));
+    return Date.now() - failedAt < FAILURE_BACKOFF_MS;
+  }
+
+  // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
+  private async staleOrRefetch<T>(
     key: string,
-    maxAge: number,
-    fetch: () => Promise<T>,
-    outdated?: (copy: Copy<T>) => boolean
+    stale: Copy<T> | undefined,
+    refetch: Promise<T>,
   ): Promise<T | undefined> {
-    const fresh = (candidate: Copy<T>) => Date.now() - candidate.fetchedAt <= maxAge && !outdated?.(candidate);
-
-    let copy = this.copies.get(key) as Copy<T> | undefined;
-    if (copy && fresh(copy)) return copy.value;
-
-    const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt", "failedAt");
-    const fetchedAt = Number(storedAt?.toString());
-    if (data && fetchedAt > (copy?.fetchedAt ?? 0)) {
-      copy = { value: await unzip<T>(data), fetchedAt };
-      this.copies.set(key, copy);
-    }
-
-    if (copy && fresh(copy)) return copy.value;
-    if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR) return copy?.value;
-
-    const refetch = this.singleflight.run(key, async () => {
-      const value = await fetch().catch(async (error) => {
-        await this.redis.hset(key, "failedAt", Date.now());
-        throw error;
-      });
-      const fetchedAt = Date.now();
-      await this.redis.hset(key, { data: await zip(value), fetchedAt });
-      this.copies.set(key, { value, fetchedAt });
-      return value;
+    const recorded = refetch.catch(async (error) => {
+      await this.redis.hset(key, "failedAt", Date.now());
+      throw error;
     });
 
-    // A stale copy answers at once, since waiting out a Hypixel timeout would outlast the bot's request
-    if (copy && !outdated?.(copy)) {
-      void refetch.catch((error) => this.logger.error(error));
-      return copy.value;
+    if (stale) {
+      void recorded.catch((error) => this.logger.error(error));
+      return stale.value;
     }
 
     try {
-      return await refetch;
+      return await recorded;
     } catch (error) {
+      if (!(error instanceof HypixelUnavailableError)) throw error;
+
       this.logger.error(error);
-      return copy?.value;
+      return undefined;
     }
   }
 }
