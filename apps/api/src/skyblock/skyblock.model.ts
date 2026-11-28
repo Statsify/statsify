@@ -8,7 +8,7 @@
 
 import { modelOptions as ModelOptions, prop } from "@typegoose/typegoose";
 
-// No TTL index: each document is the latest copy, kept as the stale fallback.
+// There's no TTL index, since the latest copy is the stale fallback.
 @ModelOptions({ schemaOptions: { collection: "skyblock", versionKey: false } })
 export class SkyBlockProfiles {
   @prop({ required: true, unique: true })
@@ -17,12 +17,14 @@ export class SkyBlockProfiles {
   @prop({ required: true })
   public fetchedAt: number;
 
-  // gzip(JSON.stringify(res.profiles)), which is "null" for a player who never played
+  // The gzipped profiles are null for a player who never played SkyBlock.
   @prop({ required: true })
   public data: Buffer;
 }
 
-@ModelOptions({ schemaOptions: { collection: "skyblockmuseum", versionKey: false } })
+@ModelOptions({
+  schemaOptions: { collection: "skyblockmuseum", versionKey: false },
+})
 export class SkyBlockMuseum {
   @prop({ required: true, unique: true })
   public profileId: string;
@@ -30,7 +32,6 @@ export class SkyBlockMuseum {
   @prop({ required: true })
   public fetchedAt: number;
 
-  // gzip(JSON.stringify(res.members))
   @prop({ required: true })
   public data: Buffer;
 }

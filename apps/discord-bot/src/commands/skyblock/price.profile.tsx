@@ -9,7 +9,7 @@
 import { Container, Footer, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
-import { RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
+import { RARITY_COLORS, formatPriceAge } from "./components/ItemGrid.js";
 import type { Canvas, Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { PriceView } from "@statsify/skyblock";
@@ -26,10 +26,18 @@ export interface SkyBlockPriceProfileProps {
   t: LocalizeFunction;
 }
 
-export const SkyBlockPriceProfile = ({ price, icon, background, logo, user, t }: SkyBlockPriceProfileProps) => {
+export const SkyBlockPriceProfile = ({
+  price,
+  icon,
+  background,
+  logo,
+  user,
+  t,
+}: SkyBlockPriceProfileProps) => {
   const { bazaar, lowestBin, npc } = price;
   const coins = (value: number) => t(value >= 100 ? Math.floor(value) : value);
-  const instant = (value?: number) => (value === undefined ? t("skyblock.none") : coins(value));
+  const instant = (value?: number) =>
+    value === undefined ? t("skyblock.none") : coins(value);
 
   return (
     <Container background={background}>
@@ -41,37 +49,65 @@ export const SkyBlockPriceProfile = ({ price, icon, background, logo, user, t }:
         </div>
       </box>
       <Table.table>
-        {bazaar ?
-          (
-            <>
-              <Table.tr>
-                <Table.td title={t("skyblock.bazaarBuy")} value={instant(bazaar.instantBuy)} color="§a" />
-                <Table.td title={t("skyblock.bazaarSell")} value={instant(bazaar.instantSell)} color="§6" />
-              </Table.tr>
-              <Table.tr>
-                <Table.td title={t("skyblock.weeklyBuys")} value={t(bazaar.buyMovingWeek)} color="§b" />
-                <Table.td title={t("skyblock.weeklySells")} value={t(bazaar.sellMovingWeek)} color="§b" />
-              </Table.tr>
-            </>
-          ) :
-          <></>}
-        {lowestBin ?
-          (
+        {bazaar ? (
+          <>
             <Table.tr>
-              <Table.td title={t("skyblock.lowestBin")} value={coins(lowestBin.coins)} color="§6" />
-              <Table.td title={t("skyblock.listings")} value={t(lowestBin.listings)} color="§e" />
+              <Table.td
+                title={t("skyblock.bazaarBuy")}
+                value={instant(bazaar.instantBuy)}
+                color="§a"
+              />
+              <Table.td
+                title={t("skyblock.bazaarSell")}
+                value={instant(bazaar.instantSell)}
+                color="§6"
+              />
             </Table.tr>
-          ) :
-          <></>}
-        {npc === undefined ?
-          <></> :
-          (
             <Table.tr>
-              <Table.td title={t("skyblock.npcSell")} value={coins(npc)} color="§e" />
+              <Table.td
+                title={t("skyblock.weeklyBuys")}
+                value={t(bazaar.buyMovingWeek)}
+                color="§b"
+              />
+              <Table.td
+                title={t("skyblock.weeklySells")}
+                value={t(bazaar.sellMovingWeek)}
+                color="§b"
+              />
             </Table.tr>
-          )}
+          </>
+        ) : (
+          <></>
+        )}
+        {lowestBin ? (
+          <Table.tr>
+            <Table.td
+              title={t("skyblock.lowestBin")}
+              value={coins(lowestBin.coins)}
+              color="§6"
+            />
+            <Table.td
+              title={t("skyblock.listings")}
+              value={t(lowestBin.listings)}
+              color="§e"
+            />
+          </Table.tr>
+        ) : (
+          <></>
+        )}
+        {npc === undefined ? (
+          <></>
+        ) : (
+          <Table.tr>
+            <Table.td
+              title={t("skyblock.npcSell")}
+              value={coins(npc)}
+              color="§e"
+            />
+          </Table.tr>
+        )}
       </Table.table>
-      <Empty text={pricesAsOf(t, price.asOf)} />
+      <Empty text={formatPriceAge(t, price.asOf)} />
       <Footer logo={logo} user={user} />
     </Container>
   );

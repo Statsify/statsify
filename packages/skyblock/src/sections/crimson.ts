@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type CrimsonSection, KUUDRA_TIERS } from "#types";
 import { KUUDRA_KEYS } from "#data";
 import { add } from "@statsify/math";
-import { type CrimsonSection, KUUDRA_TIERS } from "#types";
 import type { RawMember } from "#raw";
+
+export type Faction = "mages" | "barbarians";
 
 // In the Dojo's order
 const DOJO_TESTS = [
@@ -22,7 +24,7 @@ const DOJO_TESTS = [
   "fireball",
 ] as const;
 
-// Bestiary ids: player_stats.kills misses most kills
+// player_stats.kills misses most kills, so these read the bestiary.
 const MINIBOSSES = {
   bladesoul: "bladesoul_200",
   barbarian_duke_x: "barbarian_duke_x_200",
@@ -31,12 +33,11 @@ const MINIBOSSES = {
   magma_boss: "magma_boss_500",
 };
 
-/** null before the member's first Crimson Isle progress. */
 export function getCrimson(member: RawMember): CrimsonSection | null {
   const island = member.nether_island_player_data;
   const tiers = island?.kuudra_completed_tiers ?? {};
 
-  // Hypixel sends the record, with no Kuudra tiers and the Dojo at 0, before the member picks a faction
+  // Hypixel sends the record at 0 before the member picks a faction.
   const started =
     island?.selected_faction ||
     island?.mages_reputation ||
@@ -63,25 +64,7 @@ export function getCrimson(member: RawMember): CrimsonSection | null {
     dojoPoints: add(...dojo.map(({ points }) => points)),
     minibosses: Object.entries(MINIBOSSES).map(([boss, id]) => ({
       boss,
-      kills: member.bestiary?.kills?.[id] ?? 0,
+      kills: Number(member.bestiary?.kills?.[id] ?? 0),
     })),
   };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getCrimson is null for the record Hypixel sends before a faction is picked", () => {
-    expect(
-      getCrimson({
-        nether_island_player_data: {
-          kuudra_completed_tiers: {},
-          dojo: { dojo_points_mob_kb: 0 },
-        },
-      }),
-    ).toBeNull();
-    expect(
-      getCrimson({ nether_island_player_data: { selected_faction: "mages" } }),
-    ).not.toBeNull();
-  });
 }

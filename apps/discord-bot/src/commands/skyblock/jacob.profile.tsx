@@ -15,7 +15,9 @@ import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const jacobIcons = ({ jacob }: MemberView) =>
-  jacob?.crops.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
+  jacob?.crops
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined) ?? [];
 
 export const SkyBlockJacobProfile = ({
   profile,
@@ -52,18 +54,21 @@ export const SkyBlockJacobProfile = ({
     [t("skyblock.farmingLevelCap"), `+${t(jacob.perks.farmingLevelCap)}`, "§a"],
   ];
 
-  const items = jacob.crops.map(({ name, texture, bracket, personalBest }) => ({
-    texture,
-    name: `${bracket ? MEDAL_COLORS[bracket] : "§7"}${name}`,
-    value: [
-      bracket
-        ? `${MEDAL_COLORS[bracket]}${prettify(bracket)}`
-        : `§8${t("skyblock.none")}`,
-      ...(personalBest === undefined
-        ? []
-        : [`§7${t("skyblock.personalBest", { amount: t(personalBest) })}`]),
-    ].join(" §8• "),
-  }));
+  const items = jacob.crops.map(({ name, texture, bracket, personalBest }) => {
+    const reached = bracket
+      ? `${MEDAL_COLORS[bracket]}${prettify(bracket)}`
+      : `§8${t("skyblock.none")}`;
+    const best =
+      personalBest === undefined
+        ? ""
+        : ` §8• §7${t("skyblock.personalBest", { amount: t(personalBest) })}`;
+
+    return {
+      texture,
+      name: `${bracket ? MEDAL_COLORS[bracket] : "§7"}${name}`,
+      value: `${reached}${best}`,
+    };
+  });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>

@@ -18,12 +18,6 @@ export default {
     key: "",
     timeout: 5000,
   },
-  skyblock: {
-    hypixelBudget: 60,
-    reserve: 100,
-    timeout: 10000,
-    pricesRefreshMinutes: 15,
-  },
   api: {
     port: 3000,
     mediaRoot: "",

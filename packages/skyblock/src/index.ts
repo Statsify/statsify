@@ -8,18 +8,17 @@
 
 export * from "./types.js";
 export * from "./raw.js";
-export { getApiSettings } from "./api-settings.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";
-export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
-export { resourceTexture, textureOf } from "./textures.js";
+export { parseItemsResource, toItemView } from "./items.js";
+export { getItemTexture, resourceTexture } from "./textures.js";
 export {
   SECTIONS,
   SKYBLOCK_SECTIONS,
-  toMemberView,
+  getApiSettings,
   type SectionInput,
   type SectionKey,
   type SectionNeed,
@@ -27,13 +26,31 @@ export {
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
 export { getChocolate } from "./sections/chocolate.js";
-export { getCrimson } from "./sections/crimson.js";
-export { getDungeons } from "./sections/dungeons.js";
-export { getFishing } from "./sections/fishing.js";
-export { getHotf } from "./sections/hotf.js";
-export { getHotm } from "./sections/hotm.js";
-export { getJacob } from "./sections/jacob.js";
+export { getCrimson, type Faction } from "./sections/crimson.js";
+export {
+  DUNGEON_CLASSES,
+  getDungeons,
+  type DungeonClass,
+} from "./sections/dungeons.js";
+export {
+  TROPHY_TIERS,
+  getFishing,
+  type TrophyTier,
+} from "./sections/fishing.js";
+export { WHISPERS, getHotf, type Whisper } from "./sections/hotf.js";
+export { POWDERS, getHotm, type Powder } from "./sections/hotm.js";
+export {
+  JACOB_BRACKETS,
+  JACOB_MEDALS,
+  getJacob,
+  type JacobBracket,
+  type JacobMedal,
+} from "./sections/jacob.js";
 export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
-export { getSkills } from "./sections/skills.js";
-export { getSlayers } from "./sections/slayers.js";
+export { SKILLS, getSkills, type Skill } from "./sections/skills.js";
+export {
+  SLAYER_BOSSES,
+  getSlayers,
+  type SlayerBoss,
+} from "./sections/slayers.js";

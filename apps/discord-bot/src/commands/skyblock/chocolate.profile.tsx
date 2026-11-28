@@ -12,7 +12,7 @@ import { RARITY_COLORS, gridRows } from "./components/ItemGrid.js";
 import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-// The employees whose id isn't their name in the factory (the wiki's Chocolate Factory page)
+// These employees go by another name in the factory.
 const RENAMED_EMPLOYEES = new Set(["rabbit_father", "rabbit_grandma"]);
 
 const COLUMNS = 4;

@@ -44,7 +44,7 @@ export const Card = ({
   </Container>
 );
 
-export interface EmptyCardProps extends Omit<CardProps, "children"> {
+interface EmptyCardProps extends Omit<CardProps, "children"> {
   text: string;
 }
 
