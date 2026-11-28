@@ -22,6 +22,11 @@ pub struct RenderOptions {
   pub armor: Option<Armor>,
   /// Enchantment glint texture (PNG), needed when an armor piece is enchanted.
   pub glint: Option<Uint8Array>,
+  /// Cape texture (PNG).
+  pub cape: Option<Uint8Array>,
+  /// Camera angle around the player in radians: 0 faces the front, π the back.
+  /// Defaults to -0.3.
+  pub yaw: Option<f64>,
 }
 
 #[napi]
@@ -48,14 +53,26 @@ pub async fn render_skin(
   let options = options.unwrap_or_default();
   let armor = options.armor.unwrap_or_default();
 
+  let yaw = options
+    .yaw
+    .map(|yaw| narrow(yaw).ok_or(crate::error::Error::InvalidYaw))
+    .transpose()?;
+
   let model = renderer.load_skin(
     skin,
     model_kind,
     model_outer_layer,
     &armor,
     options.glint.as_deref(),
+    options.cape.as_deref(),
   )?;
-  let buffer = renderer.render(&model).await?;
+  let buffer = renderer.render(&model, yaw).await?;
 
   Ok(buffer.into())
+}
+
+// Checked after narrowing, since a huge f64 becomes an f32 infinity
+fn narrow(value: f64) -> Option<f32> {
+  let value = value as f32;
+  value.is_finite().then_some(value)
 }

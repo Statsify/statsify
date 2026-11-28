@@ -5,7 +5,7 @@ mod outer_layer_geometry;
 mod prism;
 pub mod vertex;
 
-use cgmath::{Quaternion, Vector3};
+use cgmath::{Deg, Quaternion, Rad, Vector3};
 
 pub use self::box_geometry::*;
 pub use self::outer_layer_geometry::*;
@@ -21,6 +21,22 @@ pub struct Geometry {
 pub struct Rotation {
   pub quaternion: Quaternion<f32>,
   pub pivot: Vector3<f32>,
+}
+
+// Rust folds f32 trig (cgmath's rotations and perspective too) at build time when inlining shows
+// the angle, and glibc's f32 trig can be a bit off from that. Rounded f64 trig gives one answer.
+pub fn sin_cos(angle: impl Into<Rad<f32>>) -> (f32, f32) {
+  let (sin, cos) = f64::from(angle.into().0).sin_cos();
+  (sin as f32, cos as f32)
+}
+
+pub fn tan(angle: impl Into<Rad<f32>>) -> f32 {
+  f64::from(angle.into().0).tan() as f32
+}
+
+pub fn axis_angle(axis: Vector3<f32>, angle: Deg<f32>) -> Quaternion<f32> {
+  let (sin, cos) = sin_cos(Rad::from(angle) / 2.0);
+  Quaternion::from_sv(cos, axis * sin)
 }
 
 impl Geometry {
