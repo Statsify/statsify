@@ -86,8 +86,7 @@ export const WARLORDS_WEAPONS = {
   STRING: "item/string",
 } as const;
 
-// Simple is leather in a team's dye; the pack paints the other tiers over vanilla materials,
-// recolored for the blue team.
+// The pack repaints these vanilla materials as each team's upper armor tiers
 export const WARLORDS_ARMOR = {
   0: {
     blue: { material: "leather", color: SUIT_DYES.BLUE },

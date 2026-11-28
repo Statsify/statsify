@@ -68,15 +68,17 @@ const armor = z.object({
 export type ArmorPieceDto = z.infer<typeof armorPiece>;
 export type ArmorDto = z.infer<typeof armor>;
 
-// An empty value keeps the default angle, where z.coerce.number() would read "" as 0, the front.
-// The default sits on the number because the OpenAPI schema drops one set on the transform
 export const queryAngle = (limit: number, fallback?: number) => {
   const angle = z.coerce.number().min(-limit).max(limit);
+  // OpenAPI drops a default set on the transform, so it goes on the number
+  const documented =
+    fallback === undefined ? angle : angle.meta({ default: fallback });
 
+  // An empty value keeps the default, where z.coerce.number() reads "" as 0
   return z
     .literal("")
     .transform(() => undefined)
-    .or(fallback === undefined ? angle : angle.meta({ default: fallback }))
+    .or(documented)
     .optional();
 };
 
