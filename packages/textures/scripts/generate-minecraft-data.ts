@@ -285,18 +285,6 @@ const [legacy, items, blocks, entities, effects, modernItems] =
     fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
     fetchMinecraftData<ModernItem[]>("26.1/items.json"),
   ]);
-if (!legacyAssets.textures.has("items/diamond_sword"))
-  throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
-
-const [legacy, items, blocks, entities, effects, modernItems] =
-  await Promise.all([
-    fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
-    fetchJson<LegacyItem[]>("1.8/items.json"),
-    fetchJson<LegacyItem[]>("1.8/blocks.json"),
-    fetchJson<LegacyEntity[]>("1.8/entities.json"),
-    fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
-    fetchJson<ModernItem[]>("26.1/items.json"),
-  ]);
 
 const missing: string[] = [];
 
