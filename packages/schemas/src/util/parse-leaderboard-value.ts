@@ -60,7 +60,11 @@ export function parseLeaderboardValue(
   const { parser, searchBy } = getLeaderboardField(constructor, key);
   const search = input.trim().toLowerCase();
 
-  if (parser) return parser(search.replaceAll(",", ""));
+  if (parser) {
+    // In a time, a comma between digits is a decimal comma, like 1:23,45
+    const time = search.replaceAll(/(?<=\d),(?=\d)/g, ".").replaceAll(",", "");
+    return parser(time);
+  }
 
   const match = /^(\d*\.?\d+)([kmb])?/.exec(normalizeNumber(search));
   if (!match) return Number.NaN;
@@ -112,5 +116,10 @@ if (import.meta.vitest) {
     expect(parseLeaderboardValue(Player, fkdr, "2,50")).toBe(2.5);
     expect(parseLeaderboardValue(Player, fkdr, "1.234,5")).toBe(1234.5);
     expect(parseLeaderboardValue(Player, fkdr, "1,234.5")).toBe(1234.5);
+
+    const parkour = "stats.parkour.BEDWARS";
+
+    expect(parseLeaderboardValue(Player, parkour, "1:23,45")).toBe(83_450);
+    expect(parseLeaderboardValue(Player, parkour, "83,450s")).toBe(83_450);
   });
 }
