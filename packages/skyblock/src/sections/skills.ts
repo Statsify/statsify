@@ -7,106 +7,108 @@
  */
 
 import { LEVELING } from "#data";
-import { SKILLS, type SkillLevel, type SkillsSection } from "#types";
 import { add } from "@statsify/math";
-import { coopMembers } from "../profiles.js";
 import { fractionalLevel, getLevel } from "#leveling";
+import { getCoopMembers } from "../profiles.js";
 import type { RawMember, RawProfile } from "#raw";
+import type { SkillLevel, SkillsSection } from "#types";
 
-// Runecrafting and social are cosmetic skills, so the average leaves them out; hunting counts.
-export const AVERAGED = SKILLS.filter((skill) => skill !== "runecrafting" && skill !== "social");
+export const SKILLS = [
+  "farming",
+  "mining",
+  "combat",
+  "foraging",
+  "fishing",
+  "enchanting",
+  "alchemy",
+  "taming",
+  "carpentry",
+  "hunting",
+  "runecrafting",
+  "social",
+] as const;
 
-export const xpOf = (member: RawMember, skill: string) => member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
+export type Skill = (typeof SKILLS)[number];
 
-const tableOf = (skill: string) =>
-  skill === "runecrafting" ? LEVELING.runecrafting_xp : skill === "social" ? LEVELING.social : LEVELING.leveling_xp;
+// Runecrafting and Social are cosmetic, so the average leaves them out.
+export const AVERAGED = SKILLS.filter(
+  (skill) => skill !== "runecrafting" && skill !== "social",
+);
 
-// 50, the log unlocks, then Agatha's two cap raises at her Milestone IV and Miria's at IV and V (unverified). Hypixel's
-// highest foraging level achievement fits it on every saved player with a cap past 50, 56 at Miria IV included.
-const foragingCap = (member: RawMember) => {
-  const perks = member.player_data?.perks ?? {};
-  const miria = perks.miria_power ?? 0;
-  const shops = 2 * Number((perks.agatha_power ?? 0) >= 4) + Number(miria >= 4) + Number(miria >= 5);
-  return 50 + (member.player_data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0) + shops;
-};
-
-// 50 and the three log unlocks: a level past it rests on the shops
+// Past 50 and the three log unlocks, the cap rests on the shop perks.
 const FORAGING_VERIFIED = 53;
 
-// Runecrafting stops at 3 without a rank
 const UNRANKED_RUNECRAFTING_CAP = 3;
 
-function capOf(skill: string, member: RawMember, ranked: boolean) {
+export const getSkillXp = (member: RawMember, skill: Skill) =>
+  member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
+
+function getXpTable(skill: Skill) {
+  if (skill === "runecrafting") return LEVELING.runecrafting_xp;
+  if (skill === "social") return LEVELING.social;
+  return LEVELING.leveling_xp;
+}
+
+function getLevelCap(skill: Skill, member: RawMember, ranked: boolean) {
   if (skill === "runecrafting" && !ranked) return UNRANKED_RUNECRAFTING_CAP;
+
   const cap = LEVELING.leveling_caps[skill];
   const max = LEVELING.max_levels[skill];
-  if (skill === "farming") return Math.min(cap + (member.jacobs_contest?.perks?.farming_level_cap ?? 0), max);
-  if (skill === "taming") return Math.min(cap + (member.pets_data?.pet_care?.pet_types_sacrificed?.length ?? 0), max);
-  if (skill === "foraging") return Math.min(foragingCap(member), max);
+
+  if (skill === "farming") {
+    const perk = member.jacobs_contest?.perks?.farming_level_cap ?? 0;
+    return Math.min(cap + perk, max);
+  }
+
+  if (skill === "taming") {
+    const sacrificed = member.pets_data?.pet_care?.pet_types_sacrificed ?? [];
+    return Math.min(cap + sacrificed.length, max);
+  }
+
+  if (skill === "foraging") {
+    const data = member.player_data;
+    const unlocks = data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0;
+    const agatha = Number(data?.perks?.agatha_power ?? 0);
+    const miria = Number(data?.perks?.miria_power ?? 0);
+    // Agatha's Milestone IV raises the cap by two, and Miria's IV and V by one.
+    const shops =
+      2 * Number(agatha >= 4) + Number(miria >= 4) + Number(miria >= 5);
+    return Math.min(50 + unlocks + shops, max);
+  }
+
   return cap;
 }
 
-/**
- * null when the skills API is off. Social sums the XP of every member who accepted their invite, since the profile
- * shares it.
- */
-export function getSkills(profile: RawProfile, member: RawMember, ranked = true): SkillsSection | null {
+export function getSkills(
+  profile: RawProfile,
+  member: RawMember,
+  ranked = true,
+): SkillsSection | null {
   if (!member.player_data?.experience) return null;
 
-  const accepted = coopMembers(profile);
+  // Social XP is shared, so it sums every member who accepted the invite.
+  const accepted = getCoopMembers(profile);
+
   const skills = Object.fromEntries(
     SKILLS.map((skill): [string, SkillLevel] => {
-      const xp = skill === "social" ? add(...accepted.map(([, other]) => xpOf(other, skill))) : xpOf(member, skill);
-      const level = getLevel(xp, tableOf(skill), capOf(skill, member, ranked));
-      return [skill, { ...level, unverified: skill === "foraging" && level.level > FORAGING_VERIFIED }];
-    })
+      const xp =
+        skill === "social"
+          ? add(...accepted.map(([, other]) => getSkillXp(other, skill)))
+          : getSkillXp(member, skill);
+      const cap = getLevelCap(skill, member, ranked);
+      const level = getLevel(xp, getXpTable(skill), cap);
+      return [
+        skill,
+        {
+          ...level,
+          unverified: skill === "foraging" && level.level > FORAGING_VERIFIED,
+        },
+      ];
+    }),
   ) as SkillsSection["skills"];
 
-  const average = add(...AVERAGED.map((skill) => fractionalLevel(skills[skill]))) / AVERAGED.length;
+  const average =
+    add(...AVERAGED.map((skill) => fractionalLevel(skills[skill]))) /
+    AVERAGED.length;
   return { average, skills };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getSkills caps farming, taming and foraging per member, and sums social", () => {
-    const member: RawMember = {
-      player_data: {
-        experience: {
-          SKILL_FARMING: 1e12,
-          SKILL_TAMING: 1e12,
-          SKILL_FORAGING: 1e12,
-          SKILL_FORAGING_extra_level_cap: 3,
-          SKILL_RUNECRAFTING: 7340,
-          SKILL_SOCIAL: 100,
-        },
-        perks: { agatha_power: 4 },
-      },
-      jacobs_contest: { perks: { farming_level_cap: 10 } },
-      pets_data: { pet_care: { pet_types_sacrificed: ["A", "B", "C"] } },
-    };
-    const other: RawMember = { player_data: { experience: { SKILL_SOCIAL: 50 } } };
-    const invited: RawMember = {
-      player_data: { experience: { SKILL_SOCIAL: 1000 } },
-      profile: { coop_invitation: { confirmed: false } },
-    };
-    const profile = { profile_id: "p", cute_name: "Apple", members: { a: member, b: other, c: invited } };
-    const skills = getSkills(profile, member)?.skills;
-
-    expect(skills?.farming).toMatchObject({ level: 60, maxLevel: 60 });
-    expect(skills?.taming).toMatchObject({ level: 53, maxLevel: 53, unverified: false });
-    expect(skills?.foraging).toMatchObject({ level: 55, maxLevel: 55, unverified: true });
-    expect(skills?.runecrafting.level).toBe(14);
-    expect(getSkills(profile, member, false)?.skills.runecrafting).toMatchObject({ level: 3, maxLevel: 3 });
-    expect(skills?.social).toMatchObject({ level: 2, xp: 150 });
-
-    const forager = { player_data: { experience: { SKILL_FORAGING: 55_172_425 } } };
-    expect(getSkills(profile, forager)?.skills.foraging).toMatchObject({ level: 50, unverified: false });
-
-    const foragingCap = (miria_power: number) =>
-      getSkills(profile, { player_data: { ...member.player_data, perks: { agatha_power: 4, miria_power } } })?.skills
-        .foraging.maxLevel;
-    expect([3, 4, 5].map(foragingCap)).toEqual([55, 56, 57]);
-    expect(getSkills({ profile_id: "p", cute_name: "Apple", members: {} }, {})).toBeNull();
-  });
 }

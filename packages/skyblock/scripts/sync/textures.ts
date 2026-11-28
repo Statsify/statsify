@@ -15,11 +15,11 @@ const PACK = new URL(
   "../../../../assets/public/minecraft-textures/default/assets/minecraft/textures/",
   import.meta.url,
 );
-const SYNC_TIMEOUT = 60_000;
+const SYNC_TIMEOUT_MS = 60_000;
 
 export async function fetchOk(url: string) {
   const response = await fetch(url, {
-    signal: AbortSignal.timeout(SYNC_TIMEOUT),
+    signal: AbortSignal.timeout(SYNC_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);
   return response;
@@ -51,15 +51,12 @@ const WOODS = [
   "acacia",
   "big_oak",
 ] as const;
-const blocks = (names: readonly string[], prefix = "") =>
-  names.map((name) => `blocks/${prefix}${name}`);
+const blockPaths = (names: Iterable<string>, prefix = "") =>
+  Array.from(names, (name) => `blocks/${prefix}${name}`);
 
-/**
- * 1.8 items whose icon isn't items/<name> or blocks/<name>, by minecraft-data name; a list is indexed by Damage. Blocks
- * draw flat, from the face their item shows most; chests, banners and skulls name the entity texture ./icons crops.
- */
+// Icons that aren't items/<name> or blocks/<name>, a list indexed by Damage.
 const TEXTURES: Record<string, string | string[]> = {
-  stone: blocks([
+  stone: blockPaths([
     "stone",
     "stone_granite",
     "stone_granite_smooth",
@@ -69,26 +66,26 @@ const TEXTURES: Record<string, string | string[]> = {
     "stone_andesite_smooth",
   ]),
   grass: "blocks/grass_side",
-  dirt: blocks(["dirt", "coarse_dirt", "dirt_podzol_side"]),
-  planks: blocks(WOODS, "planks_"),
-  sapling: blocks(
+  dirt: blockPaths(["dirt", "coarse_dirt", "dirt_podzol_side"]),
+  planks: blockPaths(WOODS, "planks_"),
+  sapling: blockPaths(
     ["oak", "spruce", "birch", "jungle", "acacia", "roofed_oak"],
     "sapling_",
   ),
-  sand: blocks(["sand", "red_sand"]),
-  log: blocks(WOODS, "log_"),
-  leaves: blocks(WOODS.slice(0, 4), "leaves_"),
-  sponge: blocks(["sponge", "sponge_wet"]),
+  sand: blockPaths(["sand", "red_sand"]),
+  log: blockPaths(WOODS, "log_"),
+  leaves: blockPaths(WOODS.slice(0, 4), "leaves_"),
+  sponge: blockPaths(["sponge", "sponge_wet"]),
   dispenser: "blocks/dispenser_front_horizontal",
-  sandstone: blocks(["normal", "carved", "smooth"], "sandstone_"),
+  sandstone: blockPaths(["normal", "carved", "smooth"], "sandstone_"),
   golden_rail: "blocks/rail_golden",
   detector_rail: "blocks/rail_detector",
   sticky_piston: "blocks/piston_top_sticky",
-  tallgrass: blocks(["deadbush", "tallgrass", "fern"]),
+  tallgrass: blockPaths(["deadbush", "tallgrass", "fern"]),
   piston: "blocks/piston_top_normal",
-  wool: blocks(COLORS, "wool_colored_"),
+  wool: blockPaths(COLORS, "wool_colored_"),
   yellow_flower: "blocks/flower_dandelion",
-  red_flower: blocks(
+  red_flower: blockPaths(
     [
       "rose",
       "blue_orchid",
@@ -104,7 +101,7 @@ const TEXTURES: Record<string, string | string[]> = {
   ),
   brown_mushroom: "blocks/mushroom_brown",
   red_mushroom: "blocks/mushroom_red",
-  stone_slab: blocks([
+  stone_slab: blockPaths([
     "stone_slab_side",
     "sandstone_normal",
     "planks_oak",
@@ -137,8 +134,8 @@ const TEXTURES: Record<string, string | string[]> = {
   fence: "blocks/planks_oak",
   pumpkin: "blocks/pumpkin_face_off",
   lit_pumpkin: "blocks/pumpkin_face_on",
-  stained_glass: blocks(COLORS, "glass_"),
-  monster_egg: blocks([
+  stained_glass: blockPaths(COLORS, "glass_"),
+  monster_egg: blockPaths([
     "stone",
     "cobblestone",
     "stonebrick",
@@ -146,7 +143,7 @@ const TEXTURES: Record<string, string | string[]> = {
     "stonebrick_cracked",
     "stonebrick_carved",
   ]),
-  stonebrick: blocks(["", "_mossy", "_cracked", "_carved"], "stonebrick"),
+  stonebrick: blockPaths(["", "_mossy", "_cracked", "_carved"], "stonebrick"),
   brown_mushroom_block: "blocks/mushroom_block_skin_brown",
   red_mushroom_block: "blocks/mushroom_block_skin_red",
   glass_pane: "blocks/glass",
@@ -161,34 +158,34 @@ const TEXTURES: Record<string, string | string[]> = {
   enchanting_table: "blocks/enchanting_table_side",
   end_portal_frame: "blocks/endframe_side",
   redstone_lamp: "blocks/redstone_lamp_off",
-  wooden_slab: blocks(WOODS, "planks_"),
+  wooden_slab: blockPaths(WOODS, "planks_"),
   sandstone_stairs: "blocks/sandstone_normal",
   ender_chest: "entity/chest/ender",
   spruce_stairs: "blocks/planks_spruce",
   birch_stairs: "blocks/planks_birch",
   jungle_stairs: "blocks/planks_jungle",
-  cobblestone_wall: blocks(["cobblestone", "cobblestone_mossy"]),
+  cobblestone_wall: blockPaths(["cobblestone", "cobblestone_mossy"]),
   wooden_button: "blocks/planks_oak",
-  anvil: blocks(["0", "1", "2"], "anvil_top_damaged_"),
+  anvil: blockPaths(["0", "1", "2"], "anvil_top_damaged_"),
   trapped_chest: "entity/chest/trapped",
   light_weighted_pressure_plate: "blocks/gold_block",
   heavy_weighted_pressure_plate: "blocks/iron_block",
   daylight_detector: "blocks/daylight_detector_top",
-  quartz_block: blocks(["side", "chiseled", "lines"], "quartz_block_"),
+  quartz_block: blockPaths(["side", "chiseled", "lines"], "quartz_block_"),
   quartz_stairs: "blocks/quartz_block_side",
   activator_rail: "blocks/rail_activator",
   dropper: "blocks/dropper_front_horizontal",
-  stained_hardened_clay: blocks(COLORS, "hardened_clay_stained_"),
-  stained_glass_pane: blocks(COLORS, "glass_"),
-  leaves2: blocks(["acacia", "big_oak"], "leaves_"),
-  log2: blocks(["acacia", "big_oak"], "log_"),
+  stained_hardened_clay: blockPaths(COLORS, "hardened_clay_stained_"),
+  stained_glass_pane: blockPaths(COLORS, "glass_"),
+  leaves2: blockPaths(["acacia", "big_oak"], "leaves_"),
+  log2: blockPaths(["acacia", "big_oak"], "log_"),
   acacia_stairs: "blocks/planks_acacia",
   dark_oak_stairs: "blocks/planks_big_oak",
-  prismarine: blocks(["rough", "bricks", "dark"], "prismarine_"),
+  prismarine: blockPaths(["rough", "bricks", "dark"], "prismarine_"),
   hay_block: "blocks/hay_block_side",
-  carpet: blocks(COLORS, "wool_colored_"),
+  carpet: blockPaths(COLORS, "wool_colored_"),
   packed_ice: "blocks/ice_packed",
-  double_plant: blocks(
+  double_plant: blockPaths(
     [
       "sunflower_front",
       "syringa_top",
@@ -199,7 +196,7 @@ const TEXTURES: Record<string, string | string[]> = {
     ],
     "double_plant_",
   ),
-  red_sandstone: blocks(["normal", "carved", "smooth"], "red_sandstone_"),
+  red_sandstone: blockPaths(["normal", "carved", "smooth"], "red_sandstone_"),
   red_sandstone_stairs: "blocks/red_sandstone_normal",
   stone_slab2: "blocks/red_sandstone_normal",
   spruce_fence_gate: "blocks/planks_spruce",
@@ -253,7 +250,7 @@ const TEXTURES: Record<string, string | string[]> = {
     "items/fish_pufferfish_raw",
   ],
   cooked_fish: ["items/fish_cod_cooked", "items/fish_salmon_cooked"],
-  // The pack has 1.14's red_dye and yellow_dye in place of 1.8's dye_powder_red and dye_powder_yellow.
+  // The pack has 1.14's red and yellow dye in place of 1.8's dye powders.
   dye: COLORS.toReversed().map((color) =>
     color === "red" || color === "yellow"
       ? `items/${color}_dye`
@@ -303,10 +300,7 @@ const TEXTURES: Record<string, string | string[]> = {
   dark_oak_door: "items/door_dark_oak",
 };
 
-/**
- * The items resource's material names that aren't minecraft-data's 1.8 name in capitals. Blocks and items are kept
- * apart because a few share a name (reeds is SUGAR_CANE_BLOCK as a block and SUGAR_CANE as an item).
- */
+// Material names that differ from minecraft-data's, apart since some repeat.
 const MATERIAL_NAMES: Record<"blocks" | "items", Record<string, string>> = {
   blocks: {
     bed: "BED_BLOCK",
@@ -480,26 +474,27 @@ const texturePath = (name: string, damage: number) => {
   return path && inPack(path) ? path : undefined;
 };
 
-const downloadMinecraftData = async (file: "blocks" | "items") => {
+async function downloadMinecraftData(file: "blocks" | "items") {
   const url = `https://raw.githubusercontent.com/${MINECRAFT_DATA}/${MINECRAFT_DATA_SHA}/data/pc/1.8/${file}.json`;
-  return (await (await fetchOk(url)).json()) as MinecraftItem[];
-};
+  const response = await fetchOk(url);
+  return (await response.json()) as MinecraftItem[];
+}
 
-// The neu and textures units both read items.json, so a run downloads each file once
+// The neu and textures units both read items.json, so a run downloads it once.
 const minecraftDownloads: Partial<
   Record<"blocks" | "items", Promise<MinecraftItem[]>>
 > = {};
-export const minecraftData = (file: "blocks" | "items") =>
+
+export const fetchMinecraftData = (file: "blocks" | "items") =>
   (minecraftDownloads[file] ??= downloadMinecraftData(file));
 
-/** textures-1.8.json, from minecraft-data's 1.8 items and blocks and the 1.8 pack. */
 export const TEXTURE_UNITS = {
   async textures({ write }: SyncContext) {
     const [minecraftItems, minecraftBlocks] = await Promise.all([
-      minecraftData("items"),
-      minecraftData("blocks"),
+      fetchMinecraftData("items"),
+      fetchMinecraftData("blocks"),
     ]);
-    // "<id>:<damage>" per variant and "<id>" for damage 0; ./icons tries both.
+    // Variants are keyed "<id>:<damage>", and damage 0 is also keyed "<id>".
     const textures: Record<string, string> = {};
     const unmapped: string[] = [];
 
@@ -516,7 +511,7 @@ export const TEXTURE_UNITS = {
       }
     }
 
-    // items.json repeats each block's item under the block's id, so those ids take the block's name.
+    // items.json repeats each block under its id, so the block's name wins.
     const blockIds = new Set(minecraftBlocks.map(({ id }) => id));
     const materials = Object.fromEntries([
       ...minecraftBlocks.map(({ id, name }) => [
@@ -531,7 +526,7 @@ export const TEXTURE_UNITS = {
         ]),
     ]);
 
-    await write("textures-1.8.json", { materials, textures });
+    write("textures-1.8.json", { materials, textures });
     console.log(
       `${Object.keys(textures).length} item textures, ${Object.keys(materials).length} materials; no texture in the 1.8 pack: ${unmapped.join(" ")}`,
     );

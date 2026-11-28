@@ -7,14 +7,15 @@
  */
 
 import { arrayGroup } from "@statsify/util";
-import { decodeSlots, toolkitItemView } from "#items";
+import { decodeAttributes } from "#nbt";
+import { decodeSlots, toToolkitItemView } from "#items";
 import { resourceItem } from "#textures";
 import { setImmediate } from "node:timers/promises";
 import type { InventoriesSection, InventoryId, ItemsResource } from "#types";
 import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
-/** The ender chest's page, and the size the bags are paged at. */
-const PAGE = 45;
+// The bags are paged at the size of an ender chest page.
+const PAGE_SIZE = 45;
 
 const BAGS = {
   accessoryBag: "talisman_bag",
@@ -24,78 +25,94 @@ const BAGS = {
   sacksBag: "sacks_bag",
 } as const satisfies Partial<Record<InventoryId, string>>;
 
-const paged = <T>(slots: T[]) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
+const toPages = <T>(slots: T[]) =>
+  slots.length > 0 ? arrayGroup(slots, PAGE_SIZE) : [[]];
 
-/** A map's blobs in their numeric key's order, as the game numbers backpacks. */
-export const byKey = (blobs: Record<string, RawNbt> = {}) =>
+export const sortByKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
 
-/** The hotbar comes first in the blob and last on screen. */
-const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
+// The hotbar comes first in the blob and last on screen.
+const moveHotbarLast = <T>(slots: T[]) => [
+  ...slots.slice(9),
+  ...slots.slice(0, 9),
+];
 
-/**
- * A toolkit holds a tool unless it's taken out into an inventory or the toolkit isn't unlocked. IN_USE, IS_UNLOCKED and
- * HUNTING_TOOLKIT (used up to unlock the menu, the wiki's Hunting Toolkit page) aren't tools; an emptied slot is null.
- */
-const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean) => T | null): T[] => {
-  const inUse = toolkit.IN_USE as Record<string, Record<string, boolean>> | undefined;
-  const held = (kind: string, slot: number) => Boolean(toolkit.IS_UNLOCKED) && inUse?.[kind]?.[slot] !== true;
-  return Object.entries(toolkit)
-    .flatMap(([kind, tools]) =>
-      Array.isArray(tools) && kind !== "HUNTING_TOOLKIT" ?
-        (tools as (RawNbt | null)[]).map((blob, slot) => blob && tool(blob, held(kind, slot))) :
-        []
-    )
-    .filter((item) => item !== null);
-};
+type GetTool<T> = (blob: RawNbt, held: boolean) => T | null;
 
-type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
+// The used-up Hunting Toolkit item sits beside the tools, so it's skipped.
+function getToolkitSlots<T>(toolkit: RawToolkit, getTool: GetTool<T>) {
+  const slots: T[] = [];
+  for (const [kind, tools] of Object.entries(toolkit)) {
+    if (!Array.isArray(tools) || kind === "HUNTING_TOOLKIT") continue;
 
-/** Every inventory as the game pages it, each slot from `slots` and each toolkit tool from `tool`; a null tool is dropped. */
-export async function inventoryPages<T>(
+    for (const [slot, blob] of (tools as (RawNbt | null)[]).entries()) {
+      // IN_USE marks a tool taken out of the toolkit into an inventory.
+      const held =
+        Boolean(toolkit.IS_UNLOCKED) && toolkit.IN_USE?.[kind]?.[slot] !== true;
+      const tool = blob && getTool(blob, held);
+      if (tool) slots.push(tool);
+    }
+  }
+  return slots;
+}
+
+export async function getInventoryPages<T>(
   member: RawMember,
-  slots: (blob: RawNbt) => (T | null)[],
-  tool: (blob: RawNbt, held: boolean) => T | null
-): Promise<Pages<T> | null> {
+  getSlots: (blob: RawNbt) => (T | null)[],
+  getTool: GetTool<T>,
+) {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // Each blob is a synchronous gunzip and NBT parse, so other requests run between them
+  // Each blob is a synchronous gunzip, so other requests run between them.
   const decode = async (blob: RawNbt) => {
     await setImmediate();
-    return slots(blob);
+    return getSlots(blob);
   };
 
-  const pages: Pages<T> = { inventory: [hotbarLast(await decode(inventory.inv_contents))] };
+  const pages: Partial<Record<InventoryId, (T | null)[][]>> = {
+    inventory: [moveHotbarLast(await decode(inventory.inv_contents))],
+  };
 
-  if (inventory.ender_chest_contents) pages.enderChest = paged(await decode(inventory.ender_chest_contents));
-  pages.backpacks = await Array.fromAsync(byKey(inventory.backpack_contents), decode);
-  if (inventory.personal_vault_contents) pages.personalVault = [await decode(inventory.personal_vault_contents)];
+  if (inventory.ender_chest_contents)
+    pages.enderChest = toPages(await decode(inventory.ender_chest_contents));
+  pages.backpacks = await Array.fromAsync(
+    sortByKey(inventory.backpack_contents),
+    decode,
+  );
+  if (inventory.personal_vault_contents)
+    pages.personalVault = [await decode(inventory.personal_vault_contents)];
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
-    // oxlint-disable-next-line no-await-in-loop -- one bag per turn
-    if (blob) pages[id] = paged(await decode(blob));
+    // oxlint-disable-next-line no-await-in-loop -- yields to other requests
+    if (blob) pages[id] = toPages(await decode(blob));
   }
 
   const farming = member.garden_player_data?.farming_toolkit;
-  if (farming) pages.farmingToolkit = [toolkitPage(farming, tool)];
+  if (farming) pages.farmingToolkit = [getToolkitSlots(farming, getTool)];
   const hunting = member.foraging?.hunting_toolkit;
-  if (hunting) pages.huntingToolkit = [toolkitPage(hunting, tool)];
+  if (hunting) pages.huntingToolkit = [getToolkitSlots(hunting, getTool)];
 
   const rift = member.rift?.inventory;
-  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(await decode(rift.inv_contents))];
-  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(await decode(rift.ender_chest_contents));
+  if (rift?.inv_contents)
+    pages.riftInventory = [moveHotbarLast(await decode(rift.inv_contents))];
+  if (rift?.ender_chest_contents)
+    pages.riftEnderChest = toPages(await decode(rift.ender_chest_contents));
 
   return pages;
 }
 
-/** Every inventory as the game pages it, and the sacks. */
-export async function getInventories(member: RawMember, items: ItemsResource): Promise<InventoriesSection | null> {
+export async function getInventories(
+  member: RawMember,
+  items: ItemsResource,
+): Promise<InventoriesSection | null> {
   const inventory = member.inventory;
-  const pages = await inventoryPages(member, decodeSlots, (blob) => toolkitItemView(blob, items));
+  const pages = await getInventoryPages(member, decodeSlots, (blob) =>
+    toToolkitItemView(decodeAttributes(blob), items),
+  );
   if (!inventory || !pages) return null;
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
@@ -114,7 +131,9 @@ export async function getInventories(member: RawMember, items: ItemsResource): P
 
   return {
     pages,
-    backpackIcons: byKey(inventory.backpack_icons).map((blob) => decodeSlots(blob)[0] ?? null),
+    backpackIcons: sortByKey(inventory.backpack_icons).map(
+      (blob) => decodeSlots(blob)[0] ?? null,
+    ),
     sacks,
   };
 }

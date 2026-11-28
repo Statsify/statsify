@@ -21,14 +21,23 @@ const PETS_SHOWN = 18;
 // The section sorts the active pet first, then by rarity and XP
 const topPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
 
-const petName = ({ name, rarity, skinColor }: PetView) =>
+// The game puts a ✦ in the skin's color after a skinned pet's name.
+const formatPetName = ({ name, rarity, skinColor }: PetView) =>
   `${RARITY_COLORS[rarity]}${name}${skinColor ? `${skinColor} ✦` : ""}`;
 
 export const petIcons = (member: MemberView) =>
-  topPets(member).flatMap(({ texture, heldItemTexture }) => (heldItemTexture ? [texture, heldItemTexture] : [texture]));
+  topPets(member).flatMap(({ texture, heldItemTexture }) =>
+    heldItemTexture ? [texture, heldItemTexture] : [texture],
+  );
 
-export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
-  const { score, active, pets, totalXp, skinned, candyUsed, activeStats } = profile.member.pets!;
+export const SkyBlockPetsProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
+  const { score, active, pets, totalXp, skinned, candyUsed, activeStats } =
+    profile.member.pets!;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.petScore"), t(score), "§b"],
@@ -36,30 +45,45 @@ export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProf
     [t("skyblock.skinnedPets"), t(skinned), "§d"],
     [t("skyblock.totalPetXp"), t(Math.floor(totalXp)), "§d"],
     [t("skyblock.petCandyUsed"), t(candyUsed), "§c"],
-    [t("skyblock.activePet"), active ? petName(active) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.activePet"),
+      active ? formatPetName(active) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  const stats = PLAYER_STATS.flatMap(({ id, color }) => {
-    const value = activeStats?.[id];
-    return value ? [{ name: prettify(id), color, value }] : [];
-  });
+  const stats = PLAYER_STATS.filter(({ id }) => activeStats?.[id]).map(
+    ({ id, color }) => ({
+      name: prettify(id),
+      color,
+      value: activeStats![id]!,
+    }),
+  );
 
   const items = topPets(profile.member).map((pet) => {
-    const candy = pet.candyUsed > 0 ? ` §8• §c${t("skyblock.candyUsed", { candy: t(pet.candyUsed) })}` : "";
+    const level = `§7${t("skyblock.petLevel", { level: t(pet.level.level) })}`;
+    const candy = t("skyblock.candyUsed", { candy: t(pet.candyUsed) });
+
     return {
       texture: pet.texture,
       badge: pet.heldItemTexture,
-      name: petName(pet),
-      value: `§7${t("skyblock.petLevel", { level: t(pet.level.level) })}${candy}`,
+      name: formatPetName(pet),
+      value: pet.candyUsed > 0 ? `${level} §8• §c${candy}` : level,
     };
   });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {stats.length > 0 ? <StatLines label={t("skyblock.activePet")} stats={stats} t={t} /> : <></>}
-      {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={3} stacked /> :
-        <Empty text={t("skyblock.noPets")} />}
+      {stats.length > 0 ? (
+        <StatLines label={t("skyblock.activePet")} stats={stats} t={t} />
+      ) : (
+        <></>
+      )}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} columns={3} stacked />
+      ) : (
+        <Empty text={t("skyblock.noPets")} />
+      )}
     </Card>
   );
 };

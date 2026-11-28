@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Typed views of the data scripts/sync-data.ts writes to src/generated/: NEU-REPO's (MIT, see src/generated/NOTICE.md),
-// plus the skill tables and max levels from Hypixel's skills resource and the tiers from its collections resource.
+// scripts/sync-data.ts generates these from the sources in NOTICE.md.
 import accessories from "./generated/accessories.json" with { type: "json" };
 import attributeShards from "./generated/attribute-shards.json" with { type: "json" };
 import bestiary from "./generated/bestiary.json" with { type: "json" };
@@ -18,6 +17,7 @@ import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
 import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
+import itemModels from "./generated/item-models.json" with { type: "json" };
 import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petItems from "./generated/pet-items.json" with { type: "json" };
@@ -27,8 +27,12 @@ import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
+import textures from "./generated/textures-1.8.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PlayerStat, PowerStat, Rarity, Skill, SlayerBoss, Stats, TreeLayout } from "#types";
+import { prettify } from "@statsify/util";
+import type { PlayerStat, PowerStat, Rarity, Stats, TreeLayout } from "#types";
+import type { Skill } from "./sections/skills.js";
+import type { SlayerBoss } from "./sections/slayers.js";
 
 export const LEVELING = leveling as {
   catacombs: number[];
@@ -39,7 +43,7 @@ export const LEVELING = leveling as {
   leveling_xp: number[];
   max_levels: Record<string, number>;
   runecrafting_xp: number[];
-  sblevel_colours: Record<string, string>; // the lowest level of each bracket → a Minecraft color id
+  sblevel_colours: Record<string, string>; // a bracket's first level → color id
   slayer_to_highest_tier: Record<string, number>;
   slayer_xp: Record<string, number[]>;
   social: number[];
@@ -48,14 +52,22 @@ export const LEVELING = leveling as {
 export const PETS = pets as {
   custom_pet_leveling: Record<
     string,
-    { type?: number; pet_levels?: number[]; max_level?: number; rarity_offset?: Record<string, number> }
+    {
+      type?: number;
+      pet_levels?: number[];
+      max_level?: number;
+      rarity_offset?: Record<string, number>;
+    }
   >;
   id_to_display_name: Record<string, string>;
   pet_levels: number[];
   pet_rarity_offset: Record<string, number>;
 };
 
-/** SkyBlock XP per point of accessory power and of pet score. */
+export const getPetName = (type: string) =>
+  PETS.id_to_display_name[type] ?? prettify(type);
+
+// The SkyBlock XP for each point of accessory power and of pet score.
 export const SKYBLOCK_XP = sblevels.core_task;
 
 export const PET_TEXTURES = petTextures as {
@@ -64,69 +76,109 @@ export const PET_TEXTURES = petTextures as {
   skinColors: Record<string, string>;
 };
 
-/** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
-export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
+export const MATERIAL_IDS: Record<string, number | undefined> =
+  textures.materials;
 
-export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
+// 1.8 pack texture paths by "<id>:<damage>", and by "<id>" for damage 0.
+export const TEXTURE_PATHS: Record<string, string | undefined> =
+  textures.textures;
+
+// The item_model of each item a modern client draws unlike its 1.8 material.
+export const ITEM_MODELS: Record<string, string | undefined> = itemModels;
+
+// An accessory's higher tiers, or a variant like Dante's Talisman and Ring.
+export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
+  string,
+  string[]
+>;
+
+export const IGNORED_ACCESSORIES = new Set<string>(accessories.ignored);
 
 export const HOTM_LAYOUT = hotmLayout as TreeLayout;
 
-/** Essence type (WITHER, CRIMSON…) → its shop's perks → each perk's max level. */
-export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, number>>;
-
-/**
- * A stone Power's stats at the Accessory Power its stone lists them for, and its Unique Power Bonus, which doesn't
- * scale. Powers learned without a stone aren't here.
- */
-export const POWERS = powers as Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }>;
-
 export const HOTF_LAYOUT = hotfLayout as TreeLayout;
 
-/** Hoppity's rabbits by rarity, common to divine. */
+// Each essence shop's perk ids, with each perk's max level.
+export const ESSENCE_SHOPS = essenceShops as Record<
+  string,
+  Record<string, number>
+>;
+
+// Stats scale from the listed accessoryPower, but the bonus never scales.
+export const POWERS = powers as Record<
+  string,
+  { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }
+>;
+
+// Hoppity's rabbits by lowercase rarity.
 export const RABBITS = hoppity as Record<string, string[]>;
 
-/** Each Kuudra tier's key head, by the API's tier names (none is the basic tier). */
 export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
 
-/** Each essence's head, by item id (ESSENCE_WITHER). */
 export const ESSENCE_TEXTURES = essenceTextures as Record<string, string>;
 
-/** Trophy fish id, as the API spells it but uppercased → name. */
+// Trophy fish names by the API's id, uppercased.
 export const TROPHY_FISH = trophyFish as Record<string, string>;
 
-/** A bestiary family: its kill ids (one per level it spawns at), the kills past which none count, and its bracket. */
-export interface BestiaryFamily {
+interface BestiaryFamily {
   name: string;
-  ids: string[];
-  cap: number;
+  ids: string[]; // one per level it spawns at
+  cap: number; // kills past it don't count
   bracket: string;
 }
 
-/** Each bracket's kills per tier, and every bestiary page; the Fishing and Critter Safari pages are subpages. */
+// A page with a category, like Fishing, is a subpage of it.
 export const BESTIARY = bestiary as {
-  brackets: Record<string, number[]>;
+  brackets: Record<string, number[]>; // the kills each tier needs
   pages: { category?: string; name: string; families: BestiaryFamily[] }[];
 };
 
-// The sea creatures NEU files under their island's page (the wiki's list of sea creatures, an owner exception, unverified)
+// NEU files these sea creatures under their island's page.
 const ISLAND_SEA_CREATURES: Record<string, string[]> = {
-  "Lotus Atoll": ["Atoll Croaker", "Drowned Captain", "Frog Prince", "Lotus Guardian", "Puddle Jumper", "gorF"],
-  "Moonglade Marsh": ["Bogged", "Ent", "Nessie", "Stridersurfer", "Tadgang", "The Loch Emperor", "Wetwing"],
-  "Torrhus Canyon": ["Brineling", "Giant Isopod", "Haggard", "Silkbreeze", "Sprawl", "Torrid"],
+  "Lotus Atoll": [
+    "Atoll Croaker",
+    "Drowned Captain",
+    "Frog Prince",
+    "Lotus Guardian",
+    "Puddle Jumper",
+    "gorF",
+  ],
+  "Moonglade Marsh": [
+    "Bogged",
+    "Ent",
+    "Nessie",
+    "Stridersurfer",
+    "Tadgang",
+    "The Loch Emperor",
+    "Wetwing",
+  ],
+  "Torrhus Canyon": [
+    "Brineling",
+    "Giant Isopod",
+    "Haggard",
+    "Silkbreeze",
+    "Sprawl",
+    "Torrid",
+  ],
 };
 
-/** Every sea creature: the Fishing category's families and the islands' ones. */
-export const SEA_CREATURES = BESTIARY.pages.flatMap(({ name, category, families }) =>
-  category === "Fishing" ? families : families.filter((family) => ISLAND_SEA_CREATURES[name]?.includes(family.name))
+export const SEA_CREATURES = BESTIARY.pages.flatMap(
+  ({ name, category, families }) =>
+    category === "Fishing"
+      ? families
+      : families.filter((family) =>
+          ISLAND_SEA_CREATURES[name]?.includes(family.name),
+        ),
 );
 
-/** Hypixel's collections by category, each item's tiers as the amount each needs, in the resource's order. */
-export const COLLECTIONS = collections as { id: string; name: string; items: { id: string; name: string; tiers: number[] }[] }[];
+// Each item's tiers are the amounts they need, in the resource's order.
+export const COLLECTIONS = collections as {
+  id: string;
+  name: string;
+  items: { id: string; name: string; tiers: number[] }[];
+}[];
 
-/**
- * Hunting's shards, each with the attribute it levels and, when level I grants stats outright, those stats; Chameleon's
- * can't be consumed. An attribute's levels cost its rarity's `levels` in shards, one count per level.
- */
+// An attribute's levels cost its rarity's `levels`, in shards per level.
 export const ATTRIBUTE_SHARDS = attributeShards as {
   levels: Record<Rarity, number[]>;
   shards: {
@@ -135,13 +187,13 @@ export const ATTRIBUTE_SHARDS = attributeShards as {
     attribute: string;
     attributeName: string;
     rarity: Rarity;
-    grants?: { stat: PlayerStat; value: number }[];
+    grants?: { stat: PlayerStat; value: number }[]; // level I's stats
     families?: string[];
     unconsumable?: boolean;
   }[];
 };
 
-/** NEU's Garden tables, with the crop milestones by the API's crop id and each upgrade's level count. */
+// Crop milestones are keyed by the API's crop id, upgrades by level count.
 export const GARDEN = garden as {
   garden_exp: number[];
   crop_milestones: Record<string, number[]>;
@@ -151,10 +203,7 @@ export const GARDEN = garden as {
   composter_upgrades: Record<string, number>;
 };
 
-/**
- * Base stats, what each skill and slayer level adds (skills from Hypixel's skills resource), and pet score's Magic
- * Find from each score up.
- */
+// Pet score's Magic Find is keyed by the lowest score that gives it.
 export const STAT_TABLES = stats as {
   base: Stats;
   skills: Record<Skill, Stats[]>;
@@ -162,8 +211,14 @@ export const STAT_TABLES = stats as {
   pet_score: Record<string, number>;
 };
 
-/** Each pet's stats by rarity at its first and last stat level: 1 and 100, or `levels` (101 and 200 for the dragons). */
-export const PET_STATS = petNums as Record<string, Partial<Record<Rarity, { first: Stats; last: Stats; levels?: number[] }>>>;
+// Pet stats are listed at levels 1 and 100, or at `levels` for the dragons.
+export const PET_STATS = petNums as Record<
+  string,
+  Partial<Record<Rarity, { first: Stats; last: Stats; levels?: number[] }>>
+>;
 
-/** A pet item's flat stats, and the percent it raises some or all of the pet's own stats by. */
-export const PET_ITEMS = petItems as Record<string, { stats?: Stats; petStats?: Stats; allPetStats?: number }>;
+// petStats and allPetStats are percents that raise the pet's own stats.
+export const PET_ITEMS = petItems as Record<
+  string,
+  { stats?: Stats; petStats?: Stats; allPetStats?: number }
+>;

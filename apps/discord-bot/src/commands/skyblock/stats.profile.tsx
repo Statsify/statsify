@@ -10,7 +10,7 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { PLAYER_STATS, RARITY_COLORS } from "@statsify/skyblock/display";
-import { gridRows, progressText } from "./components/ItemGrid.js";
+import { gridRows, formatProgress } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 import type { StatGroup } from "@statsify/skyblock";
@@ -18,52 +18,94 @@ import type { StatGroup } from "@statsify/skyblock";
 const STATS = new Map(PLAYER_STATS.map((stat) => [stat.id, stat]));
 const ATTRIBUTES = 30;
 
-// Seven groups as seven buttons crowd the profile menu, so the gathering skills share a page
+// Seven pages would crowd the profile menu, so gathering skills share one.
 export const STAT_PAGES = {
   combat: ["combat"],
   gathering: ["mining", "farming", "foraging", "fishing"],
   misc: ["misc", "wisdoms"],
 } as const satisfies Record<string, StatGroup[]>;
 
-// Gathering's long fortune names set its width four a row; elsewhere the header usually does, so three would only add height
-const COLUMNS: Record<keyof typeof STAT_PAGES, number> = { combat: 4, gathering: 3, misc: 4 };
+// Gathering's long fortune names would widen the card at four to a row.
+const COLUMNS: Record<keyof typeof STAT_PAGES, number> = {
+  combat: 4,
+  gathering: 3,
+  misc: 4,
+};
 
-export interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
+interface SkyBlockStatsProfileProps extends SkyBlockProfileProps {
   page: keyof typeof STAT_PAGES;
 }
 
-export const SkyBlockStatsProfile = ({ profile, t, page, ...card }: SkyBlockStatsProfileProps) => {
+export const SkyBlockStatsProfile = ({
+  profile,
+  t,
+  page,
+  ...card
+}: SkyBlockStatsProfileProps) => {
   const { stats } = profile.member;
-  const sidebar: SidebarItem[] = stats?.weapon ? [[t("skyblock.weapon"), stats.weapon, "§f"]] : [];
+  const sidebar: SidebarItem[] = stats?.weapon
+    ? [[t("skyblock.weapon"), stats.weapon, "§f"]]
+    : [];
 
-  const groups = STAT_PAGES[page].flatMap((group) => {
-    const cells = (stats?.stats ?? []).flatMap(({ stat, total }) => {
+  const groups: JSX.Element[] = [];
+  for (const group of STAT_PAGES[page]) {
+    const cells: JSX.Element[] = [];
+    for (const { stat, total } of stats?.stats ?? []) {
       const info = STATS.get(stat);
-      if (!info || info.group !== group) return [];
-      const value = `${t(Math.round(total * 10) / 10)}${"percent" in info && info.percent ? "%" : ""}`;
-      return [<Table.td title={`${info.symbol} ${prettify(stat)}`} value={value} color={info.color} size="small" />];
-    });
+      if (!info || info.group !== group) continue;
 
-    return cells.length > 0 ? [<Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>{gridRows(cells, COLUMNS[page], true)}</Table.ts>] : [];
-  });
+      const unit = "percent" in info && info.percent ? "%" : "";
+      cells.push(
+        <Table.td
+          title={`${info.symbol} ${prettify(stat)}`}
+          value={`${t(Math.round(total * 10) / 10)}${unit}`}
+          color={info.color}
+          size="small"
+        />,
+      );
+    }
+
+    if (cells.length === 0) continue;
+    groups.push(
+      <Table.ts title={`§e${t(`skyblock.statGroups.${group}`)}`}>
+        {gridRows(cells, COLUMNS[page], { spreadLastRow: true })}
+      </Table.ts>,
+    );
+  }
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {groups.length > 0 ? <Table.table>{groups}</Table.table> : <Empty text={t("skyblock.noStats")} />}
+      {groups.length > 0 ? (
+        <Table.table>{groups}</Table.table>
+      ) : (
+        <Empty text={t("skyblock.noStats")} />
+      )}
     </Card>
   );
 };
 
-export const SkyBlockAttributesProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockAttributesProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const attributes = profile.member.attributes!;
   // A late-game member has 200+ unlocked, so the ones still leveling come first
   const shown = attributes.attributes
     .filter(({ level }) => level > 0)
-    .toSorted((a, b) => Number(a.level === a.maxLevel) - Number(b.level === b.maxLevel) || b.level - a.level)
+    .toSorted(
+      (a, b) =>
+        Number(a.level === a.maxLevel) - Number(b.level === b.maxLevel) ||
+        b.level - a.level,
+    )
     .slice(0, ATTRIBUTES);
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.unlocked"), `${t(attributes.unlocked)}§7/${t(attributes.total)}`, "§a"],
+    [
+      t("skyblock.unlocked"),
+      `${t(attributes.unlocked)}§7/${t(attributes.total)}`,
+      "§a",
+    ],
     [t("skyblock.maxed"), t(attributes.maxed), "§6"],
     [t("skyblock.shardsOwned"), t(attributes.owned), "§b"],
   ];
@@ -71,7 +113,7 @@ export const SkyBlockAttributesProfile = ({ profile, t, ...card }: SkyBlockProfi
   const cells = shown.map(({ attribute, rarity, level, maxLevel }) => (
     <Table.td
       title={attribute}
-      value={progressText(t, level, maxLevel)}
+      value={formatProgress(t, level, maxLevel)}
       color={RARITY_COLORS[rarity]}
       size="small"
     />
@@ -79,7 +121,11 @@ export const SkyBlockAttributesProfile = ({ profile, t, ...card }: SkyBlockProfi
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {cells.length > 0 ? <Table.table>{gridRows(cells, 3, true)}</Table.table> : <Empty text={t("skyblock.noAttributes")} />}
+      {cells.length > 0 ? (
+        <Table.table>{gridRows(cells, 3, { spreadLastRow: true })}</Table.table>
+      ) : (
+        <Empty text={t("skyblock.noAttributes")} />
+      )}
     </Card>
   );
 };

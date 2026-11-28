@@ -72,7 +72,7 @@ export type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
 
 export interface SkyBlockCard {
   sections: SkyBlockSection[];
-  /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
+  // Never museum, since its response leaves out members who donated nothing.
   settings: Exclude<keyof ApiSettings, "museum">[];
   icons?: (member: MemberView) => ItemTexture[];
   profile: SkyBlockProfile | SkyBlockSubPage[];
@@ -81,7 +81,7 @@ export interface SkyBlockCard {
 interface SkyBlockSubPage {
   label: LocalizationString;
   profile: SkyBlockProfile;
-  icons?: SkyBlockCard["icons"]; // in place of the card's
+  icons?: SkyBlockCard["icons"];
 }
 
 export const SKYBLOCK_CARDS = {
@@ -289,7 +289,7 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
-export const skyBlockHeading = (
+export const getSkyBlockHeading = (
   t: LocalizeFunction,
   name: SkyBlockCardName | "bingo" | "calendar" | "ranks",
 ) => `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
@@ -299,11 +299,11 @@ export function skyBlockTitle(
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,
 ) {
-  // The Header moves the profile onto its own line where that narrows the card
-  return `${skyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
+  // The Header puts the profile on its own line only where that's narrower.
+  return `${getSkyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {
-  // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
+  // getBackground throws for SkyBlock, which has no backgrounds yet.
   return getBackground("hypixel", "overall");
 }
