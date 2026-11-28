@@ -70,8 +70,10 @@ const DOJO_BELTS: [DojoBelt, number][] = [
   ["white", 0],
 ];
 
+// Reputation can drop below 0, which is still Neutral.
 const getReputationRank = (reputation: number) =>
-  REPUTATION_RANKS.findLast((rank) => reputation >= RANK_REPUTATION[rank])!;
+  REPUTATION_RANKS.findLast((rank) => reputation >= RANK_REPUTATION[rank]) ??
+  "neutral";
 
 const getDojoGrade = (points: number) =>
   DOJO_GRADES.find(([, lowest]) => points >= lowest)![0];
@@ -142,6 +144,7 @@ if (import.meta.vitest) {
 
   suite("getReputationRank", () => {
     it("should start each rank at its least reputation", () => {
+      expect(getReputationRank(-500)).toBe("neutral");
       expect(getReputationRank(0)).toBe("neutral");
       expect(getReputationRank(999)).toBe("neutral");
       expect(getReputationRank(1000)).toBe("friendly");
