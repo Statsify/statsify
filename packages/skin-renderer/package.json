@@ -20,9 +20,11 @@
     "build:wasm": "wasm-pack build --target web --release",
     "build:wasm:debug": "wasm-pack build --target web --dev",
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty",
-    "lint:ci": "cargo fmt --check && cargo clippy -- -D warnings"
+    "lint:ci": "cargo fmt --check && cargo clippy -- -D warnings",
+    "test": "cargo test"
   },
   "devDependencies": {
+    "@statsify/minecraft-models": "workspace:^",
     "@statsify/render-core": "workspace:^"
   },
   "napi": {

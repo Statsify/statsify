@@ -29,6 +29,7 @@ tokio = { version = "1.45.1", features = ["sync"] }
 napi = { version = "3.2.4", features = ["async"] }
 napi-derive = "3.2.4"
 wgpu = "26.0.1"
+statsify-minecraft-models = { path = "../minecraft-models" }
 
 [build-dependencies]
 napi-build = "2.2.0"

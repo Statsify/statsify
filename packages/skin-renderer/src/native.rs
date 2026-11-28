@@ -7,7 +7,7 @@ use tokio::sync::OnceCell;
 
 use crate::armor::Armor;
 use crate::model::{Model, ModelKind, ModelOuterLayer};
-use crate::pose::Pose;
+use crate::pose::{Held, Pose};
 
 static SKIN_RENDERER: OnceCell<Renderer<NativeBackend>> = OnceCell::const_new();
 
@@ -30,7 +30,7 @@ pub struct RenderOptions {
   /// Camera angle around the player in radians: 0 faces the front, π the back.
   /// Defaults to -0.3.
   pub yaw: Option<f64>,
-  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly'")]
+  #[napi(ts_type = "'standing' | 'punch' | 'sneak' | 'jump' | 'swim' | 'fly' | 'sit'")]
   pub pose: Option<Pose>,
 }
 
@@ -87,6 +87,7 @@ fn draw_skin(
     options.glint.as_deref(),
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
+    Held::default(),
   )?;
 
   let camera = match yaw {
@@ -104,7 +105,7 @@ fn draw_skin(
 }
 
 // Checked after narrowing, since a huge f64 becomes an f32 infinity
-fn narrow(value: f64) -> Option<f32> {
+pub(crate) fn narrow(value: f64) -> Option<f32> {
   let value = value as f32;
   value.is_finite().then_some(value)
 }

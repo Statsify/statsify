@@ -1,5 +1,7 @@
 use cgmath::{Deg, Vector3, Zero};
 #[cfg(not(target_arch = "wasm32"))]
+use cgmath::{Matrix4, SquareMatrix};
+#[cfg(not(target_arch = "wasm32"))]
 use napi_derive::napi;
 
 use crate::geometry::{axis_angle, Geometry, Rotation};
@@ -24,6 +26,24 @@ pub enum Pose {
   Jump,
   Swim,
   Fly,
+  Sit,
+}
+
+/// Which of the player's hands hold an item.
+#[derive(Clone, Copy, Default)]
+pub struct Held {
+  pub right: bool,
+  pub left: bool,
+}
+
+impl Held {
+  pub fn holds(self, part: Part) -> bool {
+    match part {
+      Part::RightArm => self.right,
+      Part::LeftArm => self.left,
+      _ => false,
+    }
+  }
 }
 
 pub struct PartPose {
@@ -66,9 +86,31 @@ impl Pose {
       (Pose::Fly, Part::RightArm) => part_pose([0.0, 0.0, -10.0], [0.0; 3]),
       (Pose::Fly, Part::LeftArm) => part_pose([0.0, 0.0, 10.0], [0.0; 3]),
 
+      // Riding. The body stays put: the game seats a rider by moving the whole player
+      (Pose::Sit, Part::RightArm | Part::LeftArm) => part_pose([-36.0, 0.0, 0.0], [0.0; 3]),
+      (Pose::Sit, Part::RightLeg) => part_pose([-72.0, -18.0, 0.0], [0.0; 3]),
+      (Pose::Sit, Part::LeftLeg) => part_pose([-72.0, 18.0, 0.0], [0.0; 3]),
+
       _ => return None,
     };
 
+    Some(pose)
+  }
+
+  // 1.8 halves the swing a holding arm has so far (walking or riding) and pitches it π/10 forward,
+  // before the attack swing and sneaking add theirs. Swimming and flying aren't 1.8 poses.
+  pub fn holding(self, part: Part) -> Option<PartPose> {
+    let mut pose = self
+      .part(part)
+      .unwrap_or_else(|| part_pose([0.0; 3], [0.0; 3]));
+
+    let swing = match self {
+      Pose::Jump | Pose::Sit => pose.rotation.x,
+      Pose::Standing | Pose::Punch | Pose::Sneak => 0.0,
+      Pose::Swim | Pose::Fly => return self.part(part),
+    };
+
+    pose.rotation.x -= swing / 2.0 + 18.0;
     Some(pose)
   }
 
@@ -97,7 +139,17 @@ impl Pose {
         quaternion: axis_angle(Vector3::unit_x(), Deg(90.0)),
         pivot: Vector3::zero(),
       }),
-      Pose::Standing | Pose::Punch | Pose::Jump => {}
+      Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => {}
+    }
+  }
+
+  // `place` as a matrix, for the bones models attach to
+  #[cfg(not(target_arch = "wasm32"))]
+  pub fn placement(self) -> Matrix4<f32> {
+    match self {
+      Pose::Sneak => Matrix4::from_translation(Vector3::new(0.0, -SNEAK_DROP, 0.0)),
+      Pose::Swim | Pose::Fly => Matrix4::from(axis_angle(Vector3::unit_x(), Deg(90.0))),
+      Pose::Standing | Pose::Punch | Pose::Jump | Pose::Sit => Matrix4::identity(),
     }
   }
 }
