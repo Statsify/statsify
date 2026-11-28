@@ -32,7 +32,12 @@ export interface InventoryProps {
  * <mc-inventory> for React. The element loads only in the browser, and `pack` and `slots` wait for
  * it: React would set them as attributes on an element that isn't defined yet.
  */
-export function Inventory({ pack, slots, onTooltipChange, ...attributes }: InventoryProps) {
+export function Inventory({
+  pack,
+  slots,
+  onTooltipChange,
+  ...attributes
+}: InventoryProps) {
   const ref = useRef<McInventory>(null);
 
   useEffect(() => {
@@ -50,7 +55,8 @@ export function Inventory({ pack, slots, onTooltipChange, ...attributes }: Inven
     const element = ref.current;
     if (!element || !onTooltipChange) return;
 
-    const listener = (event: Event) => onTooltipChange((event as CustomEvent<TooltipChange | null>).detail);
+    const listener = (event: Event) =>
+      onTooltipChange((event as CustomEvent<TooltipChange | null>).detail);
     element.addEventListener("mc-tooltip-change", listener);
     return () => element.removeEventListener("mc-tooltip-change", listener);
   }, [onTooltipChange]);

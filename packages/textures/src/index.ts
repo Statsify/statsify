@@ -13,8 +13,17 @@ export * from "./core/inventory.js";
 export * from "./core/item-renderer.js";
 export * from "./core/item-stack.js";
 export * from "./core/legacy-items.js";
-export { type ItemLayer, ModelResolver, resolveTextures } from "./core/models.js";
+export {
+  type ItemLayer,
+  ModelResolver,
+  resolveTextures,
+} from "./core/models.js";
 export * from "./core/pack.js";
 export * from "./core/text.js";
 export type { DyeColor } from "./core/tints.js";
-export { drawTooltip, loadNames, nameKeys, tooltipLines } from "./core/tooltip.js";
+export {
+  drawTooltip,
+  loadNames,
+  nameKeys,
+  tooltipLines,
+} from "./core/tooltip.js";

@@ -7,8 +7,16 @@
  */
 
 import { CHEST_SCREEN, InventoryRenderer } from "./inventory.js";
-import { type ComponentBranches, type ItemLayer, hasComponent } from "./models.js";
-import { ItemRenderer, type ItemSource, type SkinLoader } from "./item-renderer.js";
+import {
+  type ComponentBranches,
+  type ItemLayer,
+  hasComponent,
+} from "./models.js";
+import {
+  ItemRenderer,
+  type ItemSource,
+  type SkinLoader,
+} from "./item-renderer.js";
 import { context, createCanvas, decodePng } from "./canvas.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
@@ -50,7 +58,9 @@ export class Atlas implements ItemSource {
     resolve: (item: ItemStack) => {
       const layers = this.data.layers[item.id] ?? [];
       if (Array.isArray(layers)) return layers;
-      return hasComponent(item, layers.component) ? layers.on_true : layers.on_false;
+      return hasComponent(item, layers.component)
+        ? layers.on_true
+        : layers.on_false;
     },
   };
 
@@ -73,7 +83,12 @@ export class Atlas implements ItemSource {
 
   /** An InventoryRenderer over the atlas. An atlas has no font, so the page draws the title, counts and tooltips */
   public inventoryRenderer(cache?: IconCache, loadSkin?: SkinLoader) {
-    return new InventoryRenderer(new ItemRenderer(this, cache, loadSkin), undefined, this.names, this.texture(CHEST_SCREEN));
+    return new InventoryRenderer(
+      new ItemRenderer(this, cache, loadSkin),
+      undefined,
+      this.names,
+      this.texture(CHEST_SCREEN),
+    );
   }
 
   /** Whether the item is drawn from its models rather than its icon, since its stack changes how it looks */
@@ -88,9 +103,20 @@ export class Atlas implements ItemSource {
 
     if (!icon) {
       const rects = rectOf(this.data.icons, id);
-      const [x, y, width, height] = rects.find(([, , width]) => width === 16 * scale) ?? rects.at(-1)!;
+      const [x, y, width, height] =
+        rects.find(([, , width]) => width === 16 * scale) ?? rects.at(-1)!;
       icon = createCanvas(16 * scale, 16 * scale);
-      context(icon).drawImage(this.image, x, y, width, height, 0, 0, icon.width, icon.height);
+      context(icon).drawImage(
+        this.image,
+        x,
+        y,
+        width,
+        height,
+        0,
+        0,
+        icon.width,
+        icon.height,
+      );
       this.icons.set(key, icon);
     }
 
@@ -110,7 +136,9 @@ export class Atlas implements ItemSource {
     let sprite = this.sprites.get(key);
 
     if (!sprite) {
-      sprite = context(this.image).getImageData(...rectOf(this.data.textures, key));
+      sprite = context(this.image).getImageData(
+        ...rectOf(this.data.textures, key),
+      );
       this.sprites.set(key, sprite);
     }
 
@@ -127,12 +155,17 @@ function rectOf<T>(rects: Record<string, T>, id: string) {
 /** Loads an atlas from its map's URL, with the image beside it */
 export async function loadAtlas(url: string | URL) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  if (!response.ok)
+    throw new Error(`${url}: ${response.status} ${response.statusText}`);
   const data = (await response.json()) as AtlasData;
 
   const imageUrl = new URL(data.image, response.url);
   const image = await fetch(imageUrl, { signal: AbortSignal.timeout(60_000) });
-  if (!image.ok) throw new Error(`${imageUrl}: ${image.status} ${image.statusText}`);
+  if (!image.ok)
+    throw new Error(`${imageUrl}: ${image.status} ${image.statusText}`);
 
-  return new Atlas(data, await decodePng(new Uint8Array(await image.arrayBuffer())));
+  return new Atlas(
+    data,
+    await decodePng(new Uint8Array(await image.arrayBuffer())),
+  );
 }
