@@ -551,7 +551,8 @@ export function renderWarlords(
   );
 }
 
-export interface SmashScene extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
+export interface SmashScene
+  extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
   models: ModelInstance[];
 }
 
@@ -575,7 +576,8 @@ function drawHeroSkin(color: number) {
   return canvas.toBuffer("png");
 }
 
-type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> & Pick<ArmoredPlayer, "skin" | "armor">;
+type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> &
+  Pick<ArmoredPlayer, "skin" | "armor">;
 
 export function renderSmash(
   library: ModelLibrary,
