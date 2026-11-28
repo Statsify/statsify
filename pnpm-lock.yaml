@@ -231,7 +231,7 @@ importers:
         version: 12.0.1
       '@m8a/nestjs-typegoose':
         specifier: ^12.0.1
-        version: 12.0.1(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0)))(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        version: 12.0.1(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0)))(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       '@nestjs/axios':
         specifier: ^4.0.1
         version: 4.0.1(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(axios@1.21.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))(rxjs@7.8.2)
@@ -275,8 +275,8 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
       '@typegoose/typegoose':
-        specifier: ^12.21.1
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        specifier: ^12.22.0
+        version: 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       fastify:
         specifier: ^5.12.8
         version: 5.12.8
@@ -290,8 +290,8 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       mongoose:
-        specifier: ~8.21.1
-        version: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+        specifier: ^8.24.11
+        version: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
       nestjs-zod:
         specifier: ^5.6.0
         version: 5.6.0(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/swagger@11.4.8(@fastify/static@10.1.12)(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2))(rxjs@7.8.2)(zod@4.6.7)
@@ -351,8 +351,8 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
       '@typegoose/typegoose':
-        specifier: ^12.21.1
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        specifier: ^12.22.0
+        version: 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       axios:
         specifier: 1.21.1
         version: 1.21.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -366,8 +366,8 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       mongoose:
-        specifier: ~8.21.1
-        version: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+        specifier: ^8.24.11
+        version: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -491,8 +491,8 @@ importers:
         specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.3)
       mongoose:
-        specifier: ~8.21.1
-        version: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+        specifier: ^8.24.11
+        version: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
       postcss:
         specifier: ^8.5.33
         version: 8.5.33
@@ -533,8 +533,8 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
       '@typegoose/typegoose':
-        specifier: ^12.21.1
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        specifier: ^12.22.0
+        version: 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       axios:
         specifier: 1.21.1
         version: 1.21.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -545,8 +545,8 @@ importers:
         specifier: ^3.7.2
         version: 3.7.2
       mongoose:
-        specifier: ~8.21.1
-        version: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+        specifier: ^8.24.11
+        version: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -588,14 +588,14 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
       '@typegoose/typegoose':
-        specifier: ^12.21.1
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        specifier: ^12.22.0
+        version: 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       minecraft-protocol:
         specifier: 1.68.0
         version: 1.68.0(supports-color@7.2.0)
       mongoose:
-        specifier: ~8.21.1
-        version: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+        specifier: ^8.24.11
+        version: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
 
   packages/api-client:
     dependencies:
@@ -766,8 +766,8 @@ importers:
         specifier: ^0.5.24
         version: 0.5.24
       '@typegoose/typegoose':
-        specifier: ^12.21.1
-        version: 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+        specifier: ^12.22.0
+        version: 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       luxon:
         specifier: ^3.7.2
         version: 3.7.2
@@ -2922,11 +2922,11 @@ packages:
   '@tybys/wasm-util@0.10.5':
     resolution: {integrity: sha512-dOGOPxlaNV+G046mZzN+9C0dAcQZeSKcXiVaM0TYy/LM4ttTmgSBDxYfovcYI8Em3+eAbiAYpvWLOv8+ZVRJKA==}
 
-  '@typegoose/typegoose@12.21.1':
-    resolution: {integrity: sha512-lmFeUlki8ygtW7MsqxJbIBm1bsTKPvj5avHGz7ka1WZ0ZG0vhRwUoui2UvOnYZVtxjfk9ee/JXMKtaIjOh7Rmw==}
+  '@typegoose/typegoose@12.22.0':
+    resolution: {integrity: sha512-ZTjDVF3bt1B3bCRY+gpG3D1mYPTmrg8vPa8RgX14Z5Dlgm13Cnmdj/+Rmg7FJU2qVZ9eu6kb8lTD1maPgluJcw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
-      mongoose: ~8.21.0
+      mongoose: ~8.24.11
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -4497,8 +4497,8 @@ packages:
       socks:
         optional: true
 
-  mongoose@8.21.1:
-    resolution: {integrity: sha512-1LhrVeHwiyAGxwSaYSq2uf32izQD+qoM2c8wq63W8MIsJBxKQDBnMkhJct55m0qqCsm2Maq8aPpIIfOHSYAqxg==}
+  mongoose@8.24.11:
+    resolution: {integrity: sha512-/+sMN5nKCijI2QaIHikCu8z0LIAqH5ecWGC+gZDqXLNLAnqa0FG+7VOYMbS04QOdZWvAQVQXY71uvCVmtjhppA==}
     engines: {node: '>=16.20.1'}
 
   moo@0.5.3:
@@ -4528,8 +4528,8 @@ packages:
     resolution: {integrity: sha512-ikJRQTk8hw5DEoFVxHG1Gn9T/xcjtdnOKIU1JTmGjZZlg9LST2mBLmcX3/ICIbgJydT2GOc15RnNy5mHmzfSew==}
     engines: {node: '>=4.0.0'}
 
-  mquery@5.0.0:
-    resolution: {integrity: sha512-iQMncpmEK8R8ncT8HJGsGc9Dsp8xcgYMVSbs5jgnm1lFHTZqMJTUWTDx1LBO8+mK3tPNZWFLBghQEIOULSTHZg==}
+  mquery@5.0.1:
+    resolution: {integrity: sha512-C99lWV0TFI34pS008jBsi3JrE2xZPnTgUw5yApQR71nRP0hxLy8D5m1Lbbk83c8AQWJwdJ0329HzFtZ1MRTUIw==}
     engines: {node: '>=14.0.0'}
 
   mrmime@2.0.1:
@@ -6083,13 +6083,13 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0)))(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))':
+  '@m8a/nestjs-typegoose@12.0.1(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(@nestjs/core@11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2))(@typegoose/typegoose@12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0)))(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))':
     dependencies:
       '@nestjs/common': 11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
       '@nestjs/core': 11.2.12(@nestjs/common@11.2.12(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@typegoose/typegoose': 12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))
+      '@typegoose/typegoose': 12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))
       is-class: 0.0.9
-      mongoose: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+      mongoose: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
 
   '@microsoft/tsdoc@0.17.1': {}
 
@@ -7266,11 +7266,11 @@ snapshots:
       tslib: 2.9.1
     optional: true
 
-  '@typegoose/typegoose@12.21.1(mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0))':
+  '@typegoose/typegoose@12.22.0(mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0))':
     dependencies:
       lodash: 4.18.1
       loglevel: 1.9.2
-      mongoose: 8.21.1(socks@2.8.11)(supports-color@7.2.0)
+      mongoose: 8.24.11(socks@2.8.11)(supports-color@7.2.0)
       reflect-metadata: 0.2.2
       semver: 7.8.6
       tslib: 2.9.1
@@ -8732,13 +8732,13 @@ snapshots:
     optionalDependencies:
       socks: 2.8.11
 
-  mongoose@8.21.1(socks@2.8.11)(supports-color@7.2.0):
+  mongoose@8.24.11(socks@2.8.11)(supports-color@7.2.0):
     dependencies:
       bson: 6.10.4
       kareem: 2.6.3
       mongodb: 6.20.0(socks@2.8.11)
       mpath: 0.9.0
-      mquery: 5.0.0(supports-color@7.2.0)
+      mquery: 5.0.1(supports-color@7.2.0)
       ms: 2.1.3
       sift: 17.1.3
     transitivePeerDependencies:
@@ -8769,7 +8769,7 @@ snapshots:
 
   mpath@0.9.0: {}
 
-  mquery@5.0.0(supports-color@7.2.0):
+  mquery@5.0.1(supports-color@7.2.0):
     dependencies:
       debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
