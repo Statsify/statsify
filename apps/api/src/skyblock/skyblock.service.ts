@@ -45,18 +45,19 @@ import type {
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-const FRESH_FOR = 300_000;
-const LIVE_FLOOR = 60_000;
-const FAILED_FOR = 60_000;
-const SECTION_SECONDS = 300;
+const STORED_FRESH_MS = 300_000;
+const LIVE_REUSE_MS = 60_000;
+const FAILURE_BACKOFF_MS = 60_000;
+const SECTION_CACHE_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves old ones.
 const SECTION_VERSION = 1;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
-const MAX_DOCUMENT = 15 * 1024 * 1024;
+const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 
 const isFresh = (fetchedAt: number, cache: CacheLevel) =>
   cache === CacheLevel.CACHE_ONLY ||
-  Date.now() - fetchedAt < (cache === CacheLevel.LIVE ? LIVE_FLOOR : FRESH_FOR);
+  Date.now() - fetchedAt <
+    (cache === CacheLevel.LIVE ? LIVE_REUSE_MS : STORED_FRESH_MS);
 
 function toUnavailable(error: HypixelUnavailableError) {
   if (error instanceof HypixelThrottledError) {
@@ -282,7 +283,12 @@ export class SkyBlockService {
   }
 
   private async recordFailure(key: string, error: Error, storedAt?: number) {
-    await this.redis.set(`skyblock:failed:${key}`, "1", "PX", FAILED_FOR);
+    await this.redis.set(
+      `skyblock:failed:${key}`,
+      "1",
+      "PX",
+      FAILURE_BACKOFF_MS,
+    );
 
     const fallback =
       storedAt === undefined
@@ -293,7 +299,7 @@ export class SkyBlockService {
 
   private async compress(response: unknown, id: string) {
     const data = await gzipJson(response);
-    if (data.length > MAX_DOCUMENT) {
+    if (data.length > MAX_DOCUMENT_BYTES) {
       this.logger.warn(
         `Not storing ${id}'s SkyBlock response: ${data.length} bytes gzipped`,
       );
@@ -320,7 +326,12 @@ export class SkyBlockService {
     if (cached) return gunzipJson<MemberView[SkyBlockSection]>(cached);
 
     const computed = await section.compute(input);
-    await this.redis.set(key, await gzipJson(computed), "EX", SECTION_SECONDS);
+    await this.redis.set(
+      key,
+      await gzipJson(computed),
+      "EX",
+      SECTION_CACHE_SECONDS,
+    );
     return computed;
   }
 }

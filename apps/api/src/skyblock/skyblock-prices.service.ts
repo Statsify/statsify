@@ -43,9 +43,9 @@ const LOCK_KEY = "skyblock:prices:lock";
 const BAZAAR_KEY = "skyblock:bazaar";
 const ITEMS_KEY = "skyblock:resource:items";
 
-const PRICES_REFRESH = 15 * 60_000;
-const BAZAAR_REFRESH = 60_000;
-const ITEMS_REFRESH = 12 * 60 * 60_000;
+const PRICES_REFRESH_MS = 15 * 60_000;
+const BAZAAR_REFRESH_MS = 60_000;
+const ITEMS_REFRESH_MS = 12 * 60 * 60_000;
 // The lock spaces rebuilds out too, for when the feed's lastUpdated stops.
 const LOCK_MS = 300_000;
 
@@ -105,7 +105,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       if (data) this.map = await gunzipJson<PriceMap>(data);
     }
 
-    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH) {
+    if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH_MS) {
       void this.rebuild(reads).catch((error) => this.logger.error(error));
     }
 
@@ -113,7 +113,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async getItems(): Promise<LoadedItems | undefined> {
-    if (!isCurrent(this.items, ITEMS_REFRESH)) {
+    if (!isCurrent(this.items, ITEMS_REFRESH_MS)) {
       const stored = await this.readStored<RawItemsResource>(
         ITEMS_KEY,
         this.items?.fetchedAt,
@@ -121,7 +121,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       if (stored) this.items = loadItems(stored);
     }
 
-    if (this.items && isCurrent(this.items, ITEMS_REFRESH)) {
+    if (this.items && isCurrent(this.items, ITEMS_REFRESH_MS)) {
       return this.items.value;
     }
 
@@ -158,7 +158,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private async getBazaar(): Promise<Bazaar | undefined> {
-    if (!isCurrent(this.bazaar, BAZAAR_REFRESH)) {
+    if (!isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
       const stored = await this.readStored<Bazaar>(
         BAZAAR_KEY,
         this.bazaar?.fetchedAt,
@@ -166,7 +166,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
       if (stored) this.bazaar = stored;
     }
 
-    if (this.bazaar && isCurrent(this.bazaar, BAZAAR_REFRESH)) {
+    if (this.bazaar && isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
       return this.bazaar.value;
     }
 
