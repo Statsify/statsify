@@ -21,7 +21,8 @@ export interface LayoutShape<T> {
 
 /** Comma-separated lists with "null" for an empty slot, like BedWars' quick buy */
 export const LIST_LAYOUT: LayoutShape<string> = {
-  slots: (list) => list.split(",").map((slot) => (slot === "null" ? undefined : slot)),
+  slots: (list) =>
+    list.split(",").map((slot) => (slot === "null" ? undefined : slot)),
   layout: (slots) => slots.map((slot) => slot || "null").join(","),
 };
 
@@ -29,17 +30,27 @@ export const LIST_LAYOUT: LayoutShape<string> = {
 export const SLOT_LAYOUT: LayoutShape<Record<string, string>> = {
   slots(layout) {
     const slots: Slots = [];
-    for (const [slot, token] of Object.entries(layout)) slots[Number(slot)] = String(token);
+    for (const [slot, token] of Object.entries(layout))
+      slots[Number(slot)] = String(token);
     return slots;
   },
-  layout: (slots) => Object.fromEntries(slots.flatMap((token, slot) => (token ? [[slot, token]] : []))),
+  layout: (slots) =>
+    Object.fromEntries(
+      slots.flatMap((token, slot) => (token ? [[slot, token]] : [])),
+    ),
 };
 
 /** `{ slot: "id,damage" }`, as Blitz and Mega Walls send layouts, stored as `id:damage` without a damage of 0 */
 export const LEGACY_LAYOUT: LayoutShape<Record<string, string>> = {
-  slots: (layout) => SLOT_LAYOUT.slots(layout).map((token) => token?.replace(/,0$/, "").replace(",", ":")),
+  slots: (layout) =>
+    SLOT_LAYOUT.slots(layout).map((token) =>
+      token?.replace(/,0$/, "").replace(",", ":"),
+    ),
   layout(slots) {
-    const legacy = slots.map((token) => token && (token.includes(":") ? token.replace(":", ",") : `${token},0`));
+    const legacy = slots.map(
+      (token) =>
+        token && (token.includes(":") ? token.replace(":", ",") : `${token},0`),
+    );
     return SLOT_LAYOUT.layout(legacy);
   },
 };
@@ -64,7 +75,13 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
   },
   layout(slots) {
     const stacks = slots.map((tokens) =>
-      tokens ? tokens.split("+").map((token) => (token.includes(":") ? token : `${token}:0`).replaceAll("/", ",")) : [],
+      tokens
+        ? tokens
+            .split("+")
+            .map((token) =>
+              (token.includes(":") ? token : `${token}:0`).replaceAll("/", ","),
+            )
+        : [],
     );
     const layout: Record<string, number[]> = {};
 
@@ -73,7 +90,13 @@ export const ITEM_LAYOUT: LayoutShape<Record<string, string | number[]>> = {
     for (;;) {
       const item = stacks
         .map((stack) => stack[0])
-        .find((first) => first && stacks.every((stack) => stack[0] === first || !stack.includes(first)));
+        .find(
+          (first) =>
+            first &&
+            stacks.every(
+              (stack) => stack[0] === first || !stack.includes(first),
+            ),
+        );
       if (!item) return layout;
 
       layout[item] ??= [];
@@ -111,14 +134,22 @@ function packSlots(slots: Slots) {
 
 // A saved layout with every slot emptied is kept as `name=`, since a missing one means the default
 function encodeLayouts(layouts: [name: string, slots: Slots][]) {
-  return layouts.map(([name, slots]) => `${name}=${packSlots(slots)}`).join(";");
+  return layouts
+    .map(([name, slots]) => `${name}=${packSlots(slots)}`)
+    .join(";");
 }
 
-function collectLayouts<T>(data: APIData, pattern: RegExp, shape: LayoutShape<T>) {
+function collectLayouts<T>(
+  data: APIData,
+  pattern: RegExp,
+  shape: LayoutShape<T>,
+) {
   return encodeLayouts(
     Object.entries(data).flatMap(([key, layout]): [string, Slots][] => {
       const match = pattern.exec(key);
-      return match && typeof layout === "object" && layout !== null ? [[match[1], shape.slots(layout)]] : [];
+      return match && typeof layout === "object" && layout !== null
+        ? [[match[1], shape.slots(layout)]]
+        : [];
     }),
   );
 }
@@ -131,7 +162,11 @@ export function decodeLayouts<T>(layouts: string, shape: LayoutShape<T>) {
 
       const slots = packed
         .split(",")
-        .flatMap((slot) => (slot.startsWith("*") ? Array.from({ length: Number(slot.slice(1)) }, () => "") : [slot]));
+        .flatMap((slot) =>
+          slot.startsWith("*")
+            ? Array.from({ length: Number(slot.slice(1)) }, () => "")
+            : [slot],
+        );
 
       return [name, shape.layout(slots)];
     }),
@@ -139,7 +174,8 @@ export function decodeLayouts<T>(layouts: string, shape: LayoutShape<T>) {
 }
 
 // Pit inventories arrive as `{ type: 0, data: [signed bytes] }` of gzipped NBT
-const encodeNbt = (nbt?: { data?: number[] }) => (Array.isArray(nbt?.data) ? Buffer.from(nbt.data).toString("base64") : "");
+const encodeNbt = (nbt?: { data?: number[] }) =>
+  Array.isArray(nbt?.data) ? Buffer.from(nbt.data).toString("base64") : "";
 
 export class PlayerLayouts {
   @Field()
@@ -164,17 +200,35 @@ export class PlayerLayouts {
   public pitArmor: string;
 
   public constructor(stats: APIData) {
-    const { favourites_2: quickBuy, favorite_slots: hotbar } = stats.Bedwars ?? {};
+    const { favourites_2: quickBuy, favorite_slots: hotbar } =
+      stats.Bedwars ?? {};
     this.bedwars = encodeLayouts(
-      Object.entries({ quickBuy, hotbar }).flatMap(([name, list]): [string, Slots][] =>
-        typeof list === "string" ? [[name, LIST_LAYOUT.slots(list)]] : [],
+      Object.entries({ quickBuy, hotbar }).flatMap(
+        ([name, list]): [string, Slots][] =>
+          typeof list === "string" ? [[name, LIST_LAYOUT.slots(list)]] : [],
       ),
     );
 
-    this.duels = collectLayouts(stats.Duels ?? {}, /^layout_(.+)$/, SLOT_LAYOUT);
-    this.skywars = collectLayouts(stats.SkyWars ?? {}, /^kit_(.+)_inventory$/, ITEM_LAYOUT);
-    this.blitzsg = collectLayouts(stats.HungerGames ?? {}, /^(.+)Inventory$/, LEGACY_LAYOUT);
-    this.megawalls = collectLayouts(stats.Walls3 ?? {}, /^(.+)Inventory$/, LEGACY_LAYOUT);
+    this.duels = collectLayouts(
+      stats.Duels ?? {},
+      /^layout_(.+)$/,
+      SLOT_LAYOUT,
+    );
+    this.skywars = collectLayouts(
+      stats.SkyWars ?? {},
+      /^kit_(.+)_inventory$/,
+      ITEM_LAYOUT,
+    );
+    this.blitzsg = collectLayouts(
+      stats.HungerGames ?? {},
+      /^(.+)Inventory$/,
+      LEGACY_LAYOUT,
+    );
+    this.megawalls = collectLayouts(
+      stats.Walls3 ?? {},
+      /^(.+)Inventory$/,
+      LEGACY_LAYOUT,
+    );
 
     this.pitInventory = encodeNbt(stats.Pit?.profile?.inv_contents);
     this.pitArmor = encodeNbt(stats.Pit?.profile?.inv_armor);
