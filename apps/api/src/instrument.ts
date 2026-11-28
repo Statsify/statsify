@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/nestjs";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import { sentryOptions } from "@statsify/logger/sentry";
 
 const options = await sentryOptions("sentry.apiDsn");
@@ -15,8 +16,13 @@ const options = await sentryOptions("sentry.apiDsn");
 Sentry.init({
   ...options,
   // Redis spans every command, so a player save would get one span per leaderboard
-  integrations: (integrations) =>
-    integrations.filter((integration) => integration.name !== "Redis"),
+  integrations: (integrations) => [
+    ...integrations.filter((integration) => integration.name !== "Redis"),
+    nodeProfilingIntegration(),
+  ],
+  // Only sampled traces get profiled, so tracesSampleRate still sets the volume
+  profileLifecycle: "trace",
+  profileSessionSampleRate: 1,
   // userInfo doesn't cover the client IP headers
   dataCollection: {
     ...options.dataCollection,

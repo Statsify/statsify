@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import {
   redactInteractionTokens,
   sentryOptions,
@@ -16,4 +17,8 @@ import {
 Sentry.init({
   ...(await sentryOptions("sentry.discordBotDsn")),
   ...redactInteractionTokens,
+  integrations: [nodeProfilingIntegration()],
+  // Only sampled traces get profiled, so tracesSampleRate still sets the volume
+  profileLifecycle: "trace",
+  profileSessionSampleRate: 1,
 });
