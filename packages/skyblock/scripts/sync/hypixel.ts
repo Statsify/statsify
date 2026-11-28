@@ -6,16 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { collectionBoards } from "@statsify/skyblock";
-import { neuBeforeRemoval, neuStats, statTotals } from "./neu.ts";
-import { normalizeItemText, statRewards } from "#lore";
-import type { SyncContext } from "../sync-data.ts";
+import { fetchNeuBeforeRemoval, readNeuStats, sumStatValues } from "./neu.ts";
+import { normalizeItemText, parseStatRewards } from "#lore";
 import { fetchOk } from "./textures.ts";
+import { getCollectionBoards } from "@statsify/skyblock";
 import { toLevelCosts } from "#leveling";
+import type { SyncContext } from "../sync-data.ts";
 
-export const HYPIXEL_SKILLS =
-  "https://api.hypixel.net/v2/resources/skyblock/skills";
-export const HYPIXEL_COLLECTIONS =
+const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
+const HYPIXEL_COLLECTIONS =
   "https://api.hypixel.net/v2/resources/skyblock/collections";
 
 interface HypixelSkill {
@@ -28,47 +27,50 @@ interface HypixelCollections {
   items: Record<string, { name: string; tiers: { amountRequired: number }[] }>;
 }
 
-/** One of Hypixel's keyless SkyBlock resources. */
-async function hypixelResource<T>(url: string) {
-  return (await (await fetchOk(url)).json()) as T & { version: string };
+async function fetchHypixelResource<T>(url: string) {
+  const response = await fetchOk(url);
+  return (await response.json()) as T & { version: string };
 }
 
-// NEU's bonus tables: a slayer level gives the stats of the highest level key at or under it
-const perLevel = (
+// A slayer level gives the stats of the highest bonus key at or under it.
+function toLevelStats(
   table: Record<string, Record<string, number>>,
   levels: number,
-) => {
+) {
+  const stats: Record<string, number>[] = [];
   let current: Record<string, number> = {};
-  return Array.from(
-    { length: levels },
-    (_, i) => (current = table[i + 1] ? neuStats(table[i + 1]) : current),
-  );
-};
+  for (let level = 1; level <= levels; level++) {
+    if (table[level]) current = readNeuStats(table[level]);
+    stats.push(current);
+  }
 
-/** The tables built from Hypixel's skills and collections resources, with NEU's where they're merged with them. */
+  return stats;
+}
+
 export const HYPIXEL_UNITS = {
   async hypixel({ readJson, write, setBoards }: SyncContext) {
+    // NEU's Runecrafting table is off at five levels, so skills use Hypixel's.
     const [
       { skills, version: skillsVersion },
       { collections, version: collectionsVersion },
       leveling,
-      sblevels,
+      { sblevel_colours },
       fairySouls,
       misc,
       bonuses,
     ] = await Promise.all([
-      // Skill tables come from Hypixel's skills resource (keyless), since NEU's runecrafting table is off at five levels.
-      hypixelResource<{ skills: Record<string, HypixelSkill> }>(HYPIXEL_SKILLS),
-      // Collection tiers come from Hypixel's collections resource too, in its order of categories and items.
-      hypixelResource<{ collections: Record<string, HypixelCollections> }>(
+      fetchHypixelResource<{ skills: Record<string, HypixelSkill> }>(
+        HYPIXEL_SKILLS,
+      ),
+      fetchHypixelResource<{ collections: Record<string, HypixelCollections> }>(
         HYPIXEL_COLLECTIONS,
       ),
       readJson<Record<string, unknown>>("constants/leveling.json"),
-      neuBeforeRemoval<{ sblevel_colours: Record<string, string> }>(
+      fetchNeuBeforeRemoval<{ sblevel_colours: Record<string, string> }>(
         "constants/sblevels.json",
       ),
       readJson<{ "Max Souls": number }>("constants/fairy_souls.json"),
-      neuBeforeRemoval<{ base_stats: Record<string, number> }>(
+      fetchNeuBeforeRemoval<{ base_stats: Record<string, number> }>(
         "constants/misc.json",
       ),
       readJson<{
@@ -76,6 +78,7 @@ export const HYPIXEL_UNITS = {
         pet_rewards: Record<string, { magic_find: number }>;
       }>("constants/bonuses.json"),
     ]);
+
     const xpTable = (skill: string) =>
       toLevelCosts(
         skills[skill].levels.map(({ totalExpRequired }) => totalExpRequired),
@@ -92,10 +95,10 @@ export const HYPIXEL_UNITS = {
         })),
       }),
     );
-    await write("collections.json", collectionData);
+    write("collections.json", collectionData);
 
     const slayerXp = leveling.slayer_xp as Record<string, number[]>;
-    await write("leveling.json", {
+    write("leveling.json", {
       catacombs: leveling.catacombs,
       fairy_souls: fairySouls["Max Souls"],
       HOTF: leveling.HOTF,
@@ -109,22 +112,23 @@ export const HYPIXEL_UNITS = {
         ]),
       ),
       runecrafting_xp: xpTable("RUNECRAFTING"),
-      sblevel_colours: sblevels.sblevel_colours,
-      // NEU copies Revenant's 15 XP for Tarantula level 2; the game asks 25.
+      sblevel_colours,
+      // NEU copies Revenant's 15 XP for Tarantula level 2, but the game has 25.
       slayer_xp: { ...slayerXp, spider: slayerXp.spider.with(1, 25) },
       slayer_to_highest_tier: leveling.slayer_to_highest_tier,
       social: xpTable("SOCIAL"),
     });
 
-    await write("stats.json", {
-      base: neuStats(misc.base_stats),
-      // Each level's unlocks, as lore lines: "+2<glyph> Health", "Farmhand XV   Grants +56➜60 <glyph> Farming Fortune, …"
+    write("stats.json", {
+      base: readNeuStats(misc.base_stats),
       skills: Object.fromEntries(
         Object.entries(skills).map(([id, { levels }]) => [
           id.toLowerCase(),
           levels.map(({ unlocks = [] }) =>
-            statTotals(
-              unlocks.flatMap((line) => statRewards(normalizeItemText(line))),
+            sumStatValues(
+              unlocks.flatMap((line) =>
+                parseStatRewards(normalizeItemText(line)),
+              ),
             ),
           ),
         ]),
@@ -132,19 +136,19 @@ export const HYPIXEL_UNITS = {
       slayers: Object.fromEntries(
         Object.entries(bonuses.bonus_stats)
           .filter(([id]) => id.startsWith("slayer_"))
-          .map(([id, table]) => [
-            id.slice("slayer_".length),
-            perLevel(table, slayerXp[id.slice("slayer_".length)].length),
-          ]),
+          .map(([id, table]) => {
+            const boss = id.slice("slayer_".length);
+            return [boss, toLevelStats(table, slayerXp[boss].length)];
+          }),
       ),
       pet_score: Object.fromEntries(
-        Object.entries(bonuses.pet_rewards).flatMap(([score, { magic_find }]) =>
-          magic_find ? [[score, magic_find]] : [],
-        ),
+        Object.entries(bonuses.pet_rewards)
+          .filter(([, { magic_find }]) => magic_find)
+          .map(([score, { magic_find }]) => [score, magic_find]),
       ),
     });
 
-    setBoards("collections", collectionBoards(collectionData));
+    setBoards("collections", getCollectionBoards(collectionData));
     return {
       skills: { url: HYPIXEL_SKILLS, version: skillsVersion },
       collections: { url: HYPIXEL_COLLECTIONS, version: collectionsVersion },

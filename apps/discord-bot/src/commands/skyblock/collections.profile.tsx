@@ -10,12 +10,13 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, gridRows, progressText } from "./components/ItemGrid.js";
+import { ItemGrid, formatProgress, gridRows } from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
-import type { CollectionCategory, MemberView } from "@statsify/skyblock";
+import type { CollectionCategory } from "@statsify/skyblock/display";
+import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-const categoryItems = (
+const getCategoryItems = (
   collections: MemberView["collections"],
   category: CollectionCategory,
 ) => collections?.categories.find(({ id }) => id === category)?.items ?? [];
@@ -23,14 +24,16 @@ const categoryItems = (
 export const collectionIcons =
   (category: CollectionCategory) =>
   ({ collections }: MemberView) =>
-    categoryItems(collections, category).flatMap(({ texture }) =>
-      texture ? [texture] : [],
-    );
+    getCategoryItems(collections, category)
+      .map(({ texture }) => texture)
+      .filter((texture) => texture !== undefined);
 
 export const minionIcons = ({ minions }: MemberView) =>
-  minions?.minions.flatMap(({ texture }) => (texture ? [texture] : [])) ?? [];
+  minions?.minions
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined) ?? [];
 
-export interface SkyBlockCollectionsProfileProps extends SkyBlockProfileProps {
+interface SkyBlockCollectionsProfileProps extends SkyBlockProfileProps {
   category: CollectionCategory;
 }
 
@@ -42,7 +45,7 @@ export const SkyBlockCollectionsProfile = ({
   ...card
 }: SkyBlockCollectionsProfileProps) => {
   const { collections } = profile.member;
-  const items = categoryItems(collections, category);
+  const items = getCategoryItems(collections, category);
   const tiersOnly = items.some(({ amount }) => amount === undefined);
 
   const sidebar: SidebarItem[] = collections
@@ -65,14 +68,15 @@ export const SkyBlockCollectionsProfile = ({
       {tiersOnly ? <Empty text={t("skyblock.collectionTiersOnly")} /> : <></>}
       {collections ? (
         <ItemGrid
-          items={items.map(({ texture, name, amount, tier, maxTier }) => ({
-            texture,
-            name: `§f${name}`,
-            value:
-              amount === undefined
-                ? progressText(t, tier, maxTier)
-                : `§b${t(amount)} ${progressText(t, tier, maxTier)}`,
-          }))}
+          items={items.map(({ texture, name, amount, tier, maxTier }) => {
+            const progress = formatProgress(t, tier, maxTier);
+            return {
+              texture,
+              name: `§f${name}`,
+              value:
+                amount === undefined ? progress : `§b${t(amount)} ${progress}`,
+            };
+          })}
           icons={icons}
           columns={3}
           stacked
@@ -118,7 +122,7 @@ export const SkyBlockMinionsProfile = ({
           items={crafted.map(({ texture, name, tiers, maxTier }) => ({
             texture,
             name: `§f${name.replace(/ Minion$/, "")}`,
-            value: progressText(t, Math.max(...tiers), maxTier),
+            value: formatProgress(t, Math.max(...tiers), maxTier),
           }))}
           icons={icons}
           columns={3}
@@ -156,7 +160,7 @@ export const SkyBlockBestiaryProfile = ({
     return (
       <Table.td
         title={label}
-        value={progressText(t, tiers, maxTiers)}
+        value={formatProgress(t, tiers, maxTiers)}
         color="§f"
         size="small"
       />
@@ -165,7 +169,7 @@ export const SkyBlockBestiaryProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      <Table.table>{gridRows(pages, 3, true)}</Table.table>
+      <Table.table>{gridRows(pages, 3, { spreadLastRow: true })}</Table.table>
     </Card>
   );
 };

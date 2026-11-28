@@ -6,176 +6,150 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { costOf } from "#prices";
-import { parsePetKey } from "#auctions";
 import {
   PET_RARITIES,
-  getPets,
-  petMaxLevel,
-  petName,
-  petScorePoints,
-  petTexture,
-} from "./pets.js";
-import { PET_TEXTURES, SKYBLOCK_XP } from "#data";
-import { SKYBLOCK_XP_PER_LEVEL, skyblockLevel } from "../profiles.js";
-import { cheapestFirst, getAccessories } from "./accessories.js";
+  getPetMaxLevel,
+  getPetScore,
+  getPetScorePoints,
+  toSkyBlockLevel,
+} from "#leveling";
+import { PET_TEXTURES, SKYBLOCK_XP, getPetName } from "#data";
+import { getAccessorySteps, keepBestPerChain } from "./accessories.js";
+import { getItemCost, getPetKeyName, parsePetKey } from "#prices";
+import { getPetTexture } from "#textures";
 import { prettify } from "@statsify/util";
-import type {
-  ItemsResource,
-  Level,
-  MissingAccessory,
-  PriceMap,
-  SkyBlockLevelSection,
-} from "#types";
+import type { ItemsResource, PriceMap, SkyBlockLevelSection } from "#types";
 import type { RawMember } from "#raw";
 
 type Source = SkyBlockLevelSection["sources"][number];
 
-/** SkyBlock levels have no cap, so maxLevel is the next one and the bar always runs to it. */
-function toLevel(xp: number): Level {
-  const level = skyblockLevel(xp);
-  const xpCurrent = xp % SKYBLOCK_XP_PER_LEVEL;
-  return {
-    level,
-    maxLevel: level + 1,
-    xp,
-    xpCurrent,
-    xpForNext: SKYBLOCK_XP_PER_LEVEL,
-    progress: xpCurrent / SKYBLOCK_XP_PER_LEVEL,
-  };
-}
+// Outside the bag first, since it costs nothing, and unpriced sources last.
+const compareSources = (a: Source, b: Source) =>
+  Number(b.outsideBag) - Number(a.outsideBag) ||
+  (a.coinsPerXp ?? Infinity) - (b.coinsPerXp ?? Infinity) ||
+  b.xp - a.xp ||
+  a.name.localeCompare(b.name);
 
-/** SkyBlock XP is never taken back, so a task pays only for what goes past the highest value it has reached. */
-const gainOver = (
+const getGainOverHighest = (
   current: number,
   highest: number | undefined,
   added: number,
 ) => Math.max(0, current + added - Math.max(current, highest ?? 0));
 
-const accessoryXp = (
-  power: number,
-  highest: number | undefined,
-  added: number,
-) => gainOver(power, highest, added) * SKYBLOCK_XP.accessory_bag_xp;
+function getAccessorySources(
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap,
+  market: boolean,
+) {
+  const accessories = getAccessorySteps(member, items, prices, market);
+  if (!accessories) return [];
 
-const compareSources = cheapestFirst<Source>(
-  (source) => source.coinsPerXp,
-  (source) => source.xp,
-);
+  const { accessoryPower, highestAccessoryPower, steps } = accessories;
+  const candidates = steps.map((step) => {
+    const gain = getGainOverHighest(
+      accessoryPower,
+      highestAccessoryPower,
+      step.accessoryPower,
+    );
+    const xp = gain * SKYBLOCK_XP.accessory_bag_xp;
+    const source: Source = {
+      kind: "accessory",
+      id: step.id,
+      name: step.name,
+      xp,
+      outsideBag: step.outsideBag,
+      cost: step.cost,
+      coinsPerXp: step.cost && step.cost.coins / xp,
+      texture: step.texture,
+    };
+    return source;
+  });
 
-/**
- * Missing accessories and pet types the player has none of, each at its cheapest tier. Without a market, nothing has a
- * cost and pets are at their highest tier.
- */
+  const ranked = candidates.filter(({ xp }) => xp > 0).toSorted(compareSources);
+
+  // An unpriced step still wins its chain, so the steps under it stay hidden.
+  return keepBestPerChain(ranked).filter(
+    ({ outsideBag, cost }) => !market || outsideBag || cost,
+  );
+}
+
+function getPetSources(member: RawMember, prices: PriceMap, market: boolean) {
+  const score = getPetScore(member);
+  const getPetXp = (points: number) =>
+    getGainOverHighest(score, member.leveling?.highest_pet_score, points) *
+    SKYBLOCK_XP.pet_score_xp;
+
+  const owned = new Set((member.pets_data?.pets ?? []).map(({ type }) => type));
+  const montezuma = member.rift?.dead_cats?.montezuma;
+  if (montezuma) owned.add(montezuma.type);
+  const best = new Map<string, Source>();
+
+  if (!market) {
+    for (const [type, heads] of Object.entries(PET_TEXTURES.pets)) {
+      const tier = PET_RARITIES.findLast((scored) => heads[scored]);
+      if (!tier || owned.has(type)) continue;
+
+      const xp = getPetXp(getPetScorePoints(tier));
+      if (xp === 0) continue;
+
+      best.set(type, {
+        kind: "pet",
+        id: type,
+        name: `${prettify(tier)} ${getPetName(type)}`,
+        xp,
+        outsideBag: false,
+        texture: getPetTexture(type, tier),
+      });
+    }
+
+    return [...best.values()];
+  }
+
+  for (const [key, entry] of Object.entries(prices.entries)) {
+    const pet = parsePetKey(key);
+    const cost = getItemCost(entry);
+    if (!pet || !cost || owned.has(pet.type)) continue;
+
+    // A max-level pet adds a point to the pet score.
+    const maxed = pet.level === getPetMaxLevel(pet.type);
+    const xp = getPetXp(getPetScorePoints(pet.rarity) + Number(maxed));
+    if (xp === 0) continue;
+
+    const source: Source = {
+      kind: "pet",
+      id: key,
+      name: getPetKeyName(pet),
+      xp,
+      outsideBag: false,
+      cost,
+      coinsPerXp: cost.coins / xp,
+      texture: getPetTexture(pet.type, pet.rarity),
+    };
+
+    const kept = best.get(pet.type);
+    if (!kept || compareSources(source, kept) < 0) best.set(pet.type, source);
+  }
+
+  return [...best.values()];
+}
+
+// Without a market, pets show at their highest scored tier with no cost.
 export function getSkyBlockLevel(
   member: RawMember,
   items: ItemsResource,
   prices: PriceMap,
   market: boolean,
 ): SkyBlockLevelSection {
-  // Each chain keeps its cheapest step per XP, since under the highest the cheapest per accessory power can pay none. A
-  // step that pays none goes last, and so does a tier reached in place, so its chain keeps a step this list can show.
-  const accessories = getAccessories(
-    member,
-    items,
-    prices,
-    market,
-    (power, highest) => {
-      const xp = (step: MissingAccessory) =>
-        accessoryXp(power, highest, step.accessoryPower);
-      const cheapest = cheapestFirst<MissingAccessory>(
-        (step) => step.cost && step.cost.coins / xp(step),
-        xp,
-      );
-      const last = (step: MissingAccessory) =>
-        Number(xp(step) === 0 || step.nextTier !== undefined);
-      return (a, b) => last(a) - last(b) || cheapest(a, b);
-    },
-  );
-  const { score, pets } = getPets(member);
-  const owned = new Set(pets.map((pet) => pet.type));
-
-  const petXp = (tier: string, maxed = false) =>
-    gainOver(
-      score,
-      member.leveling?.highest_pet_score,
-      petScorePoints(tier) + Number(maxed),
-    ) * SKYBLOCK_XP.pet_score_xp;
-
-  const sources: Source[] = !accessories
-    ? []
-    : accessories.missing.flatMap(
-        ({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
-          const xp = accessoryXp(
-            accessories.accessoryPower,
-            accessories.highestAccessoryPower,
-            accessoryPower,
-          );
-          if (xp === 0 || nextTier || (market && !outsideBag && !cost))
-            return [];
-          return [
-            {
-              kind: "accessory",
-              id,
-              name,
-              xp,
-              outsideBag,
-              cost,
-              coinsPerXp: cost && cost.coins / xp,
-              texture,
-            },
-          ];
-        },
-      );
-
-  const best = new Map<string, Source>();
-  if (market) {
-    for (const [key, entry] of Object.entries(prices.entries)) {
-      const pet = parsePetKey(key);
-      const cost = costOf(entry);
-      if (!pet || !cost || owned.has(pet.type)) continue;
-
-      const xp = petXp(pet.rarity, pet.level === petMaxLevel(pet.type));
-      if (xp === 0) continue;
-
-      const source: Source = {
-        kind: "pet",
-        id: key,
-        name: pet.name,
-        xp,
-        outsideBag: false,
-        cost,
-        coinsPerXp: cost.coins / xp,
-        texture: petTexture(pet.type, pet.rarity),
-      };
-
-      const kept = best.get(pet.type);
-      if (!kept || compareSources(source, kept) < 0) best.set(pet.type, source);
-    }
-  } else {
-    for (const [type, heads] of Object.entries(PET_TEXTURES.pets)) {
-      const tier = PET_RARITIES.findLast((scored) => heads[scored]);
-      if (!tier || owned.has(type)) continue;
-
-      const xp = petXp(tier);
-      if (xp === 0) continue;
-
-      const name = `${prettify(tier)} ${petName(type)}`;
-      best.set(type, {
-        kind: "pet",
-        id: type,
-        name,
-        xp,
-        outsideBag: false,
-        texture: petTexture(type, tier),
-      });
-    }
-  }
+  const sources = [
+    ...getAccessorySources(member, items, prices, market),
+    ...getPetSources(member, prices, market),
+  ];
 
   return {
-    level: toLevel(member.leveling?.experience ?? 0),
+    level: toSkyBlockLevel(member.leveling?.experience ?? 0),
     pricesAsOf: prices.asOf,
     market,
-    sources: [...sources, ...best.values()].toSorted(compareSources),
+    sources: sources.toSorted(compareSources),
   };
 }

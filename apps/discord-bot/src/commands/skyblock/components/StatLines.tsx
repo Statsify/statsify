@@ -12,7 +12,7 @@ import type { PowerStat } from "@statsify/skyblock";
 
 const MAX_STATS_PER_LINE = 3; // more is wider than the card
 
-export interface StatLinesProps {
+interface StatLinesProps {
   label: string;
   stats: PowerStat[];
   t: LocalizeFunction;

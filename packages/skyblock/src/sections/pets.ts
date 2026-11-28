@@ -6,124 +6,53 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PETS, PET_ITEMS, PET_STATS, PET_TEXTURES } from "#data";
-import { RARITY_COLORS } from "../display.js";
+import { PET_ITEMS, PET_STATS, PET_TEXTURES, getPetName } from "#data";
 import {
   PET_SKIN_PREFIX,
   RARITIES,
-  type ItemTexture,
   type ItemsResource,
-  type Level,
   type PetView,
   type PetsSection,
   type PlayerStat,
-  type Rarity,
-  rarityRank,
+  type Stats,
 } from "#types";
+import { boostedRarity, getPetLevel, getPetScore } from "#leveling";
+import { RARITY_COLORS } from "../display.js";
 import { add } from "@statsify/math";
-import { getLevel } from "#leveling";
-import { prettify } from "@statsify/util";
-import { resourceTexture } from "#textures";
+import { getPetTexture, resourceTexture } from "#textures";
 import { sumStats } from "#lore";
 import type { RawMember, RawPet } from "#raw";
 
-export const PET_RARITIES = RARITIES.slice(0, 6);
+function getSkinColor(skin: string, items: ItemsResource | undefined) {
+  const color = PET_TEXTURES.skinColors[skin];
+  if (color) return color;
 
-export const petName = (type: string) =>
-  PETS.id_to_display_name[type] ?? prettify(type);
-
-/** A Tier Boost raises the rarity, and with it the XP table the level reads. */
-export function boostedRarity(pet: RawPet) {
-  const base = pet.tier as Rarity;
-  // A boost never makes a pet Mythic, except the Bingo pet (the wiki's Tier Boost page, unverified)
-  const highest = pet.type === "BINGO" ? "MYTHIC" : "LEGENDARY";
-  return pet.heldItem === "PET_ITEM_TIER_BOOST" &&
-    rarityRank(base) < rarityRank(highest)
-    ? PET_RARITIES[rarityRank(base) + 1]
-    : base;
-}
-
-export const petMaxLevel = (type: string) =>
-  PETS.custom_pet_leveling[type]?.max_level ?? 100;
-
-/** 99 levels from the rarity's offset, plus custom pets' extra levels (Golden Dragon to 200). */
-export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
-  const custom = PETS.custom_pet_leveling[pet.type] ?? {};
-  const own = custom.rarity_offset ?? {};
-  // Bingo's own offsets stop at Legendary, below the Mythic a Tier Boost gives it, so its highest one carries on
-  const highest = PET_RARITIES.findLast((candidate) => candidate in own);
-  const offset =
-    own[rarity] ?? (highest ? own[highest] : PETS.pet_rarity_offset[rarity]);
-  const maxLevel = petMaxLevel(pet.type);
-  const table = [
-    ...PETS.pet_levels.slice(offset, offset + 99),
-    ...(custom.pet_levels ?? []),
-  ];
-  const level = getLevel(pet.exp, table, maxLevel - 1);
-  return { ...level, level: level.level + 1, maxLevel };
-}
-
-/** The items resource covers skins newer than the NEU pin; a type falls back to its nearest rarity's head. */
-export function petTexture(
-  type: string,
-  rarity: Rarity,
-  skin?: string | null,
-  items?: ItemsResource,
-): ItemTexture {
-  const skinned =
-    skin &&
-    (PET_TEXTURES.skins[skin] ??
-      items?.items[`${PET_SKIN_PREFIX}${skin}`]?.skin);
-  if (skinned) return { kind: "head", skin: skinned };
-
-  const textures = PET_TEXTURES.pets[type] ?? {};
-  const nearest = RARITIES.toSorted(
-    (a, b) =>
-      Math.abs(rarityRank(a) - rarityRank(rarity)) -
-      Math.abs(rarityRank(b) - rarityRank(rarity)),
-  );
-  const hash = nearest.map((candidate) => textures[candidate]).find(Boolean);
-  // A type newer than the pin has no head: show the bare skull item.
-  return hash
-    ? { kind: "head", skin: hash }
-    : { kind: "item", id: 397, damage: 3 };
+  const tier = items?.items[`${PET_SKIN_PREFIX}${skin}`]?.tier;
+  return tier && RARITY_COLORS[tier];
 }
 
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
-  const heldResource = pet.heldItem ? items?.items[pet.heldItem] : undefined;
-  const skinTier = pet.skin
-    ? items?.items[`${PET_SKIN_PREFIX}${pet.skin}`]?.tier
-    : undefined;
+  const heldItem = pet.heldItem ? items?.items[pet.heldItem] : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,
     uniqueId: pet.uniqueId ?? undefined,
     type: pet.type,
-    name: petName(pet.type),
+    name: getPetName(pet.type),
     rarity,
     level: getPetLevel(pet, rarity),
     heldItem: pet.heldItem ?? undefined,
-    heldItemTexture: heldResource && resourceTexture(heldResource),
+    heldItemTexture: heldItem && resourceTexture(heldItem),
     skin: pet.skin ?? undefined,
-    skinColor: pet.skin
-      ? (PET_TEXTURES.skinColors[pet.skin] ??
-        (skinTier && RARITY_COLORS[skinTier]))
-      : undefined,
+    skinColor: pet.skin ? getSkinColor(pet.skin, items) : undefined,
     candyUsed: pet.candyUsed ?? 0,
     active: pet.active,
-    texture: petTexture(pet.type, rarity, pet.skin, items),
+    texture: getPetTexture(pet.type, rarity, { skin: pet.skin, items }),
   };
 }
 
-/** A tier's pet score points: Common 1 … Mythic 6, and 0 for the tiers that never count. */
-export const petScorePoints = (tier: string) =>
-  PET_RARITIES.indexOf(tier as Rarity) + 1;
-
-/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
-function petStats(
-  pet: PetView | undefined,
-): Partial<Record<PlayerStat, number>> | undefined {
+function getPetStats(pet: PetView | undefined): Stats | undefined {
   if (!pet) return undefined;
 
   const table = PET_STATS[pet.type]?.[pet.rarity];
@@ -131,123 +60,49 @@ function petStats(
   const [from, to] = table?.levels ?? [1, 100];
   const progress = (Math.min(pet.level.level, to) - from) / (to - from);
 
-  // A dragon below its table's first level is still an egg, with no stats of its own
-  const own = (
+  // A dragon below its table's first level is an egg with no stats.
+  const keys =
     pet.level.level < from
       ? []
-      : Object.keys({ ...table?.first, ...table?.last })
-  ).map((key) => {
+      : Object.keys({ ...table?.first, ...table?.last });
+
+  const own = keys.map((key) => {
     const stat = key as PlayerStat;
     const first = table?.first[stat] ?? 0;
-    const boost =
-      1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
+    const last = table?.last[stat] ?? 0;
+    const percent = (item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0);
     return {
-      [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost,
+      [stat]: (first + (last - first) * progress) * (1 + percent / 100),
     };
   });
 
   return sumStats([...own, item?.stats ?? {}]);
 }
 
-/**
- * Pet score: each type's best pet by rarity, Tier Boost included (the wiki's Rift Ferret page, unverified), then level.
- * Montezuma (the Rift's dead_cats, whose active means summoned there) is listed but doesn't score, as the game doesn't.
- */
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
-  const views: PetView[] = [];
-  const best = new Map<string, { points: number; level: PetView["level"] }>();
-
-  for (const pet of member.pets_data?.pets ?? []) {
-    const view = toPetView(pet, items);
-    views.push(view);
-
-    const points = petScorePoints(view.rarity);
-    if (points === 0) continue;
-
-    const { level } = view;
-    const seen = best.get(pet.type);
-    if (
-      !seen ||
-      points > seen.points ||
-      (points === seen.points && level.level > seen.level.level)
-    )
-      best.set(pet.type, { points, level });
-  }
-
+  const raw = [...(member.pets_data?.pets ?? [])];
+  // The Rift keeps Montezuma apart, and its active means summoned there.
   const montezuma = member.rift?.dead_cats?.montezuma;
-  if (montezuma) views.push(toPetView({ ...montezuma, active: false }, items));
+  if (montezuma) raw.push({ ...montezuma, active: false });
 
-  const pets = views.toSorted(
-    (a, b) =>
-      Number(b.active) - Number(a.active) ||
-      rarityRank(b.rarity) - rarityRank(a.rarity) ||
-      b.level.xp - a.level.xp,
-  );
+  const pets = raw
+    .map((pet) => toPetView(pet, items))
+    .toSorted(
+      (a, b) =>
+        Number(b.active) - Number(a.active) ||
+        RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity) ||
+        b.level.xp - a.level.xp,
+    );
 
   const active = pets.find((pet) => pet.active);
 
   return {
-    score: add(
-      ...Array.from(
-        best.values(),
-        ({ points, level }) => points + Number(level.level === level.maxLevel),
-      ),
-    ),
+    score: getPetScore(member),
     active,
     pets,
     totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
-    skinned: views.filter(({ skin }) => skin).length,
-    candyUsed: add(...views.map(({ candyUsed }) => candyUsed)),
-    activeStats: petStats(active),
+    skinned: pets.filter(({ skin }) => skin).length,
+    candyUsed: add(...pets.map(({ candyUsed }) => candyUsed)),
+    activeStats: getPetStats(active),
   };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getPets levels by rarity, Tier Boost and custom tables, and scores each type's best pet", () => {
-    const { score, active, pets } = getPets({
-      pets_data: {
-        pets: [
-          {
-            type: "BEE",
-            tier: "EPIC",
-            exp: 20_000_000,
-            heldItem: "PET_ITEM_TIER_BOOST",
-            active: true,
-          },
-          { type: "TIGER", tier: "EPIC", exp: 20_000_000, active: false },
-          {
-            type: "GOLDEN_DRAGON",
-            tier: "LEGENDARY",
-            exp: 25_353_230,
-            active: false,
-          },
-          { type: "PHOENIX", tier: "VERY_SPECIAL", exp: 1e9, active: false },
-          { type: "JERRY", tier: "MYTHIC", exp: 1_000_000, active: false },
-          { type: "JERRY", tier: "COMMON", exp: 1e9, active: false },
-        ],
-      },
-    });
-
-    expect(active).toMatchObject({
-      rarity: "LEGENDARY",
-      level: { level: 96, maxLevel: 100 },
-    });
-    expect(pets.find((pet) => pet.type === "TIGER")?.level.level).toBe(100);
-    expect(
-      pets.find((pet) => pet.type === "GOLDEN_DRAGON")?.level,
-    ).toMatchObject({ level: 100, maxLevel: 200 });
-    const bingo = {
-      type: "BINGO",
-      tier: "LEGENDARY",
-      exp: 5_624_785,
-      heldItem: "PET_ITEM_TIER_BOOST",
-      active: false,
-    };
-    expect(getPetLevel(bingo).level).toBe(100);
-    // The boosted Bee scores Legendary, not Epic, and the maxed Tiger Epic plus one. Jerry scores its Mythic over its
-    // maxed Common, and Phoenix never scores
-    expect(score).toBe(5 + 5 + 5 + 6);
-  });
 }

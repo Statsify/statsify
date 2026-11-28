@@ -6,9 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds and the runtime never fetch src/generated/, so run this by hand and commit the output. Units or sources (neu,
-// hypixel, textures) after the sha resync only those: node scripts/sync-data.ts <full NEU-REPO commit sha> [unit…]
-import { HYPIXEL_UNITS } from "./sync/hypixel.ts";
+// Builds never fetch the sources, so run this by hand and commit the output.
 import {
   MINECRAFT_DATA,
   MINECRAFT_DATA_SHA,
@@ -16,16 +14,16 @@ import {
   fetchOk,
 } from "./sync/textures.ts";
 import { NEU_BEFORE_REMOVAL, NEU_REPO, NEU_UNITS } from "./sync/neu.ts";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { HYPIXEL_UNITS } from "./sync/hypixel.ts";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
 export interface SyncContext {
-  /** NEU-REPO at the sha, unpacked; empty when only textures run. */
-  neu: string;
+  neu: string; // NEU-REPO's checkout, empty when only textures run
   readJson: <T>(path: string) => Promise<T>;
-  write: (file: string, data: unknown) => Promise<void>;
+  write: (file: string, data: unknown) => void;
   setBoards: (
     kind: "collections" | "bestiary",
     list: { key: string; name: string }[],
@@ -50,6 +48,7 @@ const SOURCES: Record<string, Record<string, Unit>> = {
   hypixel: HYPIXEL_UNITS,
   textures: TEXTURE_UNITS,
 };
+
 const UNITS: Record<string, Unit> = Object.assign(
   {},
   ...Object.values(SOURCES),
@@ -61,37 +60,48 @@ const boardsFile = new URL(
   import.meta.url,
 );
 
-const [sha = "", ...names] = process.argv.slice(2);
-if (!/^[\da-f]{40}$/.test(sha))
-  throw new Error("usage: node scripts/sync-data.ts <full commit sha> [unit…]");
+// A source name picks every unit it has.
+function pickUnits(names: string[]) {
+  if (names.length === 0) return new Set(Object.keys(UNITS));
 
-const picked = new Set(
-  names.length === 0
-    ? Object.keys(UNITS)
-    : names.flatMap((name) => {
-        if (Object.hasOwn(SOURCES, name)) return Object.keys(SOURCES[name]);
-        if (Object.hasOwn(UNITS, name)) return [name];
-        throw new Error(
-          `no unit or source "${name}": ${[...new Set([...Object.keys(SOURCES), ...Object.keys(UNITS)])].join(", ")}`,
-        );
-      }),
-);
+  const picked = new Set<string>();
+  for (const name of names) {
+    if (Object.hasOwn(SOURCES, name)) {
+      for (const unit of Object.keys(SOURCES[name])) picked.add(unit);
+    } else if (Object.hasOwn(UNITS, name)) {
+      picked.add(name);
+    } else {
+      const known = new Set([...Object.keys(SOURCES), ...Object.keys(UNITS)]);
+      throw new Error(`no unit or source "${name}": ${[...known].join(", ")}`);
+    }
+  }
+
+  return picked;
+}
+
+const [sha = "", ...names] = process.argv.slice(2);
+if (!/^[\da-f]{40}$/.test(sha)) {
+  throw new Error(
+    "usage: node scripts/sync-data.ts <full NEU-REPO commit sha> [unit or source…]",
+  );
+}
+
+const picked = pickUnits(names);
 const full = picked.size === Object.keys(UNITS).length;
 
-// A partial run keeps every other file as the recorded pins built it
+// A partial run keeps every other file, so it must use the recorded pins.
 const recorded = JSON.parse(
   await readFile(new URL("source.json", out), "utf8"),
 ) as Source;
-if (
-  !full &&
-  (sha !== recorded.sha || MINECRAFT_DATA_SHA !== recorded.minecraftData.sha)
-) {
+const repinned =
+  sha !== recorded.sha || MINECRAFT_DATA_SHA !== recorded.minecraftData.sha;
+if (!full && repinned) {
   throw new Error(
     `a partial run takes the recorded pins: NEU-REPO ${recorded.sha}, minecraft-data ${recorded.minecraftData.sha}`,
   );
 }
 
-/** Sorts object keys at every depth, so a resync only diffs real changes. */
+// Sorted keys at every depth keep a resync's diff to real changes.
 const sorted = (value: unknown): unknown => {
   if (Array.isArray(value)) return value.map(sorted);
   if (value === null || typeof value !== "object") return value;
@@ -102,21 +112,21 @@ const sorted = (value: unknown): unknown => {
   );
 };
 
-// Held until every unit has run, so a failed run leaves src/generated/ as it was
+// Files wait for every unit, so a failed run leaves src/generated alone.
 const pending = new Map<string, string>();
 const write = (file: string, data: unknown) => {
   pending.set(file, `${JSON.stringify(sorted(data), null, 2)}\n`);
-  return Promise.resolve();
 };
 
-// A shared key merges two boards, and a dropped one restarts its board empty with the old scores left behind
+// A shared key merges two boards, and a dropped one keeps its old scores.
 function checkBoards(kind: string, old: string[][], next: string[][]) {
   const keys = next.map(([key]) => key);
   const shared = [
     ...new Set(keys.filter((key, index) => keys.indexOf(key) !== index)),
   ];
-  if (shared.length > 0)
+  if (shared.length > 0) {
     throw new Error(`${kind} boards share keys: ${shared.join(", ")}`);
+  }
 
   const removed = old.map(([key]) => key).filter((key) => !keys.includes(key));
   if (removed.length > 0 && process.env.ALLOW_REMOVED_BOARDS !== "1") {
@@ -126,11 +136,10 @@ function checkBoards(kind: string, old: string[][], next: string[][]) {
   }
 }
 
-const notice = (
-  { minecraftData, repo, sha, skills, collections }: Source,
-  license: string,
-) =>
-  `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at ${NEU_BEFORE_REMOVAL}, before it removed them. All of it is under NEU-REPO's MIT license:\n\n${license}`;
+function formatNotice(source: Source, license: string) {
+  const { minecraftData, repo, sha, skills, collections } = source;
+  return `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (${minecraftData.repo}) at ${minecraftData.sha}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${skills.url}), version ${skills.version}. collections.json comes from Hypixel's SkyBlock collections resource (${collections.url}), version ${collections.version}.\n\nThe other JSON files here, and the slayer and pet score tables in stats.json, are derived from NEU-REPO (${repo}) at ${sha}. sblevels.json, the level colors in leveling.json and the base table in stats.json are derived from it at ${NEU_BEFORE_REMOVAL}, before it removed them. All of it is under NEU-REPO's MIT license:\n\n${license}`;
+}
 
 const dir = await mkdtemp(join(tmpdir(), "neu-repo-"));
 
@@ -151,22 +160,24 @@ try {
   const readJson = async <T>(path: string): Promise<T> =>
     JSON.parse(await readFile(join(dir, path), "utf8")) as T;
 
-  // Each key is a Mongo path and a Redis key, so one that changes here leaves its old board behind
+  // Each key is a Mongo path and a Redis key, so a changed one strands a board.
   const boards = JSON.parse(await readFile(boardsFile, "utf8"));
-  let boardsSet = false;
+  let boardsChanged = false;
   const setBoards: SyncContext["setBoards"] = (kind, list) => {
     const next = list.map(({ key, name }) => [key, name]);
     checkBoards(kind, boards[kind], next);
     boards[kind] = next;
-    boardsSet = true;
+    boardsChanged = true;
   };
 
   const sync: SyncContext = { neu: dir, readJson, write, setBoards };
-  const versions = (
-    await Promise.all([...picked].map((name) => UNITS[name](sync)))
-  ).find(Boolean);
-  if (boardsSet)
+  const results = await Promise.all(
+    [...picked].map((name) => UNITS[name](sync)),
+  );
+  const versions = results.find(Boolean);
+  if (boardsChanged) {
     await writeFile(boardsFile, `${JSON.stringify(boards, null, 2)}\n`);
+  }
 
   if (versions) {
     const source: Source = full
@@ -182,11 +193,9 @@ try {
         }
       : { ...recorded, ...versions };
 
-    await write("source.json", source);
-    pending.set(
-      "NOTICE.md",
-      notice(source, await readFile(join(dir, "LICENSE"), "utf8")),
-    );
+    write("source.json", source);
+    const license = await readFile(join(dir, "LICENSE"), "utf8");
+    pending.set("NOTICE.md", formatNotice(source, license));
   }
 
   await Promise.all(

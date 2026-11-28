@@ -7,25 +7,27 @@
  */
 
 import {
-  type ItemAttributes,
+  RARITIES,
   type ItemView,
   type ItemsResource,
-  RARITIES,
   type Rarity,
-  type RawItem,
   type Slots,
 } from "#types";
-import { decodeAttributes, decodeInventory } from "#nbt";
+import { decodeInventory } from "#nbt";
+import { getItemTexture, resourceTexture, skinHash } from "#textures";
 import { RARITY_COLORS } from "./display.js";
-import { normalizeItemText } from "./lore.js";
+import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
-import { resourceTexture, skinHash, textureOf } from "#textures";
-import type { RawNbt } from "#raw";
-import { z } from "zod";
+import type {
+  RawItem,
+  RawItemAttributes,
+  RawItemsResource,
+  RawNbt,
+} from "#raw";
 
 const RARITY_NAMES = new Map<string, Rarity>([
   ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
-  // How Jerry's cosmetics name Legendary (the wiki's Rarity page)
+  // Jerry's cosmetics call Legendary "LEGENJERRY".
   ["LEGENJERRY", "LEGENDARY"],
 ]);
 
@@ -33,15 +35,15 @@ const RARITY_LINE = new RegExp(
   `^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`,
 );
 
-function rarityOf(lore: readonly string[]): Rarity | undefined {
+function getLoreRarity(lore: string[]): Rarity | undefined {
   const name = RARITY_LINE.exec(
     removeFormatting(lore.at(-1) ?? "").trim(),
   )?.[1];
   return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
-/** An NBT long, which the decode leaves as `[high, low]` (low signed), as a number; an int as it is. */
-export function nbtNumber(value: unknown): number | undefined {
+// The decode leaves an NBT long as [high, low], with the low half signed.
+function nbtNumber(value: unknown): number | undefined {
   if (typeof value === "number") return value;
   if (
     Array.isArray(value) &&
@@ -52,7 +54,7 @@ export function nbtNumber(value: unknown): number | undefined {
   return undefined;
 }
 
-// The API keys of the items' lifetime counters, as the saves have them, kept raw
+// The lifetime counters the saved players' items carry
 const COUNTERS = [
   "absorb_logs_chopped",
   "blood_god_kills",
@@ -79,37 +81,40 @@ const DRILL_PARTS = [
   "drill_part_upgrade_module",
 ] as const;
 
-const nonEmpty = <T>(list: T[]) => (list.length > 0 ? list : undefined);
+// A slot named for one gem holds its quality, while COMBAT_0 names its gem
+// in COMBAT_0_gem.
+function getGems(raw: unknown): ItemView["gems"] {
+  if (!raw || typeof raw !== "object") return;
+  const slots = raw as Record<string, unknown>;
 
-/**
- * A slot keyed by its gem type holds the quality ("RUBY_0": "FINE", or an object with a uuid); a multi-type slot
- * ("COMBAT_0") names its gem beside it ("COMBAT_0_gem": "SAPPHIRE"). unlocked_slots lists the opened slots, filled or not.
- */
-function gemsOf(raw: unknown): ItemView["gems"] {
-  if (!raw || typeof raw !== "object") return undefined;
-  const gems = raw as Record<string, unknown>;
+  const gems: NonNullable<ItemView["gems"]> = [];
+  for (const [key, value] of Object.entries(slots)) {
+    if (key === "unlocked_slots" || key.endsWith("_gem")) continue;
 
-  return nonEmpty(
-    Object.entries(gems).flatMap(([key, value]) => {
-      if (key === "unlocked_slots" || key.endsWith("_gem")) return [];
-      const quality =
-        typeof value === "string"
-          ? value
-          : (value as { quality?: unknown } | null)?.quality;
-      if (typeof quality !== "string") return [];
-      const slot = key.replace(/_\d+$/, "");
-      const named = gems[`${key}_gem`];
-      return [{ slot, gem: typeof named === "string" ? named : slot, quality }];
-    }),
-  );
+    const quality =
+      typeof value === "string"
+        ? value
+        : (value as { quality?: unknown } | null)?.quality;
+    if (typeof quality !== "string") continue;
+
+    const slot = key.replace(/_\d+$/, "");
+    const named = slots[`${key}_gem`];
+    gems.push({ slot, gem: typeof named === "string" ? named : slot, quality });
+  }
+
+  return gems.length > 0 ? gems : undefined;
 }
 
-/** What an item's ExtraAttributes say beyond its name and lore. */
-function attributeDetails(attributes: ItemAttributes) {
-  const counters = COUNTERS.flatMap((key) => {
+function getItemDetails(attributes: RawItemAttributes) {
+  const counters: Record<string, number> = {};
+  for (const key of COUNTERS) {
     const value = nbtNumber(attributes[key]);
-    return value === undefined ? [] : [[key, Math.floor(value)] as const];
-  });
+    if (value !== undefined) counters[key] = Math.floor(value);
+  }
+
+  const drillParts = DRILL_PARTS.map((part) => attributes[part])
+    .filter((id) => typeof id === "string")
+    .map((id) => id.toUpperCase());
   const [rune] = Object.entries(attributes.runes ?? {});
 
   return {
@@ -120,18 +125,13 @@ function attributeDetails(attributes: ItemAttributes) {
     enrichment: attributes.talisman_enrichment,
     hotPotato: nbtNumber(attributes.hot_potato_count),
     obtainedAt: nbtNumber(attributes.timestamp),
-    gems: gemsOf(attributes.gems),
-    counters: counters.length > 0 ? Object.fromEntries(counters) : undefined,
+    gems: getGems(attributes.gems),
+    counters: Object.keys(counters).length > 0 ? counters : undefined,
     dye: attributes.dye_item,
     rune: rune && { id: rune[0], level: rune[1] },
     skin: attributes.skin,
     origin: attributes.originTag,
-    drillParts: nonEmpty(
-      DRILL_PARTS.flatMap((part) => {
-        const id = attributes[part];
-        return typeof id === "string" ? [id.toUpperCase()] : [];
-      }),
-    ),
+    drillParts: drillParts.length > 0 ? drillParts : undefined,
   };
 }
 
@@ -144,25 +144,23 @@ export function toItemView(item: RawItem): ItemView {
     id,
     name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
-    rarity: rarityOf(lore),
+    rarity: getLoreRarity(lore),
     count: item.Count,
     glint: item.tag?.ench !== undefined,
-    texture: textureOf(item),
-    ...attributeDetails(attributes),
+    texture: getItemTexture(item),
+    ...getItemDetails(attributes),
   };
 }
 
-/**
- * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. null for
- * an id the resource can't draw.
- */
-export function toolkitView(
-  attributes: ItemAttributes,
+// A toolkit's tool has no name or lore, so the items resource draws it.
+export function toToolkitItemView(
+  attributes: RawItemAttributes,
   items: ItemsResource,
 ): ItemView | null {
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;
+
   const rarity =
     resource.tier &&
     RARITIES[
@@ -179,62 +177,26 @@ export function toolkitView(
       Object.keys(attributes.enchantments ?? {}).length > 0 ||
       Boolean(resource.glowing),
     texture,
-    ...attributeDetails(attributes),
+    ...getItemDetails(attributes),
   };
 }
 
-export const toolkitItemView = (blob: RawNbt, items: ItemsResource) =>
-  toolkitView(decodeAttributes(blob), items);
-
-export const decodeSlots = (blob: RawNbt): Slots =>
-  decodeInventory(blob).map((item) => item && toItemView(item));
-
-const RawResourceItem = z.object({
-  id: z.string(),
-  name: z.string(),
-  material: z.string(),
-  durability: z.number().optional(),
-  tier: z.string().optional(),
-  category: z.string().optional(),
-  color: z.string().optional(),
-  skin: z.object({ value: z.string() }).optional(),
-  origin: z.string().optional(),
-  rift_transferrable: z.boolean().optional(),
-  npc_sell_price: z.number().optional(),
-  glowing: z.boolean().optional(),
-  generator: z.string().optional(),
-  generator_tier: z.number().optional(),
-  museum_data: z
-    .object({
-      category: z.string().optional(),
-      donation_xp: z.number().optional(),
-      armor_set_donation_xp: z.record(z.string(), z.number()).optional(),
-      parent: z.record(z.string(), z.string()).optional(), // the museum key → its upgrade
-    })
-    .optional(),
-});
-
-/** /v2/resources/skyblock/items */
-export const RawItemsResource = z.object({
-  lastUpdated: z.number(),
-  items: z.array(RawResourceItem),
-});
-export type RawItemsResource = z.infer<typeof RawItemsResource>;
-
-// The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
-const tierOf = (tier = "COMMON") =>
-  tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier);
+export function decodeSlots(blob: RawNbt): Slots {
+  return decodeInventory(blob).map((item) => item && toItemView(item));
+}
 
 export function parseItemsResource(raw: RawItemsResource): ItemsResource {
-  // The museum keeps an armor set under the set's key, which each of its pieces names
+  // The museum keeps an armor set under the set's key, which its pieces name.
   const museum: ItemsResource["museum"] = {};
   for (const { id, museum_data: data } of raw.items) {
     if (!data?.category) continue;
+
     const { category, parent } = data;
-    if (data.donation_xp !== undefined)
+    if (data.donation_xp !== undefined) {
       museum[id] = { category, xp: data.donation_xp, upgrade: parent?.[id] };
-    // A set's pieces can disagree (Sponge's equipment gives a point less and names no upgrade), so the set keeps the
-    // most XP and any upgrade a piece names
+    }
+
+    // Sponge's equipment gives a point less than its armor and names no upgrade.
     for (const [set, xp] of Object.entries(data.armor_set_donation_xp ?? {})) {
       const seen = museum[set];
       museum[set] = {
@@ -247,7 +209,6 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
 
   return {
     lastUpdated: raw.lastUpdated,
-    raw: raw.items,
     museum,
     items: Object.fromEntries(
       raw.items.map(
@@ -256,7 +217,8 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           name,
           material,
           durability,
-          tier,
+          // The resource leaves COMMON out and still calls DIVINE SUPREME.
+          tier = "COMMON",
           category,
           color,
           skin,
@@ -272,7 +234,10 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
             name,
             material,
             durability,
-            tier: tierOf(tier),
+            tier:
+              tier === "SUPREME"
+                ? "DIVINE"
+                : RARITIES.find((rarity) => rarity === tier),
             category,
             color,
             skin: skin && skinHash(skin.value),
@@ -290,73 +255,100 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("rarityOf reads the last lore line", () => {
-    expect(rarityOf(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe(
-      "LEGENDARY",
-    );
-    expect(rarityOf(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe("MYTHIC");
-    expect(rarityOf(["§c§lVERY SPECIAL HATCESSORY"])).toBe("VERY_SPECIAL");
-    expect(rarityOf(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"])).toBe(
-      "MYTHIC",
-    );
-    expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
-    expect(rarityOf(["§7A rare find"])).toBeUndefined();
-    expect(rarityOf([])).toBeUndefined();
-  });
+  suite("getLoreRarity", () => {
+    it("should read the last lore line", () => {
+      expect(getLoreRarity(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe(
+        "LEGENDARY",
+      );
+      expect(getLoreRarity(["§a§lUNCOMMON"])).toBe("UNCOMMON");
+      expect(getLoreRarity(["§c§lVERY SPECIAL HATCESSORY"])).toBe(
+        "VERY_SPECIAL",
+      );
+    });
 
-  test("gemsOf reads a typed slot's quality and a mixed slot's gem", () => {
-    expect(
-      gemsOf({
-        unlocked_slots: ["JADE_0", "COMBAT_0", "COMBAT_1"],
-        RUBY_0: "FINE",
-        JADE_0: { uuid: "x", quality: "PERFECT" },
-        COMBAT_0: "FLAWLESS",
-        COMBAT_0_gem: "SAPPHIRE",
-      }),
-    ).toEqual([
-      { slot: "RUBY", gem: "RUBY", quality: "FINE" },
-      { slot: "JADE", gem: "JADE", quality: "PERFECT" },
-      { slot: "COMBAT", gem: "SAPPHIRE", quality: "FLAWLESS" },
-    ]);
-    expect(gemsOf({ unlocked_slots: ["RUBY_0"] })).toBeUndefined();
-  });
-
-  test("nbtNumber joins a long's halves", () => {
-    expect(nbtNumber(5)).toBe(5);
-    expect(nbtNumber([0, 7])).toBe(7);
-    expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
-    expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
-    expect(nbtNumber("5")).toBeUndefined();
-  });
-
-  test("parseItemsResource keeps an armor set's most XP and its upgrade, in either order", () => {
-    const belt = {
-      id: "SPONGE_BELT",
-      name: "",
-      material: "",
-      museum_data: {
-        category: "FISHING",
-        armor_set_donation_xp: { SPONGE: 5 },
-      },
-    };
-    const helmet = {
-      id: "SPONGE_HELMET",
-      name: "",
-      material: "",
-      museum_data: {
-        category: "FISHING",
-        armor_set_donation_xp: { SPONGE: 6 },
-        parent: { SPONGE: "SHARK_SCALE" },
-      },
-    };
-    for (const items of [
-      [belt, helmet],
-      [helmet, belt],
-    ])
+    it("should read a recombobulated or shiny line", () => {
+      expect(getLoreRarity(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe(
+        "MYTHIC",
+      );
       expect(
-        parseItemsResource({ lastUpdated: 0, items }).museum.SPONGE,
-      ).toEqual({ category: "FISHING", xp: 6, upgrade: "SHARK_SCALE" });
+        getLoreRarity(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"]),
+      ).toBe("MYTHIC");
+    });
+
+    it("should skip lore with no rarity", () => {
+      expect(getLoreRarity(["§7A rare find"])).toBeUndefined();
+      expect(getLoreRarity([])).toBeUndefined();
+    });
+  });
+
+  suite("getGems", () => {
+    it("should read a gem slot's quality and a mixed slot's gem", () => {
+      expect(
+        getGems({
+          unlocked_slots: ["JADE_0", "COMBAT_0", "COMBAT_1"],
+          RUBY_0: "FINE",
+          JADE_0: { uuid: "x", quality: "PERFECT" },
+          COMBAT_0: "FLAWLESS",
+          COMBAT_0_gem: "SAPPHIRE",
+        }),
+      ).toEqual([
+        { slot: "RUBY", gem: "RUBY", quality: "FINE" },
+        { slot: "JADE", gem: "JADE", quality: "PERFECT" },
+        { slot: "COMBAT", gem: "SAPPHIRE", quality: "FLAWLESS" },
+      ]);
+    });
+
+    it("should skip unlocked slots with nothing in them", () => {
+      expect(getGems({ unlocked_slots: ["RUBY_0"] })).toBeUndefined();
+    });
+  });
+
+  suite("nbtNumber", () => {
+    it("should join a long's halves", () => {
+      expect(nbtNumber([0, 7])).toBe(7);
+      expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
+      expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
+    });
+
+    it("should keep an int and skip anything else", () => {
+      expect(nbtNumber(5)).toBe(5);
+      expect(nbtNumber("5")).toBeUndefined();
+    });
+  });
+
+  suite("parseItemsResource", () => {
+    it("should keep an armor set's most XP and its upgrade, in either order", () => {
+      const belt = {
+        id: "SPONGE_BELT",
+        name: "",
+        material: "",
+        museum_data: {
+          category: "FISHING",
+          armor_set_donation_xp: { SPONGE: 5 },
+        },
+      };
+      const helmet = {
+        id: "SPONGE_HELMET",
+        name: "",
+        material: "",
+        museum_data: {
+          category: "FISHING",
+          armor_set_donation_xp: { SPONGE: 6 },
+          parent: { SPONGE: "SHARK_SCALE" },
+        },
+      };
+      const sponge = { category: "FISHING", xp: 6, upgrade: "SHARK_SCALE" };
+
+      for (const items of [
+        [belt, helmet],
+        [helmet, belt],
+      ]) {
+        expect(
+          parseItemsResource({ lastUpdated: 0, items }).museum.SPONGE,
+        ).toEqual(sponge);
+      }
+    });
   });
 }
