@@ -66,19 +66,12 @@ function getAccessorySources(
     return source;
   });
 
-  // A step that pays no XP goes last in its chain, even when it's free.
-  const ranked = candidates.toSorted(
-    (a, b) => Number(a.xp === 0) - Number(b.xp === 0) || compareSources(a, b),
+  const ranked = candidates.filter(({ xp }) => xp > 0).toSorted(compareSources);
+
+  // An unpriced step still wins its chain, so the steps under it stay hidden.
+  return keepBestPerChain(ranked).filter(
+    ({ outsideBag, cost }) => !market || outsideBag || cost,
   );
-
-  const sources: Source[] = [];
-  for (const source of keepBestPerChain(ranked)) {
-    if (source.xp === 0) continue;
-    if (market && !source.outsideBag && !source.cost) continue;
-    sources.push(source);
-  }
-
-  return sources;
 }
 
 function getPetSources(member: RawMember, prices: PriceMap, market: boolean) {
