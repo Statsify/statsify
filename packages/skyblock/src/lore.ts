@@ -70,7 +70,8 @@ const FORMATTING_BEFORE_COLOR = /§[k-o](?:[^§]|§[k-o])*(?=§[\da-f])/gi;
 
 // A dropped glyph takes the space after it when it starts a word ("§2<glyph> Undead" → "§2Undead"), and the space
 // before it when punctuation follows ("Undead <glyph>!" → "Undead!")
-const UNMAPPED_GLYPH = /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
+const UNMAPPED_GLYPH =
+  /(?<=(?:^|\s)(?:§.)*)\p{Co} | \p{Co}(?=(?!§)\p{P})|\p{Co}/gu;
 
 const NEEDS_NORMALIZING = /§[k-o]|\p{Co}/iu;
 
@@ -87,8 +88,10 @@ export function normalizeItemText(text: string) {
 
 const STAT_NAMES = new Map<string, PlayerStat>(
   PLAYER_STATS.flatMap((stat) =>
-    [prettify(stat.id), ...("aliases" in stat ? stat.aliases : [])].map((name) => [name, stat.id] as const)
-  )
+    [prettify(stat.id), ...("aliases" in stat ? stat.aliases : [])].map(
+      (name) => [name, stat.id] as const,
+    ),
+  ),
 );
 
 /** The stat lore calls `name` ("Crit Damage", or an older name such as "Bonus Attack Speed"). */
@@ -101,7 +104,9 @@ const amount = (text: string) => Number(text.replaceAll(",", ""));
  * its reforge, gems and enchantments in. undefined for other lines and for stats a player doesn't have (Damage).
  */
 export function parseStatLine(line: string): StatValue | undefined {
-  const match = /^([A-Z][\w' ]*): ([+-][\d,.]+)%?(?: |$)/.exec(removeFormatting(line));
+  const match = /^([A-Z][\w' ]*): ([+-][\d,.]+)%?(?: |$)/.exec(
+    removeFormatting(line),
+  );
   if (!match) return undefined;
   const stat = statNamed(match[1]);
   return stat && { stat, value: amount(match[2]) };
@@ -118,11 +123,15 @@ export function parsePieceBonuses(lore: string[]): StatValue[] {
     const match = /^Piece Bonus: \+([\d,.]+)(\S+)$/.exec(line);
     if (!match) return [];
 
-    const start = lines.findLastIndex((other, at) => at < index && other.startsWith("Piece Bonus:"));
+    const start = lines.findLastIndex(
+      (other, at) => at < index && other.startsWith("Piece Bonus:"),
+    );
     const description = lines.slice(start + 1, index).join(" ");
     if (/\b(?:against|while|when)\b/.test(description)) return [];
 
-    const name = /^[A-Z][\w']*(?: [A-Z][\w']*)*/.exec(description.split(`${match[2]} `)[1] ?? "")?.[0];
+    const name = /^[A-Z][\w']*(?: [A-Z][\w']*)*/.exec(
+      description.split(`${match[2]} `)[1] ?? "",
+    )?.[0];
     const stat = name && statNamed(name);
     return stat ? [{ stat, value: amount(match[1]) }] : [];
   });
@@ -134,12 +143,19 @@ export function parsePieceBonuses(lore: string[]): StatValue[] {
  */
 export function statRewards(text: string): StatValue[] {
   const rewards = removeFormatting(text).matchAll(
-    /([+-][\d,.]+)(?:➜([\d,.]+))?%?[^\s\w]*(?: [^\s\w])? ([A-Z][\w']*(?: [A-Z][\w']*)*)/g
+    /([+-][\d,.]+)(?:➜([\d,.]+))?%?[^\s\w]*(?: [^\s\w])? ([A-Z][\w']*(?: [A-Z][\w']*)*)/g,
   );
 
   return [...rewards].flatMap(([, from, to, name]) => {
     const stat = statNamed(name);
-    return stat ? [{ stat, value: to === undefined ? amount(from) : amount(to) - amount(from) }] : [];
+    return stat
+      ? [
+          {
+            stat,
+            value: to === undefined ? amount(from) : amount(to) - amount(from),
+          },
+        ]
+      : [];
   });
 }
 
@@ -147,35 +163,81 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("normalizeItemText draws item text the way 1.8 does", () => {
-    expect(normalizeItemText("§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7.")).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
-    expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe("§7Grants §d+3 Hunting Fortune§7.");
-    expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe("§7taken from §2Undead §7mobs");
-    expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe("§d§lUltimate Wise V§r§9, §9Champion X");
-    expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe("§d§l§r §d§lMYTHIC ACCESSORY §r§d§l");
-    expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe("§6§LEPIC §r§9§9 Shard");
+    expect(
+      normalizeItemText("§7Grants §c+5\uE010 Health §7and §a\uE008 Defense§7."),
+    ).toBe("§7Grants §c+5❤ Health §7and §a❈ Defense§7.");
+    expect(normalizeItemText("§7Grants §d+3\uE05B Hunting Fortune§7.")).toBe(
+      "§7Grants §d+3 Hunting Fortune§7.",
+    );
+    expect(normalizeItemText("§7taken from §2\uE084 Undead §7mobs")).toBe(
+      "§7taken from §2Undead §7mobs",
+    );
+    expect(normalizeItemText("§d§lUltimate Wise V§9, §9Champion X")).toBe(
+      "§d§lUltimate Wise V§r§9, §9Champion X",
+    );
+    expect(normalizeItemText("§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka")).toBe(
+      "§d§l§r §d§lMYTHIC ACCESSORY §r§d§l",
+    );
+    expect(normalizeItemText("§6§LEPIC §9§KX§9 Shard")).toBe(
+      "§6§LEPIC §r§9§9 Shard",
+    );
   });
 
   test("parseStatLine, parsePieceBonuses and statRewards read stats out of lore", () => {
-    expect(parseStatLine("§7Health: §c+125")).toEqual({ stat: "health", value: 125 });
-    expect(parseStatLine("§7Sea Creature Chance: §3+0.25% §9(+0.25%)")).toEqual({ stat: "sea_creature_chance", value: 0.25 });
-    expect(parseStatLine("§7Intelligence: §b+1,124 §9(+100) §d(+24)")).toEqual({ stat: "intelligence", value: 1124 });
-    expect(parseStatLine("§7Speed: §c-5")).toEqual({ stat: "speed", value: -5 });
-    expect(parseStatLine("§7Bonus Attack Speed: §c+3%")).toEqual({ stat: "attack_speed", value: 3 });
+    expect(parseStatLine("§7Health: §c+125")).toEqual({
+      stat: "health",
+      value: 125,
+    });
+    expect(parseStatLine("§7Sea Creature Chance: §3+0.25% §9(+0.25%)")).toEqual(
+      { stat: "sea_creature_chance", value: 0.25 },
+    );
+    expect(parseStatLine("§7Intelligence: §b+1,124 §9(+100) §d(+24)")).toEqual({
+      stat: "intelligence",
+      value: 1124,
+    });
+    expect(parseStatLine("§7Speed: §c-5")).toEqual({
+      stat: "speed",
+      value: -5,
+    });
+    expect(parseStatLine("§7Bonus Attack Speed: §c+3%")).toEqual({
+      stat: "attack_speed",
+      value: 3,
+    });
     expect(parseStatLine("§7Damage: §c+120")).toBeUndefined();
-    expect(parseStatLine("§7Grants §c+5❤ Health §7and §a+2❈ Defense§7.")).toBeUndefined();
+    expect(
+      parseStatLine("§7Grants §c+5❤ Health §7and §a+2❈ Defense§7."),
+    ).toBeUndefined();
 
-    const salesperson = ["§7Piece Bonus: §6Salesperson", "§7Complete Garden Visitor Offers to", "§7gain §6☘ Farming Fortune§7.", "§7Piece Bonus: §6+15☘"];
-    expect(parsePieceBonuses(salesperson)).toEqual([{ stat: "farming_fortune", value: 15 }]);
-    expect(parsePieceBonuses(["§7Kill Spiders to accumulate defense against them", "§7Piece Bonus: §a+215❈"])).toEqual([]);
+    const salesperson = [
+      "§7Piece Bonus: §6Salesperson",
+      "§7Complete Garden Visitor Offers to",
+      "§7gain §6☘ Farming Fortune§7.",
+      "§7Piece Bonus: §6+15☘",
+    ];
+    expect(parsePieceBonuses(salesperson)).toEqual([
+      { stat: "farming_fortune", value: 15 },
+    ]);
+    expect(
+      parsePieceBonuses([
+        "§7Kill Spiders to accumulate defense against them",
+        "§7Piece Bonus: §a+215❈",
+      ]),
+    ).toEqual([]);
 
-    expect(statRewards("§7Grants §c+30❁ Strength§7 and §f+20✦ Speed§7.")).toEqual([
+    expect(
+      statRewards("§7Grants §c+30❁ Strength§7 and §f+20✦ Speed§7."),
+    ).toEqual([
       { stat: "strength", value: 30 },
       { stat: "speed", value: 20 },
     ]);
-    expect(statRewards("Farmhand XV   Grants +56➜60 ☘ Farming Fortune, which increases your chance")).toEqual([
-      { stat: "farming_fortune", value: 4 },
+    expect(
+      statRewards(
+        "Farmhand XV   Grants +56➜60 ☘ Farming Fortune, which increases your chance",
+      ),
+    ).toEqual([{ stat: "farming_fortune", value: 4 }]);
+    expect(statRewards("+0.5%☣ Crit Chance")).toEqual([
+      { stat: "crit_chance", value: 0.5 },
     ]);
-    expect(statRewards("+0.5%☣ Crit Chance")).toEqual([{ stat: "crit_chance", value: 0.5 }]);
     expect(statRewards("+100 Coins")).toEqual([]);
   });
 }

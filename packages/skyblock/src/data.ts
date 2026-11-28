@@ -25,7 +25,14 @@ import sblevels from "./generated/sblevels.json" with { type: "json" };
 import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
-import type { PowerStat, Rarity, Skill, SlayerBoss, Stats, TreeLayout } from "#types";
+import type {
+  PowerStat,
+  Rarity,
+  Skill,
+  SlayerBoss,
+  Stats,
+  TreeLayout,
+} from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
@@ -44,7 +51,12 @@ export const LEVELING = leveling as {
 export const PETS = pets as {
   custom_pet_leveling: Record<
     string,
-    { type?: number; pet_levels?: number[]; max_level?: number; rarity_offset?: Record<string, number> }
+    {
+      type?: number;
+      pet_levels?: number[];
+      max_level?: number;
+      rarity_offset?: Record<string, number>;
+    }
   >;
   id_to_display_name: Record<string, string>;
   pet_levels: number[];
@@ -60,20 +72,31 @@ export const PET_TEXTURES = petTextures as {
 };
 
 /** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
-export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
+export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
+  string,
+  string[]
+>;
 
-export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
+export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(
+  accessories.ignored,
+);
 
 export const HOTM_LAYOUT = hotmLayout as TreeLayout;
 
 /** Essence type (WITHER, CRIMSON…) → its shop's perks → each perk's max level. */
-export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, number>>;
+export const ESSENCE_SHOPS = essenceShops as Record<
+  string,
+  Record<string, number>
+>;
 
 /**
  * A stone Power's stats at the Accessory Power its stone lists them for, and its Unique Power Bonus, which doesn't
  * scale. Powers learned without a stone aren't here.
  */
-export const POWERS = powers as Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }>;
+export const POWERS = powers as Record<
+  string,
+  { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }
+>;
 
 export const HOTF_LAYOUT = hotfLayout as TreeLayout;
 
@@ -111,7 +134,13 @@ export const STAT_TABLES = stats as {
 };
 
 /** Each pet's stats by rarity at its first and last stat level: 1 and 100, or `levels` (101 and 200 for the dragons). */
-export const PET_STATS = petNums as Record<string, Partial<Record<Rarity, { first: Stats; last: Stats; levels?: number[] }>>>;
+export const PET_STATS = petNums as Record<
+  string,
+  Partial<Record<Rarity, { first: Stats; last: Stats; levels?: number[] }>>
+>;
 
 /** A pet item's flat stats, and the percent it raises some or all of the pet's own stats by. */
-export const PET_ITEMS = petItems as Record<string, { stats?: Stats; petStats?: Stats; allPetStats?: number }>;
+export const PET_ITEMS = petItems as Record<
+  string,
+  { stats?: Stats; petStats?: Stats; allPetStats?: number }
+>;
