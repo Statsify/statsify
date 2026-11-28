@@ -7,10 +7,21 @@
  */
 
 import { LEVELING } from "#data";
-import { SLAYER_BOSSES, type SlayersSection } from "#types";
 import { add } from "@statsify/math";
 import { getLevel, toLevelCosts } from "#leveling";
 import type { RawMember } from "#raw";
+import type { SlayersSection } from "#types";
+
+export const SLAYER_BOSSES = [
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
+  "blaze",
+  "vampire",
+] as const;
+
+export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
 export function getSlayers(member: RawMember): SlayersSection {
   const bosses = SLAYER_BOSSES.map((boss) => {
