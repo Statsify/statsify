@@ -519,6 +519,14 @@ const skullHash = (nbt: string) => {
   return value && skinHash(value);
 };
 
+const toTreeLayout = (perks: Record<string, Record<string, unknown>>) =>
+  Object.fromEntries(
+    Object.entries(perks).map(([id, { name, x, y, maxLevel }]) => [
+      id,
+      { name, x, y, maxLevel },
+    ]),
+  );
+
 // A power stone's lore lists its Power's stats at a set accessory power.
 function readPowerStone(lore: string[]) {
   const text = lore.map(removeFormatting);
@@ -605,14 +613,6 @@ try {
       pet_score_xp: core_task.pet_score_xp,
     },
   });
-
-  const toTreeLayout = (perks: Record<string, Record<string, unknown>>) =>
-    Object.fromEntries(
-      Object.entries(perks).map(([id, { name, x, y, maxLevel }]) => [
-        id,
-        { name, x, y, maxLevel },
-      ]),
-    );
 
   const [{ hotm }, { hotf }] = await Promise.all([
     readJson<{ hotm: { perks: Record<string, Record<string, unknown>> } }>(
