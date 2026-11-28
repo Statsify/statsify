@@ -33,7 +33,6 @@ import {
 import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { Worker } from "node:worker_threads";
 import { gunzipJson, gzipJson } from "./zip.js";
-import { setNetworthItems } from "@statsify/skyblock/networth";
 import type {
   RebuildRequest,
   RebuildResult,
@@ -62,9 +61,19 @@ function isCurrent<T>(copy: Copy<T> | undefined, maxAge: number) {
   return copy !== undefined && Date.now() - copy.fetchedAt <= maxAge;
 }
 
-function loadItems({ value, fetchedAt }: Copy<RawItemsResource>) {
-  setNetworthItems(value);
-  return { value: parseItemsResource(value), fetchedAt };
+interface LoadedItems {
+  raw: RawItemsResource;
+  parsed: ItemsResource;
+}
+
+const loadItems = ({ value, fetchedAt }: Copy<RawItemsResource>) => ({
+  value: { raw: value, parsed: parseItemsResource(value) },
+  fetchedAt,
+});
+
+interface MarketReads {
+  bazaar?: Promise<Bazaar | undefined>;
+  items?: Promise<LoadedItems | undefined>;
 }
 
 @Injectable()
@@ -73,7 +82,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   // A process keeps what it unzipped, since unzipping per request is slow.
   private map?: PriceMap;
   private bazaar?: Copy<Bazaar>;
-  private items?: Copy<ItemsResource>;
+  private items?: Copy<LoadedItems>;
   private worker?: Worker;
 
   public constructor(
@@ -86,7 +95,10 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     await this.worker?.terminate();
   }
 
-  public async getPriceMap(): Promise<PriceMap | undefined> {
+  // A rebuild reuses the bazaar and items reads a caller already started.
+  public async getPriceMap(
+    reads: MarketReads = {},
+  ): Promise<PriceMap | undefined> {
     const asOf = Number(await this.redis.hget(PRICES_KEY, "asOf"));
     if (asOf > (this.map?.asOf ?? 0)) {
       const data = await this.redis.hgetBuffer(PRICES_KEY, "data");
@@ -94,13 +106,13 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     }
 
     if (!this.map || Date.now() - this.map.asOf > PRICES_REFRESH) {
-      void this.rebuild().catch((error) => this.logger.error(error));
+      void this.rebuild(reads).catch((error) => this.logger.error(error));
     }
 
     return this.map;
   }
 
-  public async getItems(): Promise<ItemsResource | undefined> {
+  public async getItems(): Promise<LoadedItems | undefined> {
     if (!isCurrent(this.items, ITEMS_REFRESH)) {
       const stored = await this.readStored<RawItemsResource>(
         ITEMS_KEY,
@@ -114,27 +126,31 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     }
 
     const refetch = this.hypixelService.getSkyBlockItems().then(async (raw) => {
-      this.items = loadItems(await this.store(ITEMS_KEY, raw));
-      return this.items.value;
+      const copy = { value: raw, fetchedAt: Date.now() };
+      const loaded = loadItems(copy);
+      await this.store(ITEMS_KEY, copy);
+      this.items = loaded;
+      return loaded.value;
     });
 
     return this.staleOrRefetch(this.items, refetch);
   }
 
   public async getPrice(id: string): Promise<PriceView> {
-    const [map, bazaar, items] = await Promise.all([
-      this.getPriceMap(),
-      this.getBazaar(),
-      this.getItems(),
+    const reads = { bazaar: this.getBazaar(), items: this.getItems() };
+    const [map, bazaar, loaded] = await Promise.all([
+      this.getPriceMap(reads),
+      reads.bazaar,
+      reads.items,
     ]);
-    if (!map || !bazaar || !items) {
+    if (!map || !bazaar || !loaded) {
       throw new SkyBlockUnavailableException("market");
     }
 
-    const price = toPriceView(id, map, bazaar, items);
+    const price = toPriceView(id, map, bazaar, loaded.parsed);
     if (price) return price;
 
-    const described = describeKey(id, items);
+    const described = describeKey(id, loaded.parsed);
     throw new SkyBlockNotFoundException(
       described ? "price" : "item",
       described?.name,
@@ -157,30 +173,32 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     const refetch = this.hypixelService
       .getSkyBlockBazaar()
       .then(async (raw) => {
-        this.bazaar = await this.store(BAZAAR_KEY, parseBazaar(raw));
-        return this.bazaar.value;
+        const copy = { value: parseBazaar(raw), fetchedAt: Date.now() };
+        await this.store(BAZAAR_KEY, copy);
+        this.bazaar = copy;
+        return copy.value;
       });
 
     return this.staleOrRefetch(this.bazaar, refetch);
   }
 
-  private async rebuild() {
+  private async rebuild(reads: MarketReads) {
     const lock = await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS, "NX");
     if (lock !== "OK") return;
 
     try {
-      const [bazaar, items] = await Promise.all([
-        this.getBazaar(),
-        this.getItems(),
+      const [bazaar, loaded] = await Promise.all([
+        reads.bazaar ?? this.getBazaar(),
+        reads.items ?? this.getItems(),
       ]);
-      if (!bazaar || !items) {
+      if (!bazaar || !loaded) {
         throw new Error("no bazaar or items resource to build prices with");
       }
 
       const result = await this.build({
         timeout: SKYBLOCK_TIMEOUT,
         bazaar,
-        items,
+        items: loaded.parsed,
       });
       if ("error" in result) throw new Error(result.error);
 
@@ -198,7 +216,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
       await this.redis.hset(PRICES_KEY, { data, asOf: result.asOf });
       this.map = map;
-      await this.searchService.update(map, items);
+      await this.searchService.update(map, loaded.parsed);
     } finally {
       await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS);
     }
@@ -246,10 +264,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     return { value: await gunzipJson<T>(data), fetchedAt };
   }
 
-  private async store<T>(key: string, value: T): Promise<Copy<T>> {
-    const fetchedAt = Date.now();
+  private async store<T>(key: string, { value, fetchedAt }: Copy<T>) {
     await this.redis.hset(key, { data: await gzipJson(value), fetchedAt });
-    return { value, fetchedAt };
   }
 
   // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.

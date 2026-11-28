@@ -116,11 +116,14 @@ export class SkyBlockService {
     profileName?: string,
   ): Promise<SkyBlockProfileView> {
     const needs = new Set(sections.flatMap((name) => ALL_SECTIONS[name].needs));
+    const reads = {
+      items: needs.has("items") ? this.pricesService.getItems() : undefined,
+    };
     const [{ player, profiles, fetchedAt, stale }, prices, items] =
       await Promise.all([
         this.getPlayerProfiles(tag, cache),
-        needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
-        needs.has("items") ? this.pricesService.getItems() : undefined,
+        needs.has("prices") ? this.pricesService.getPriceMap(reads) : undefined,
+        reads.items,
       ]);
 
     const profile = findProfile(profiles, player.uuid, profileName);
@@ -141,7 +144,8 @@ export class SkyBlockService {
       member,
       museum: museum?.museum.members?.[player.uuid],
       prices,
-      items,
+      items: items?.parsed,
+      rawItems: items?.raw,
     };
 
     const computed = await Promise.all(
