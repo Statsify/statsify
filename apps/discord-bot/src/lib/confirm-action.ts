@@ -30,7 +30,12 @@ export interface ConfirmActionOptions {
 
 export function confirmAction(
   context: CommandContext,
-  { prompt, confirmLabel, confirmStyle = ButtonStyle.Success, onConfirm }: ConfirmActionOptions
+  {
+    prompt,
+    confirmLabel,
+    confirmStyle = ButtonStyle.Success,
+    onConfirm,
+  }: ConfirmActionOptions,
 ): IMessage {
   const t = context.t();
   const userId = context.getInteraction().getUserId();
@@ -48,7 +53,12 @@ export function confirmAction(
 
   const timeout = setTimeout(() => {
     close();
-    context.reply({ content: (t) => t("confirm.expired"), embeds: [], attachments: [], components: [] });
+    context.reply({
+      content: (t) => t("confirm.expired"),
+      embeds: [],
+      attachments: [],
+      components: [],
+    });
   }, 300_000);
 
   function close() {
@@ -57,34 +67,45 @@ export function confirmAction(
     listener.removeHook(cancelButton.getCustomId());
   }
 
-  const ownerOnly = (run: () => Promise<IMessage>) => (interaction: Interaction) => {
-    // Discord rejects a follow-up sent before the click is acknowledged, so reply in the click's response
-    if (interaction.getUserId() !== userId)
-      return {
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: interaction.convertToApiData({
-          ...new ErrorMessage("errors.notCommandOwner"),
-          ephemeral: true,
-        }),
-      };
+  const ownerOnly =
+    (run: () => Promise<IMessage>) => (interaction: Interaction) => {
+      // Discord rejects a follow-up sent before the click is acknowledged, so reply in the click's response
+      if (interaction.getUserId() !== userId)
+        return {
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: interaction.convertToApiData({
+            ...new ErrorMessage("errors.notCommandOwner"),
+            ephemeral: true,
+          }),
+        };
 
-    close();
+      close();
 
-    return run()
-      .catch((error): IMessage => {
-        if (!(error instanceof Message)) logger.error(error);
-        const errorMessage = error instanceof Message ? error : new ErrorMessage("errors.unknown");
-        return { ...errorMessage, content: "", attachments: [] };
-      })
-      .then((message) => context.reply({ ...message, components: [] }));
-  };
+      return run()
+        .catch((error): IMessage => {
+          if (!(error instanceof Message)) logger.error(error);
+          const errorMessage =
+            error instanceof Message
+              ? error
+              : new ErrorMessage("errors.unknown");
+          return { ...errorMessage, content: "", attachments: [] };
+        })
+        .then((message) => context.reply({ ...message, components: [] }));
+    };
 
   listener.addHook(confirmButton.getCustomId(), ownerOnly(onConfirm));
 
   listener.addHook(
     cancelButton.getCustomId(),
-    ownerOnly(async () => ({ content: (t) => t("confirm.canceled"), embeds: [], attachments: [] }))
+    ownerOnly(async () => ({
+      content: (t) => t("confirm.canceled"),
+      embeds: [],
+      attachments: [],
+    })),
   );
 
-  return { ...prompt, components: [new ActionRowBuilder([confirmButton, cancelButton])] };
+  return {
+    ...prompt,
+    components: [new ActionRowBuilder([confirmButton, cancelButton])],
+  };
 }

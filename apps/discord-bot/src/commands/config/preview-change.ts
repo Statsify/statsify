@@ -6,7 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { CommandContext, IMessage, LocalizationString } from "@statsify/discord";
+import type {
+  CommandContext,
+  IMessage,
+  LocalizationString,
+} from "@statsify/discord";
 import { confirmAction } from "#lib/confirm-action";
 
 export function previewChange(
@@ -14,7 +18,7 @@ export function previewChange(
   name: string,
   profile: Buffer,
   apply: () => Promise<unknown>,
-  applied: LocalizationString
+  applied: LocalizationString,
 ): IMessage {
   return confirmAction(context, {
     prompt: {
