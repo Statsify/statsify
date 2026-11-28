@@ -22,7 +22,9 @@ export class SkyBlockProfiles {
   public data: Buffer;
 }
 
-@ModelOptions({ schemaOptions: { collection: "skyblockmuseum", versionKey: false } })
+@ModelOptions({
+  schemaOptions: { collection: "skyblockmuseum", versionKey: false },
+})
 export class SkyBlockMuseum {
   @prop({ required: true, unique: true })
   public profileId: string;
@@ -35,7 +37,9 @@ export class SkyBlockMuseum {
   public data: Buffer;
 }
 
-@ModelOptions({ schemaOptions: { collection: "skyblockgarden", versionKey: false } })
+@ModelOptions({
+  schemaOptions: { collection: "skyblockgarden", versionKey: false },
+})
 export class SkyBlockGarden {
   @prop({ required: true, unique: true })
   public profileId: string;

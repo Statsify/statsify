@@ -60,7 +60,8 @@ export interface ProfileSummary {
   fairySouls: number;
 }
 
-export interface SkyBlockProfileView extends PlayerRef, Freshness, ProfileSummary {
+export interface SkyBlockProfileView
+  extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
   gardenFetchedAt?: number;
@@ -121,7 +122,14 @@ export type InventoryId = (typeof INVENTORIES)[number];
 export interface InventoriesSection {
   pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
   backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
-  sacks: { id: string; name: string; count: number; rarity?: Rarity; glint: boolean; texture?: ItemTexture }[]; // largest first
+  sacks: {
+    id: string;
+    name: string;
+    count: number;
+    rarity?: Rarity;
+    glint: boolean;
+    texture?: ItemTexture;
+  }[]; // largest first
 }
 
 export interface MuseumView {
@@ -176,7 +184,14 @@ export interface SkillsSection {
   skills: Record<Skill, SkillLevel>;
 }
 
-export const SLAYER_BOSSES = ["zombie", "spider", "wolf", "enderman", "blaze", "vampire"] as const;
+export const SLAYER_BOSSES = [
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
+  "blaze",
+  "vampire",
+] as const;
 
 export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
@@ -201,7 +216,13 @@ export interface DungeonFloor {
   milestoneCompletions: number;
 }
 
-export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+export const DUNGEON_CLASSES = [
+  "healer",
+  "mage",
+  "berserk",
+  "archer",
+  "tank",
+] as const;
 
 export type DungeonClass = (typeof DUNGEON_CLASSES)[number];
 
@@ -269,7 +290,10 @@ export interface TreeNode {
   enabled: boolean;
 }
 
-export type TreeLayout = Record<string, { name: string; x: number; y: number; maxLevel: number }>;
+export type TreeLayout = Record<
+  string,
+  { name: string; x: number; y: number; maxLevel: number }
+>;
 
 export const WHISPERS = ["forest", "desert"] as const;
 
@@ -299,7 +323,13 @@ export const FACTIONS = ["mages", "barbarians"] as const;
 export type Faction = (typeof FACTIONS)[number];
 
 // The API's names: "none" is the basic tier
-export const KUUDRA_TIERS = ["none", "hot", "burning", "fiery", "infernal"] as const;
+export const KUUDRA_TIERS = [
+  "none",
+  "hot",
+  "burning",
+  "fiery",
+  "infernal",
+] as const;
 
 export interface KuudraTier {
   tier: string;
@@ -307,7 +337,12 @@ export interface KuudraTier {
   texture: ItemTexture; // its key
 }
 
-export const CATCHES = ["normal", "treasure", "largeTreasure", "outstanding"] as const;
+export const CATCHES = [
+  "normal",
+  "treasure",
+  "largeTreasure",
+  "outstanding",
+] as const;
 
 export type Catch = (typeof CATCHES)[number];
 
@@ -329,7 +364,13 @@ export interface TrophyFish {
   tiers: Record<TrophyTier, number>;
 }
 
-export const JACOB_BRACKETS = ["bronze", "silver", "gold", "platinum", "diamond"] as const;
+export const JACOB_BRACKETS = [
+  "bronze",
+  "silver",
+  "gold",
+  "platinum",
+  "diamond",
+] as const;
 
 export type JacobBracket = (typeof JACOB_BRACKETS)[number];
 
@@ -430,7 +471,16 @@ export interface RiftSection {
   catsFound: number;
 }
 
-export const AUCTION_STATS = ["created", "completed", "won", "bids", "highestBid", "goldSpent", "goldEarned", "fees"] as const;
+export const AUCTION_STATS = [
+  "created",
+  "completed",
+  "won",
+  "bids",
+  "highestBid",
+  "goldSpent",
+  "goldEarned",
+  "fees",
+] as const;
 
 export type AuctionStat = (typeof AUCTION_STATS)[number];
 
@@ -539,7 +589,10 @@ export interface PowerStat {
 
 /** A duplicate, or a lower tier or variant that another accessory in the bag replaces. */
 export type InactiveAccessory = ItemView &
-  ({ reason: "duplicate" } | { reason: "replaced"; replacedBy: { id: string; name: string } });
+  (
+    | { reason: "duplicate" }
+    | { reason: "replaced"; replacedBy: { id: string; name: string } }
+  );
 
 export interface NetworthSection {
   total: number;
@@ -552,7 +605,10 @@ export interface NetworthSection {
   noInventory: boolean;
   museumIncluded: boolean;
   pricesAsOf: number;
-  categories: Record<string, { total: number; unsoulbound: number; top: NetworthItem[] }>;
+  categories: Record<
+    string,
+    { total: number; unsoulbound: number; top: NetworthItem[] }
+  >;
   petPrices: Record<string, number>; // by the pet's uuid, for every pet the pets category priced
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
@@ -616,7 +672,11 @@ export const RawItem = z.object({
   tag: z
     .object({
       display: z
-        .object({ Name: z.string().optional(), Lore: z.array(z.string()).optional(), color: z.number().optional() })
+        .object({
+          Name: z.string().optional(),
+          Lore: z.array(z.string()).optional(),
+          color: z.number().optional(),
+        })
         .optional(),
       ExtraAttributes: z
         .object({
@@ -624,7 +684,9 @@ export const RawItem = z.object({
           modifier: z.string().optional(),
           upgrade_level: z.number().optional(),
           // A few items store it as a long, which the decode leaves as `[high, low]`
-          dungeon_item_level: z.union([z.number(), z.tuple([z.number(), z.number()])]).optional(),
+          dungeon_item_level: z
+            .union([z.number(), z.tuple([z.number(), z.number()])])
+            .optional(),
           rarity_upgrades: z.number().optional(),
           enchantments: z.record(z.string(), z.number()).optional(),
           talisman_enrichment: z.string().optional(),
@@ -632,7 +694,13 @@ export const RawItem = z.object({
         .catchall(z.unknown())
         .optional(),
       SkullOwner: z
-        .object({ Properties: z.object({ textures: z.array(z.object({ Value: z.string() })).optional() }).optional() })
+        .object({
+          Properties: z
+            .object({
+              textures: z.array(z.object({ Value: z.string() })).optional(),
+            })
+            .optional(),
+        })
         .optional(),
       ench: z.array(z.unknown()).optional(),
     })

@@ -7,14 +7,26 @@
  */
 
 import { GARDEN } from "#data";
-import { type GardenSection, type GardenView, type ItemsResource, type Rarity, rarityRank } from "#types";
+import {
+  type GardenSection,
+  type GardenView,
+  type ItemsResource,
+  type Rarity,
+  rarityRank,
+} from "#types";
 import { getLevel } from "#leveling";
 import { prettify } from "@statsify/util";
 import { resourceItem } from "#textures";
 import type { RawGarden, RawMember } from "#raw";
 
 // The composter menu's order; the synced table's keys are sorted
-const COMPOSTER_UPGRADES = ["speed", "multi_drop", "fuel_cap", "organic_matter_cap", "cost_reduction"] as const;
+const COMPOSTER_UPGRADES = [
+  "speed",
+  "multi_drop",
+  "fuel_cap",
+  "organic_matter_cap",
+  "cost_reduction",
+] as const;
 
 // The visitors whose id isn't their name in game, from the wiki's list of Garden visitors
 const VISITOR_NAMES: Record<string, string> = {
@@ -50,27 +62,47 @@ const VISITOR_NAMES: Record<string, string> = {
   wolf_shaman: "Old Shaman Nyko",
 };
 
-const byName = <T extends { name: string }>(a: T, b: T) => a.name.localeCompare(b.name);
+const byName = <T extends { name: string }>(a: T, b: T) =>
+  a.name.localeCompare(b.name);
 const rank = (rarity?: Rarity) => (rarity ? rarityRank(rarity) : -1);
 
 // Hypixel lists greenhouse skins as barn skins too. A skin's item is `<ID>_BARN_SKIN` or `<ID>_GREENHOUSE_SKIN`; the ones
 // without one are named here, from the wiki's Barn Skins and Greenhouse Skins pages
 const ITEMLESS_GREENHOUSE_SKINS = new Set(["dante", "shipwreck"]);
-const ITEMLESS_SKIN_NAMES: Record<string, string> = { dante: "Dante's Uprising", end: "The End" };
+const ITEMLESS_SKIN_NAMES: Record<string, string> = {
+  dante: "Dante's Uprising",
+  end: "The End",
+};
 
 // spring_barn's item is "Spring Barn Skin", so a skin named for its kind keeps it
-const skinItemName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") => {
-  const suffix = id.endsWith(`_${kind.toLowerCase()}`) ? " Skin" : ` ${kind} Skin`;
-  return items.items[`${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`]?.name.replace(suffix, "");
+const skinItemName = (
+  items: ItemsResource,
+  id: string,
+  kind: "Barn" | "Greenhouse",
+) => {
+  const suffix = id.endsWith(`_${kind.toLowerCase()}`)
+    ? " Skin"
+    : ` ${kind} Skin`;
+  return items.items[
+    `${id.toUpperCase()}_${kind.toUpperCase()}_SKIN`
+  ]?.name.replace(suffix, "");
 };
 
 const isGreenhouseSkin = (items: ItemsResource, id: string) =>
-  ITEMLESS_GREENHOUSE_SKINS.has(id) || skinItemName(items, id, "Greenhouse") !== undefined;
+  ITEMLESS_GREENHOUSE_SKINS.has(id) ||
+  skinItemName(items, id, "Greenhouse") !== undefined;
 
-const skinName = (items: ItemsResource, id: string, kind: "Barn" | "Greenhouse") =>
-  skinItemName(items, id, kind) ?? ITEMLESS_SKIN_NAMES[id] ?? prettify(id);
+const skinName = (
+  items: ItemsResource,
+  id: string,
+  kind: "Barn" | "Greenhouse",
+) => skinItemName(items, id, kind) ?? ITEMLESS_SKIN_NAMES[id] ?? prettify(id);
 
-export function getGarden(member: RawMember, garden: RawGarden | null | undefined, items: ItemsResource): GardenSection {
+export function getGarden(
+  member: RawMember,
+  garden: RawGarden | null | undefined,
+  items: ItemsResource,
+): GardenSection {
   const player = member.garden_player_data;
   const analyzed = new Set(player?.analyzed_greenhouse_crops);
 
@@ -80,7 +112,9 @@ export function getGarden(member: RawMember, garden: RawGarden | null | undefine
     greenhouse: (player?.discovered_greenhouse_crops ?? [])
       .flatMap((id) => {
         const found = items.items[id.toUpperCase()];
-        return found?.category === "MUTATION" ? [{ id, name: found.name, analyzed: analyzed.has(id) }] : [];
+        return found?.category === "MUTATION"
+          ? [{ id, name: found.name, analyzed: analyzed.has(id) }]
+          : [];
       })
       .toSorted(byName),
     garden: garden ? toGardenView(garden, items) : null,
@@ -89,11 +123,21 @@ export function getGarden(member: RawMember, garden: RawGarden | null | undefine
 
 function toGardenView(garden: RawGarden, items: ItemsResource): GardenView {
   const commissions = garden.commission_data;
-  const { selected_barn_skin: selected, unlocked_barn_skins: unlockedSkins = [] } = garden;
+  const {
+    selected_barn_skin: selected,
+    unlocked_barn_skins: unlockedSkins = [],
+  } = garden;
 
   return {
-    level: getLevel(garden.garden_experience ?? 0, GARDEN.garden_exp, GARDEN.garden_exp.length),
-    plots: { unlocked: garden.unlocked_plots_ids?.length ?? 0, total: GARDEN.plots.length },
+    level: getLevel(
+      garden.garden_experience ?? 0,
+      GARDEN.garden_exp,
+      GARDEN.garden_exp.length,
+    ),
+    plots: {
+      unlocked: garden.unlocked_plots_ids?.length ?? 0,
+      total: GARDEN.plots.length,
+    },
     crops: Object.entries(GARDEN.crop_milestones)
       .map(([id, tiers]) => {
         const collected = garden.resources_collected?.[id] ?? 0;
@@ -102,7 +146,10 @@ function toGardenView(garden: RawGarden, items: ItemsResource): GardenView {
           ...resourceItem(items, id),
           collected,
           milestone: getLevel(collected, tiers, tiers.length),
-          upgrade: { level: garden.crop_upgrade_levels?.[id] ?? 0, maxLevel: GARDEN.crop_upgrades },
+          upgrade: {
+            level: garden.crop_upgrade_levels?.[id] ?? 0,
+            maxLevel: GARDEN.crop_upgrades,
+          },
         };
       })
       .toSorted(byName),
@@ -128,31 +175,60 @@ function toGardenView(garden: RawGarden, items: ItemsResource): GardenView {
     // A skin a Garden level unlocks has no item and isn't in Hypixel's list; it shows only once selected
     barnSkins: {
       selected: selected && skinName(items, selected, "Barn"),
-      unlocked: unlockedSkins.filter((id) => !isGreenhouseSkin(items, id)).map((id) => skinName(items, id, "Barn")),
+      unlocked: unlockedSkins
+        .filter((id) => !isGreenhouseSkin(items, id))
+        .map((id) => skinName(items, id, "Barn")),
     },
-    greenhouseSkins: unlockedSkins.filter((id) => isGreenhouseSkin(items, id)).map((id) => skinName(items, id, "Greenhouse")),
+    greenhouseSkins: unlockedSkins
+      .filter((id) => isGreenhouseSkin(items, id))
+      .map((id) => skinName(items, id, "Greenhouse")),
   };
 }
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
-  const items: ItemsResource = { lastUpdated: 0, raw: [], museum: {}, items: {} };
+  const items: ItemsResource = {
+    lastUpdated: 0,
+    raw: [],
+    museum: {},
+    items: {},
+  };
   const at = (xp: number, collected: number) =>
-    getGarden({}, { garden_experience: xp, resources_collected: { WHEAT: collected } }, items).garden!;
+    getGarden(
+      {},
+      { garden_experience: xp, resources_collected: { WHEAT: collected } },
+      items,
+    ).garden!;
 
   test("getGarden levels the Garden and each crop's milestone", () => {
     const wheat = GARDEN.crop_milestones.WHEAT;
     const total = wheat.reduce((sum, cost) => sum + cost, 0);
-    const milestone = (collected: number) => at(0, collected).crops.find(({ id }) => id === "WHEAT")!.milestone;
+    const milestone = (collected: number) =>
+      at(0, collected).crops.find(({ id }) => id === "WHEAT")!.milestone;
 
     // The table's first level costs 0, so a new Garden is level 1
-    expect(at(0, 0).level).toMatchObject({ level: 1, xpCurrent: 0, xpForNext: 70 });
+    expect(at(0, 0).level).toMatchObject({
+      level: 1,
+      xpCurrent: 0,
+      xpForNext: 70,
+    });
     expect(at(140, 0).level).toMatchObject({ level: 3, xpCurrent: 0 });
-    expect(at(1_000_000, 0).level).toMatchObject({ level: 15, xpForNext: undefined, progress: 1 });
+    expect(at(1_000_000, 0).level).toMatchObject({
+      level: 15,
+      xpForNext: undefined,
+      progress: 1,
+    });
 
     expect(milestone(0)).toMatchObject({ level: 0, xpForNext: wheat[0] });
-    expect(milestone(wheat[0])).toMatchObject({ level: 1, xpCurrent: 0, xpForNext: wheat[1] });
-    expect(milestone(total + 1)).toMatchObject({ level: 46, xpForNext: undefined });
+    expect(milestone(wheat[0])).toMatchObject({
+      level: 1,
+      xpCurrent: 0,
+      xpForNext: wheat[1],
+    });
+    expect(milestone(total + 1)).toMatchObject({
+      level: 46,
+      xpForNext: undefined,
+    });
   });
 }
