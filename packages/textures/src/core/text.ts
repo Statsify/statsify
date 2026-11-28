@@ -11,7 +11,6 @@ import { context, createCanvas, decodePng, hex } from "./canvas.js";
 import { unzipSync } from "fflate";
 
 interface TextStyle {
-  /** 0xRRGGBB */
   color: number;
   bold: boolean;
   italic: boolean;
@@ -25,7 +24,6 @@ interface TextRun {
   style: TextStyle;
 }
 
-/** Text as § codes or a JSON text component, as newer items and chat carry it */
 export type TextComponent =
   | string
   | TextComponent[]
@@ -40,7 +38,6 @@ export type TextComponent =
       extra?: TextComponent[];
     };
 
-// The chat colors by name, in § code order
 const COLORS: Record<string, number> = {
   black: 0x00_00_00,
   dark_blue: 0x00_00_aa,
@@ -62,7 +59,7 @@ const COLORS: Record<string, number> = {
 
 const CODE_COLORS = Object.values(COLORS);
 
-// 1.8 brightens gold's red after working out its shadow, so gold's shadow isn't a quarter of it
+// 1.8 brightens gold's red after working out its shadow
 const shadowColor = (color: number) =>
   color === COLORS.gold ? 0x2a_2a_00 : (color & 0xfc_fc_fc) >> 2;
 
@@ -83,10 +80,7 @@ const plainStyle = (color = 0xff_ff_ff): TextStyle => ({
   obfuscated: false,
 });
 
-/**
- * Splits §-coded text into styled runs. A color code clears bold, italic and the rest, and
- * §r goes back to the color the text started in, as in game.
- */
+// A color code clears bold, italic and the rest, as it does in game
 function parseLegacy(text: string, base: TextStyle): TextRun[] {
   const runs: TextRun[] = [];
   let style = base;
@@ -119,7 +113,6 @@ function componentColor(color: string | undefined, fallback: number) {
   return COLORS[color] ?? fallback;
 }
 
-/** Flattens a JSON text component into runs, children inheriting their parent's style */
 function parseComponent(
   component: TextComponent,
   inherited: TextStyle = plainStyle(),
@@ -144,21 +137,17 @@ function parseComponent(
 }
 
 interface Glyph {
-  /** The font sheet or unifont glyph it's drawn from, and where on it. Spaces have none */
   image?: OffscreenCanvas;
   x: number;
   y: number;
   width: number;
   height: number;
-  /** In GUI pixels */
   scale: number;
   top: number;
   advance: number;
-  /** How far the shadow and bold's second copy sit from the glyph: 1, or ½ for unifont */
   offset: number;
 }
 
-// The font providers drawn here. Others, like ttf, match none of these types and are skipped
 type Provider = { filter?: Record<string, boolean> } & (
   | { type: "minecraft:reference"; id: string }
   | { type: "minecraft:space"; advances: Record<string, number> }
@@ -181,16 +170,13 @@ type Provider = { filter?: Record<string, boolean> } & (
     }
 );
 
-/** A unihex font: GNU Unifont's 16-pixel-tall glyphs as hex rows, by code point */
 interface Unihex {
   rows: Map<number, string>;
   overrides: { from: number; to: number; left: number; right: number }[];
 }
 
-// The font options a provider's filter can ask for, as the game sets them by default
 const FONT_OPTIONS: Record<string, boolean> = { uniform: false, jp: false };
 
-// The CSS font family for characters the pack's fonts don't have
 const FALLBACK_FONT = "Minecraft";
 
 const fallbackFont = (scale: number) => `${8 * scale}px "${FALLBACK_FONT}"`;
@@ -215,7 +201,6 @@ function readUnihex(zip: Uint8Array) {
   return rows;
 }
 
-// Draws a unifont glyph from its 16 hex rows, each a quarter as many digits as the glyph is wide
 function unihexGlyph(
   glyphHex: string,
   override?: { left: number; right: number },
@@ -228,7 +213,7 @@ function unihexGlyph(
   const lit = (line: number, column: number) =>
     ((line >>> (columns - 1 - column)) & 1) === 1;
 
-  // A glyph spans its lit columns, unless the font fixes the width for its range
+  // A glyph spans its lit columns unless the font fixes its width
   const any = bits.reduce((all, row) => all | row, 0);
   let left = columns;
   let right = -1;
@@ -257,7 +242,7 @@ function unihexGlyph(
 
   ctx.putImageData(pixels, 0, 0);
 
-  // Unifont draws at half size, 8 GUI pixels tall, so its shadow and bold move half a pixel
+  // Unifont draws at half size, so its shadow and bold move half a pixel
   return {
     image: canvas,
     x: 0,
@@ -271,7 +256,6 @@ function unihexGlyph(
   };
 }
 
-// The width a bitmap glyph takes: up to its rightmost column with any pixel in it
 function glyphWidth(
   pixels: ImageData,
   x: number,
@@ -290,16 +274,12 @@ function glyphWidth(
 }
 
 export interface DrawTextOptions {
-  /** Screen pixels per GUI pixel */
   scale: number;
   shadow?: boolean;
-  /** The color text starts in and §r goes back to, white unless set */
   color?: number;
-  /** Picks the characters §k shows */
   tick?: number;
 }
 
-/** Draws Minecraft text from a pack's default font, with a CSS font for characters it lacks */
 export class TextRenderer {
   private tinted = new Map<OffscreenCanvas, Map<number, OffscreenCanvas>>();
   private obfuscated = new Map<number, string[]>();
@@ -398,31 +378,29 @@ export class TextRenderer {
       }
     }
 
-    const unihex = providers.flatMap((provider): Unihex[] => {
-      if (provider.type !== "minecraft:unihex") return [];
+    const unihex: Unihex[] = [];
+    for (const provider of providers) {
+      if (provider.type !== "minecraft:unihex") continue;
 
       const { hex_file: file, size_overrides: overrides = [] } = provider;
       const [namespace, path] = namespaced(file).split(":");
       const zip = stack.get(`assets/${namespace}/${path}`);
-      if (!zip) return [];
+      if (!zip) continue;
 
-      return [
-        {
-          rows: readUnihex(zip),
-          overrides: overrides.map(({ from, to, left, right }) => ({
-            from: from.codePointAt(0)!,
-            to: to.codePointAt(0)!,
-            left,
-            right,
-          })),
-        },
-      ];
-    });
+      unihex.push({
+        rows: readUnihex(zip),
+        overrides: overrides.map(({ from, to, left, right }) => ({
+          from: from.codePointAt(0)!,
+          to: to.codePointAt(0)!,
+          left,
+          right,
+        })),
+      });
+    }
 
     return new TextRenderer(glyphs, unihex);
   }
 
-  /** A character's glyph, drawing unifont ones the first time they're needed */
   private lookup(char: string): Glyph | undefined {
     let glyph = this.glyphs.get(char);
     if (glyph) return glyph;
@@ -439,7 +417,6 @@ export class TextRenderer {
     return glyph;
   }
 
-  /** A line's width in GUI pixels */
   public width(text: TextComponent) {
     let width = 0;
 
@@ -450,7 +427,6 @@ export class TextRenderer {
     return width;
   }
 
-  /** Draws a line with its top left at x, y in screen pixels */
   public draw(
     ctx: OffscreenCanvasRenderingContext2D,
     text: TextComponent,
@@ -460,12 +436,10 @@ export class TextRenderer {
   ) {
     const runs = parseComponent(text, plainStyle(options.color));
 
-    // Vanilla draws the shadow first, down and right of the text at a quarter of its color
     if (options.shadow ?? true) this.line(ctx, runs, x, y, options, true);
     this.line(ctx, runs, x, y, options, false);
   }
 
-  /** How far a character moves the cursor, in GUI pixels; bold adds its glyph's offset */
   private advance(char: string, bold = false, glyph = this.lookup(char)) {
     if (glyph) return glyph.advance + (bold ? glyph.offset : 0);
 
@@ -540,7 +514,6 @@ export class TextRenderer {
     }
   }
 
-  /** Draws a glyph, or the character in the fallback font when the pack has no glyph for it */
   private drawGlyph(
     ctx: OffscreenCanvasRenderingContext2D,
     glyph: Glyph | undefined,
@@ -580,7 +553,7 @@ export class TextRenderer {
       return;
     }
 
-    // Italics lean each row right by a quarter pixel per pixel above the bottom, as vanilla does
+    // Italics lean each row a quarter pixel per pixel above the bottom
     for (let row = 0; row < glyph.height; row++) {
       const shift =
         (1 - 0.25 * (glyph.top + (row + 0.5) * glyph.scale)) * scale;
@@ -619,7 +592,6 @@ export class TextRenderer {
     return tinted;
   }
 
-  /** Characters with this advance, for §k to swap in */
   private sameWidth(advance: number) {
     let chars = this.obfuscated.get(advance);
 
