@@ -31,7 +31,6 @@ const BOTTOM_ROW = (SHOP_ROWS - 1) * SHOP_COLUMNS;
 // Older quick buys store Wood as wood
 const RENAMED: Record<string, string | undefined> = { wood: "oak_wood_planks" };
 
-// The quick buy's 21 slots: rows 3 to 5 of the shop, less their first and last columns
 const QUICK_BUY_SLOTS = [2, 3, 4].flatMap((row) =>
   Array.from(
     { length: SHOP_COLUMNS - 2 },
@@ -39,7 +38,6 @@ const QUICK_BUY_SLOTS = [2, 3, 4].flatMap((row) =>
   ),
 );
 
-/** An item's tooltip on Quick Buy, when you have enough to buy it */
 function quickBuyLore({
   cost: [amount, currency],
   description = [],
@@ -59,7 +57,6 @@ function quickBuyLore({
   ];
 }
 
-/** The BedWars item shop open on Quick Buy, as 54 slots, with a player's quick buy from favourites_2 or else the default */
 export function fromBedwarsQuickBuy(
   favorites: string | null | undefined,
 ): (ItemStack | undefined)[] {
@@ -111,7 +108,6 @@ export function fromBedwarsQuickBuy(
   return slots;
 }
 
-/** A BedWars hotbar as the Hotbar Manager shows it, from favorite_slots ("Melee,null,…") or else the default */
 export function fromBedwarsHotbar(
   favoriteSlots: string | null | undefined,
 ): (ItemStack | undefined)[] {

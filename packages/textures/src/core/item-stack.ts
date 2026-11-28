@@ -23,7 +23,6 @@ export interface ItemStack {
   skin?: string;
   name?: TextComponent;
   lore?: TextComponent[];
-  /** The lines under the name as the game drew them, which replace lore and Unbreakable */
   tooltip?: TextComponent[];
   unbreakable?: boolean;
   hideFlags?: number;
