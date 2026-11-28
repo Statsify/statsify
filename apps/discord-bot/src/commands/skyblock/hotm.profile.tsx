@@ -25,14 +25,20 @@ const TREE_WIDTH = 7;
 const TREE_HEIGHT = 10;
 const PERK_SIZE = 14;
 
-const perkColor = ({ level, maxLevel, enabled }: HotmSection["nodes"][number]) => {
+const perkColor = ({
+  level,
+  maxLevel,
+  enabled,
+}: HotmSection["nodes"][number]) => {
   if (level === 0) return new Color("§8").hex;
   if (!enabled) return new Color("§c").hex;
   return new Color(level === maxLevel ? "§a" : "§e").hex;
 };
 
 const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
-  const byPosition = new Map(nodes.map((node) => [`${node.x},${node.y}`, node]));
+  const byPosition = new Map(
+    nodes.map((node) => [`${node.x},${node.y}`, node]),
+  );
 
   return (
     <div direction="column" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
@@ -40,19 +46,24 @@ const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
         <div>
           {Array.from({ length: TREE_WIDTH }, (_, x) => {
             const node = byPosition.get(`${x},${y}`);
-            return node ?
-              (
-                <box
-                  width={PERK_SIZE}
-                  height={PERK_SIZE}
-                  color={perkColor(node)}
-                  padding={0}
-                  margin={1}
-                  border={{ topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 }}
-                  shadowDistance={0}
-                />
-              ) :
-              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
+            return node ? (
+              <box
+                width={PERK_SIZE}
+                height={PERK_SIZE}
+                color={perkColor(node)}
+                padding={0}
+                margin={1}
+                border={{
+                  topLeft: 0,
+                  topRight: 0,
+                  bottomLeft: 0,
+                  bottomRight: 0,
+                }}
+                shadowDistance={0}
+              />
+            ) : (
+              <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />
+            );
           })}
         </div>
       ))}
@@ -60,17 +71,44 @@ const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
   );
 };
 
-export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
-  const { level, coreLevel, loadout, tokens, ability, powder, nodes, crystals, nucleusRuns, glacite } =
-    profile.member.hotm!;
+export const SkyBlockHotmProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
+  const {
+    level,
+    coreLevel,
+    loadout,
+    tokens,
+    ability,
+    powder,
+    nodes,
+    crystals,
+    nucleusRuns,
+    glacite,
+  } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), `${t(tokens.spent)}§7/§5${t(tokens.total)}`, "§5"],
+    [
+      t("skyblock.tokensSpent"),
+      `${t(tokens.spent)}§7/§5${t(tokens.total)}`,
+      "§5",
+    ],
     [t("skyblock.coreOfTheMountain"), t(coreLevel), "§6"],
-    [t("skyblock.pickaxeAbility"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.pickaxeAbility"),
+      ability ? prettify(ability) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (loadout.total > 1)
+    sidebar.unshift([
+      t("skyblock.loadout"),
+      t("skyblock.loadoutOf", loadout),
+      "§b",
+    ]);
 
   const powders = POWDERS.map((type) => {
     const color = POWDER_COLORS[type];
@@ -78,9 +116,15 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
 
     return (
       <box direction="column" location="center" width="100%">
-        <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${t(`skyblock.powders.${type}`)}`}</text>
-        <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^3^${color}${t(total)}`}</text>
-        <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
+        <text
+          margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+        >{`${color}${t(`skyblock.powders.${type}`)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
+        >{`§^3^${color}${t(total)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 8, left: 10, right: 10 }}
+        >{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
       </box>
     );
   });
@@ -98,7 +142,12 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
+          <LevelBar
+            title={t("skyblock.hotmLevel")}
+            level={level}
+            color="§5"
+            t={t}
+          />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
         <Table.tr>
@@ -107,7 +156,9 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
           </box>
           <box direction="column" location="center" width="100%">
             {stats.map(([name, value, color]) => (
-              <text margin={{ top: 2, bottom: 2, left: 10, right: 10 }}>{`§7${name}: ${color}${t(value)}`}</text>
+              <text
+                margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
+              >{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
         </Table.tr>

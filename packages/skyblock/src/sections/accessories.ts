@@ -35,16 +35,27 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
 // Some anniversary hats aren't in the items resource, so their rarity marks them.
 const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   const category = items.items[id]?.category;
-  return rarity === "SPECIAL" || rarity === "VERY_SPECIAL" || (category !== undefined && category !== "ACCESSORY");
+  return (
+    rarity === "SPECIAL" ||
+    rarity === "VERY_SPECIAL" ||
+    (category !== undefined && category !== "ACCESSORY")
+  );
 };
 
 const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
 // How a Power's stats scale with Accessory Power, per the wiki
-const powerScale = (accessoryPower: number) => 29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
+const powerScale = (accessoryPower: number) =>
+  29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
 
-function stonePowerStats({ accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string], accessoryPower: number) {
-  const scaled = stats.map((stat) => ({ ...stat, value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt) }));
+function stonePowerStats(
+  { accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string],
+  accessoryPower: number,
+) {
+  const scaled = stats.map((stat) => ({
+    ...stat,
+    value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt),
+  }));
 
   for (const extra of bonus) {
     const stat = scaled.find(({ name }) => name === extra.name);
@@ -70,19 +81,33 @@ function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
 
 /** Rift-only accessories never go in the bag, and ignored ones can't be obtained any more. */
 const isCandidate = (id: string, item: ItemsResource["items"][string]) =>
-  item.category === "ACCESSORY" && !item.riftOnly && !IGNORED_ACCESSORIES.has(id);
+  item.category === "ACCESSORY" &&
+  !item.riftOnly &&
+  !IGNORED_ACCESSORIES.has(id);
 
 /** Accessories in the inventory, ender chest, backpacks and vault: owned, but worth nothing until they're in the bag. */
 function storedAccessories(member: RawMember, items: ItemsResource) {
-  const { inv_contents, ender_chest_contents, personal_vault_contents, backpack_contents } = member.inventory ?? {};
-  const blobs = [inv_contents, ender_chest_contents, personal_vault_contents, ...Object.values(backpack_contents ?? {})];
+  const {
+    inv_contents,
+    ender_chest_contents,
+    personal_vault_contents,
+    backpack_contents,
+  } = member.inventory ?? {};
+  const blobs = [
+    inv_contents,
+    ender_chest_contents,
+    personal_vault_contents,
+    ...Object.values(backpack_contents ?? {}),
+  ];
 
-  return blobs.flatMap((blob) => (blob ? decodeInventory(blob) : [])).flatMap((item) => {
-    const id = item?.tag?.ExtraAttributes?.id;
-    if (!item || typeof id !== "string") return [];
-    const resource = items.items[id];
-    return resource && isCandidate(id, resource) ? [toItemView(item)] : [];
-  });
+  return blobs
+    .flatMap((blob) => (blob ? decodeInventory(blob) : []))
+    .flatMap((item) => {
+      const id = item?.tag?.ExtraAttributes?.id;
+      if (!item || typeof id !== "string") return [];
+      const resource = items.items[id];
+      return resource && isCandidate(id, resource) ? [toItemView(item)] : [];
+    });
 }
 
 type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
@@ -96,13 +121,18 @@ export function getAccessories(
   items: ItemsResource,
   prices: PriceMap,
   market: boolean,
-  order: (accessoryPower: number, highest: number | undefined) => StepOrder = () => byCoinsPerAccessoryPower
+  order: (
+    accessoryPower: number,
+    highest: number | undefined,
+  ) => StepOrder = () => byCoinsPerAccessoryPower,
 ): AccessoriesSection | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
 
-  const contacts = member.nether_island_player_data?.abiphone?.active_contacts?.length ?? 0;
-  const power = ({ id, rarity }: { id: string; rarity?: Rarity }) => powerOf(id, rarity, contacts);
+  const contacts =
+    member.nether_island_player_data?.abiphone?.active_contacts?.length ?? 0;
+  const power = ({ id, rarity }: { id: string; rarity?: Rarity }) =>
+    powerOf(id, rarity, contacts);
 
   const views = decodeInventory(bag)
     .flatMap((item) => (item ? [toItemView(item)] : []))
@@ -118,13 +148,19 @@ export function getAccessories(
   for (const view of views) {
     const upgrades = upgradesOf(view.id);
     const replacedBy =
-      upgrades.find((id) => counted.has(id)) ?? upgrades.find((id) => owned.has(id) && !isMutual(view.id, id));
+      upgrades.find((id) => counted.has(id)) ??
+      upgrades.find((id) => owned.has(id) && !isMutual(view.id, id));
 
     if (counted.has(view.id)) {
       inactive.push({ ...view, reason: "duplicate" });
     } else if (replacedBy) {
       const by = items.items[replacedBy];
-      if (by) inactive.push({ ...view, reason: "replaced", replacedBy: { id: replacedBy, name: by.name } });
+      if (by)
+        inactive.push({
+          ...view,
+          reason: "replaced",
+          replacedBy: { id: replacedBy, name: by.name },
+        });
     } else {
       active.push(view);
       counted.add(view.id);
@@ -134,8 +170,13 @@ export function getAccessories(
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
   // A prism consumed at Erihann is refunded to the bag as a Rare the next time the player joins
-  const accessoryPower = add(...active.map(power), prism.length * powerOf("RIFT_PRISM", "RARE", 0));
-  const stone = storage?.selected_power ? POWERS[storage.selected_power] : undefined;
+  const accessoryPower = add(
+    ...active.map(power),
+    prism.length * powerOf("RIFT_PRISM", "RARE", 0),
+  );
+  const stone = storage?.selected_power
+    ? POWERS[storage.selected_power]
+    : undefined;
   const stepOrder = order(accessoryPower, storage?.highest_magical_power);
   const stored = storedAccessories(member, items);
 
@@ -151,13 +192,24 @@ export function getAccessories(
     market,
     active,
     inactive,
-    missing: getMissing(owned, stored, active, contacts, items, stepOrder, market ? prices : undefined),
+    missing: getMissing(
+      owned,
+      stored,
+      active,
+      contacts,
+      items,
+      stepOrder,
+      market ? prices : undefined,
+    ),
   };
 }
 
 /** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */
 export const cheapestFirst =
-  <T extends { outsideBag: boolean; name: string }>(coinsPer: (step: T) => number | undefined, gain: (step: T) => number) =>
+  <T extends { outsideBag: boolean; name: string }>(
+    coinsPer: (step: T) => number | undefined,
+    gain: (step: T) => number,
+  ) =>
   (a: T, b: T) =>
     Number(b.outsideBag) - Number(a.outsideBag) ||
     (coinsPer(a) ?? Infinity) - (coinsPer(b) ?? Infinity) ||
@@ -166,7 +218,7 @@ export const cheapestFirst =
 
 const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
   (step) => step.coinsPerAccessoryPower,
-  (step) => step.accessoryPower
+  (step) => step.accessoryPower,
 );
 
 /**
@@ -180,34 +232,50 @@ function getMissing(
   contacts: number,
   items: ItemsResource,
   order: StepOrder,
-  prices?: PriceMap
+  prices?: PriceMap,
 ) {
   const byId = new Map<string, ItemView>();
   for (const view of stored) {
     const kept = byId.get(view.id);
-    if (!kept || powerOf(view.id, view.rarity, contacts) > powerOf(kept.id, kept.rarity, contacts)) byId.set(view.id, view);
+    if (
+      !kept ||
+      powerOf(view.id, view.rarity, contacts) >
+        powerOf(kept.id, kept.rarity, contacts)
+    )
+      byId.set(view.id, view);
   }
 
-  const storedPower = (id: string) => powerOf(id, byId.get(id)?.rarity, contacts);
+  const storedPower = (id: string) =>
+    powerOf(id, byId.get(id)?.rarity, contacts);
   const outside = new Map(
     [...byId].filter(
-      ([id]) => !upgradesOf(id).some((by) => byId.has(by) && isMutual(id, by) && outranks(by, id, storedPower))
-    )
+      ([id]) =>
+        !upgradesOf(id).some(
+          (by) =>
+            byId.has(by) && isMutual(id, by) && outranks(by, id, storedPower),
+        ),
+    ),
   );
 
   const steps = Object.entries(items.items)
     .flatMap(([id, item]): MissingAccessory[] => {
       if (!item.tier || !isCandidate(id, item) || owned.has(id)) return [];
-      if (upgradesOf(id).some((by) => owned.has(by) || outside.has(by))) return [];
+      if (upgradesOf(id).some((by) => owned.has(by) || outside.has(by)))
+        return [];
 
       const replaces = active
         .filter((view) => upgradesOf(view.id).includes(id))
-        .map((view) => ({ id: view.id, power: powerOf(view.id, view.rarity, contacts) }))
+        .map((view) => ({
+          id: view.id,
+          power: powerOf(view.id, view.rarity, contacts),
+        }))
         .toSorted((a, b) => b.power - a.power)[0];
 
       const view = outside.get(id);
       // A recombobulated lower tier can be worth as much as the next one up.
-      const gain = powerOf(id, view?.rarity ?? item.tier, contacts) - (replaces?.power ?? 0);
+      const gain =
+        powerOf(id, view?.rarity ?? item.tier, contacts) -
+        (replaces?.power ?? 0);
       const texture = resourceTexture(item);
       if (gain <= 0 || !texture) return [];
 
@@ -231,7 +299,13 @@ function getMissing(
   // A tier lists every tier above it as an upgrade, so the first step of each chain in that order is its best.
   const best: MissingAccessory[] = [];
   for (const step of steps) {
-    if (!best.some(({ id }) => upgradesOf(id).includes(step.id) || upgradesOf(step.id).includes(id))) best.push(step);
+    if (
+      !best.some(
+        ({ id }) =>
+          upgradesOf(id).includes(step.id) || upgradesOf(step.id).includes(id),
+      )
+    )
+      best.push(step);
   }
 
   return best;

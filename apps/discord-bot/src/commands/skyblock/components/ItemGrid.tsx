@@ -27,12 +27,16 @@ export const RARITY_COLORS: Record<Rarity, string> = {
 };
 
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
-  t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });
+  t("skyblock.pricesAsOf", {
+    time: formatTime(Date.now() - asOf, { entries: 1 }),
+  });
 
 // Table.tr splits its width by its cells, so a short last row is padded to keep the columns
 export const gridRows = (cells: JSX.Element[], columns: number) =>
   arrayGroup(cells, columns).map((row) => (
-    <Table.tr>{[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}</Table.tr>
+    <Table.tr>
+      {[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}
+    </Table.tr>
   ));
 
 export interface ItemGridEntry {
@@ -52,7 +56,16 @@ export const ItemGrid = ({ items, icons, columns = 2 }: ItemGridProps) => {
   const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <ItemSlot icon={texture && icons.get(texture)} />
-      {badge && icons.has(badge) ? <img image={icons.get(badge)!} width={16} height={16} margin={{ left: -14, top: 18 }} /> : <></>}
+      {badge && icons.has(badge) ? (
+        <img
+          image={icons.get(badge)!}
+          width={16}
+          height={16}
+          margin={{ left: -14, top: 18 }}
+        />
+      ) : (
+        <></>
+      )}
       <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
       <div width="remaining" margin={{ left: 4, right: 4 }} />
       <text>{value}</text>

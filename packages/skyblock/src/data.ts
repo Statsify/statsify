@@ -34,7 +34,12 @@ export const LEVELING = leveling as {
 export const PETS = pets as {
   custom_pet_leveling: Record<
     string,
-    { type?: number; pet_levels?: number[]; max_level?: number; rarity_offset?: Record<string, number> }
+    {
+      type?: number;
+      pet_levels?: number[];
+      max_level?: number;
+      rarity_offset?: Record<string, number>;
+    }
   >;
   id_to_display_name: Record<string, string>;
   pet_levels: number[];
@@ -50,9 +55,14 @@ export const PET_TEXTURES = petTextures as {
 };
 
 /** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
-export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
+export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
+  string,
+  string[]
+>;
 
-export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
+export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(
+  accessories.ignored,
+);
 
 export const HOTM_LAYOUT = hotmLayout as Record<
   string,
@@ -60,10 +70,16 @@ export const HOTM_LAYOUT = hotmLayout as Record<
 >;
 
 /** Essence type (WITHER, CRIMSON…) → its shop's perks → each perk's max level. */
-export const ESSENCE_SHOPS = essenceShops as Record<string, Record<string, number>>;
+export const ESSENCE_SHOPS = essenceShops as Record<
+  string,
+  Record<string, number>
+>;
 
 /**
  * A stone Power's stats at the Accessory Power its stone lists them for, and its Unique Power Bonus, which doesn't
  * scale. Powers learned without a stone aren't here.
  */
-export const POWERS = powers as Record<string, { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }>;
+export const POWERS = powers as Record<
+  string,
+  { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }
+>;

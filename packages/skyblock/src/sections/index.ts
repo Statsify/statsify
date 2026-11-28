@@ -15,7 +15,12 @@ import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
-import { RawMember, type RawMuseum, type RawMuseumMember, type RawProfile } from "#raw";
+import {
+  RawMember,
+  type RawMuseum,
+  type RawMuseumMember,
+  type RawProfile,
+} from "#raw";
 import type { ItemsResource, MemberView, PriceMap } from "#types";
 
 export type SectionNeed = "museum" | "prices" | "items";
@@ -57,7 +62,12 @@ type MemberKeys = { [K in keyof RawMember]?: true };
 
 /** The member's keys each section reads. */
 const READS: { [K in SectionKey]: MemberKeys } = {
-  accessories: { accessory_bag_storage: true, inventory: true, nether_island_player_data: true, rift: true },
+  accessories: {
+    accessory_bag_storage: true,
+    inventory: true,
+    nether_island_player_data: true,
+    rift: true,
+  },
   dungeons: { currencies: true, dungeons: true, player_data: true },
   hotm: { glacite_player_data: true, mining_core: true, skill_tree: true },
   level: {
@@ -70,7 +80,12 @@ const READS: { [K in SectionKey]: MemberKeys } = {
     rift: true,
   },
   pets: { pets_data: true, player_stats: true, rift: true },
-  skills: { jacobs_contest: true, pets_data: true, player_data: true, profile: true },
+  skills: {
+    jacobs_contest: true,
+    pets_data: true,
+    player_data: true,
+    profile: true,
+  },
   slayers: { slayer: true },
 };
 
@@ -83,14 +98,20 @@ const COOP_READS: { [K in SectionKey]?: MemberKeys } = {
  * Checks the member's `keys` and the other members' `coopKeys` before computing the section, so a malformed key fails
  * only the sections that read it.
  */
-export function checkReads<K extends keyof MemberView>(section: Section<K>, keys: MemberKeys, coopKeys?: MemberKeys): Section<K> {
+export function checkReads<K extends keyof MemberView>(
+  section: Section<K>,
+  keys: MemberKeys,
+  coopKeys?: MemberKeys,
+): Section<K> {
   const own = RawMember.pick(keys);
   const coop = coopKeys && RawMember.pick(coopKeys);
   return {
     needs: section.needs,
     compute: async (input) => {
       own.parse(input.member);
-      if (coop) for (const [uuid, member] of Object.entries(input.profile.members)) if (uuid !== input.uuid) coop.parse(member);
+      if (coop)
+        for (const [uuid, member] of Object.entries(input.profile.members))
+          if (uuid !== input.uuid) coop.parse(member);
       return section.compute(input);
     },
   };
@@ -100,7 +121,8 @@ const DEFINITIONS: { [K in SectionKey]: Section<K> } = {
   accessories: {
     needs: ["prices", "items"],
     compute: async ({ profile, member, items, prices }) => {
-      if (!items || !prices) throw new TypeError("accessories needs prices and items");
+      if (!items || !prices)
+        throw new TypeError("accessories needs prices and items");
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
@@ -109,18 +131,28 @@ const DEFINITIONS: { [K in SectionKey]: Section<K> } = {
   level: {
     needs: ["prices", "items"],
     compute: async ({ profile, member, items, prices }) => {
-      if (!items || !prices) throw new TypeError("level needs prices and items");
+      if (!items || !prices)
+        throw new TypeError("level needs prices and items");
       return getSkyBlockLevel(member, items, prices, hasMarket(profile));
     },
   },
-  pets: { needs: ["items"], compute: async ({ member, items }) => getPets(member, items) },
-  skills: { needs: [], compute: async ({ profile, member }) => getSkills(profile, member) },
+  pets: {
+    needs: ["items"],
+    compute: async ({ member, items }) => getPets(member, items),
+  },
+  skills: {
+    needs: [],
+    compute: async ({ profile, member }) => getSkills(profile, member),
+  },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
 };
 
 /** The caller fetches each section's needs before compute(). */
 export const SECTIONS = Object.fromEntries(
-  (Object.keys(DEFINITIONS) as SectionKey[]).map((name) => [name, checkReads(DEFINITIONS[name], READS[name], COOP_READS[name])])
+  (Object.keys(DEFINITIONS) as SectionKey[]).map((name) => [
+    name,
+    checkReads(DEFINITIONS[name], READS[name], COOP_READS[name]),
+  ]),
 ) as typeof DEFINITIONS;
 
 /** museum is the whole museum response, when it was fetched. */
@@ -128,20 +160,33 @@ export async function toMemberView<K extends keyof MemberView>(
   input: SectionInput,
   sections: readonly K[],
   compute: (name: K) => Promise<MemberView[K]>,
-  museum?: RawMuseum
+  museum?: RawMuseum,
 ): Promise<MemberView> {
-  const computed = await Promise.all(sections.map(async (name) => [name, await compute(name)] as const));
-  return { apiSettings: getApiSettings(input.profile, input.member, museum), ...Object.fromEntries(computed) };
+  const computed = await Promise.all(
+    sections.map(async (name) => [name, await compute(name)] as const),
+  );
+  return {
+    apiSettings: getApiSettings(input.profile, input.member, museum),
+    ...Object.fromEntries(computed),
+  };
 }
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("a malformed member key fails only the sections that read it", async () => {
-    const member = { slayer: { slayer_bosses: { zombie: { xp: "100" } } } } as unknown as RawMember;
-    const input = { uuid: "a", profile: { profile_id: "p", cute_name: "Apple", members: { a: member } }, member };
+    const member = {
+      slayer: { slayer_bosses: { zombie: { xp: "100" } } },
+    } as unknown as RawMember;
+    const input = {
+      uuid: "a",
+      profile: { profile_id: "p", cute_name: "Apple", members: { a: member } },
+      member,
+    };
 
-    await expect(SECTIONS.slayers.compute(input)).rejects.toThrow("slayer_bosses");
+    await expect(SECTIONS.slayers.compute(input)).rejects.toThrow(
+      "slayer_bosses",
+    );
     await expect(SECTIONS.dungeons.compute(input)).resolves.toBeDefined();
   });
 }
