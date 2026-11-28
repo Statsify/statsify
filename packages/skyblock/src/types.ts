@@ -94,7 +94,8 @@ export interface MemberView {
   hotf?: HotfSection | null;
   gear?: GearSection | null;
   inventories?: InventoriesSection | null;
-  museum?: MuseumView | null; // null with no museum fetched or nothing donated
+  // The museum is null when none was fetched or nothing is donated.
+  museum?: MuseumView | null;
   experiments?: ExperimentsSection | null;
   rift?: RiftSection | null;
   misc?: MiscSection;
@@ -104,8 +105,10 @@ export interface MemberView {
 export type Slots = (ItemView | null)[];
 
 export interface GearSection {
-  armor: Slots; // helmet to boots
-  equipment: Slots; // necklace, cloak, belt, gloves
+  // Armor goes from helmet to boots.
+  armor: Slots;
+  // Equipment goes necklace, cloak, belt, then gloves.
+  equipment: Slots;
   wardrobe: { slot: number; armor: Slots }[];
   wardrobeSlot?: number;
   weapons: ItemView[];
@@ -129,7 +132,9 @@ export type InventoryId = (typeof INVENTORIES)[number];
 export interface InventoriesSection {
   // personalVault is missing with its own API setting off.
   pages: Partial<Record<InventoryId, Slots[]>>;
-  backpackIcons: (ItemView | null)[]; // in the order of pages.backpacks
+  // Backpack icons follow the order of pages.backpacks.
+  backpackIcons: (ItemView | null)[];
+  // Sacks sort largest first.
   sacks: {
     id: string;
     name: string;
@@ -137,7 +142,7 @@ export interface InventoriesSection {
     rarity?: Rarity;
     glint: boolean;
     texture?: ItemTexture;
-  }[]; // largest first
+  }[];
 }
 
 export interface MuseumView {
@@ -146,7 +151,8 @@ export interface MuseumView {
   // An id is an item or an armor set.
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[];
   special: { donatedAt?: number; items: Slots }[];
-  donated: { category: string; count: number }[]; // most first
+  // Categories sort by the most donated first.
+  donated: { category: string; count: number }[];
 }
 
 export interface ApiSettings {
@@ -195,8 +201,9 @@ export interface DungeonFloor {
   fastestS?: number;
   fastestSPlus?: number;
   mobsKilled: number;
-  mostMobsKilled?: number; // in one run
-  mostHealing?: number; // in one run
+  // The most mobs killed and healing are each in one run.
+  mostMobsKilled?: number;
+  mostHealing?: number;
   milestoneCompletions: number;
 }
 
@@ -352,12 +359,15 @@ export interface ChocolateSection {
 
 export interface ExperimentsSection {
   games: { game: Experiment; bonusClicks: number; tiers: ExperimentTier[] }[];
-  serums: number; // drunk
+  // Serums counts the ones drunk.
+  serums: number;
 }
 
 export interface ExperimentTier {
-  tier: number; // the API's index, which starts at 1 for Ultrasequencer
-  attempts?: number; // not kept for every game
+  // The tier is the API's index, which starts at 1 for Ultrasequencer.
+  tier: number;
+  // Hypixel doesn't keep attempts for every game.
+  attempts?: number;
   claims: number;
   bestScore?: number;
 }
@@ -374,13 +384,16 @@ export interface RiftSection {
 export interface MiscSection {
   kills: number;
   deaths: number;
-  topKills: { id: string; count: number }[]; // the 20 most, by mob id
-  topDeaths: { id: string; count: number }[]; // by cause
+  // Top kills are the 20 most, by mob id.
+  topKills: { id: string; count: number }[];
+  // Top deaths are by cause.
+  topDeaths: { id: string; count: number }[];
   highestDamage?: number;
   highestCriticalDamage?: number;
   auctions: Record<AuctionStat, number>;
   gifts: { given: number; received: number };
-  mythological: { kills: number; chains: number }; // burrow chains completed
+  // Chains are completed burrow chains.
+  mythological: { kills: number; chains: number };
   candy: number;
   soulflow: number;
 }
@@ -501,7 +514,8 @@ export interface NetworthSection {
     string,
     { total: number; unsoulbound: number; top: NetworthItem[] }
   >;
-  petPrices: Record<string, number>; // by pet uuid
+  // Pet prices are keyed by pet uuid.
+  petPrices: Record<string, number>;
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
 }
@@ -514,8 +528,10 @@ export interface NetworthItem {
   soulbound: boolean;
   cosmetic: boolean;
   texture?: ItemTexture;
-  basePrice: number; // the whole stack's, before modifiers
-  modifiers: { type: string; price: number }[]; // per kind, priciest first
+  // The base price is the whole stack's, before modifiers.
+  basePrice: number;
+  // Modifiers are one per kind, priciest first.
+  modifiers: { type: string; price: number }[];
 }
 
 export interface SkyBlockLevelSection {
@@ -564,7 +580,8 @@ export type ItemTexture =
 // The API keeps this to itself and never sends it to clients.
 export interface ItemsResource {
   lastUpdated: number;
-  museum: Record<string, string>; // item or armor set → category
+  // The museum maps each item or armor set to its category.
+  museum: Record<string, string>;
   items: Record<
     string,
     {

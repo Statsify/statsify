@@ -90,8 +90,10 @@ export interface RawMember {
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
-    kills?: Record<string, number>; // by mob id, plus "total"
-    deaths?: Record<string, number>; // by cause, plus "total"
+    // Kills are by mob id, plus "total".
+    kills?: Record<string, number>;
+    // Deaths are by cause, plus "total".
+    deaths?: Record<string, number>;
     highest_damage?: number;
     highest_critical_damage?: number;
     auctions?: {
