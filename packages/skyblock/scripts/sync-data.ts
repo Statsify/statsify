@@ -11,8 +11,8 @@ import {
   MINECRAFT_DATA,
   MINECRAFT_DATA_SHA,
   TEXTURE_UNITS,
-  fetchOk,
 } from "./sync/textures.ts";
+import { fetchOk } from "./sync/fetch.ts";
 import { NEU_BEFORE_REMOVAL, NEU_REPO, NEU_UNITS } from "./sync/neu.ts";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { HYPIXEL_UNITS } from "./sync/hypixel.ts";
