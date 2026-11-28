@@ -58,19 +58,43 @@ const DYES: Record<string, string> = {
 
 // 1.8 ids minecraft-data's legacy table skips or names by a later version: 31:0 is the shrub, which the game
 // draws as a dead bush, and 1.8's only bed is red
-const LEGACY_ITEMS: Record<string, string> = { "31:0": "minecraft:dead_bush", "355:0": "minecraft:red_bed" };
+const LEGACY_ITEMS: Record<string, string> = {
+  "31:0": "minecraft:dead_bush",
+  "355:0": "minecraft:red_bed",
+};
 
-const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
+const RECORDS = [
+  "11",
+  "13",
+  "blocks",
+  "cat",
+  "chirp",
+  "far",
+  "mall",
+  "mellohi",
+  "stal",
+  "strad",
+  "wait",
+  "ward",
+] as const;
 
 // 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   ...Object.fromEntries(
     Object.entries(DYES).flatMap(([color, dye]) => [
-      [`blocks/hardened_clay_stained_${color}`, `block/${color === "silver" ? "light_gray" : color}_terracotta`],
+      [
+        `blocks/hardened_clay_stained_${color}`,
+        `block/${color === "silver" ? "light_gray" : color}_terracotta`,
+      ],
       [`items/dye_powder_${color}`, `item/${dye}`],
     ]),
   ),
-  ...Object.fromEntries(RECORDS.map((record) => [`items/record_${record}`, `item/music_disc_${record}`])),
+  ...Object.fromEntries(
+    RECORDS.map((record) => [
+      `items/record_${record}`,
+      `item/music_disc_${record}`,
+    ]),
+  ),
   "blocks/anvil_base": "block/anvil",
   "blocks/anvil_top_damaged_0": "block/anvil_top",
   "blocks/anvil_top_damaged_1": "block/chipped_anvil_top",
@@ -168,7 +192,9 @@ const snakeCase = (name: string) =>
 
 const [path, legacyPath, namesPath] = process.argv.slice(2);
 if (!path || !legacyPath || !namesPath) {
-  throw new Error("Pass the paths to a 26.3 client jar or vanilla pack zip, a 1.8.9 client jar and a /sdump names export");
+  throw new Error(
+    "Pass the paths to a 26.3 client jar or vanilla pack zip, a 1.8.9 client jar and a /sdump names export",
+  );
 }
 
 const names = { items: new Set<string>(), effects: new Set<string>() };
@@ -213,8 +239,15 @@ function modelTextures(models: Map<string, ModelFile>, id: string) {
     next = model.parent && withoutNamespace(model.parent);
   }
 
-  const textures = resolveTextures(Object.assign({}, ...chain.toReversed().map((model) => model.textures)));
-  return Object.fromEntries(Object.entries(textures).map(([key, texture]) => [key, withoutNamespace(texture)]));
+  const textures = resolveTextures(
+    Object.assign({}, ...chain.toReversed().map((model) => model.textures)),
+  );
+  return Object.fromEntries(
+    Object.entries(textures).map(([key, texture]) => [
+      key,
+      withoutNamespace(texture),
+    ]),
+  );
 }
 
 unzipSync(await readFile(path), {
@@ -222,26 +255,48 @@ unzipSync(await readFile(path), {
     const item = /^assets\/minecraft\/items\/(.+)\.json$/.exec(name);
     if (item) names.items.add(item[1]);
 
-    const effect = /^assets\/minecraft\/textures\/mob_effect\/(.+)\.png$/.exec(name);
+    const effect = /^assets\/minecraft\/textures\/mob_effect\/(.+)\.png$/.exec(
+      name,
+    );
     if (effect) names.effects.add(effect[1]);
 
     return false;
   },
 });
 
-if (names.items.size === 0) throw new Error(`${path} has no assets/minecraft/items folder`);
+if (names.items.size === 0)
+  throw new Error(`${path} has no assets/minecraft/items folder`);
 
-const [modernAssets, legacyAssets] = await Promise.all([readAssets(path), readAssets(legacyPath)]);
-if (!legacyAssets.textures.has("items/diamond_sword")) throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
-
-const [legacy, items, blocks, entities, effects, modernItems] = await Promise.all([
-  fetchMinecraftData<{ items: Record<string, string | null> }>("common/legacy.json"),
-  fetchMinecraftData<LegacyItem[]>("1.8/items.json"),
-  fetchMinecraftData<LegacyItem[]>("1.8/blocks.json"),
-  fetchMinecraftData<LegacyEntity[]>("1.8/entities.json"),
-  fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
-  fetchMinecraftData<ModernItem[]>("26.1/items.json"),
+const [modernAssets, legacyAssets] = await Promise.all([
+  readAssets(path),
+  readAssets(legacyPath),
 ]);
+if (!legacyAssets.textures.has("items/diamond_sword"))
+  throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
+
+const [legacy, items, blocks, entities, effects, modernItems] =
+  await Promise.all([
+    fetchMinecraftData<{ items: Record<string, string | null> }>(
+      "common/legacy.json",
+    ),
+    fetchMinecraftData<LegacyItem[]>("1.8/items.json"),
+    fetchMinecraftData<LegacyItem[]>("1.8/blocks.json"),
+    fetchMinecraftData<LegacyEntity[]>("1.8/entities.json"),
+    fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
+    fetchMinecraftData<ModernItem[]>("26.1/items.json"),
+  ]);
+if (!legacyAssets.textures.has("items/diamond_sword"))
+  throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
+
+const [legacy, items, blocks, entities, effects, modernItems] =
+  await Promise.all([
+    fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
+    fetchJson<LegacyItem[]>("1.8/items.json"),
+    fetchJson<LegacyItem[]>("1.8/blocks.json"),
+    fetchJson<LegacyEntity[]>("1.8/entities.json"),
+    fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
+    fetchJson<ModernItem[]>("26.1/items.json"),
+  ]);
 
 const missing: string[] = [];
 
@@ -267,13 +322,22 @@ const SPAWN_EGG = 383;
 const POTION = 373;
 
 const mobs = new Map(
-  entities.filter((entity) => entity.type === "mob").map((entity) => [entity.id, entity]),
+  entities
+    .filter((entity) => entity.type === "mob")
+    .map((entity) => [entity.id, entity]),
 );
 
 // The legacy table also has later versions' Damage values, like 1.12's bed colors and 1.9's dragon head
 const legacyDamages = new Map<number, Set<number>>();
 for (const { id, variations = [] } of [...items, ...blocks]) {
-  legacyDamages.set(id, new Set([...(legacyDamages.get(id) ?? []), 0, ...variations.map(({ metadata }) => metadata)]));
+  legacyDamages.set(
+    id,
+    new Set([
+      ...(legacyDamages.get(id) ?? []),
+      0,
+      ...variations.map(({ metadata }) => metadata),
+    ]),
+  );
 }
 
 // With LEGACY_ITEMS, the legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
@@ -325,10 +389,14 @@ interface DumpedName {
   rarity: string;
 }
 
-const dumpedNames: DumpedName[] = JSON.parse(await readFile(namesPath, "utf8")).items;
+const dumpedNames: DumpedName[] = JSON.parse(
+  await readFile(namesPath, "utf8"),
+).items;
 
 for (const { id, damage, name, rarity } of dumpedNames) {
-  const modern = output.items[`${id}:${damage}`] ?? (damage === 0 ? output.items[id] : undefined);
+  const modern =
+    output.items[`${id}:${damage}`] ??
+    (damage === 0 ? output.items[id] : undefined);
   if (modern) output.legacyNames[modern] = `${rarity}${name}`;
 }
 
@@ -346,13 +414,20 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
-const materials = await fetch(BUKKIT_MATERIALS, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
+const materials = await fetch(BUKKIT_MATERIALS, {
+  signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+});
 if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
 
 // Entries look like GOLD_CHESTPLATE(315, 1, 112). Only ids the item table has are kept
-const drawn = new Set([POTION, ...Object.keys(output.items).map((key) => Number(key.split(":")[0]))]);
+const drawn = new Set([
+  POTION,
+  ...Object.keys(output.items).map((key) => Number(key.split(":")[0])),
+]);
 
-for (const [, name, id] of (await materials.text()).matchAll(/^\s+([A-Z0-9_]+)\((\d+)/gm)) {
+for (const [, name, id] of (await materials.text()).matchAll(
+  /^\s+([A-Z0-9_]+)\((\d+)/gm,
+)) {
   if (drawn.has(Number(id))) output.materials[name] = Number(id);
 }
 
@@ -364,9 +439,16 @@ for (const id of legacyAssets.models.keys()) {
 
   const after = modelTextures(modernAssets.models, id);
 
-  for (const [key, texture] of Object.entries(modelTextures(legacyAssets.models, id))) {
+  for (const [key, texture] of Object.entries(
+    modelTextures(legacyAssets.models, id),
+  )) {
     const target = after[key];
-    if (!target || !legacyAssets.textures.has(texture) || !modernAssets.textures.has(target)) continue;
+    if (
+      !target ||
+      !legacyAssets.textures.has(texture) ||
+      !modernAssets.textures.has(target)
+    )
+      continue;
 
     const counts = pairings.get(texture) ?? new Map<string, number>();
     counts.set(target, (counts.get(target) ?? 0) + 1);
@@ -377,7 +459,8 @@ for (const id of legacyAssets.models.keys()) {
 const mostPaired = (counts: Map<string, number>) =>
   [...counts].toSorted(([a, x], [b, y]) => y - x || a.localeCompare(b))[0][0];
 
-const sameName = (texture: string) => texture.replace(/^items\//, "item/").replace(/^blocks\//, "block/");
+const sameName = (texture: string) =>
+  texture.replace(/^items\//, "item/").replace(/^blocks\//, "block/");
 
 const itemTextures = new Set(
   [...legacyAssets.models.keys()]
@@ -396,7 +479,12 @@ for (const texture of [...legacyAssets.textures].toSorted()) {
 
   if (target === undefined) {
     if (itemTextures.has(texture)) missing.push(`texture ${texture}`);
-  } else if (target !== null && !modernAssets.textures.has(typeof target === "string" ? target : target.texture)) {
+  } else if (
+    target !== null &&
+    !modernAssets.textures.has(
+      typeof target === "string" ? target : target.texture,
+    )
+  ) {
     missing.push(`texture ${texture} as ${JSON.stringify(target)}`);
   } else if (target !== texture) {
     output.legacyTextures[texture] = target;
@@ -404,7 +492,8 @@ for (const texture of [...legacyAssets.textures].toSorted()) {
 }
 
 const renamedTexture = (texture: string) => {
-  const target = texture in output.legacyTextures ? output.legacyTextures[texture] : texture;
+  const target =
+    texture in output.legacyTextures ? output.legacyTextures[texture] : texture;
   return typeof target === "string" ? target : target?.texture;
 };
 
@@ -413,14 +502,20 @@ function isTemplate(models: Map<string, ModelFile>, id: string) {
   const textures = modelTextures(models, id);
   let elements: ModelFile["elements"];
 
-  for (let next: string | undefined = id; next && models.has(next) && !elements; ) {
+  for (
+    let next: string | undefined = id;
+    next && models.has(next) && !elements;
+  ) {
     const model: ModelFile = models.get(next)!;
     elements = model.elements;
     next = model.parent && withoutNamespace(model.parent);
   }
 
   return (elements ?? []).some((element) =>
-    Object.values(element.faces).some(({ texture }) => texture.startsWith("#") && !(texture.slice(1) in textures)),
+    Object.values(element.faces).some(
+      ({ texture }) =>
+        texture.startsWith("#") && !(texture.slice(1) in textures),
+    ),
   );
 }
 
@@ -428,7 +523,10 @@ function isTemplate(models: Map<string, ModelFile>, id: string) {
 // template, 26.3's is the anvil) moves aside, so it doesn't replace 26.3's, and its children follow it
 const moved = new Set(
   [...legacyAssets.models.keys()].filter(
-    (id) => modernAssets.models.has(id) && isTemplate(legacyAssets.models, id) !== isTemplate(modernAssets.models, id),
+    (id) =>
+      modernAssets.models.has(id) &&
+      isTemplate(legacyAssets.models, id) !==
+        isTemplate(modernAssets.models, id),
   ),
 );
 
@@ -475,7 +573,9 @@ Object.assign(output.legacyModels, {
 });
 
 if (missing.length > 0) {
-  throw new Error(`Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`);
+  throw new Error(
+    `Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`,
+  );
 }
 
 await writeFile(

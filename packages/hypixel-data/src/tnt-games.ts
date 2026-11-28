@@ -20,7 +20,9 @@ export interface TntGamesMode {
 const MODES = dumped as Record<string, TntGamesMode>;
 
 /** TNT Games' modes as the TNTGames stats key each layout (tntrun, spleef), and their names */
-export const TNT_GAMES_LAYOUTS = Object.entries(MODES).map(([key, { name }]) => ({ key, name }));
+export const TNT_GAMES_LAYOUTS = Object.entries(MODES).map(
+  ([key, { name }]) => ({ key, name }),
+);
 
 /**
  * A TNT Games layout, like TNTGames.tntrun ({ "0": "double_jump", "1": "speed_potion" }), as 36

@@ -21,16 +21,26 @@ export interface SkyWarsKit {
 // Built by scripts/import-dump.ts from the lobby's kit menus and Kit Customizers
 const KITS = dumped as Record<string, SkyWarsKit>;
 
-const hasDefault = ({ items }: SkyWarsKit) => items.length > 0 && items.every(({ slot }) => slot !== undefined);
+const hasDefault = ({ items }: SkyWarsKit) =>
+  items.length > 0 && items.every(({ slot }) => slot !== undefined);
 
 /** Every SkyWars kit with a default layout, by the key fromSkyWarsKit takes (normal_scout) and its menu's name */
-export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, kit]) => (hasDefault(kit) ? [{ key, name: kit.name }] : []));
+export const SKYWARS_KITS = Object.entries(KITS).flatMap(([key, kit]) =>
+  hasDefault(kit) ? [{ key, name: kit.name }] : [],
+);
 
 // Kit ids are kit_<type>_<mode>_<kit>. Ranked's kits (kit_ranked_ranked_scout) hold Mini's items
-const MENUS: Record<string, string | undefined> = { solo: "normal", team: "insane", ranked: "mini", mega: "mega" };
+const MENUS: Record<string, string | undefined> = {
+  solo: "normal",
+  team: "insane",
+  ranked: "mini",
+  mega: "mega",
+};
 
 // Mega's Pyro is stored as pyromaniac
-const RENAMED: Record<string, string | undefined> = { mega_pyromaniac: "mega_pyro" };
+const RENAMED: Record<string, string | undefined> = {
+  mega_pyromaniac: "mega_pyro",
+};
 
 // Mythical kits (kit_mythical_end-lord) have no mode, and Normal and Insane enchant them
 // differently, so they match no menu
@@ -49,13 +59,23 @@ function skyWarsKit(kit: string) {
 export function skyWarsKitArmor(kit: string) {
   const items = skyWarsKit(kit)?.items;
   // A listed head, like Frog's Hat, starts in the hotbar, since the game only puts on armor
-  return items && armorOf(items.map(({ item }) => item).filter(({ id }) => id !== "minecraft:player_head"));
+  return (
+    items &&
+    armorOf(
+      items
+        .map(({ item }) => item)
+        .filter(({ id }) => id !== "minecraft:player_head"),
+    )
+  );
 }
 
 /** A layout key with its enchantment ids in order, as tokens have them */
 function withSortedEnchantments(key: string) {
   const [material, damage, enchantments] = key.split(":");
-  const ids = enchantments?.split(",").map(Number).toSorted((a, b) => a - b);
+  const ids = enchantments
+    ?.split(",")
+    .map(Number)
+    .toSorted((a, b) => a - b);
   return [material, damage, ...(ids ? [ids.join(",")] : [])].join(":");
 }
 
@@ -64,7 +84,10 @@ function withSortedEnchantments(key: string) {
  * for a kit the dump lacks). `kit` is its id (kit_basic_solo_scout, as activeKit_SOLO holds it) or a SKYWARS_KITS key
  */
 export function fromSkyWarsKit(
-  stored: Readonly<Record<string, string | readonly number[]>> | null | undefined,
+  stored:
+    | Readonly<Record<string, string | readonly number[]>>
+    | null
+    | undefined,
   kit: string,
 ): (ItemStack | undefined)[] | undefined {
   const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
@@ -72,29 +95,42 @@ export function fromSkyWarsKit(
 
   if (!stored) {
     if (!dumpedKit || !hasDefault(dumpedKit)) return;
-    for (const { slot, item } of dumpedKit.items) if (slot !== undefined) slots[slot] = item;
+    for (const { slot, item } of dumpedKit.items)
+      if (slot !== undefined) slots[slot] = item;
     return slots;
   }
 
-  const listed = new Map(dumpedKit?.items.map(({ token, item }) => [token, item]));
-  const byMaterial = Map.groupBy(dumpedKit?.items ?? [], ({ token }) => token.split(":").slice(0, 2).join(":"));
+  const listed = new Map(
+    dumpedKit?.items.map(({ token, item }) => [token, item]),
+  );
+  const byMaterial = Map.groupBy(dumpedKit?.items ?? [], ({ token }) =>
+    token.split(":").slice(0, 2).join(":"),
+  );
 
   // Many layouts (all of Ranked's) store a listed item without its enchantment ids
   const findListed = (key: string) => {
     const sameMaterial = byMaterial.get(key);
-    return listed.get(withSortedEnchantments(key)) ?? (sameMaterial?.length === 1 ? sameMaterial[0].item : undefined);
+    return (
+      listed.get(withSortedEnchantments(key)) ??
+      (sameMaterial?.length === 1 ? sameMaterial[0].item : undefined)
+    );
   };
 
   // Older versions of a kit leave their items in a layout, so a slot can hold two: the kit's
   // current item wins, then the first
   const entries = Object.entries(stored)
     .map(([key, value]) => ({ key, value, listedItem: findListed(key) }))
-    .toSorted((a, b) => Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined));
+    .toSorted(
+      (a, b) =>
+        Number(b.listedItem !== undefined) - Number(a.listedItem !== undefined),
+    );
 
   for (const { key, value, listedItem } of entries) {
     const [material, damage, enchantments] = key.split(":");
     const plain = hypixelMaterial(material, Number(damage));
-    const item = listedItem ?? (plain && { ...plain, enchanted: enchantments ? true : undefined });
+    const item =
+      listedItem ??
+      (plain && { ...plain, enchanted: enchantments ? true : undefined });
     if (!item) continue;
 
     for (const slot of [value].flat().map(Number)) {
