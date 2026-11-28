@@ -9,7 +9,7 @@
 import { Container, Footer, Table } from "#components";
 import { Empty } from "./components/Empty.js";
 import { ItemSlot } from "./components/ItemSlot.js";
-import { RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
+import { RARITY_COLORS, formatPriceAge } from "./components/ItemGrid.js";
 import type { Canvas, Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { PriceView } from "@statsify/skyblock";
@@ -107,7 +107,7 @@ export const SkyBlockPriceProfile = ({
           </Table.tr>
         )}
       </Table.table>
-      <Empty text={pricesAsOf(t, price.asOf)} />
+      <Empty text={formatPriceAge(t, price.asOf)} />
       <Footer logo={logo} user={user} />
     </Container>
   );

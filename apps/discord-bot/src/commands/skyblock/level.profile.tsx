@@ -9,7 +9,7 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, formatPriceAge } from "./components/ItemGrid.js";
 import { LevelBar } from "./components/LevelBar.js";
 import { prettify } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
@@ -45,7 +45,7 @@ export const SkyBlockLevelProfile = ({
   );
 
   const footnote = market
-    ? pricesAsOf(t, asOf)
+    ? formatPriceAge(t, asOf)
     : t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (

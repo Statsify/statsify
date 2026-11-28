@@ -9,7 +9,7 @@
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
+import { ItemGrid, formatPriceAge } from "./components/ItemGrid.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView, NetworthSection } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
@@ -23,7 +23,9 @@ const topItems = ({ categories }: NetworthSection) =>
     .slice(0, TOP_ITEMS);
 
 export const networthIcons = ({ networth }: MemberView) =>
-  topItems(networth!).flatMap(({ texture }) => (texture ? [texture] : []));
+  topItems(networth!)
+    .map(({ texture }) => texture)
+    .filter((texture) => texture !== undefined);
 
 export const SkyBlockNetworthProfile = ({
   profile,
@@ -47,7 +49,7 @@ export const SkyBlockNetworthProfile = ({
     .filter(([, { total }]) => total > 0)
     .toSorted(([, a], [, b]) => b.total - a.total)
     .map(([name, { total }]) => (
-      // prettify gives "Enderchest"; Hypixel calls it the Ender Chest
+      // prettify would write "Enderchest".
       <Table.td
         title={
           name === "enderchest" ? t("skyblock.enderChest") : prettify(name)
@@ -87,7 +89,7 @@ export const SkyBlockNetworthProfile = ({
         ))}
       </Table.table>
       {items.length > 0 ? <ItemGrid items={items} icons={icons} /> : <></>}
-      <Empty text={`${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`} />
+      <Empty text={`${unpriced}${formatPriceAge(t, networth.pricesAsOf)}`} />
     </Card>
   );
 };

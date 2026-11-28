@@ -10,7 +10,11 @@ import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import { ItemGrid, RARITY_COLORS, pricesAsOf } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  RARITY_COLORS,
+  formatPriceAge,
+} from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
@@ -83,7 +87,7 @@ export const SkyBlockAccessoriesProfile = ({
     );
 
   const footnote = accessories.market
-    ? pricesAsOf(t, accessories.pricesAsOf)
+    ? formatPriceAge(t, accessories.pricesAsOf)
     : t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (
