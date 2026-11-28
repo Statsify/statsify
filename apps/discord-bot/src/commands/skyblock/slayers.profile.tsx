@@ -13,19 +13,32 @@ import { BOSS_COLORS, SLAYER_BOSSES } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSlayersProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockSlayersProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const slayers = profile.member.slayers!;
 
-  const sidebar: SidebarItem[] = [[t("skyblock.slayerXp"), t(slayers.xp), "§5"]];
+  const sidebar: SidebarItem[] = [
+    [t("skyblock.slayerXp"), t(slayers.xp), "§5"],
+  ];
 
   const cells = SLAYER_BOSSES.map((name) => {
     const { level, kills } = slayers.bosses[name];
 
     return (
       <box direction="column" location="center" width="100%" padding={0}>
-        <LevelBar title={prettify(name)} level={level} color={BOSS_COLORS[name]} t={t} />
+        <LevelBar
+          title={prettify(name)}
+          level={level}
+          color={BOSS_COLORS[name]}
+          t={t}
+        />
         <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>
-          {kills.map((count, tier) => `§7${romanNumeral(tier + 1)} §f${t(count)}`).join("§8 • ")}
+          {kills
+            .map((count, tier) => `§7${romanNumeral(tier + 1)} §f${t(count)}`)
+            .join("§8 • ")}
         </text>
       </box>
     );

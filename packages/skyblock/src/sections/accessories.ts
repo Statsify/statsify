@@ -8,20 +8,20 @@
 
 import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
-import { rarityRank } from "#types";
-import { costOf } from "#prices";
 import { decodeInventory } from "#nbt";
+import { getItemCost } from "#prices";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
-import type {
-  AccessoriesSection,
-  InactiveAccessory,
-  ItemView,
-  ItemsResource,
-  MissingAccessory,
-  PriceMap,
-  Rarity,
-  Slots,
+import {
+  RARITIES,
+  type AccessoriesSection,
+  type InactiveAccessory,
+  type ItemView,
+  type ItemsResource,
+  type MissingAccessory,
+  type PriceMap,
+  type Rarity,
+  type Slots,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -34,7 +34,15 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
   MYTHIC: 22,
 };
 
-// Some anniversary hats aren't in the items resource, so their rarity marks them.
+interface Bag {
+  accessoryPower: number;
+  active: ItemView[];
+  inactive: InactiveAccessory[];
+  owned: Set<string>;
+  contacts: number;
+}
+
+// Some old hats aren't in the items resource, so their rarity marks them.
 const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   const category = items.items[id]?.category;
   return (
@@ -44,19 +52,39 @@ const isFormerAccessory = ({ id, rarity }: ItemView, items: ItemsResource) => {
   );
 };
 
-const upgradesOf = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
+const getUpgrades = (id: string) => ACCESSORY_UPGRADES[id] ?? [];
 
-// How a Power's stats scale with Accessory Power, per the wiki
-export const powerScale = (accessoryPower: number) =>
+// Variants list each other, while a higher tier doesn't list its lower one.
+const isVariant = (a: string, b: string) => getUpgrades(b).includes(a);
+
+// Of two variants, the one with more accessory power counts, then the first id.
+const outranks = (variant: string, id: string, power: (id: string) => number) =>
+  power(variant) > power(id) || (power(variant) === power(id) && variant < id);
+
+function getAccessoryPower(
+  id: string,
+  rarity: Rarity | undefined,
+  contacts: number,
+) {
+  const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
+  if (id === "HEGEMONY_ARTIFACT") return power * 2;
+  if (id === "ABICASE") return power + Math.floor(contacts / 2);
+  return power;
+}
+
+// The wiki's scaling of a Power's stats with accessory power.
+export const getPowerScale = (accessoryPower: number) =>
   29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
 
-export function stonePowerStats(
+export function getPowerStats(
   { accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string],
   accessoryPower: number,
 ) {
+  const scale = getPowerScale(accessoryPower);
+  const listedScale = getPowerScale(listedAt);
   const scaled = stats.map((stat) => ({
     ...stat,
-    value: (stat.value * powerScale(accessoryPower)) / powerScale(listedAt),
+    value: (stat.value * scale) / listedScale,
   }));
 
   for (const extra of bonus) {
@@ -68,27 +96,13 @@ export function stonePowerStats(
   return scaled;
 }
 
-/** Variants list each other (Dante's Talisman and Ring); a higher tier doesn't list its lower one. */
-const isMutual = (a: string, b: string) => upgradesOf(b).includes(a);
-
-/** Of two variants, the one with the most AP counts, then the first id. */
-const outranks = (by: string, id: string, power: (id: string) => number) =>
-  power(by) > power(id) || (power(by) === power(id) && by < id);
-
-function powerOf(id: string, rarity: Rarity | undefined, contacts: number) {
-  const power = (rarity && ACCESSORY_POWER[rarity]) ?? 0;
-  if (id === "HEGEMONY_ARTIFACT") return power * 2;
-  return id === "ABICASE" ? power + Math.floor(contacts / 2) : power;
-}
-
-/** Rift-only accessories never go in the bag, and ignored ones can't be obtained any more. */
+// Rift-only and ignored accessories can't go in the bag.
 const isCandidate = (id: string, item: ItemsResource["items"][string]) =>
   item.category === "ACCESSORY" &&
   !item.riftOnly &&
   !IGNORED_ACCESSORIES.has(id);
 
-/** Accessories in the inventory, ender chest, backpacks and vault: owned, but no accessory power until they're in the bag. */
-function storedAccessories(member: RawMember, items: ItemsResource) {
+function getStoredAccessories(member: RawMember, items: ItemsResource) {
   const {
     inv_contents,
     ender_chest_contents,
@@ -102,116 +116,34 @@ function storedAccessories(member: RawMember, items: ItemsResource) {
     ...Object.values(backpack_contents ?? {}),
   ];
 
-  return blobs
-    .flatMap((blob) => (blob ? decodeInventory(blob) : []))
-    .flatMap((item) => {
+  const stored: ItemView[] = [];
+  for (const blob of blobs) {
+    if (!blob) continue;
+
+    for (const item of decodeInventory(blob)) {
       const id = item?.tag?.ExtraAttributes?.id;
-      if (!item || typeof id !== "string") return [];
+      if (!item || id === undefined) continue;
+
       const resource = items.items[id];
-      return resource && isCandidate(id, resource) ? [toItemView(item)] : [];
-    });
-}
-
-/**
- * Accessories in the inventory and not in the bag, one of each: they give their stats there too, but no accessory power
- * (the wiki's Accessories page, unverified).
- */
-export function heldAccessories(
-  inventory: Slots,
-  items: ItemsResource,
-  owned: ReadonlySet<string>,
-) {
-  const held = new Map<string, ItemView>();
-
-  for (const view of inventory) {
-    if (!view || held.has(view.id) || owned.has(view.id)) continue;
-    const resource = items.items[view.id];
-    if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
+      if (resource && isCandidate(id, resource)) stored.push(toItemView(item));
+    }
   }
 
-  return [...held.values()];
+  return stored;
 }
 
-/** Each family's highest tier, wherever it's kept; of variants that replace each other, the first listed counts. */
-export function highestTiers(accessories: ItemView[]) {
-  const at = new Map(accessories.map(({ id }, index) => [id, index]));
-  return accessories.filter(
-    ({ id }, index) =>
-      !upgradesOf(id).some(
-        (by) => at.has(by) && (!isMutual(id, by) || at.get(by)! < index),
-      ),
-  );
-}
-
-type StepOrder = (a: MissingAccessory, b: MissingAccessory) => number;
-
-/**
- * null when the inventory API is off. Only the best of each upgrade chain counts, one of each duplicate and one of two
- * variants, and a consumed Rift Prism counts as one in the bag. Each chain's missing step is the first in `order`.
- */
-export function getAccessories(
-  member: RawMember,
-  items: ItemsResource,
-  prices: PriceMap,
-  market: boolean,
-  order: (
-    accessoryPower: number,
-    highest: number | undefined,
-  ) => StepOrder = () => byCoinsPerAccessoryPower,
-): AccessoriesSection | null {
-  const bag = bagAccessories(member, items);
-  if (!bag) return null;
-
-  const { active, inactive, owned, contacts, accessoryPower } = bag;
-  const storage = member.accessory_bag_storage;
-  const tuning = storage?.tuning?.slot_0 ?? {};
-  const stone = storage?.selected_power
-    ? POWERS[storage.selected_power]
-    : undefined;
-  const stepOrder = order(accessoryPower, storage?.highest_magical_power);
-  const stored = storedAccessories(member, items);
-
-  return {
-    accessoryPower,
-    highestAccessoryPower: storage?.highest_magical_power,
-    selectedPower: storage?.selected_power,
-    powerStats: stone && stonePowerStats(stone, accessoryPower),
-    tuning,
-    tuningPoints: add(...Object.values(tuning)),
-    enrichments: active.filter((view) => view.enrichment).length,
-    unenriched: active.filter(
-      (view) =>
-        !view.enrichment && rarityRank(view.rarity!) >= rarityRank("LEGENDARY"),
-    ).length,
-    recombobulated: active.filter((view) => view.recombobulated).length,
-    pricesAsOf: prices.asOf,
-    market,
-    active,
-    inactive,
-    missing: getMissing(
-      owned,
-      stored,
-      active,
-      contacts,
-      items,
-      stepOrder,
-      market ? prices : undefined,
-    ),
-  };
-}
-
-/** The bag's accessories that count and those that don't, and their accessory power; null with the inventory API off. */
-export function bagAccessories(member: RawMember, items: ItemsResource) {
+export function readBag(member: RawMember, items: ItemsResource): Bag | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
 
   const contacts =
     member.nether_island_player_data?.abiphone?.active_contacts?.length ?? 0;
   const power = ({ id, rarity }: { id: string; rarity?: Rarity }) =>
-    powerOf(id, rarity, contacts);
+    getAccessoryPower(id, rarity, contacts);
 
   const views = decodeInventory(bag)
-    .flatMap((item) => (item ? [toItemView(item)] : []))
+    .filter((item) => item !== null)
+    .map(toItemView)
     .filter((view) => !isFormerAccessory(view, items))
     .toSorted((a, b) => power(b) - power(a));
 
@@ -221,139 +153,223 @@ export function bagAccessories(member: RawMember, items: ItemsResource) {
   const active: ItemView[] = [];
   const inactive: InactiveAccessory[] = [];
 
+  // Only the best tier of each chain counts, and one of two variants.
   for (const view of views) {
-    const upgrades = upgradesOf(view.id);
+    const upgrades = getUpgrades(view.id);
     const replacedBy =
       upgrades.find((id) => counted.has(id)) ??
-      upgrades.find((id) => owned.has(id) && !isMutual(view.id, id));
+      upgrades.find((id) => owned.has(id) && !isVariant(view.id, id));
 
     if (counted.has(view.id)) {
       inactive.push({ ...view, reason: "duplicate" });
     } else if (replacedBy) {
-      const by = items.items[replacedBy];
-      if (by)
-        inactive.push({
-          ...view,
-          reason: "replaced",
-          replacedBy: { id: replacedBy, name: by.name },
-        });
+      const replacement = items.items[replacedBy];
+      if (!replacement) continue;
+
+      inactive.push({
+        ...view,
+        reason: "replaced",
+        replacedBy: { id: replacedBy, name: replacement.name },
+      });
     } else {
       active.push(view);
       counted.add(view.id);
     }
   }
 
-  // A prism consumed at Erihann is refunded to the bag as a Rare the next time the player joins
+  // A consumed Rift Prism comes back to the bag as a Rare.
   const accessoryPower = add(
     ...active.map(power),
-    prism.length * powerOf("RIFT_PRISM", "RARE", 0),
+    prism.length * getAccessoryPower("RIFT_PRISM", "RARE", 0),
   );
-  return { active, inactive, owned, contacts, accessoryPower };
+
+  return { accessoryPower, active, inactive, owned, contacts };
 }
 
-/** Outside the bag first, since it costs nothing, then coins per point gained; unpriced ones sort last, by points. */
-export const cheapestFirst =
-  <T extends { outsideBag: boolean; name: string }>(
-    coinsPer: (step: T) => number | undefined,
-    gain: (step: T) => number,
-  ) =>
-  (a: T, b: T) =>
-    Number(b.outsideBag) - Number(a.outsideBag) ||
-    (coinsPer(a) ?? Infinity) - (coinsPer(b) ?? Infinity) ||
-    gain(b) - gain(a) ||
-    a.name.localeCompare(b.name);
-
-const byCoinsPerAccessoryPower = cheapestFirst<MissingAccessory>(
-  (step) => step.coinsPerAccessoryPower,
-  (step) => step.accessoryPower,
-);
-
-/**
- * Every tier above the bag's best in a chain is a step, worth its accessory power over that tier. Each chain or variant
- * pair keeps its first step in `order`. One the player keeps outside the bag is free, and nothing below it is offered.
- */
-function getMissing(
-  owned: ReadonlySet<string>,
-  stored: ItemView[],
-  active: ItemView[],
-  contacts: number,
+// An accessory in the inventory gives its stats but no accessory power.
+export function getHeldAccessories(
+  inventory: Slots,
   items: ItemsResource,
-  order: StepOrder,
-  prices?: PriceMap,
+  owned: Set<string>,
 ) {
-  const byId = new Map<string, ItemView>();
-  for (const view of stored) {
-    const kept = byId.get(view.id);
-    if (
-      !kept ||
-      powerOf(view.id, view.rarity, contacts) >
-        powerOf(kept.id, kept.rarity, contacts)
-    )
-      byId.set(view.id, view);
+  const held = new Map<string, ItemView>();
+
+  for (const view of inventory) {
+    if (!view || held.has(view.id) || owned.has(view.id)) continue;
+
+    const resource = items.items[view.id];
+    if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
+  }
+
+  return [...held.values()];
+}
+
+// Of two variants that replace each other, the first one listed counts.
+export function getHighestTiers(accessories: ItemView[]) {
+  const indexes = new Map(accessories.map(({ id }, index) => [id, index]));
+
+  return accessories.filter(
+    ({ id }, index) =>
+      !getUpgrades(id).some(
+        (upgrade) =>
+          indexes.has(upgrade) &&
+          (!isVariant(id, upgrade) || indexes.get(upgrade)! < index),
+      ),
+  );
+}
+
+// Every unowned tier above the bag's best in a chain is a step.
+function getSteps(
+  { active, owned, contacts }: Bag,
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap | undefined,
+) {
+  const bestStored = new Map<string, ItemView>();
+  for (const view of getStoredAccessories(member, items)) {
+    const kept = bestStored.get(view.id);
+    const power = getAccessoryPower(view.id, view.rarity, contacts);
+    if (!kept || power > getAccessoryPower(kept.id, kept.rarity, contacts)) {
+      bestStored.set(view.id, view);
+    }
   }
 
   const storedPower = (id: string) =>
-    powerOf(id, byId.get(id)?.rarity, contacts);
-  const outside = new Map(
-    [...byId].filter(
+    getAccessoryPower(id, bestStored.get(id)?.rarity, contacts);
+  const outsideBag = new Map(
+    [...bestStored].filter(
       ([id]) =>
-        !upgradesOf(id).some(
-          (by) =>
-            byId.has(by) && isMutual(id, by) && outranks(by, id, storedPower),
+        !getUpgrades(id).some(
+          (upgrade) =>
+            bestStored.has(upgrade) &&
+            isVariant(id, upgrade) &&
+            outranks(upgrade, id, storedPower),
         ),
     ),
   );
 
-  const steps = Object.entries(items.items)
-    .flatMap(([id, item]): MissingAccessory[] => {
-      if (!item.tier || !isCandidate(id, item) || owned.has(id)) return [];
-      if (upgradesOf(id).some((by) => owned.has(by) || outside.has(by)))
-        return [];
+  const steps: MissingAccessory[] = [];
+  for (const [id, item] of Object.entries(items.items)) {
+    if (!item.tier || !isCandidate(id, item) || owned.has(id)) continue;
 
-      const replaces = active
-        .filter((view) => upgradesOf(view.id).includes(id))
-        .map((view) => ({
-          id: view.id,
-          power: powerOf(view.id, view.rarity, contacts),
-        }))
-        .toSorted((a, b) => b.power - a.power)[0];
+    const upgrades = getUpgrades(id);
+    if (upgrades.some((upgrade) => owned.has(upgrade))) continue;
+    if (upgrades.some((upgrade) => outsideBag.has(upgrade))) continue;
 
-      const view = outside.get(id);
-      // A recombobulated lower tier can be worth as much as the next one up.
-      const gain =
-        powerOf(id, view?.rarity ?? item.tier, contacts) -
-        (replaces?.power ?? 0);
-      const texture = resourceTexture(item);
-      if (gain <= 0 || !texture) return [];
+    let replaces: { id: string; power: number } | undefined;
+    for (const view of active) {
+      if (!getUpgrades(view.id).includes(id)) continue;
 
-      const cost = view ? undefined : costOf(prices?.entries[id]);
-      return [
-        {
-          id,
-          name: item.name,
-          rarity: view?.rarity ?? item.tier,
-          accessoryPower: gain,
-          outsideBag: view !== undefined,
-          cost,
-          coinsPerAccessoryPower: cost && cost.coins / gain,
-          replaces: replaces?.id,
-          texture,
-        },
-      ];
-    })
-    .toSorted(order);
+      const viewPower = getAccessoryPower(view.id, view.rarity, contacts);
+      if (!replaces || viewPower > replaces.power) {
+        replaces = { id: view.id, power: viewPower };
+      }
+    }
 
-  // A tier lists every tier above it as an upgrade, so the first step of each chain in that order is its best.
-  const best: MissingAccessory[] = [];
-  for (const step of steps) {
-    if (
-      !best.some(
-        ({ id }) =>
-          upgradesOf(id).includes(step.id) || upgradesOf(step.id).includes(id),
-      )
-    )
-      best.push(step);
+    const view = outsideBag.get(id);
+    const rarity = view?.rarity ?? item.tier;
+    // A recombobulated lower tier can be worth as much as the next one up.
+    const gain =
+      getAccessoryPower(id, rarity, contacts) - (replaces?.power ?? 0);
+    const texture = resourceTexture(item);
+    if (gain <= 0 || !texture) continue;
+
+    const cost = view ? undefined : getItemCost(prices?.entries[id]);
+    steps.push({
+      id,
+      name: item.name,
+      rarity,
+      accessoryPower: gain,
+      outsideBag: view !== undefined,
+      cost,
+      coinsPerAccessoryPower: cost && cost.coins / gain,
+      replaces: replaces?.id,
+      texture,
+    });
+  }
+
+  return steps;
+}
+
+// A tier lists every tier above it, so a chain's first step is its best.
+export function keepBestPerChain<T extends { id: string }>(sorted: T[]) {
+  const best: T[] = [];
+  for (const step of sorted) {
+    const sameChain = best.some(
+      ({ id }) =>
+        getUpgrades(id).includes(step.id) || getUpgrades(step.id).includes(id),
+    );
+    if (!sameChain) best.push(step);
   }
 
   return best;
+}
+
+// Without a market, nothing has a cost.
+export function getAccessorySteps(
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap,
+  market: boolean,
+) {
+  const bag = readBag(member, items);
+  if (!bag) return null;
+
+  return {
+    accessoryPower: bag.accessoryPower,
+    highestAccessoryPower: member.accessory_bag_storage?.highest_magical_power,
+    steps: getSteps(bag, member, items, market ? prices : undefined),
+  };
+}
+
+export function getAccessories(
+  member: RawMember,
+  items: ItemsResource,
+  prices: PriceMap,
+  market: boolean,
+): AccessoriesSection | null {
+  const bag = readBag(member, items);
+  if (!bag) return null;
+
+  // Outside the bag first, since those cost nothing.
+  const steps = getSteps(
+    bag,
+    member,
+    items,
+    market ? prices : undefined,
+  ).toSorted(
+    (a, b) =>
+      Number(b.outsideBag) - Number(a.outsideBag) ||
+      (a.coinsPerAccessoryPower ?? Infinity) -
+        (b.coinsPerAccessoryPower ?? Infinity) ||
+      b.accessoryPower - a.accessoryPower ||
+      a.name.localeCompare(b.name),
+  );
+
+  const storage = member.accessory_bag_storage;
+  const tuning = storage?.tuning?.slot_0 ?? {};
+  const stone = storage?.selected_power
+    ? POWERS[storage.selected_power]
+    : undefined;
+
+  return {
+    accessoryPower: bag.accessoryPower,
+    highestAccessoryPower: storage?.highest_magical_power,
+    selectedPower: storage?.selected_power,
+    powerStats: stone && getPowerStats(stone, bag.accessoryPower),
+    tuning,
+    tuningPoints: add(...Object.values(tuning)),
+    enrichments: bag.active.filter((view) => view.enrichment).length,
+    unenriched: bag.active.filter(
+      (view) =>
+        !view.enrichment &&
+        RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY"),
+    ).length,
+    recombobulated: bag.active.filter((view) => view.recombobulated).length,
+    pricesAsOf: prices.asOf,
+    market,
+    active: bag.active,
+    inactive: bag.inactive,
+    missing: keepBestPerChain(steps),
+  };
 }
