@@ -478,17 +478,3 @@ export interface RawBazaar {
     }
   >;
 }
-
-interface RawPerk {
-  name: string;
-  description: string;
-}
-
-export interface RawElection {
-  mayor: {
-    election: { year: number };
-    name: string;
-    perks: RawPerk[];
-    minister?: { name: string; perk: RawPerk };
-  };
-}

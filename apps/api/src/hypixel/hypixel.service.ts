@@ -23,7 +23,6 @@ import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from 
 import type { APIData } from "@statsify/util";
 import type {
   RawBazaar,
-  RawElection,
   RawGarden,
   RawItemsResource,
   RawMuseum,
@@ -230,12 +229,6 @@ export class HypixelService {
 
   public getSkyBlockItems() {
     return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items", {
-      keyless: true,
-    });
-  }
-
-  public getSkyBlockElection() {
-    return this.getSkyBlock<RawElection>("/v2/resources/skyblock/election", {
       keyless: true,
     });
   }

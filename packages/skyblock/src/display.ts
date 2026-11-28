@@ -30,15 +30,6 @@ export { INVENTORIES, PLAYER_STATS, RARITIES, STAT_GROUPS } from "#types";
 export { SKILLS } from "./sections/skills.js";
 export { SLAYER_BOSSES } from "./sections/slayers.js";
 export { WHISPERS } from "./sections/hotf.js";
-export {
-  SKYBLOCK_MONTHS,
-  getNextEvents,
-  getTerm,
-  toSkyBlockDate,
-  type EventTime,
-  type SkyBlockDate,
-  type SkyBlockEvent,
-} from "./calendar.js";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
