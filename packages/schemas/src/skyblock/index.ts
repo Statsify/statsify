@@ -10,12 +10,9 @@ import { Field } from "#metadata";
 import { FormattedGame } from "#game";
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 
+// The default limits are sized for player boards, so each board sets its own.
 const BOARD_LIMIT = 50_000;
 
-/**
- * One mode's boards for a member of a profile, from `toMemberStats` in `@statsify/skyblock`. Each board sets its 50,000
- * rows, since the default limits are sized for player boards.
- */
 export class SkyBlockBoards {
   @Field({
     leaderboard: {
@@ -38,7 +35,7 @@ export class SkyBlockBoards {
   })
   public nonCosmeticNetworth: number;
 
-  // Maxed members tie on the average, so the board ranks by `skillAverageOrder` (the shown average, then the XP under it)
+  // Maxed members tie on the average, so the board ranks skillAverageOrder.
   @Field({
     leaderboard: {
       fieldName: "Skill Average",
@@ -435,7 +432,6 @@ export const skyblockStatsId = (uuid: string, profileId: string) =>
   `${uuid}:${profileId}`;
 export const skyblockStatsUuid = (id: string) => id.split(":")[0];
 
-/** A member of a profile on the SkyBlock leaderboards: every profile is on `overall`, and a special mode's on its own too. */
 @ModelOptions({
   schemaOptions: { collection: "skyblockstats", versionKey: false },
 })

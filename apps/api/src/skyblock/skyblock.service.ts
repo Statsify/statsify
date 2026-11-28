@@ -394,7 +394,7 @@ export class SkyBlockService {
 
     const items = this.pricesService.getItems();
     const [players, prices, loaded, museums] = await Promise.all([
-      this.leaderboardService.knownPlayers(
+      this.leaderboardService.getKnownPlayers(
         ranked.flatMap((profile) => Object.keys(profile.members)),
       ),
       this.pricesService.getPriceMap({ items }),

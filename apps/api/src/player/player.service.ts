@@ -43,7 +43,7 @@ export class PlayerService {
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
 
-  /** For a module that stores more per player and imports this one (SkyBlock), so deleting reaches it too. */
+  // SkyBlock imports this module, so it registers its delete work here.
   public onDelete(hook: (uuid: string) => Promise<unknown>) {
     this.deleteHooks.push(hook);
   }

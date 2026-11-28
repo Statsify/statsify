@@ -8,13 +8,13 @@
 
 import Fuse from "fuse.js";
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import {
   AbstractArgument,
-  CommandContext,
-  LocalizationString,
+  type CommandContext,
+  type LocalizationString,
 } from "@statsify/discord";
 import { FUSE_OPTIONS } from "./player-leaderboard.argument.js";
 import { SkyBlockStats, getLeaderboardFields } from "@statsify/schemas";

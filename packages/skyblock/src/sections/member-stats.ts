@@ -74,7 +74,7 @@ export type MemberStats = Record<MemberStat, number>;
 const XP_SPAN = 2 ** 40;
 
 // Maxed members tie on the shown average, so the XP under it breaks ties.
-export const getSkillAverageOrder = (average: number, xp: number) =>
+const getSkillAverageOrder = (average: number, xp: number) =>
   Math.round(average * 100) * XP_SPAN + Math.min(Math.floor(xp), XP_SPAN - 1);
 
 // The page counts Catacombs and class levels past 50, but the boards don't.
