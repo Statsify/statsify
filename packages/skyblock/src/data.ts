@@ -111,7 +111,7 @@ export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
 // Trophy fish names by the API's id, uppercased.
 export const TROPHY_FISH = trophyFish as Record<string, string>;
 
-export interface BestiaryFamily {
+interface BestiaryFamily {
   name: string;
   ids: string[]; // one per level it spawns at
   cap: number; // kills past it don't count

@@ -23,7 +23,7 @@ const SLOT_CRAFTS = [
   500, 550, 600, 650, 700,
 ];
 
-export function getCraftedSlots(unique: number) {
+function getCraftedSlots(unique: number) {
   const reached = countTiersReached(unique, SLOT_CRAFTS);
   return { slots: BASE_SLOTS + reached, next: SLOT_CRAFTS[reached] };
 }

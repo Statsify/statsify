@@ -12,7 +12,7 @@ import { countTiersReached } from "#leveling";
 import type { BestiarySection } from "#types";
 import type { RawMember } from "#raw";
 
-export function getBestiaryTier(kills: number, cap: number, bracket: number[]) {
+function getBestiaryTier(kills: number, cap: number, bracket: number[]) {
   const thresholds = bracket.filter((needed) => needed <= cap);
   const tier = countTiersReached(kills, thresholds);
   return { tier, maxTier: thresholds.length, next: thresholds[tier] };
