@@ -20,6 +20,7 @@ export * from "./metadata/serialize.js";
 export * from "./player/index.js";
 export * from "./progression.js";
 export * from "./ratios.js";
+export * from "./role-connection/index.js";
 export * from "./skin/index.js";
 export * from "./status/index.js";
 export * from "./tags/index.js";

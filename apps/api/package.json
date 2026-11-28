@@ -83,6 +83,10 @@
       "types": "./src/leaderboards/index.ts",
       "default": "./dist/leaderboards/index.js"
     },
+    "#linked-roles": {
+      "types": "./src/linked-roles/index.ts",
+      "default": "./dist/linked-roles/index.js"
+    },
     "#sentry": {
       "types": "./src/sentry/index.ts",
       "default": "./dist/sentry/index.js"

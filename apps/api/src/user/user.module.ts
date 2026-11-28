@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { LinkedRolesModule } from "#linked-roles";
 import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
@@ -13,7 +14,7 @@ import { UserController } from "./user.controller.js";
 import { UserService } from "./user.service.js";
 
 @Module({
-  imports: [TypegooseModule.forFeature([User, VerifyCode])],
+  imports: [LinkedRolesModule, TypegooseModule.forFeature([User, VerifyCode])],
   controllers: [UserController],
   providers: [UserService],
 })
