@@ -52,7 +52,7 @@ export const SkyBlockPetsProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {items.length > 0 ? (
-        <ItemGrid items={items} icons={icons} columns={3} />
+        <ItemGrid items={items} icons={icons} columns={3} stacked />
       ) : (
         <Empty text={t("skyblock.noPets")} />
       )}

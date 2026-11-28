@@ -86,11 +86,16 @@ export const SkyBlockNetworthProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
-        {arrayGroup(cells, 3).map((row) => (
+        {/* Three long names like Carnival Mask Inventory widen a row. */}
+        {arrayGroup(cells, 2).map((row) => (
           <Table.tr>{row}</Table.tr>
         ))}
       </Table.table>
-      {items.length > 0 ? <ItemGrid items={items} icons={icons} /> : <></>}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} stacked />
+      ) : (
+        <></>
+      )}
       <Empty text={`${unpriced}${formatPriceAge(t, networth.pricesAsOf)}`} />
     </Card>
   );
