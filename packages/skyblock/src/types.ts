@@ -281,7 +281,7 @@ export interface ItemView {
   id: string;
   uuid?: string;
   name: string;
-  // Lore keeps its § codes.
+  // Lore keeps its § codes, normalized as 1.8 draws them.
   lore: string[];
   rarity?: Rarity;
   count: number;

@@ -17,6 +17,7 @@ import { add } from "@statsify/math";
 import { boostedRarity } from "#leveling";
 import { describeKey, lookupKeys } from "#prices";
 import { getItemTexture, getPetTexture, resourceTexture } from "#textures";
+import { normalizeItemText } from "#lore";
 import { prettify } from "@statsify/util";
 import type {
   ItemTexture,
@@ -83,7 +84,7 @@ const toNetworthItem = (
   items: ItemsResource,
 ): NetworthItem => ({
   id: priced.id,
-  name: priced.name,
+  name: normalizeItemText(priced.name),
   count: priced.count ?? 1,
   price: priced.price,
   soulbound: priced.soulbound,

@@ -13,24 +13,25 @@ import {
   type Rarity,
 } from "#types";
 import { getItemTexture, skinHash } from "#textures";
+import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
 import type { RawItem, RawItemsResource } from "#raw";
 
-// Longest first, so "VERY SPECIAL" wins over "SPECIAL".
-const RARITY_NAMES = RARITIES.map((rarity) =>
-  rarity.replace("_", " "),
-).toSorted((a, b) => b.length - a.length);
+const RARITY_NAMES = new Map<string, Rarity>([
+  ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
+  // Jerry's cosmetics call Legendary "LEGENJERRY".
+  ["LEGENJERRY", "LEGENDARY"],
+]);
 
-// Recombobulated items open the rarity line with an obfuscated "a".
 const RARITY_LINE = new RegExp(
-  `^(?:a )?(?:SHINY )?(${RARITY_NAMES.join("|")})\\b`,
+  `^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`,
 );
 
 function getLoreRarity(lore: string[]): Rarity | undefined {
-  const rarity = RARITY_LINE.exec(
+  const name = RARITY_LINE.exec(
     removeFormatting(lore.at(-1) ?? "").trim(),
   )?.[1];
-  return rarity?.replace(" ", "_") as Rarity | undefined;
+  return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
 // The decode leaves an NBT long as [high, low], with the low half signed.
@@ -48,12 +49,12 @@ function nbtNumber(value: unknown): number | undefined {
 export function toItemView(item: RawItem): ItemView {
   const attributes = item.tag?.ExtraAttributes ?? {};
   const id = attributes.id ?? `minecraft:${item.id}:${item.Damage}`;
-  const lore = item.tag?.display?.Lore ?? [];
+  const lore = (item.tag?.display?.Lore ?? []).map(normalizeItemText);
 
   return {
     id,
     uuid: attributes.uuid,
-    name: item.tag?.display?.Name ?? id,
+    name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
     rarity: getLoreRarity(lore),
     count: item.Count,
@@ -122,11 +123,11 @@ if (import.meta.vitest) {
     });
 
     it("should read a recombobulated or shiny line", () => {
-      expect(getLoreRarity(["§d§l§ka§r §d§lMYTHIC ACCESSORY §d§l§ka"])).toBe(
+      expect(getLoreRarity(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe(
         "MYTHIC",
       );
       expect(
-        getLoreRarity(["§d§l§ka§r §d§lSHINY MYTHIC DUNGEON SWORD §d§l§ka"]),
+        getLoreRarity(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"]),
       ).toBe("MYTHIC");
     });
 
