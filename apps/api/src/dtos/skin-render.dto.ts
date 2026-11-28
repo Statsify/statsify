@@ -11,18 +11,36 @@ import { UuidDto } from "./uuid.dto.js";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
-const POSES = ["standing", "punch", "sneak", "jump", "swim", "fly"] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
+const POSES = [
+  "standing",
+  "punch",
+  "sneak",
+  "jump",
+  "swim",
+  "fly",
+] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
 
-const ARMOR_MATERIALS = ["leather", "chainmail", "iron", "gold", "diamond"] as const;
+const ARMOR_MATERIALS = [
+  "leather",
+  "chainmail",
+  "iron",
+  "gold",
+  "diamond",
+] as const;
 
-export const SKULLS = ["skeleton", "wither_skeleton", "zombie", "creeper"] as const;
+export const SKULLS = [
+  "skeleton",
+  "wither_skeleton",
+  "zombie",
+  "creeper",
+] as const;
 
 // The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
 const TEXTURE_HASH = /^[\da-f]{1,64}$/;
 
 const armorPiece = z.object({
   material: z.enum(ARMOR_MATERIALS),
-  color: z.number().int().min(0).max(0xFF_FF_FF).optional(),
+  color: z.number().int().min(0).max(0xff_ff_ff).optional(),
   enchanted: z.boolean().optional(),
 });
 
@@ -32,7 +50,11 @@ const unset = z.never().optional();
 // A helmet is exactly one of a material, a head or a skull
 const helmet = z.union([
   armorPiece.extend({ head: unset, skull: unset }),
-  z.object({ head: z.string().regex(TEXTURE_HASH), material: unset, skull: unset }),
+  z.object({
+    head: z.string().regex(TEXTURE_HASH),
+    material: unset,
+    skull: unset,
+  }),
   z.object({ skull: z.enum(SKULLS), material: unset, head: unset }),
 ]);
 
@@ -52,9 +74,16 @@ export class SkinRenderDto extends createZodDto(
     yaw: z
       .literal("")
       .transform(() => undefined)
-      .or(z.coerce.number().min(-Math.PI * 2).max(Math.PI * 2))
+      .or(
+        z.coerce
+          .number()
+          .min(-Math.PI * 2)
+          .max(Math.PI * 2),
+      )
       .optional()
-      .describe("Camera angle around the player in radians: 0 faces the front, π the back"),
+      .describe(
+        "Camera angle around the player in radians: 0 faces the front, π the back",
+      ),
     pose: z.enum(POSES).optional(),
     cape: z
       .enum(["true", "false"])
@@ -68,12 +97,18 @@ export class SkinRenderDto extends createZodDto(
         try {
           return JSON.parse(value);
         } catch {
-          ctx.issues.push({ code: "custom", message: "Invalid JSON", input: value });
+          ctx.issues.push({
+            code: "custom",
+            message: "Invalid JSON",
+            input: value,
+          });
           return z.NEVER;
         }
       })
       .pipe(armor)
       .optional()
-      .describe("JSON, e.g. {\"helmet\":{\"head\":\"5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74\"},\"chestplate\":{\"material\":\"leather\",\"color\":16711680,\"enchanted\":true}}"),
-  })
+      .describe(
+        'JSON, e.g. {"helmet":{"head":"5797c77ccee3c04c3deed770595ea83ea1e84c9a4629b753af5d351c0cc11a74"},"chestplate":{"material":"leather","color":16711680,"enchanted":true}}',
+      ),
+  }),
 ) {}
