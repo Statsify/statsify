@@ -42,14 +42,11 @@ export class WarlordsRenderDto extends createZodDto(
       default: 0,
       description: "The class's stored <class>_armor_selection, from 0 to 2",
     }),
-    team: z
-      .string()
-      .optional()
-      .meta({
-        default: "blue",
-        description:
-          "The team colors the helmet and armor are drawn in: blue or red",
-      }),
+    team: z.string().optional().meta({
+      default: "blue",
+      description:
+        "The team colors the helmet and armor are drawn in: blue or red",
+    }),
     weapon: z
       .string()
       .optional()
