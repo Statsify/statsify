@@ -15,7 +15,7 @@ import type { MemberView } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const jacobIcons = ({ jacob }: MemberView) =>
+export const getJacobIcons = ({ jacob }: MemberView) =>
   jacob?.crops
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined) ?? [];
@@ -74,7 +74,7 @@ export const SkyBlockJacobProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {items.length > 0 ? (
-        <ItemGrid items={items} icons={icons} columns={2} />
+        <ItemGrid items={items} icons={icons} columns={2} spreadLastRow />
       ) : (
         <Empty text={t("skyblock.noJacobCrops")} />
       )}

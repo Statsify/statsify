@@ -36,7 +36,8 @@ export type GameMode = "normal" | "ironman" | "stranded" | "bingo";
 
 export interface Freshness {
   fetchedAt: number;
-  stale: boolean; // older than 5 min, served because a refetch failed
+  // A stale copy is served only because its refetch failed.
+  stale: boolean;
 }
 
 export interface PlayerRef {
@@ -56,9 +57,10 @@ export interface ProfileSummary {
   selected: boolean;
   members: { uuid: string; removed: boolean }[];
   level: number;
-  levelColor: string; // a § code
+  levelColor: string;
   xp: number;
-  newProfile: boolean; // so missing data is empty, not hidden by an API setting
+  // A new profile shows missing data as empty, not as an API setting that's off.
+  newProfile: boolean;
   purse: number;
   bank?: number;
   personalBank?: number;
@@ -160,13 +162,15 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
-  xpCurrent: number; // at the max level, all the XP past it
+  // At the max level, this is all the XP past it.
+  xpCurrent: number;
   xpForNext?: number;
   progress: number;
 }
 
 export interface SkillLevel extends Level {
-  unverified: boolean; // the API can't confirm the cap (Foraging past 53)
+  // The API can't confirm some caps, like Foraging past 53.
+  unverified: boolean;
 }
 
 export interface SkillsSection {
@@ -176,7 +180,8 @@ export interface SkillsSection {
 
 export interface SlayersSection {
   xp: number;
-  bosses: Record<SlayerBoss, { level: Level; kills: number[] }>; // kills[tier - 1]
+  // Each boss's kills start at tier 1, so tier 1 is index 0.
+  bosses: Record<SlayerBoss, { level: Level; kills: number[] }>;
 }
 
 export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
@@ -212,7 +217,8 @@ export interface DungeonsSection {
 
 export interface Essence {
   type: string;
-  amount?: number; // missing for a shop Hypixel sends no balance for
+  // Hypixel sends no balance for some shops.
+  amount?: number;
   perks: number;
   maxPerks: number;
 }
@@ -292,7 +298,8 @@ export const KUUDRA_TIERS = [
 export interface KuudraTier {
   tier: string;
   completions: number;
-  texture: ItemTexture; // its key's
+  // The texture is the tier's key.
+  texture: ItemTexture;
 }
 
 export interface FishingSection {
@@ -300,7 +307,8 @@ export interface FishingSection {
   trophyFishCaught: number;
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
-  seaCreatures: { name: string; kills: number }[]; // the most killed first
+  // Sea creatures sort by the most kills first.
+  seaCreatures: { name: string; kills: number }[];
 }
 
 export interface TrophyFish {
@@ -310,26 +318,33 @@ export interface TrophyFish {
 }
 
 export interface JacobSection {
-  medals: Record<JacobMedal, number>; // unspent
+  // Medals count only the unspent ones.
+  medals: Record<JacobMedal, number>;
   contests: number;
   crops: JacobCrop[];
-  perks: { farmingFortune: number; farmingLevelCap: number }; // Anita's
+  // These perks are the ones bought from Anita.
+  perks: { farmingFortune: number; farmingLevelCap: number };
 }
 
 export interface JacobCrop {
-  id: string; // the API's item id, like INK_SACK:3
+  // The id is the API's item id, like INK_SACK:3.
+  id: string;
   name: string;
   texture?: ItemTexture;
-  bracket?: JacobBracket; // the best one reached
+  // The bracket is the best one reached.
+  bracket?: JacobBracket;
   personalBest?: number;
 }
 
 export interface ChocolateSection {
-  level: number; // one more for each prestige
+  // The level goes up by one for each prestige.
+  level: number;
   chocolate: number;
-  total: number; // all-time
+  // The total counts all-time chocolate.
+  total: number;
   sincePrestige: number;
-  nextPrestige?: number; // none after prestige VI, the last
+  // Prestige VI is the last, so it has no next prestige.
+  nextPrestige?: number;
   rabbits: { rarity: Rarity; found: number; total: number }[];
   employees: { employee: string; level: number }[];
   timeTower: number;
@@ -428,9 +443,12 @@ export interface MissingAccessory {
   id: string;
   name: string;
   rarity: Rarity;
-  accessoryPower: number; // over the tier in the bag it replaces
-  outsideBag: boolean; // in the inventory, ender chest, a backpack or the vault
-  cost?: ItemCost; // none for one outside the bag
+  // The power counts only what it adds over the tier in the bag it replaces.
+  accessoryPower: number;
+  // Outside the bag means the inventory, ender chest, a backpack or the vault.
+  outsideBag: boolean;
+  // An accessory outside the bag has no cost.
+  cost?: ItemCost;
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
@@ -440,7 +458,8 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
-  powerStats?: PowerStat[]; // only for a Power learned from a stone
+  // Only a Power learned from a stone has these.
+  powerStats?: PowerStat[];
   tuning: Record<string, number>;
   tuningPoints: number;
   enrichments: number;
@@ -451,12 +470,13 @@ export interface AccessoriesSection {
   market: boolean;
   active: ItemView[];
   inactive: InactiveAccessory[];
-  missing: MissingAccessory[]; // outside the bag first, then the cheapest per AP
+  // Missing ones outside the bag come first, then the cheapest per power.
+  missing: MissingAccessory[];
 }
 
 export interface PowerStat {
   name: string;
-  color: string; // a § code
+  color: string;
   value: number;
 }
 
@@ -504,7 +524,8 @@ export interface SkyBlockLevelSection {
   market: boolean;
   sources: {
     kind: "accessory" | "pet";
-    id: string; // an accessory id, a pet price key, or a pet type without a market
+    // A pet's id is its price key, or its type when it has no market.
+    id: string;
     name: string;
     xp: number;
     outsideBag: boolean;
@@ -516,9 +537,11 @@ export interface SkyBlockLevelSection {
 
 // No uuid: its random bytes were a fifth of a gzipped inventories payload.
 export interface ItemView {
-  id: string; // vanilla items: "minecraft:<id>:<damage>"
+  // A vanilla item's id is "minecraft:<id>:<damage>".
+  id: string;
   name: string;
-  lore: string[]; // § codes kept, as 1.8 draws them (normalizeItemText)
+  // Lore keeps its § codes, normalized as 1.8 draws them.
+  lore: string[];
   rarity?: Rarity;
   count: number;
   glint: boolean;
@@ -527,14 +550,16 @@ export interface ItemView {
   stars?: number;
   recombobulated: boolean;
   enchantments?: Record<string, number>;
-  enrichment?: string; // an accessory's, as its stat id
+  // An accessory's enrichment is its stat id.
+  enrichment?: string;
   hotPotato?: number;
-  obtainedAt?: number; // ms
+  obtainedAt?: number;
 }
 
+// An item's id is its 1.8 numeric id, and a head's skin is a texture hash.
 export type ItemTexture =
-  | { kind: "item"; id: number; damage: number; color?: number } // 1.8 numeric id
-  | { kind: "head"; skin: string }; // skin texture hash
+  | { kind: "item"; id: number; damage: number; color?: number }
+  | { kind: "head"; skin: string };
 
 // The API keeps this to itself and never sends it to clients.
 export interface ItemsResource {

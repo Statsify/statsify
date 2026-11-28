@@ -16,14 +16,14 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const TOP_ITEMS = 10;
 
-const topItems = ({ categories }: NetworthSection) =>
+const getTopItems = ({ categories }: NetworthSection) =>
   Object.values(categories)
     .flatMap(({ top }) => top)
     .toSorted((a, b) => b.price - a.price)
     .slice(0, TOP_ITEMS);
 
-export const networthIcons = ({ networth }: MemberView) =>
-  topItems(networth!)
+export const getNetworthIcons = ({ networth }: MemberView) =>
+  getTopItems(networth!)
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined);
 
@@ -70,11 +70,13 @@ export const SkyBlockNetworthProfile = ({
     ...categories,
   ];
 
-  const items = topItems(networth).map(({ name, count, price, texture }) => ({
-    texture,
-    name: count > 1 ? `§f${name} §7x${t(count)}` : `§f${name}`,
-    value: `§6${t(Math.floor(price))}`,
-  }));
+  const items = getTopItems(networth).map(
+    ({ name, count, price, texture }) => ({
+      texture,
+      name: count > 1 ? `§f${name} §7x${t(count)}` : `§f${name}`,
+      value: `§6${t(Math.floor(price))}`,
+    }),
+  );
 
   const unpriced =
     networth.unpricedCount > 0
@@ -84,11 +86,16 @@ export const SkyBlockNetworthProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
-        {arrayGroup(cells, 3).map((row) => (
+        {/* Three long names like Carnival Mask Inventory widen a row. */}
+        {arrayGroup(cells, 2).map((row) => (
           <Table.tr>{row}</Table.tr>
         ))}
       </Table.table>
-      {items.length > 0 ? <ItemGrid items={items} icons={icons} /> : <></>}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} stacked />
+      ) : (
+        <></>
+      )}
       <Empty text={`${unpriced}${formatPriceAge(t, networth.pricesAsOf)}`} />
     </Card>
   );

@@ -14,9 +14,13 @@ import {
 } from "@statsify/skyblock/display";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { LevelBar } from "./components/LevelBar.js";
+import {
+  LevelBar,
+  type LevelBarProps,
+  getLevelBarRows,
+} from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
-import { gridRows } from "./components/ItemGrid.js";
+import { getGridRows } from "./components/ItemGrid.js";
 import type { DungeonFloor } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -58,20 +62,18 @@ export const SkyBlockDungeonsProfile = ({
     sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
   }
 
-  const classes = DUNGEON_CLASSES.map((name) => {
+  const classes = DUNGEON_CLASSES.map((name): LevelBarProps => {
     const color = CLASS_COLORS[name];
     const damage = dungeons.mostDamage[mode][name];
     const mostDamage = `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`;
 
-    return (
-      <LevelBar
-        title={prettify(name)}
-        level={dungeons.classes[name]}
-        color={color}
-        t={t}
-        note={damage > 0 ? mostDamage : undefined}
-      />
-    );
+    return {
+      title: prettify(name),
+      level: dungeons.classes[name],
+      color,
+      t,
+      notes: damage > 0 ? [mostDamage] : [],
+    };
   });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
@@ -115,7 +117,8 @@ export const SkyBlockDungeonsProfile = ({
               t={t}
             />
           </Table.tr>,
-          <Table.tr>{classes}</Table.tr>,
+          // Five classes in one row set the card's width, so they wrap.
+          ...getLevelBarRows(classes, 3),
           ...(floors.length > 0
             ? arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>)
             : [
@@ -154,7 +157,7 @@ export const SkyBlockEssenceProfile = ({
 
   return (
     <Card {...card} name={profile.displayName}>
-      <Table.table>{gridRows(cells, 4)}</Table.table>
+      <Table.table>{getGridRows(cells, 4)}</Table.table>
     </Card>
   );
 };

@@ -148,7 +148,8 @@ export interface RawMember {
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
-    unique_brackets?: Record<string, string[]>; // the crops at each bracket
+    // Each bracket maps to the crops that reached it.
+    unique_brackets?: Record<string, string[]>;
     personal_bests?: Record<string, number>;
     contests?: Record<string, unknown>;
   };
