@@ -22,7 +22,7 @@ export const DUNGEON_CLASSES = [
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
-function floorsOf(
+function getFloors(
   type: RawDungeonType | undefined,
   first: number,
 ): DungeonFloor[] {
@@ -31,7 +31,7 @@ function floorsOf(
     const completions = type?.tier_completions?.[key] ?? 0;
     return {
       floor: first + i,
-      // Master Mode often has no times_played, though every completion was a run
+      // Master Mode often has no times_played, though each clear was a run.
       played: Math.max(type?.times_played?.[key] ?? 0, completions),
       completions,
       bestScore: type?.best_score?.[key],
@@ -42,7 +42,6 @@ function floorsOf(
   });
 }
 
-/** Catacombs and classes keep leveling past 50. Floor 0 is the Entrance. */
 export function getDungeons(member: RawMember): DungeonsSection {
   const dungeons = member.dungeons;
   const types = dungeons?.dungeon_types;
@@ -54,7 +53,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
         dungeons?.player_classes?.[name]?.experience ?? 0,
         LEVELING.catacombs,
         MAX_LEVEL,
-        true,
+        { overflow: true },
       ),
     ]),
   );
@@ -64,7 +63,7 @@ export function getDungeons(member: RawMember): DungeonsSection {
       types?.catacombs?.experience ?? 0,
       LEVELING.catacombs,
       MAX_LEVEL,
-      true,
+      { overflow: true },
     ),
     classes,
     classAverage:
@@ -73,8 +72,9 @@ export function getDungeons(member: RawMember): DungeonsSection {
     selectedClass: dungeons?.selected_dungeon_class,
     secrets: dungeons?.secrets ?? 0,
     floors: {
-      normal: floorsOf(types?.catacombs, 0),
-      master: floorsOf(types?.master_catacombs, 1),
+      // Floor 0 is the Entrance.
+      normal: getFloors(types?.catacombs, 0),
+      master: getFloors(types?.master_catacombs, 1),
     },
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
