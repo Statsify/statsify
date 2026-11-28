@@ -66,7 +66,7 @@ export class SkinService {
       yaw,
       pose,
       armor: resolvedArmor,
-      glint: enchanted ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+      glint: enchanted ? await readFile(GLINT_PATH) : undefined,
       cape: capeImage && imageData(capeImage),
     });
   }
@@ -137,7 +137,8 @@ export class SkinService {
 
     // 1.8 draws no glint on a worn skull or player head
     if (helmet.skull !== undefined) {
-      const texture = await readFile(getMinecraftTexturePath(`textures/entity/${SKULL_TEXTURES[helmet.skull]}.png`));
+      const path = `textures/entity/${SKULL_TEXTURES[helmet.skull]}.png`;
+      const texture = await readFile(getMinecraftTexturePath(path));
       return { texture, enchanted: false, skull: true };
     }
 
@@ -152,7 +153,7 @@ export class SkinService {
       head = imageData(await loadTexture(`https://textures.minecraft.net/texture/${hash}`));
 
       // The hash pins the image, so this expiry only bounds how many heads Redis keeps
-      await this.redis.set(key, head, "EX", 60 * 60 * 24 * 30);
+      await this.redis.set(key, head, "EX", HEAD_TEXTURE_SECONDS);
     }
 
     return { texture: head, enchanted: false, skull: true };
@@ -212,14 +213,22 @@ const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
   creeper: "creeper/creeper",
 };
 
+const HEAD_TEXTURE_SECONDS = 30 * 24 * 60 * 60;
+const GLINT_PATH = getMinecraftTexturePath("textures/misc/enchanted_item_glint.png");
 const UNDYED_LEATHER = 0xA0_65_40;
 
-async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto, layer: 1 | 2): Promise<ArmorPiece> {
+async function resolveArmorPiece(
+  { material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto,
+  layer: 1 | 2
+): Promise<ArmorPiece> {
   const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
   if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
 
   // The dye tints the base, then the overlay adds the undyed details
-  const [base, overlay] = await Promise.all([loadImage(`${path}.png`), loadImage(`${path}_overlay.png`)]);
+  const [base, overlay] = await Promise.all([
+    loadImage(`${path}.png`),
+    loadImage(`${path}_overlay.png`),
+  ]);
   const canvas = createCanvas(base.width, base.height);
   const ctx = canvas.getContext("2d");
 

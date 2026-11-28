@@ -18,7 +18,7 @@ const POSES = [
   "jump",
   "swim",
   "fly",
-] as const satisfies readonly NonNullable<RenderOptions["pose"]>[];
+] satisfies NonNullable<RenderOptions["pose"]>[];
 
 const ARMOR_MATERIALS = [
   "leather",
@@ -35,7 +35,7 @@ export const SKULLS = [
   "creeper",
 ] as const;
 
-// The hex after textures.minecraft.net/texture/, which older textures write with fewer than 64 digits
+// Texture URLs drop a hash's leading zeros, so some are under 64 long.
 const TEXTURE_HASH = /^[\da-f]{1,64}$/;
 
 const armorPiece = z.object({
@@ -70,7 +70,7 @@ export type ArmorDto = z.infer<typeof armor>;
 
 export class SkinRenderDto extends createZodDto(
   UuidDto.schema.extend({
-    // An empty ?yaw= keeps the default angle, where z.coerce.number() would read "" as 0, the front
+    // z.coerce.number() would read an empty ?yaw= as 0, the front.
     yaw: z
       .literal("")
       .transform(() => undefined)
