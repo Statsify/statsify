@@ -13,6 +13,7 @@ import { InjectRedis, pipelineValues } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { type LeaderboardEnabledMetadata, getLeaderboardField, getLeaderboardFields } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
 
 const DAYS_IN_WEEK = {
@@ -25,10 +26,18 @@ const DAYS_IN_WEEK = {
   sunday: 6,
 };
 
+const getDepthBucket = (position: number) => {
+  let bucket = 10;
+  while (bucket < position) bucket *= 10;
+  return bucket;
+};
+
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
+  private readonly logger = new Logger("LeaderboardService");
+
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
@@ -120,6 +129,8 @@ export abstract class LeaderboardService {
         break;
       }
     }
+
+    this.countDemand(constructor, "page", [[field, (highlight ?? top) + 1]]);
 
     const leaderboard = await this.getLeaderboardFromRedis(
       constructor,
@@ -256,6 +267,30 @@ export abstract class LeaderboardService {
     }
 
     return rankings;
+  }
+
+  public countDemand<T>(
+    constructor: Constructor<T>,
+    request: "page" | "rankings",
+    positions: [field: string, position: number][]
+  ) {
+    const month = new Date().toISOString().slice(0, 7);
+    const key = `leaderboard-demand:${request}:${month}`;
+    const name = constructor.name.toLowerCase();
+
+    const counters = new Set(
+      positions.map(([field, position]) => `${name}.${field}:${getDepthBucket(position)}`)
+    );
+
+    const pipeline = this.redis.pipeline();
+
+    for (const counter of counters) pipeline.hincrby(key, counter, 1);
+
+    // A failed count must not fail the read it counts
+    pipeline
+      .exec()
+      .then(pipelineValues)
+      .catch((error) => this.logger.error(error));
   }
 
   protected abstract searchLeaderboardInput(
