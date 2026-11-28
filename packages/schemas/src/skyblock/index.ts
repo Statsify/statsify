@@ -14,6 +14,9 @@ import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 
 // The default limits are sized for player boards, so each board sets its own.
 const BOARD_LIMIT = 50_000;
+// There are hundreds of these boards, so each keeps a shallower depth.
+const COLLECTION_BOARD_LIMIT = 5_000;
+const BESTIARY_BOARD_LIMIT = 1_000;
 
 export class SkyBlockFloorBoards {
   @Field({ leaderboard: { limit: BOARD_LIMIT } })
@@ -128,18 +131,21 @@ export class SkyBlockBestiaryBoards {
   [key: string]: number;
 }
 
-// There are hundreds of these boards, so each keeps a shallower depth.
 for (const [key, name] of boards.collections) {
   Field({
     type: () => Number,
-    leaderboard: { name, fieldName: "Collected", limit: 5000 },
+    leaderboard: {
+      name,
+      fieldName: "Collected",
+      limit: COLLECTION_BOARD_LIMIT,
+    },
   })(SkyBlockCollectionBoards.prototype, key);
 }
 
 for (const [key, name] of boards.bestiary) {
   Field({
     type: () => Number,
-    leaderboard: { name, fieldName: "Kills", limit: 1000 },
+    leaderboard: { name, fieldName: "Kills", limit: BESTIARY_BOARD_LIMIT },
   })(SkyBlockBestiaryBoards.prototype, key);
 }
 
