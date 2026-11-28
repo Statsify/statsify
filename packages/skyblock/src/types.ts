@@ -229,25 +229,32 @@ export interface InventoriesSection {
 
 // Each slot's worth as networth prices it, laid out as InventoriesSection.
 export interface InventoryValues {
-  pages: Partial<Record<InventoryId, (number | null)[][]>>; // null: unpriced
+  // A null slot has no price.
+  pages: Partial<Record<InventoryId, (number | null)[][]>>;
   backpackIcons: (number | null)[];
-  totals: Partial<Record<InventoryId, number>>; // backpacks add their icons
-  sacks: Record<string, number>; // only priced ones, by id
+  // A backpack's total adds its icon.
+  totals: Partial<Record<InventoryId, number>>;
+  // Sacks list only the priced items, by id.
+  sacks: Record<string, number>;
 }
 
 export interface MissingPet {
   type: string;
   name: string;
   rarity: Rarity;
-  price?: number; // unset on a profile without the market
-  points: number; // the pet score it would add
+  // The price is unset on a profile without the market.
+  price?: number;
+  // points is the pet score the pet would add.
+  points: number;
   texture: ItemTexture;
 }
 
 export interface ValuesSection {
   pricesAsOf: number;
-  inventories: InventoryValues | null; // null with the inventory API off
-  missingPets: MissingPet[]; // cheapest first, or by name without the market
+  // The inventories are null with the inventory API off.
+  inventories: InventoryValues | null;
+  // Missing pets are cheapest first, or by name without the market.
+  missingPets: MissingPet[];
 }
 
 export interface MuseumView {

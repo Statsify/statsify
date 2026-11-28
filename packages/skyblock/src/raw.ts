@@ -119,7 +119,8 @@ export interface RawContest {
 // Each kind lists bare ExtraAttributes blobs, beside flags like IN_USE.
 export interface RawToolkit {
   IS_UNLOCKED?: boolean;
-  IN_USE?: Record<string, Record<string, boolean>>; // by kind, then slot
+  // The use flags are keyed by kind, then slot.
+  IN_USE?: Record<string, Record<string, boolean>>;
   [kind: string]: unknown;
 }
 
@@ -408,7 +409,8 @@ export interface RawItemAttributes {
   dye_item?: string;
   skin?: string;
   originTag?: string;
-  new_year_cake_bag_data?: number[]; // the cakes inside, as an inventory blob
+  // The bag's data is the cakes inside, as an inventory blob.
+  new_year_cake_bag_data?: number[];
   new_years_cake?: number;
   [key: string]: unknown;
 }
