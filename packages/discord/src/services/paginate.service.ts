@@ -34,7 +34,7 @@ type PaginateInteractionContentGenerator = (
 ) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
 
 export type Page = PageInput & {
-  /** The page's own rows under the pickers, such as a link that names what the page shows */
+  // The page's own rows, shown under the pickers.
   rows?: ActionRowBuilder[];
 } & (
     | { subPages: SubPage[] }
@@ -52,9 +52,7 @@ interface PageInput {
 type PageId = `${number}|${number}`;
 
 export interface PaginateOptions {
-  /** When to stop the pagination (ms), defaults to 300000 */
   timeout?: number;
-  /** Pick pages from a select menu even when there are five or fewer */
   menu?: boolean;
 }
 
@@ -62,6 +60,8 @@ export interface PaginateOptions {
  *
  * @param context The context of the command
  * @param pages The array of pages to paginate against
+ * @param options.timeout When to stop the pagination (ms), defaults to 300000
+ * @param options.menu Pick pages from a select menu even when there are five or fewer
  */
 export async function paginate(
   context: CommandContext,

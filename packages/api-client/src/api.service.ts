@@ -123,9 +123,9 @@ export class ApiService {
   }
 
   public getCachedSkyBlockProfiles(tag: string, cache: CacheLevel) {
-    return this.requestKey<GetSkyBlockProfilesResponse, "profiles">(
+    return this.requestKey<GetSkyBlockProfilesResponse, "player">(
       "/skyblock/profiles",
-      "profiles",
+      "player",
       { player: tag, cache },
       "GET",
       { timeout: SKYBLOCK_REQUEST_TIMEOUT }
@@ -148,11 +148,19 @@ export class ApiService {
   }
 
   public getSkyBlockPrice(item: string) {
-    return this.requestKey<GetSkyBlockPriceResponse, "price">("/skyblock/price", "price", { item });
+    return this.requestKey<GetSkyBlockPriceResponse, "price">(
+      "/skyblock/price",
+      "price",
+      { item }
+    );
   }
 
   public getSkyBlockItems(query: string) {
-    return this.requestKey<GetSkyBlockItemsResponse, "items">("/skyblock/items", "items", { query });
+    return this.requestKey<GetSkyBlockItemsResponse, "items">(
+      "/skyblock/items",
+      "items",
+      { query }
+    );
   }
 
   public getGuild(tag: string, type: GuildQuery) {

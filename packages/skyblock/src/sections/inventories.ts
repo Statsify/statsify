@@ -17,8 +17,8 @@ import type {
 } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
-/** The ender chest's page, and the size the bags are paged at. */
-const PAGE = 45;
+// The bags are paged at the size of an ender chest page.
+const PAGE_SIZE = 45;
 
 const BAGS = {
   accessoryBag: "talisman_bag",
@@ -28,16 +28,14 @@ const BAGS = {
   sacksBag: "sacks_bag",
 } as const satisfies Partial<Record<InventoryId, string>>;
 
-const paged = (slots: Slots) =>
-  slots.length > 0 ? arrayGroup(slots, PAGE) : [[]];
+const toPages = (slots: Slots) =>
+  slots.length > 0 ? arrayGroup(slots, PAGE_SIZE) : [[]];
 
-/** A map's blobs in their numeric key's order, as the game numbers backpacks. */
-const byKey = (blobs: Record<string, RawNbt> = {}) =>
+const sortByKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
 
-/** Every inventory as the game pages it, and the sacks. */
 export function getInventories(
   member: RawMember,
   items: ItemsResource,
@@ -45,21 +43,21 @@ export function getInventories(
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // The hotbar comes first in the blob and last on screen
+  // The hotbar comes first in the blob and last on screen.
   const main = decodeSlots(inventory.inv_contents);
   const pages: InventoriesSection["pages"] = {
     inventory: [[...main.slice(9), ...main.slice(0, 9)]],
   };
 
   if (inventory.ender_chest_contents)
-    pages.enderChest = paged(decodeSlots(inventory.ender_chest_contents));
-  pages.backpacks = byKey(inventory.backpack_contents).map(decodeSlots);
+    pages.enderChest = toPages(decodeSlots(inventory.ender_chest_contents));
+  pages.backpacks = sortByKey(inventory.backpack_contents).map(decodeSlots);
   if (inventory.personal_vault_contents)
     pages.personalVault = [decodeSlots(inventory.personal_vault_contents)];
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
-    if (blob) pages[id] = paged(decodeSlots(blob));
+    if (blob) pages[id] = toPages(decodeSlots(blob));
   }
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
@@ -78,7 +76,7 @@ export function getInventories(
 
   return {
     pages,
-    backpackIcons: byKey(inventory.backpack_icons).map(
+    backpackIcons: sortByKey(inventory.backpack_icons).map(
       (blob) => decodeSlots(blob)[0] ?? null,
     ),
     sacks,

@@ -14,22 +14,42 @@ import { WHISPERS, WHISPER_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockHotfProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockHotfProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const hotf = profile.member.hotf;
 
   if (!hotf) {
-    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noHotf")} />;
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noHotf")}
+      />
+    );
   }
 
-  const { level, centerLevel, loadout, tokens, ability, whispers, nodes } = hotf;
+  const { level, centerLevel, loadout, tokens, ability, whispers, nodes } =
+    hotf;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.tokensSpent"), t(tokens.spent), "§a"],
     [t("skyblock.centerOfTheForest"), t(centerLevel), "§6"],
-    [t("skyblock.ability"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.ability"),
+      ability ? prettify(ability) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (loadout.total > 1)
+    sidebar.unshift([
+      t("skyblock.loadout"),
+      t("skyblock.loadoutOf", loadout),
+      "§b",
+    ]);
 
   const pools = WHISPERS.map((type) => (
     <PerkCurrency
@@ -45,7 +65,12 @@ export const SkyBlockHotfProfile = ({ profile, t, ...card }: SkyBlockProfileProp
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.hotfLevel")} level={level} color="§a" t={t} />
+          <LevelBar
+            title={t("skyblock.hotfLevel")}
+            level={level}
+            color="§a"
+            t={t}
+          />
         </Table.tr>
         <Table.tr>
           <div direction="column" width="100%">
