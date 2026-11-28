@@ -8,20 +8,28 @@
 
 import { writeFileSync } from "node:fs";
 
-const response = await fetch("https://api.hypixel.net/v2/resources/quests", { signal: AbortSignal.timeout(30_000) });
+const response = await fetch("https://api.hypixel.net/v2/resources/quests", {
+  signal: AbortSignal.timeout(30_000),
+});
 if (!response.ok) throw new Error(`Failed to fetch quests: ${response.status}`);
 
 const { quests } = await response.json();
 
 const targets = Object.values(quests)
   .flat()
-  .filter(({ objectives }) => objectives.length === 1 && objectives[0].type === "IntegerObjective")
-  .map(({ id, objectives: [objective] }) => [id, { objective: objective.id, target: objective.integer }])
+  .filter(
+    ({ objectives }) =>
+      objectives.length === 1 && objectives[0].type === "IntegerObjective",
+  )
+  .map(({ id, objectives: [objective] }) => [
+    id,
+    { objective: objective.id, target: objective.integer },
+  ])
   .sort(([a], [b]) => a.localeCompare(b));
 
 writeFileSync(
   "../../packages/schemas/src/player/gamemodes/quests/objective-targets.json",
-  `${JSON.stringify(Object.fromEntries(targets), null, 2)}\n`
+  `${JSON.stringify(Object.fromEntries(targets), null, 2)}\n`,
 );
 
 console.log(`Wrote ${targets.length} quest targets`);
