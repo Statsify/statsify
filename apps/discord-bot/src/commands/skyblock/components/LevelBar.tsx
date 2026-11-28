@@ -16,9 +16,16 @@ export interface LevelBarProps {
   level: Level;
   color: string;
   t: LocalizeFunction;
+  notes?: string[];
 }
 
-export const LevelBar = ({ title, level, color, t }: LevelBarProps) => {
+export const LevelBar = ({
+  title,
+  level,
+  color,
+  t,
+  notes = [],
+}: LevelBarProps) => {
   const progression = new Progression(level.xpCurrent, level.xpForNext ?? 0);
 
   return (
@@ -29,7 +36,14 @@ export const LevelBar = ({ title, level, color, t }: LevelBarProps) => {
       <text
         margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
       >{`§^4^${color}${t(level.level)}`}</text>
-      <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>
+      <text
+        margin={{
+          top: 0,
+          bottom: notes.length > 0 ? 4 : 8,
+          left: 10,
+          right: 10,
+        }}
+      >
         {formatProgression({
           t,
           progression,
@@ -39,6 +53,14 @@ export const LevelBar = ({ title, level, color, t }: LevelBarProps) => {
           renderXp: lineXpBar(color),
         })}
       </text>
+      <>
+        {notes.map((note, index) => {
+          const bottom = index === notes.length - 1 ? 8 : 2;
+          return (
+            <text margin={{ top: 0, bottom, left: 10, right: 10 }}>{note}</text>
+          );
+        })}
+      </>
     </box>
   );
 };

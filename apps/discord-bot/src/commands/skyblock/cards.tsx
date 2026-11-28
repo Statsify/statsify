@@ -9,13 +9,16 @@
 import { FormattedGame } from "@statsify/schemas";
 import {
   SkyBlockAccessoriesProfile,
-  accessoryIcons,
+  getAccessoryIcons,
 } from "./accessories.profile.js";
 import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
-import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
-import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
-import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
+import { SkyBlockLevelProfile, getLevelIcons } from "./level.profile.js";
+import {
+  SkyBlockNetworthProfile,
+  getNetworthIcons,
+} from "./networth.profile.js";
+import { SkyBlockPetsProfile, getPetIcons } from "./pets.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
@@ -86,7 +89,7 @@ export const SKYBLOCK_CARDS = {
   networth: {
     sections: ["networth"],
     settings: ["inventory", "personalVault", "banking"],
-    icons: networthIcons,
+    icons: getNetworthIcons,
     profile: SkyBlockNetworthProfile,
   },
   skills: {
@@ -97,7 +100,7 @@ export const SKYBLOCK_CARDS = {
   pets: {
     sections: ["pets"],
     settings: [],
-    icons: petIcons,
+    icons: getPetIcons,
     profile: SkyBlockPetsProfile,
   },
   hotm: {
@@ -131,20 +134,20 @@ export const SKYBLOCK_CARDS = {
   accessories: {
     sections: ["accessories"],
     settings: ["inventory"],
-    icons: accessoryIcons,
+    icons: getAccessoryIcons,
     profile: SkyBlockAccessoriesProfile,
   },
   level: {
     sections: ["level"],
     settings: ["inventory"],
-    icons: levelIcons,
+    icons: getLevelIcons,
     profile: SkyBlockLevelProfile,
   },
 } satisfies Record<string, SkyBlockCard>;
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
-export function skyBlockTitle(
+export function getSkyBlockTitle(
   t: LocalizeFunction,
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,

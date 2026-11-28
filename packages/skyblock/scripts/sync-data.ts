@@ -22,7 +22,8 @@ const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
 const SYNC_TIMEOUT = 60_000;
 
 const MINECRAFT_DATA = "PrismarineJS/minecraft-data";
-const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb"; // 3.117.0
+// This is minecraft-data 3.117.0.
+const MINECRAFT_DATA_SHA = "15411f050f040e4c5df09352a75a9912ad8c3eeb";
 const PACK = new URL(
   "../../../assets/public/minecraft-textures/default/assets/minecraft/textures/",
   import.meta.url,
@@ -477,6 +478,7 @@ const texturePath = (name: string, damage: number) => {
   return path && inPack(path) ? path : undefined;
 };
 
+// It runs on a full NEU-REPO commit SHA, so NOTICE.md pins what it read.
 const sha = process.argv[2] ?? "";
 if (!/^[\da-f]{40}$/.test(sha)) {
   throw new Error("usage: node scripts/sync-data.ts <full commit sha>");
