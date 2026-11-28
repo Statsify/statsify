@@ -6,10 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type PackStack, assetPath, namespaceTypes, namespaced } from "./pack.js";
+import {
+  type PackStack,
+  assetPath,
+  namespaceTypes,
+  namespaced,
+} from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
-import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
+import {
+  type Transformation,
+  type Vec3,
+  composeTransforms,
+} from "./geometry.js";
 
 export interface Transform {
   rotation?: Vec3;
@@ -29,7 +38,12 @@ export interface ModelFace {
 export interface ModelElement {
   from: Vec3;
   to: Vec3;
-  rotation?: { origin: Vec3; axis: "x" | "y" | "z"; angle: number; rescale?: boolean };
+  rotation?: {
+    origin: Vec3;
+    axis: "x" | "y" | "z";
+    angle: number;
+    rescale?: boolean;
+  };
   shade?: boolean;
   faces: Partial<Record<Direction, ModelFace>>;
 }
@@ -104,7 +118,10 @@ type ItemModel =
 
 // Properties are read as they are for an item sitting in an inventory: not in use, not
 // selected, not cast, so every condition without a case here is false
-function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
+function condition(
+  model: Extract<ItemModel, { type: "minecraft:condition" }>,
+  item: ItemStack,
+) {
   if (model.property !== "minecraft:has_component") return false;
   return model.component === "minecraft:dyed_color" && item.color !== undefined;
 }
@@ -116,7 +133,10 @@ const select = (model: Extract<ItemModel, { type: "minecraft:select" }>) =>
 
 const BUILTIN_GENERATED = "minecraft:builtin/generated";
 
-const LEGACY_TURN: Transform = { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] };
+const LEGACY_TURN: Transform = {
+  rotation: [30, 225, 0],
+  scale: [0.625, 0.625, 0.625],
+};
 
 export class ModelResolver {
   private models = new Map<string, Model>();
@@ -134,8 +154,12 @@ export class ModelResolver {
     const cached = this.definitions.get(path);
     if (cached) return cached;
 
-    const definition = this.stack.json<{ model: ItemModel }>(path, namespaceTypes);
-    if (!definition) throw new Error(`${id} has no item model definition (${path})`);
+    const definition = this.stack.json<{ model: ItemModel }>(
+      path,
+      namespaceTypes,
+    );
+    if (!definition)
+      throw new Error(`${id} has no item model definition (${path})`);
 
     this.definitions.set(path, definition.model);
     return definition.model;
@@ -157,10 +181,16 @@ export class ModelResolver {
 
       const path = assetPath(next, "models", ".json");
       const file: ModelFile | undefined = this.stack.json(path);
-      if (!file) throw new Error(`${id} needs the model ${next}, which isn't in the pack`);
+      if (!file)
+        throw new Error(
+          `${id} needs the model ${next}, which isn't in the pack`,
+        );
 
       chain.push(file);
-      legacy.push(this.stack.packs.findLast(({ files }) => files.has(path))?.layout === "legacy");
+      legacy.push(
+        this.stack.packs.findLast(({ files }) => files.has(path))?.layout ===
+          "legacy",
+      );
       next = file.parent;
     }
 
@@ -171,7 +201,9 @@ export class ModelResolver {
     const model: Model = {
       id: namespaced(id),
       generated,
-      textures: resolveTextures(Object.assign({}, ...root.map((file) => file.textures))),
+      textures: resolveTextures(
+        Object.assign({}, ...root.map((file) => file.textures)),
+      ),
       elements: chain.find((file) => file.elements)?.elements ?? [],
       display: Object.assign({}, ...root.map((file) => file.display)),
       guiLight: chain.find((file) => file.gui_light)?.gui_light ?? "side",
@@ -181,7 +213,10 @@ export class ModelResolver {
     // so a model gets both when that transform comes from a 1.8.9 file, or it has none and any 1.8.9 file
     const gui = chain.findIndex((file) => file.display?.gui);
     if (!generated && (gui === -1 ? legacy.includes(true) : legacy[gui])) {
-      model.display.gui = composeTransforms(LEGACY_TURN, model.display.gui ?? {});
+      model.display.gui = composeTransforms(
+        LEGACY_TURN,
+        model.display.gui ?? {},
+      );
     }
 
     this.models.set(model.id, model);
@@ -191,27 +226,40 @@ export class ModelResolver {
   // 1.8.9 drew block items through an item model of their own, with its own gui transform,
   // where 26.3's definitions select the block's model
   private itemModel(item: ItemStack, selected: string) {
-    if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
+    if (!namespaced(selected).split(":")[1].startsWith("block/"))
+      return selected;
 
     const [namespace, name] = namespaced(item.id).split(":");
     const legacy = `${namespace}:item/${name}`;
     const legacyPath = assetPath(legacy, "models", ".json");
     const selectedPath = assetPath(selected, "models", ".json");
 
-    const pack = this.stack.packs.findLast(({ files }) => files.has(legacyPath) || files.has(selectedPath));
-    return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
+    const pack = this.stack.packs.findLast(
+      ({ files }) => files.has(legacyPath) || files.has(selectedPath),
+    );
+    return pack?.layout === "legacy" && pack.files.has(legacyPath)
+      ? legacy
+      : selected;
   }
 
   private layers(model: ItemModel, item: ItemStack): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
-        return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
+        return [
+          {
+            model: this.model(this.itemModel(item, model.model)),
+            tints: model.tints ?? [],
+          },
+        ];
 
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
 
       case "minecraft:condition":
-        return this.layers(condition(model, item) ? model.on_true : model.on_false, item);
+        return this.layers(
+          condition(model, item) ? model.on_true : model.on_false,
+          item,
+        );
 
       case "minecraft:select": {
         const value = select(model);
@@ -221,15 +269,21 @@ export class ModelResolver {
         );
 
         const next = match?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} ${value}`);
+        if (!next)
+          throw new Error(
+            `${item.id} has no model for ${model.property} ${value}`,
+          );
 
         return this.layers(next, item);
       }
 
       // Compasses, clocks and bows sit at their first frame
       case "minecraft:range_dispatch": {
-        const next = model.entries.findLast(({ threshold }) => threshold <= 0)?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} 0`);
+        const next =
+          model.entries.findLast(({ threshold }) => threshold <= 0)?.model ??
+          model.fallback;
+        if (!next)
+          throw new Error(`${item.id} has no model for ${model.property} 0`);
 
         return this.layers(next, item);
       }
@@ -285,7 +339,10 @@ if (import.meta.vitest) {
         hash: "test",
         layout: "modern",
         files: new Map(
-          Object.entries(files).map(([path, json]) => [path, encoder.encode(JSON.stringify(json))]),
+          Object.entries(files).map(([path, json]) => [
+            path,
+            encoder.encode(JSON.stringify(json)),
+          ]),
         ),
       },
     ]);
@@ -305,7 +362,10 @@ if (import.meta.vitest) {
           },
           "assets/minecraft/models/item/dyed.json": {
             parent: "item/base",
-            textures: { layer1: "#layer0", layer0: "minecraft:item/leather_boots" },
+            textures: {
+              layer1: "#layer0",
+              layer0: "minecraft:item/leather_boots",
+            },
           },
           "assets/minecraft/models/item/base.json": {
             parent: "builtin/generated",
@@ -315,13 +375,19 @@ if (import.meta.vitest) {
         }),
       );
 
-      const [layer] = resolver.resolve({ id: "minecraft:leather_boots", color: 0xff_00_00 });
+      const [layer] = resolver.resolve({
+        id: "minecraft:leather_boots",
+        color: 0xff_00_00,
+      });
 
       expect(layer.model).toMatchObject({
         id: "minecraft:item/dyed",
         generated: true,
         guiLight: "front",
-        textures: { layer0: "minecraft:item/leather_boots", layer1: "minecraft:item/leather_boots" },
+        textures: {
+          layer0: "minecraft:item/leather_boots",
+          layer1: "minecraft:item/leather_boots",
+        },
       });
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });

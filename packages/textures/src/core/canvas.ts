@@ -15,10 +15,13 @@ export interface CanvasBackend {
 let backend: CanvasBackend = {
   createCanvas: (width, height) => new OffscreenCanvas(width, height),
   async decodePng(file) {
-    const image = await createImageBitmap(new Blob([file as Uint8Array<ArrayBuffer>], { type: "image/png" }), {
-      colorSpaceConversion: "none",
-      premultiplyAlpha: "none",
-    });
+    const image = await createImageBitmap(
+      new Blob([file as Uint8Array<ArrayBuffer>], { type: "image/png" }),
+      {
+        colorSpaceConversion: "none",
+        premultiplyAlpha: "none",
+      },
+    );
     const canvas = new OffscreenCanvas(image.width, image.height);
     canvas.getContext("2d")!.drawImage(image, 0, 0);
     image.close();
@@ -30,7 +33,8 @@ export function setCanvasBackend(next: CanvasBackend) {
   backend = next;
 }
 
-export const createCanvas = (width: number, height: number) => backend.createCanvas(width, height);
+export const createCanvas = (width: number, height: number) =>
+  backend.createCanvas(width, height);
 
 export const decodePng = (file: Uint8Array) => backend.decodePng(file);
 
@@ -51,4 +55,5 @@ export function context(canvas: OffscreenCanvas) {
 export const hex = (color: number) => `#${color.toString(16).padStart(6, "0")}`;
 
 // From a context, since Node has no global ImageData
-export const createImageData = (width: number, height: number) => context(createCanvas(1, 1)).createImageData(width, height);
+export const createImageData = (width: number, height: number) =>
+  context(createCanvas(1, 1)).createImageData(width, height);
