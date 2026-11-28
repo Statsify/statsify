@@ -51,19 +51,15 @@ export class CommandListener extends AbstractCommandListener {
     this.cooldowns = new Map();
   }
 
-  protected async onCommand(interaction: Interaction): Promise<void> {
-    const parentData = interaction.getData();
-    const parentCommand = this.commands.get(parentData.name)!;
-
-    if (!parentCommand) return;
-
+  protected async onCommand(
+    interaction: Interaction,
+    command: CommandResolvable,
+    data: any,
+    commandName: string,
+    parentCommand: CommandResolvable
+  ): Promise<void> {
     const { id, username, discriminator } = interaction.getUser();
     const locale = interaction.getLocale();
-
-    const [command, data, commandName] = this.getCommandAndData(
-      parentCommand,
-      parentData
-    );
 
     const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
 
