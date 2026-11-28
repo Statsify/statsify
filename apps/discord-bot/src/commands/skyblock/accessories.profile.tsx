@@ -21,7 +21,7 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 
-export const accessoryIcons = ({ accessories }: MemberView) =>
+export const getAccessoryIcons = ({ accessories }: MemberView) =>
   accessories?.missing.slice(0, MISSING_SHOWN).map(({ texture }) => texture) ??
   [];
 

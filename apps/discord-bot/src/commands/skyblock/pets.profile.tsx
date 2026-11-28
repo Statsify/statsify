@@ -16,10 +16,10 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 const PETS_SHOWN = 18;
 
 // The section sorts the active pet first, then by rarity and XP
-const topPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
+const getTopPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
 
-export const petIcons = (member: MemberView) =>
-  topPets(member).map(({ texture }) => texture);
+export const getPetIcons = (member: MemberView) =>
+  getTopPets(member).map(({ texture }) => texture);
 
 export const SkyBlockPetsProfile = ({
   profile,
@@ -41,7 +41,7 @@ export const SkyBlockPetsProfile = ({
     ],
   ];
 
-  const items = topPets(profile.member).map(
+  const items = getTopPets(profile.member).map(
     ({ name, rarity, level, texture }) => ({
       texture,
       name: `${RARITY_COLORS[rarity]}${name}`,

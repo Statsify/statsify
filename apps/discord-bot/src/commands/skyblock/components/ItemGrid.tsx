@@ -32,7 +32,7 @@ export const formatPriceAge = (t: LocalizeFunction, asOf: number) =>
   });
 
 // Table.tr splits its width by cell, so a short last row gets padding.
-export const gridRows = (cells: JSX.Element[], columns: number) =>
+export const getGridRows = (cells: JSX.Element[], columns: number) =>
   arrayGroup(cells, columns).map((row) => (
     <Table.tr>
       {[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}
@@ -61,5 +61,5 @@ export const ItemGrid = ({ items, icons, columns = 2 }: ItemGridProps) => {
     </box>
   ));
 
-  return <Table.table>{gridRows(cells, columns)}</Table.table>;
+  return <Table.table>{getGridRows(cells, columns)}</Table.table>;
 };
