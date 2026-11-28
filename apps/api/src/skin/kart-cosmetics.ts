@@ -153,7 +153,7 @@ const SUIT_MATERIALS = {
 type SuitPiece = "JACKET" | "PANTS" | "SHOES";
 
 // An index would also find prototype keys like "constructor"
-function lookup<T extends object>(
+export function lookup<T extends object>(
   registry: T,
   key: string,
   error: string,

@@ -24,6 +24,11 @@ import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
+import {
+  getWarlordsArmor,
+  getWarlordsHelmetModel,
+  getWarlordsWeaponModel,
+} from "./warlords-cosmetics.js";
 import { join } from "node:path";
 import {
   type Armor,
@@ -40,13 +45,16 @@ import {
   type KartRenderDto,
   type SKULLS,
   type SkinRenderDto,
+  WARLORDS_CAMERA,
+  type WarlordsRenderDto,
 } from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
 import { access, readFile, readdir } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
-  private kartLibrary?: Promise<ModelLibrary>;
+  // A library holds native GPU resources, so each process loads its own
+  private readonly libraries = new Map<ResourcePack, Promise<ModelLibrary>>();
 
   public constructor(
     private readonly httpService: HttpService,
@@ -103,16 +111,34 @@ export class SkinService {
     const kart = resolveKart(options, uuid !== undefined);
 
     const [library, player, armor] = await Promise.all([
-      this.getKartLibrary(),
-      uuid
-        ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim))
-        : undefined,
+      this.getLibrary(KART_PACK),
+      uuid ? this.getScenePlayer(uuid) : undefined,
       resolvePackArmor(KART_PACK, kart.suit),
     ]);
 
     return renderKart(library, kart, {
       ...options,
-      player: player && { skin: imageData(player.skin), slim: player.slim, armor },
+      player: player && { ...player, armor },
+    });
+  }
+
+  public async getWarlordsRender({
+    uuid,
+    ...options
+  }: WarlordsRenderDto): Promise<Buffer> {
+    const warlords = resolveWarlords(options, uuid !== undefined);
+    const { armor: piece } = warlords;
+    const suit = { chestplate: piece, leggings: piece, boots: piece };
+
+    const [library, player, armor] = await Promise.all([
+      this.getLibrary(WARLORDS_PACK),
+      uuid ? this.getScenePlayer(uuid) : undefined,
+      resolvePackArmor(WARLORDS_PACK, suit),
+    ]);
+
+    return renderWarlords(library, warlords, {
+      ...options,
+      player: player && { ...player, armor },
     });
   }
 
@@ -203,14 +229,26 @@ export class SkinService {
     return { texture: head, enchanted: false, skull: true };
   }
 
-  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
-  private getKartLibrary() {
-    this.kartLibrary ??= loadKartLibrary().catch((error) => {
-      this.kartLibrary = undefined;
-      throw error;
-    });
+  private async getScenePlayer(uuid: string): Promise<PlayerSkin> {
+    const { skinUrl, slim } = await this.getSkin(uuid);
+    const player = await this.resolveSkin(skinUrl, slim);
+    return { skin: imageData(player.skin), slim: player.slim };
+  }
 
-    return this.kartLibrary;
+  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
+  private getLibrary(pack: ResourcePack) {
+    let library = this.libraries.get(pack);
+
+    if (!library) {
+      library = loadPackLibrary(pack).catch((error) => {
+        this.libraries.delete(pack);
+        throw error;
+      });
+
+      this.libraries.set(pack, library);
+    }
+
+    return library;
   }
 
   private getUuid(username: string): Promise<string> {
@@ -299,44 +337,53 @@ async function resolveArmorPiece(
   return { texture: await canvas.toBuffer("png"), enchanted };
 }
 
-// Hypixel's pack listing doesn't carry the Turbo Kart Racers pack, so it's copied in by hand
-const KART_PACK = join(
-  getAssetPath("resource-packs/turbo-kart-racers", "public"),
-  "assets/minecraft"
-);
+interface ResourcePack {
+  name: string;
+  path: string;
+}
+
+// Hypixel's pack listing only carries SkyBlock's pack, so game packs are copied in by hand
+const resourcePack = (name: string, folder: string): ResourcePack => ({
+  name,
+  path: join(getAssetPath(`resource-packs/${folder}`, "public"), "assets/minecraft"),
+});
+
+export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
+export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset
 // (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
 const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
 
 async function readPackFiles<T>(
+  pack: ResourcePack,
   folder: string,
   extension: string,
   read: (path: string) => Promise<T>
 ) {
-  const entries = await readdir(join(KART_PACK, folder), { recursive: true });
+  const entries = await readdir(join(pack.path, folder), { recursive: true });
   const files = entries.filter((file) => file.endsWith(extension));
-  const contents = await Promise.all(files.map((file) => read(join(KART_PACK, folder, file))));
+  const contents = await Promise.all(files.map((file) => read(join(pack.path, folder, file))));
 
   return Object.fromEntries(
     files.map((file, index) => [file.slice(0, -extension.length), contents[index]])
   );
 }
 
-export async function loadKartLibrary(): Promise<ModelLibrary> {
+export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
   // Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
-  await access(KART_PACK).catch((error: NodeJS.ErrnoException) => {
+  await access(pack.path).catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") {
-      throw new ServiceUnavailableException("The Turbo Kart Racers pack isn't installed");
+      throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
     }
 
     throw error;
   });
 
   const [models, textures, mcmeta] = await Promise.all([
-    readPackFiles("models", ".json", (path) => readFile(path, "utf8")),
-    readPackFiles("textures", ".png", (path) => readFile(path)),
-    readPackFiles("textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
+    readPackFiles(pack, "models", ".json", (path) => readFile(path, "utf8")),
+    readPackFiles(pack, "textures", ".png", (path) => readFile(path)),
+    readPackFiles(pack, "textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
   ]);
 
   return new ModelLibrary({ models, textures, mcmeta });
@@ -377,13 +424,25 @@ export function resolveKart(
   return { models, suit };
 }
 
-export interface KartRenderOptions
-  extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
-  player?: { skin: Uint8Array; slim: boolean; armor: Armor };
+interface PlayerSkin {
+  skin: Uint8Array;
+  slim: boolean;
 }
 
-async function resolvePackArmor(pack: string, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
-  const textures = join(pack, "textures");
+interface ArmoredPlayer extends PlayerSkin {
+  armor: Armor;
+}
+
+export interface KartRenderOptions
+  extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+  player?: ArmoredPlayer;
+}
+
+async function resolvePackArmor(
+  pack: ResourcePack,
+  pieces: Omit<ArmorDto, "helmet">
+): Promise<Armor> {
+  const textures = join(pack.path, "textures");
   const [chestplate, leggings, boots] = await Promise.all([
     pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
     pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
@@ -410,6 +469,70 @@ export function renderKart(
   if (!player) return renderScene(library, { models }, output);
 
   return renderScene(library, { player: { ...player, extruded, pose: "sit" }, models }, output);
+}
+
+export interface WarlordsScene {
+  models: ModelInstance[];
+  armor?: ArmorPieceDto;
+}
+
+export function resolveWarlords(
+  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon">,
+  standing: boolean
+): WarlordsScene {
+  const { class: playerClass, helmet = 0, armor = 0, team = "blue", weapon } = cosmetics;
+  const weaponModel = weapon === undefined ? undefined : getWarlordsWeaponModel(weapon);
+
+  if (!standing) {
+    const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
+    if (worn.some((value) => value !== undefined)) {
+      throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
+    }
+
+    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon");
+
+    return { models: [{ model: weaponModel, bone: "root" }] };
+  }
+
+  if (playerClass === undefined) {
+    throw new BadRequestException("A player render needs the player's class");
+  }
+
+  const models: ModelInstance[] = [
+    { model: getWarlordsHelmetModel(playerClass, helmet, team), bone: "head", display: "head" },
+  ];
+
+  if (weaponModel) models.push({ model: weaponModel, bone: "rightHand", display: "thirdperson" });
+
+  return { models, armor: getWarlordsArmor(armor, team) };
+}
+
+export interface WarlordsRenderOptions
+  extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+  player?: ArmoredPlayer;
+}
+
+export function renderWarlords(
+  library: ModelLibrary,
+  { models }: WarlordsScene,
+  { player, extruded = false, ...camera }: WarlordsRenderOptions
+): Promise<Buffer> {
+  const defaults = player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
+
+  const output = {
+    width: camera.width ?? defaults.width,
+    height: camera.height ?? defaults.height,
+    yaw: camera.yaw ?? defaults.yaw,
+    pitch: camera.pitch ?? defaults.pitch,
+  };
+
+  if (!player) return renderScene(library, { models }, output);
+
+  return renderScene(
+    library,
+    { player: { ...player, extruded, pose: "standing" }, models },
+    output
+  );
 }
 
 interface MojangProfile {

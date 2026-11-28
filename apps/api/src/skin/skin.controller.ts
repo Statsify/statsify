@@ -17,7 +17,7 @@ import {
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
 import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
-import { HeadDto, KartRenderDto, PlayerDto, SkinRenderDto } from "#dtos";
+import { HeadDto, KartRenderDto, PlayerDto, SkinRenderDto, WarlordsRenderDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
@@ -60,6 +60,16 @@ export class SkinController {
   @ApiServiceUnavailableResponse({ type: ErrorResponse })
   public async getKartRender(@Query() options: KartRenderDto) {
     const render = await this.skinService.getKartRender(options);
+    return new StreamableFile(render, { type: "image/png" });
+  }
+
+  @Get("/warlords")
+  @Auth()
+  @ApiOperation({ summary: "Get a Warlords Render of the Player in Their Class's Helmet and Armor, Holding a Weapon, or the Weapon Alone" })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiServiceUnavailableResponse({ type: ErrorResponse })
+  public async getWarlordsRender(@Query() options: WarlordsRenderDto) {
+    const render = await this.skinService.getWarlordsRender(options);
     return new StreamableFile(render, { type: "image/png" });
   }
 
