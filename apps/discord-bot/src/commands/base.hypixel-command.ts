@@ -18,6 +18,7 @@ import {
   SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import type { AxiosError } from "axios";
 import type { Armor } from "@statsify/hypixel-data";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "#components";
@@ -79,7 +80,11 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       const key = JSON.stringify(armor);
       if (!skins.has(key)) {
         skins.set(key, Object.keys(armor).length > 0 ?
-          this.apiService.getPlayerSkin(player.uuid, user, armor).catch(() => skinFor({})) :
+          this.apiService.getPlayerSkin(player.uuid, user, armor).catch((error: AxiosError) => {
+            // The API answers 404 when it can't fetch a worn head's texture
+            if (error.response?.status === 404) return skinFor({});
+            throw error;
+          }) :
           this.apiService.getPlayerSkin(player.uuid, user));
       }
 
