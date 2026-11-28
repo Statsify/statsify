@@ -45,16 +45,18 @@ export type HeaderProps =
   SidebarHeaderProps |
   CustomHeaderBodyProps;
 
-// Breaking only narrows the header when the title is wider than the nametag
-const fitTitle = (title: string, nameTag: JSX.Element, sidebar: SidebarItem[]) => {
+// A break only narrows the header when the title is wider than the nametag.
+function fitTitle(title: string, nameTag: JSX.Element, sidebar: SidebarItem[]) {
   if (!title.includes("\n")) return title;
 
   const line = title.replace("\n", " ");
-  if (sidebar.length === 0 || useComponentWidth(<HeaderBody title={line} />) <= useComponentWidth(nameTag)) return line;
+  const lineWidth = useComponentWidth(<HeaderBody title={line} />);
+  if (sidebar.length === 0 || lineWidth <= useComponentWidth(nameTag)) return line;
 
-  const height = useComponentHeight(nameTag) + useComponentHeight(<HeaderBody title={title} />);
+  const height =
+    useComponentHeight(nameTag) + useComponentHeight(<HeaderBody title={title} />);
   return height <= useComponentHeight(<Sidebar items={sidebar} />) ? title : line;
-};
+}
 
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
@@ -75,7 +77,13 @@ export const Header = (props: HeaderProps) => {
     const children = useChildren(props.children);
     body = <>{children}</>;
   } else {
-    body = <HeaderBody title={fitTitle(props.title, nameTag, "sidebar" in props ? props.sidebar : [])} description={props.description} />;
+    const items = "sidebar" in props ? props.sidebar : [];
+    body = (
+      <HeaderBody
+        title={fitTitle(props.title, nameTag, items)}
+        description={props.description}
+      />
+    );
   }
 
   if (props.time !== "LIVE")

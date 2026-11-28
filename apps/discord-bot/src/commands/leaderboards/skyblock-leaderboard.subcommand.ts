@@ -12,7 +12,6 @@ import { Service } from "typedi";
 import { getBackground } from "@statsify/assets";
 import { skyblockStatsUuid } from "@statsify/schemas";
 
-/** `/leaderboard skyblock` and `/skyblock leaderboard`: a row is one member of a profile, `<uuid>:<profile id>`. */
 @Service()
 export class SkyBlockLeaderboardSubCommand extends BaseLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {
@@ -27,9 +26,12 @@ export class SkyBlockLeaderboardSubCommand extends BaseLeaderboardCommand {
       context,
       background,
       field,
-      getLeaderboard: this.apiService.getSkyBlockLeaderboard.bind(this.apiService),
+      getLeaderboard: this.apiService.getSkyBlockLeaderboard.bind(
+        this.apiService,
+      ),
       type: "player",
-      getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(skyblockStatsUuid(id), 24),
+      getLeaderboardDataIcon: (id) =>
+        this.apiService.getPlayerHead(skyblockStatsUuid(id), 24),
     });
   }
 }

@@ -23,11 +23,12 @@ export const SkyBlockSummaryProfile = ({
       ? { value: t(0), color }
       : { value: t("skyblock.apiOff"), color: "§c" };
   const notReady = { value: t("skyblock.notReady"), color: "§7" };
-  const accessoryPower = profile.marketDown?.includes("accessories")
-    ? notReady
-    : accessories
-      ? { value: t(accessories.accessoryPower), color: "§d" }
-      : missing("§d");
+
+  const getAccessoryPower = () => {
+    if (profile.marketDown?.includes("accessories")) return notReady;
+    if (!accessories) return missing("§d");
+    return { value: t(accessories.accessoryPower), color: "§d" };
+  };
   const bank =
     profile.bank === undefined
       ? missing("§6")
@@ -46,18 +47,23 @@ export const SkyBlockSummaryProfile = ({
       "§6",
     ]);
 
-  const current = profile.members.filter(
+  const firstJoin = profile.firstJoin
+    ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", {
+        locale: t.locale,
+      })
+    : t("skyblock.none");
+
+  const { members } = profile;
+  const current = members.filter(
     ({ removed, invited }) => !removed && !invited,
   ).length;
-  const left = profile.members.filter(({ removed }) => removed).length;
-  const invited = profile.members.filter(({ invited }) => invited).length;
-  const coop = [
-    t(current),
-    ...(left > 0 ? [`§7${t("skyblock.membersLeft", { count: left })}`] : []),
-    ...(invited > 0
-      ? [`§7${t("skyblock.membersInvited", { count: invited })}`]
-      : []),
-  ].join(" §8• ");
+  const left = members.filter(({ removed }) => removed).length;
+  const invited = members.filter(({ invited }) => invited).length;
+
+  const coop = [t(current)];
+  if (left > 0) coop.push(`§7${t("skyblock.membersLeft", { count: left })}`);
+  if (invited > 0)
+    coop.push(`§7${t("skyblock.membersInvited", { count: invited })}`);
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
@@ -103,7 +109,10 @@ export const SkyBlockSummaryProfile = ({
             value={t(slayers!.xp)}
             color="§5"
           />
-          <Table.td title={t("skyblock.accessoryPower")} {...accessoryPower} />
+          <Table.td
+            title={t("skyblock.accessoryPower")}
+            {...getAccessoryPower()}
+          />
           <Table.td
             title={t("skyblock.fairySouls")}
             value={
@@ -117,16 +126,14 @@ export const SkyBlockSummaryProfile = ({
         <Table.tr>
           <Table.td
             title={t("skyblock.firstJoin")}
-            value={
-              profile.firstJoin
-                ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", {
-                    locale: t.locale,
-                  })
-                : t("skyblock.none")
-            }
+            value={firstJoin}
             color="§b"
           />
-          <Table.td title={t("skyblock.coopMembers")} value={coop} color="§e" />
+          <Table.td
+            title={t("skyblock.coopMembers")}
+            value={coop.join(" §8• ")}
+            color="§e"
+          />
         </Table.tr>
       </Table.table>
     </Card>

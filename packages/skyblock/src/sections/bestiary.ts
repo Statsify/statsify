@@ -8,18 +8,16 @@
 
 import { BESTIARY } from "#data";
 import { add } from "@statsify/math";
-import { stepsReached } from "#leveling";
+import { countTiersReached } from "#leveling";
 import type { BestiarySection } from "#types";
 import type { RawMember } from "#raw";
 
-/** A family's tier at its kills: each of its bracket's kills reached, up to its cap, past which kills don't count. */
-export function bestiaryTier(kills: number, cap: number, bracket: number[]) {
-  const steps = bracket.filter((needed) => needed <= cap);
-  const tier = stepsReached(kills, steps);
-  return { tier, maxTier: steps.length, next: steps[tier] };
+function getBestiaryTier(kills: number, cap: number, bracket: number[]) {
+  const thresholds = bracket.filter((needed) => needed <= cap);
+  const tier = countTiersReached(kills, thresholds);
+  return { tier, maxTier: thresholds.length, next: thresholds[tier] };
 }
 
-/** Each family's kills and tier by page, as NEU's bestiary lists them, from the member's bestiary kills. */
 export function getBestiary(member: RawMember): BestiarySection {
   const kills = member.bestiary?.kills ?? {};
 
@@ -27,17 +25,24 @@ export function getBestiary(member: RawMember): BestiarySection {
     category,
     name,
     families: families.map((family) => {
-      const total = add(...family.ids.map((id) => kills[id] ?? 0));
-      return { name: family.name, kills: total, ...bestiaryTier(total, family.cap, BESTIARY.brackets[family.bracket]) };
+      const total = add(...family.ids.map((id) => Number(kills[id] ?? 0)));
+      const bracket = BESTIARY.brackets[family.bracket];
+      return {
+        name: family.name,
+        kills: total,
+        ...getBestiaryTier(total, family.cap, bracket),
+      };
     }),
   }));
 
   const families = pages.flatMap(({ families }) => families);
   const tiers = add(...families.map(({ tier }) => tier));
 
-  // A few members count fewer tiers than the milestone they claimed in game, so it's at least the claimed one
+  // Some members claimed a higher milestone in game than their tiers give.
+  const claimed = member.bestiary?.milestone?.last_claimed_milestone ?? 0;
+
   return {
-    milestone: Math.max(Math.floor(tiers / 10), member.bestiary?.milestone?.last_claimed_milestone ?? 0),
+    milestone: Math.max(Math.floor(tiers / 10), claimed),
     tiers,
     maxTiers: add(...families.map(({ maxTier }) => maxTier)),
     maxed: families.filter(({ tier, maxTier }) => tier === maxTier).length,
@@ -47,12 +52,26 @@ export function getBestiary(member: RawMember): BestiarySection {
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("bestiaryTier counts the bracket's steps reached, up to the family's cap", () => {
-    const bracket = [10, 20, 50, 100, 250];
-    expect(bestiaryTier(0, 100, bracket)).toEqual({ tier: 0, maxTier: 4, next: 10 });
-    expect(bestiaryTier(20, 100, bracket)).toEqual({ tier: 2, maxTier: 4, next: 50 });
-    expect(bestiaryTier(5000, 100, bracket)).toEqual({ tier: 4, maxTier: 4, next: undefined });
+  suite("getBestiaryTier", () => {
+    it("should count the bracket's tiers reached, up to the family's cap", () => {
+      const bracket = [10, 20, 50, 100, 250];
+      expect(getBestiaryTier(0, 100, bracket)).toEqual({
+        tier: 0,
+        maxTier: 4,
+        next: 10,
+      });
+      expect(getBestiaryTier(20, 100, bracket)).toEqual({
+        tier: 2,
+        maxTier: 4,
+        next: 50,
+      });
+      expect(getBestiaryTier(5000, 100, bracket)).toEqual({
+        tier: 4,
+        maxTier: 4,
+        next: undefined,
+      });
+    });
   });
 }

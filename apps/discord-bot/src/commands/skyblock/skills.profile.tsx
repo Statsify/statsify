@@ -25,50 +25,48 @@ export const SkyBlockSkillsProfile = ({
     ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
     : [];
 
-  // Laid out three to a row: four "XP past max" notes in one row set the card's width
   const bars: LevelBarProps[] = skills
     ? SKILLS.map((name) => {
         const level = skills.skills[name];
-        const pastMax =
-          level.xpForNext === undefined &&
-          level.xpCurrent > 0 &&
-          !level.unverified
-            ? [
-                `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`,
-              ]
-            : [];
+        const maxed = level.xpForNext === undefined && !level.unverified;
+        const xp = t(Math.floor(level.xpCurrent));
 
         return {
           title: prettify(name),
           level,
           color: SKILL_COLORS[name],
           t,
-          notes: pastMax,
+          notes:
+            maxed && level.xpCurrent > 0
+              ? [`§7${t("skyblock.xpPastMax", { xp })}`]
+              : [],
         };
       })
     : [];
 
-  // A new profile has no skills of its own yet
+  // A new profile has no skills of its own yet.
   const highestSkills = profile.newProfile
     ? undefined
     : profile.player?.highestSkills;
-  const highest = SKILLS.flatMap((name) => {
+  const highest: JSX.Element[] = [];
+  for (const name of SKILLS) {
     const level = highestSkills?.[name];
-    return level === undefined
-      ? []
-      : [
-          <Table.td
-            title={prettify(name)}
-            value={t(level)}
-            color={SKILL_COLORS[name]}
-            size="small"
-          />,
-        ];
-  });
+    if (level === undefined) continue;
+
+    highest.push(
+      <Table.td
+        title={prettify(name)}
+        value={t(level)}
+        color={SKILL_COLORS[name]}
+        size="small"
+      />,
+    );
+  }
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {skills ? (
+        // Four "XP past max" notes in one row set the card's width.
         <Table.table>{levelBarRows(bars, 3)}</Table.table>
       ) : highest.length > 0 ? (
         <Table.table>

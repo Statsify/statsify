@@ -7,7 +7,7 @@
  */
 
 import { LEVELING } from "#data";
-import { minecraftColors } from "@statsify/util";
+import { toSkyBlockLevel } from "#leveling";
 import {
   type Freshness,
   type GameMode,
@@ -15,16 +15,12 @@ import {
   type PlayerExtras,
   type PlayerRef,
   type ProfileSummary,
-  type Skill,
   type SkyBlockProfilesView,
   type StoredPlayerSkyBlock,
 } from "#types";
+import { minecraftColors } from "@statsify/util";
 import type { RawMember, RawProfile } from "#raw";
-
-export const SKYBLOCK_XP_PER_LEVEL = 100;
-
-export const skyblockLevel = (xp: number) =>
-  Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
+import type { Skill } from "./sections/skills.js";
 
 const GAME_MODES: Record<string, GameMode> = {
   normal: "normal",
@@ -33,20 +29,29 @@ const GAME_MODES: Record<string, GameMode> = {
   bingo: "bingo",
 };
 
-export const gameModeOf = ({ game_mode }: RawProfile): GameMode =>
+const LEVEL_COLORS = Object.entries(LEVELING.sblevel_colours).map(
+  ([from, id]) => ({
+    from: Number(from),
+    code: minecraftColors.find((color) => color.id === id)!.code,
+  }),
+);
+
+export const getGameMode = ({ game_mode }: RawProfile): GameMode =>
   GAME_MODES[game_mode ?? "normal"] ?? "normal";
 
-/**
- * Brand new: SkyBlock levels exist with 0 XP and there's no skill XP. Profiles older than SkyBlock levels have no
- * `leveling`, and an inventory holding only the sacks bag is the inventory API being off, never a new profile.
- */
+// Ironman, stranded and bingo profiles can't use the Auction House or Bazaar.
+export const hasMarket = (profile: RawProfile) =>
+  getGameMode(profile) === "normal";
+
 function isNew(member: RawMember) {
   const skillXp = Object.entries(member.player_data?.experience ?? {}).some(
     ([key, xp]) => /^SKILL_[A-Z]+$/.test(key) && xp > 0,
   );
+  // With the inventory API off, inventory can still hold the sacks bag.
   const inventoryOff =
     member.inventory !== undefined &&
     member.inventory.inv_contents === undefined;
+  // Profiles from before SkyBlock levels have no leveling at all.
   return (
     member.leveling !== undefined &&
     !member.leveling.experience &&
@@ -58,23 +63,21 @@ function isNew(member: RawMember) {
 const isPending = (member: RawMember) =>
   member.profile?.coop_invitation?.confirmed === false;
 
-/** Everyone who accepted their invite, ex-members included, as co-op sums count them (unverified). */
-export const coopMembers = (profile: RawProfile) =>
+// Co-op sums count ex-members too, so this keeps everyone who accepted.
+export const getCoopMembers = (profile: RawProfile) =>
   Object.entries(profile.members).filter(([, member]) => !isPending(member));
 
-/** Leaving a profile leaves the member behind with a deletion_notice. */
+// A member who left keeps a deletion_notice.
 export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
   return member.profile?.deletion_notice === undefined && !isPending(member);
 }
 
-/** NEU's level brackets, one every 40 levels from gray to dark red; level 0 takes the first. */
-function levelColor(level: number) {
-  const brackets = Object.entries(LEVELING.sblevel_colours);
-  const [, id] =
-    brackets.findLast(([from]) => level >= Number(from)) ?? brackets[0];
-  return minecraftColors.find((color) => color.id === id)!.code;
+function getLevelColor(level: number) {
+  const bracket =
+    LEVEL_COLORS.findLast(({ from }) => level >= from) ?? LEVEL_COLORS[0];
+  return bracket.code;
 }
 
 export function toProfileSummary(
@@ -83,8 +86,8 @@ export function toProfileSummary(
 ): ProfileSummary {
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
-  const level = skyblockLevel(xp);
-  const gameMode = gameModeOf(profile);
+  const { level } = toSkyBlockLevel(xp);
+  const gameMode = getGameMode(profile);
 
   return {
     id: profile.profile_id,
@@ -98,7 +101,7 @@ export function toProfileSummary(
       firstJoin: other.profile?.first_join,
     })),
     level,
-    levelColor: levelColor(level),
+    levelColor: getLevelColor(level),
     xp,
     newProfile: isNew(member),
     purse: member.currencies?.coin_purse ?? 0,
@@ -106,10 +109,44 @@ export function toProfileSummary(
     personalBank: member.profile?.bank_account,
     firstJoin: member.profile?.first_join,
     fairySouls: member.fairy_soul?.total_collected ?? 0,
-    // Stranded and Bingo play on islands that hold fewer souls, and no data source says how many
-    maxFairySouls: ["normal", "ironman"].includes(gameMode)
-      ? LEVELING.fairy_souls
-      : undefined,
+    // Stranded and Bingo islands hold fewer souls, and nothing says how many.
+    maxFairySouls:
+      gameMode === "normal" || gameMode === "ironman"
+        ? LEVELING.fairy_souls
+        : undefined,
+  };
+}
+
+// The achievement for each skill's level, where Carpentry has none
+const SKILL_ACHIEVEMENTS = {
+  farming: "harvester",
+  mining: "excavator",
+  combat: "combat",
+  foraging: "gatherer",
+  fishing: "angler",
+  enchanting: "augmentation",
+  alchemy: "concoctor",
+  taming: "domesticator",
+  hunting: "predator",
+} as const satisfies Partial<Record<Skill, keyof StoredPlayerSkyBlock>>;
+
+export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
+  const highestSkills: PlayerExtras["highestSkills"] = {};
+  for (const [skill, key] of Object.entries(SKILL_ACHIEVEMENTS)) {
+    const level = stored[key];
+    if (level) highestSkills[skill as Skill] = level;
+  }
+
+  const claimed: PlayerExtras["claimed"] = {};
+  for (const claim of PLAYER_CLAIMS) {
+    const at = stored[claim];
+    if (at) claimed[claim] = at;
+  }
+
+  return {
+    highestSkills,
+    commissions: stored.hardWorkingMiner ?? 0,
+    claimed,
   };
 }
 
@@ -127,39 +164,6 @@ export function toProfilesView(
   };
 }
 
-// Read from the achievement names and unchecked in game. Carpentry, runecrafting and social have none.
-const SKILL_ACHIEVEMENTS = {
-  farming: "harvester",
-  mining: "excavator",
-  combat: "combat",
-  foraging: "gatherer",
-  fishing: "angler",
-  enchanting: "augmentation",
-  alchemy: "concoctor",
-  taming: "domesticator",
-  hunting: "predator",
-} as const satisfies Partial<Record<Skill, keyof StoredPlayerSkyBlock>>;
-
-export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
-  return {
-    highestSkills: Object.fromEntries(
-      Object.entries(SKILL_ACHIEVEMENTS).flatMap(([skill, key]) =>
-        stored[key] ? [[skill, stored[key]]] : [],
-      ),
-    ),
-    commissions: stored.hardWorkingMiner ?? 0,
-    claimed: Object.fromEntries(
-      PLAYER_CLAIMS.flatMap((claim) =>
-        stored[claim] ? [[claim, stored[claim]]] : [],
-      ),
-    ),
-  };
-}
-
-/**
- * A profile by id or cute name (any case). Without one, the selected profile, or the one with the most SkyBlock XP when
- * none is selected. Only profiles the player is still in.
- */
 export function findProfile(
   profiles: RawProfile[],
   uuid: string,
@@ -168,11 +172,11 @@ export function findProfile(
   const own = profiles.filter((candidate) => isMember(candidate, uuid));
   const xp = ({ members }: RawProfile) =>
     members[uuid].leveling?.experience ?? 0;
-  if (profile === undefined)
-    return (
-      own.find(({ selected }) => selected) ??
-      own.toSorted((a, b) => xp(b) - xp(a))[0]
-    );
+
+  if (profile === undefined) {
+    const selected = own.find(({ selected }) => selected);
+    return selected ?? own.toSorted((a, b) => xp(b) - xp(a))[0];
+  }
 
   const name = profile.toLowerCase();
   return own.find(

@@ -13,40 +13,43 @@ import {
   parseItems,
   setItems,
 } from "skyhelper-networth";
-import { boostedRarity, petTexture } from "../sections/pets.js";
-import { normalizeItemText } from "../lore.js";
-import { describeKey } from "#prices";
 import { add } from "@statsify/math";
-import { lookupKeys } from "#auctions";
+import { boostedRarity } from "#leveling";
+import { describeKey, lookupKeys } from "#prices";
+import { getItemTexture, getPetTexture, resourceTexture } from "#textures";
+import { normalizeItemText } from "#lore";
 import { prettify } from "@statsify/util";
-import { resourceTexture, textureOf } from "#textures";
 import type {
   ItemTexture,
   ItemsResource,
   NetworthItem,
   NetworthSection,
   PriceMap,
-  RawItem,
 } from "#types";
-import type { RawPet } from "#raw";
-import { type SectionInput, checkReads } from "../sections/index.js";
+import type { RawItem, RawItemsResource, RawPet } from "#raw";
+import {
+  NETWORTH_SECTION,
+  SECTIONS,
+  type Section,
+  type SkyBlockSection,
+} from "../sections/index.js";
 
 const TOP_ITEMS = 10;
 
-/** A networth result: item is there with includeItemData, petData on pets; sacks and essence have neither. */
+// Every essence type draws Wither Essence's head.
+const ESSENCE_HEAD =
+  "c4db4adfa9bf48ff5d41707ae34ea78bd2371659fcd8cd8934749af4cce9b";
+
+// Sacks and essence come back with neither item nor petData.
 type Priced = Omit<Item, "item"> & { item?: RawItem; petData?: RawPet };
 
 type Parsed = RawItem | RawPet | { id: string; amount: number };
-
-/** Wither Essence's head, which every essence type draws. */
-const ESSENCE_HEAD =
-  "c4db4adfa9bf48ff5d41707ae34ea78bd2371659fcd8cd8934749af4cce9b";
 
 let networthPrices:
   | { asOf: number; prices: Record<string, number> }
   | undefined;
 
-/** The plain key → coins map the networth library takes, built once per map. */
+// The library takes plain coins, so this builds them once per price map.
 function toNetworthPrices(map: PriceMap): Record<string, number> {
   if (networthPrices?.asOf !== map.asOf) {
     const prices = Object.fromEntries(
@@ -58,47 +61,42 @@ function toNetworthPrices(map: PriceMap): Record<string, number> {
   return networthPrices.prices;
 }
 
-function pricedTexture(
+function getPricedTexture(
   { id, item, petData }: Priced,
   items: ItemsResource,
 ): ItemTexture | undefined {
-  // A toolkit's items are bare ExtraAttributes, with no id to draw
-  if (item?.id !== undefined) return textureOf(item);
-  if (petData)
-    return petTexture(
-      petData.type,
-      boostedRarity(petData),
-      petData.skin,
-      items,
-    );
+  // A toolkit's items are bare ExtraAttributes, with no id to draw.
+  if (item?.id !== undefined) return getItemTexture(item);
+  if (petData) {
+    const rarity = boostedRarity(petData);
+    return getPetTexture(petData.type, rarity, { skin: petData.skin, items });
+  }
 
-  // Essence and runes of one tier (RUNE_LIGHTNING_1) have no items-resource id.
   if (id.startsWith("ESSENCE_")) return { kind: "head", skin: ESSENCE_HEAD };
-  const resource =
-    items.items[id] ?? (id.startsWith("RUNE_") ? items.items.RUNE : undefined);
+
+  // Runes of one tier, like RUNE_LIGHTNING_1, have no items resource id.
+  const rune = id.startsWith("RUNE_") ? items.items.RUNE : undefined;
+  const resource = items.items[id] ?? rune;
   return resource && resourceTexture(resource);
 }
 
-// These handlers replace an item's base price rather than add to it, and their entry repeats the new base
+// These replace an item's base price, so their entries repeat the new base.
 const BASE_PRICE_TYPES = new Set([
   "SHENS_AUCTION",
   "ENCHANT",
   "CROWN_OF_AVARICE",
 ]);
-const setsBasePrice = (type: string) =>
-  BASE_PRICE_TYPES.has(type) || type.includes("MIDAS_");
 
-/**
- * The library's calculation summed per kind, so every enchantment is one line. A kind can take value off (pet candy),
- * so only kinds worth nothing either way are left out.
- */
-function modifiersOf(
+function getModifiers(
   calculation: Item["calculation"] = [],
 ): NetworthItem["modifiers"] {
   const sums = new Map<string, number>();
-  for (const { type, price } of calculation)
-    if (!setsBasePrice(type)) sums.set(type, (sums.get(type) ?? 0) + price);
+  for (const { type, price } of calculation) {
+    if (BASE_PRICE_TYPES.has(type) || type.includes("MIDAS_")) continue;
+    sums.set(type, (sums.get(type) ?? 0) + price);
+  }
 
+  // Pet candy takes value off, so only kinds worth exactly 0 are dropped.
   return [...sums]
     .filter(([, price]) => price !== 0)
     .map(([type, price]) => ({ type, price }))
@@ -115,13 +113,12 @@ const toNetworthItem = (
   price: priced.price,
   soulbound: priced.soulbound,
   cosmetic: priced.cosmetic ?? false,
-  texture: pricedTexture(priced, items),
+  texture: getPricedTexture(priced, items),
   basePrice: priced.basePrice,
-  // A stack's base and calculation don't scale to its price alike (arrows, sacks, candy), so only single items add up
-  modifiers: (priced.count ?? 1) > 1 ? [] : modifiersOf(priced.calculation),
+  // A stack's base doesn't scale like its price, so only single items get them.
+  modifiers: (priced.count ?? 1) > 1 ? [] : getModifiers(priced.calculation),
 });
 
-/** The base keys the map doesn't have, by how many items and pets need each, and how many items and pets that is. */
 function getUnpriced(
   parsed: Items,
   map: PriceMap,
@@ -129,12 +126,12 @@ function getUnpriced(
 ): Pick<NetworthSection, "unpriced" | "unpricedCount"> {
   const counts = new Map<string, number>();
   let unpricedCount = 0;
-  for (const thing of Object.values(parsed).flat() as Parsed[]) {
-    const keys = (
-      "amount" in thing ? [thing.id] : lookupKeys(thing, map)
-    ).filter((key) => !map.entries[key]);
-    if (keys.length > 0) unpricedCount++;
-    for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
+
+  for (const counted of Object.values(parsed).flat() as Parsed[]) {
+    const keys = "amount" in counted ? [counted.id] : lookupKeys(counted, map);
+    const missing = keys.filter((key) => !map.entries[key]);
+    if (missing.length > 0) unpricedCount++;
+    for (const key of missing) counts.set(key, (counts.get(key) ?? 0) + 1);
   }
 
   const unpriced = [...counts]
@@ -148,29 +145,24 @@ function getUnpriced(
   return { unpriced, unpricedCount };
 }
 
-let itemsUpdated: number | undefined;
+let networthItemsUpdated: number | undefined;
 
-/**
- * Kept out of SECTIONS so the main entry, which the price worker loads under a 128 MB heap cap, never loads the networth
- * library.
- */
-const networth = {
-  needs: ["museum", "prices", "items"] as const,
-  async compute({
-    profile,
-    member,
-    museum,
-    prices,
-    items,
-  }: SectionInput): Promise<NetworthSection> {
-    if (!prices || !items)
+// Our patch stops the library fetching the items resource itself.
+function setNetworthItems(resource: RawItemsResource) {
+  if (networthItemsUpdated === resource.lastUpdated) return;
+  setItems(resource.items);
+  networthItemsUpdated = resource.lastUpdated;
+}
+
+// The price worker can't afford this library, so it stays out of SECTIONS.
+const NETWORTH: Section<"networth"> = {
+  needs: ["museum", "prices", "items"],
+  async compute({ profile, member, museum, prices, items, rawItems }) {
+    if (!prices || !items || !rawItems) {
       throw new TypeError("networth needs prices and items");
-
-    // Our patch stops the library fetching the items resource itself.
-    if (itemsUpdated !== items.lastUpdated) {
-      setItems(items.raw);
-      itemsUpdated = items.lastUpdated;
     }
+
+    setNetworthItems(rawItems);
 
     const parsed = (await parseItems(member, museum ?? {})) as Items;
     const calculator = ProfileNetworthCalculator.fromPreParsed(
@@ -211,45 +203,40 @@ const networth = {
         ]),
       ),
       petPrices: Object.fromEntries(
-        ((total.types.pets?.items ?? []) as Priced[]).flatMap(
-          ({ petData, price }) =>
-            petData?.uuid ? [[petData.uuid, price]] : [],
-        ),
+        ((total.types.pets?.items ?? []) as Priced[])
+          .filter(({ petData }) => petData?.uuid)
+          .map(({ petData, price }) => [petData!.uuid, price]),
       ),
       ...getUnpriced(parsed, prices, items),
     };
   },
 };
 
-// The library reads more of the member, from keys this package doesn't read or type
-export const NETWORTH = checkReads<"networth">(networth, {
-  currencies: true,
-  foraging: true,
-  garden_player_data: true,
-  inventory: true,
-  loadout: true,
-  pets_data: true,
-  profile: true,
-});
+export const ALL_SECTIONS: { [K in SkyBlockSection]: Section<K> } = {
+  ...SECTIONS,
+  [NETWORTH_SECTION]: NETWORTH,
+};
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("modifiersOf sums each kind, keeps what takes value off, and leaves out what replaces the base", () => {
-    const calculation = (
-      [
-        ["ENCHANT", 5_000_000],
-        ["MIDAS_SWORD_50M", 50_000_000],
-        ["ENCHANTMENT", 2],
-        ["PET_CANDY", -4],
-        ["ENCHANTMENT", 3],
-        ["REFORGE", 0],
-      ] as const
-    ).map(([type, price]) => ({ id: type, type, price, count: 1 }));
+  suite("getModifiers", () => {
+    it("should sum each kind, keeping negatives but not base prices", () => {
+      const calculation = (
+        [
+          ["ENCHANT", 5_000_000],
+          ["MIDAS_SWORD_50M", 50_000_000],
+          ["ENCHANTMENT", 2],
+          ["PET_CANDY", -4],
+          ["ENCHANTMENT", 3],
+          ["REFORGE", 0],
+        ] as const
+      ).map(([type, price]) => ({ id: type, type, price, count: 1 }));
 
-    expect(modifiersOf(calculation)).toEqual([
-      { type: "ENCHANTMENT", price: 5 },
-      { type: "PET_CANDY", price: -4 },
-    ]);
+      expect(getModifiers(calculation)).toEqual([
+        { type: "ENCHANTMENT", price: 5 },
+        { type: "PET_CANDY", price: -4 },
+      ]);
+    });
   });
 }

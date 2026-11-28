@@ -76,7 +76,7 @@ export const SkyBlockHotfProfile = ({
             t={t}
           />
         </Table.tr>
-        {/* Not a Table.tr: its cells keep their own height, and the tree's box should be as tall as the whispers */}
+        {/* A Table.tr won't stretch the tree's box to the whispers' height. */}
         <div width="100%">
           <div direction="column" width="1/2">
             {pools}

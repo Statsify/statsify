@@ -7,18 +7,19 @@
  */
 
 import { arrayGroup } from "@statsify/util";
-import { decodeSlots, toolkitItemView } from "#items";
+import { decodeSlots, toToolkitItemView } from "#items";
 import { resourceItem } from "#textures";
 import type {
   InventoriesSection,
   InventoryId,
+  ItemView,
   ItemsResource,
   Slots,
 } from "#types";
 import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
-/** The ender chest's page, and the size the bags are paged at. */
-const PAGE = 45;
+// The bags are paged at the size of an ender chest page.
+const PAGE_SIZE = 45;
 
 const BAGS = {
   accessoryBag: "talisman_bag",
@@ -28,33 +29,34 @@ const BAGS = {
   sacksBag: "sacks_bag",
 } as const satisfies Partial<Record<InventoryId, string>>;
 
-const paged = (slots: Slots) =>
-  slots.length > 0 ? arrayGroup(slots, PAGE) : [[]];
+const toPages = (slots: Slots) =>
+  slots.length > 0 ? arrayGroup(slots, PAGE_SIZE) : [[]];
 
-/** A map's blobs in their numeric key's order, as the game numbers backpacks. */
-export const byKey = (blobs: Record<string, RawNbt> = {}) =>
+export const sortByKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
 
-/** The hotbar comes first in the blob and last on screen. */
-const hotbarLast = (slots: Slots) => [...slots.slice(9), ...slots.slice(0, 9)];
+// The hotbar comes first in the blob and last on screen.
+const moveHotbarLast = (slots: Slots) => [
+  ...slots.slice(9),
+  ...slots.slice(0, 9),
+];
 
-/**
- * A toolkit's tools, kind by kind, and an emptied slot is null. IN_USE and IS_UNLOCKED aren't tools, nor is
- * HUNTING_TOOLKIT, the item used up to unlock the menu (the wiki's Hunting Toolkit page).
- */
-const toolkitPage = (toolkit: RawToolkit, items: ItemsResource): Slots =>
-  Object.entries(toolkit)
-    .flatMap(([kind, tools]) =>
-      Array.isArray(tools) && kind !== "HUNTING_TOOLKIT"
-        ? (tools as (RawNbt | null)[])
-        : [],
-    )
-    .map((blob) => blob && toolkitItemView(blob, items))
-    .filter((item) => item !== null);
+// The used-up Hunting Toolkit item sits beside the tools, so it's skipped.
+function getToolkitSlots(toolkit: RawToolkit, items: ItemsResource) {
+  const slots: ItemView[] = [];
+  for (const [kind, tools] of Object.entries(toolkit)) {
+    if (!Array.isArray(tools) || kind === "HUNTING_TOOLKIT") continue;
 
-/** Every inventory as the game pages it, and the sacks. */
+    for (const blob of tools as (RawNbt | null)[]) {
+      const view = blob && toToolkitItemView(blob, items);
+      if (view) slots.push(view);
+    }
+  }
+  return slots;
+}
+
 export function getInventories(
   member: RawMember,
   items: ItemsResource,
@@ -63,30 +65,30 @@ export function getInventories(
   if (!inventory?.inv_contents) return null;
 
   const pages: InventoriesSection["pages"] = {
-    inventory: [hotbarLast(decodeSlots(inventory.inv_contents))],
+    inventory: [moveHotbarLast(decodeSlots(inventory.inv_contents))],
   };
 
   if (inventory.ender_chest_contents)
-    pages.enderChest = paged(decodeSlots(inventory.ender_chest_contents));
-  pages.backpacks = byKey(inventory.backpack_contents).map(decodeSlots);
+    pages.enderChest = toPages(decodeSlots(inventory.ender_chest_contents));
+  pages.backpacks = sortByKey(inventory.backpack_contents).map(decodeSlots);
   if (inventory.personal_vault_contents)
     pages.personalVault = [decodeSlots(inventory.personal_vault_contents)];
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
-    if (blob) pages[id] = paged(decodeSlots(blob));
+    if (blob) pages[id] = toPages(decodeSlots(blob));
   }
 
   const farming = member.garden_player_data?.farming_toolkit;
-  if (farming) pages.farmingToolkit = [toolkitPage(farming, items)];
+  if (farming) pages.farmingToolkit = [getToolkitSlots(farming, items)];
   const hunting = member.foraging?.hunting_toolkit;
-  if (hunting) pages.huntingToolkit = [toolkitPage(hunting, items)];
+  if (hunting) pages.huntingToolkit = [getToolkitSlots(hunting, items)];
 
   const rift = member.rift?.inventory;
   if (rift?.inv_contents)
-    pages.riftInventory = [hotbarLast(decodeSlots(rift.inv_contents))];
+    pages.riftInventory = [moveHotbarLast(decodeSlots(rift.inv_contents))];
   if (rift?.ender_chest_contents)
-    pages.riftEnderChest = paged(decodeSlots(rift.ender_chest_contents));
+    pages.riftEnderChest = toPages(decodeSlots(rift.ender_chest_contents));
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
     .filter(([, count]) => count > 0)
@@ -104,7 +106,7 @@ export function getInventories(
 
   return {
     pages,
-    backpackIcons: byKey(inventory.backpack_icons).map(
+    backpackIcons: sortByKey(inventory.backpack_icons).map(
       (blob) => decodeSlots(blob)[0] ?? null,
     ),
     sacks,

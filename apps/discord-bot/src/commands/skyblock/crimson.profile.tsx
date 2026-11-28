@@ -40,8 +40,10 @@ export const SkyBlockCrimsonProfile = ({
   }
 
   const { faction, reputation, reputationRanks } = crimson;
-  const withRank = (side: Faction) =>
-    `${t(reputation[side])} §7${t(`skyblock.reputationRanks.${reputationRanks[side]}`)}`;
+  const formatReputation = (side: Faction) => {
+    const rank = t(`skyblock.reputationRanks.${reputationRanks[side]}`);
+    return `${t(reputation[side])} §7${rank}`;
+  };
 
   const sidebar: SidebarItem[] = [
     [
@@ -51,10 +53,14 @@ export const SkyBlockCrimsonProfile = ({
         : t("skyblock.none"),
       "§e",
     ],
-    [t("skyblock.reputation.mages"), withRank("mages"), FACTION_COLORS.mages],
+    [
+      t("skyblock.reputation.mages"),
+      formatReputation("mages"),
+      FACTION_COLORS.mages,
+    ],
     [
       t("skyblock.reputation.barbarians"),
-      withRank("barbarians"),
+      formatReputation("barbarians"),
       FACTION_COLORS.barbarians,
     ],
     [t("skyblock.dojoPoints"), t(crimson.dojoPoints), "§6"],
@@ -65,6 +71,12 @@ export const SkyBlockCrimsonProfile = ({
     ],
   ];
 
+  const getWaveLine = (completions: number, highestWave?: number) => {
+    if (highestWave !== undefined)
+      return `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`;
+    return completions > 0 ? "" : `§8${t("skyblock.none")}`;
+  };
+
   const kuudra = crimson.kuudra.map(
     ({ tier, completions, highestWave, texture }) => (
       <box direction="column" location="center" width="100%">
@@ -74,11 +86,7 @@ export const SkyBlockCrimsonProfile = ({
         >{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
         <text margin={{ top: 0, bottom: 4 }}>{`§^3^§f${t(completions)}`}</text>
         <text margin={{ top: 0, bottom: 4 }}>
-          {highestWave === undefined
-            ? completions > 0
-              ? ""
-              : `§8${t("skyblock.none")}`
-            : `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`}
+          {getWaveLine(completions, highestWave)}
         </text>
       </box>
     ),
@@ -94,9 +102,9 @@ export const SkyBlockCrimsonProfile = ({
           ? `§8${t("skyblock.none")}`
           : `§f${t(points)} ${DOJO_GRADE_COLORS[grade]}${grade}`}
       </text>
-      <text
-        margin={{ top: 0, bottom: 8 }}
-      >{`§7${time === undefined ? t("skyblock.none") : formatTime(time)}`}</text>
+      <text margin={{ top: 0, bottom: 8 }}>
+        {`§7${time === undefined ? t("skyblock.none") : formatTime(time)}`}
+      </text>
     </box>
   ));
 
@@ -109,7 +117,7 @@ export const SkyBlockCrimsonProfile = ({
         <Table.ts title={`§6${t("skyblock.dojo")}`}>
           <Table.tr>{dojo}</Table.tr>
         </Table.ts>
-        {/* Five minibosses in one row set the card's width, so they wrap three and two */}
+        {/* Five minibosses in one row set the card's width, so they wrap. */}
         <Table.ts title={`§e${t("skyblock.minibosses")}`}>
           {arrayGroup(crimson.minibosses, 3).map((row) => (
             <Table.tr>
