@@ -25,12 +25,39 @@ export class WarlordsRenderDto extends createZodDto(
   }).extend({
     uuid: UuidDto.schema.shape.uuid
       .optional()
-      .describe("The player standing in their class's helmet and armor. Without one, only the weapon is drawn"),
-    class: z.string().optional().describe("The player's stored chosen_class: mage, warrior, paladin or shaman. Needed with a uuid"),
-    helmet: selection.meta({ default: 0, description: "The class's stored <class>_helmet_selection, from 0 to 3" }),
-    armor: selection.meta({ default: 0, description: "The class's stored <class>_armor_selection, from 0 to 2" }),
-    team: z.string().optional().meta({ default: "blue", description: "The team colors the helmet and armor are drawn in: blue or red" }),
-    weapon: z.string().optional().describe("The held weapon's stored weapon_inventory material, such as STONE_HOE"),
-    extruded: queryBoolean("false").optional().describe("Draw the skin's outer layer in 3D"),
-  })
+      .describe(
+        "The player standing in their class's helmet and armor. Without one, only the weapon is drawn",
+      ),
+    class: z
+      .string()
+      .optional()
+      .describe(
+        "The player's stored chosen_class: mage, warrior, paladin or shaman. Needed with a uuid",
+      ),
+    helmet: selection.meta({
+      default: 0,
+      description: "The class's stored <class>_helmet_selection, from 0 to 3",
+    }),
+    armor: selection.meta({
+      default: 0,
+      description: "The class's stored <class>_armor_selection, from 0 to 2",
+    }),
+    team: z
+      .string()
+      .optional()
+      .meta({
+        default: "blue",
+        description:
+          "The team colors the helmet and armor are drawn in: blue or red",
+      }),
+    weapon: z
+      .string()
+      .optional()
+      .describe(
+        "The held weapon's stored weapon_inventory material, such as STONE_HOE",
+      ),
+    extruded: queryBoolean("false")
+      .optional()
+      .describe("Draw the skin's outer layer in 3D"),
+  }),
 ) {}
