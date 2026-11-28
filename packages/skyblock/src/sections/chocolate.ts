@@ -12,10 +12,20 @@ import { add } from "@statsify/math";
 import type { RawMember } from "#raw";
 
 // In the factory's order
-const EMPLOYEES = ["rabbit_bro", "rabbit_cousin", "rabbit_sis", "rabbit_father", "rabbit_grandma", "rabbit_uncle", "rabbit_dog"] as const;
+const EMPLOYEES = [
+  "rabbit_bro",
+  "rabbit_cousin",
+  "rabbit_sis",
+  "rabbit_father",
+  "rabbit_grandma",
+  "rabbit_uncle",
+  "rabbit_dog",
+] as const;
 // The chocolate since the last prestige that each next one needs, II to VI (the wiki's Chocolate Factory page, an
 // owner exception, unverified)
-const PRESTIGE_CHOCOLATE = [150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000];
+const PRESTIGE_CHOCOLATE = [
+  150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000,
+];
 
 // The rabbits record also holds faction_level
 const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
@@ -23,8 +33,11 @@ const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
 /** null before the member opens the Chocolate Factory. A rabbit counts once however often it was found. */
 export function getChocolate(member: RawMember): ChocolateSection | null {
   const easter = member.events?.easter;
-  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) =>
-    typeof count === "number" && ALL_RABBITS.has(rabbit) ? [[rabbit, count] as const] : []
+  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(
+    ([rabbit, count]) =>
+      typeof count === "number" && ALL_RABBITS.has(rabbit)
+        ? [[rabbit, count] as const]
+        : [],
   );
   const found = new Set(counts.map(([rabbit]) => rabbit));
 
@@ -42,12 +55,27 @@ export function getChocolate(member: RawMember): ChocolateSection | null {
     nextPrestige: PRESTIGE_CHOCOLATE[level - 1],
     rabbits: RARITIES.flatMap((rarity) => {
       const rabbits = RABBITS[rarity.toLowerCase()];
-      return rabbits ? [{ rarity, found: rabbits.filter((rabbit) => found.has(rabbit)).length, total: rabbits.length }] : [];
+      return rabbits
+        ? [
+            {
+              rarity,
+              found: rabbits.filter((rabbit) => found.has(rabbit)).length,
+              total: rabbits.length,
+            },
+          ]
+        : [];
     }),
-    employees: EMPLOYEES.map((employee) => ({ employee, level: easter.employees?.[employee] ?? 0 })),
+    employees: EMPLOYEES.map((employee) => ({
+      employee,
+      level: easter.employees?.[employee] ?? 0,
+    })),
     timeTower: easter.time_tower?.level ?? 0,
     duplicates: add(...counts.map(([, count]) => Math.max(0, count - 1))),
-    eggLocations: add(...Object.values(easter.rabbits?.collected_locations ?? {}).map((spots) => spots.length)),
+    eggLocations: add(
+      ...Object.values(easter.rabbits?.collected_locations ?? {}).map(
+        (spots) => spots.length,
+      ),
+    ),
   };
 }
 
@@ -55,6 +83,10 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("getChocolate puts a factory that never prestiged at prestige 1", () => {
-    expect(getChocolate({ events: { easter: { total_chocolate: 5, chocolate_since_prestige: 5 } } })?.level).toBe(1);
+    expect(
+      getChocolate({
+        events: { easter: { total_chocolate: 5, chocolate_since_prestige: 5 } },
+      })?.level,
+    ).toBe(1);
   });
 }

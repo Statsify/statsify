@@ -31,16 +31,20 @@ export function getHotf(member: RawMember): HotfSection | null {
   const suffix = slot === 1 ? "" : `_${slot}`;
   const nodes = tree?.nodes?.[`foraging${suffix}`] ?? {};
   const used = Object.entries(tree?.tokens_spent ?? {}).filter(
-    ([key, spent]) => /^forest(_\d+)?$/.test(key) && spent > 0
+    ([key, spent]) => /^forest(_\d+)?$/.test(key) && spent > 0,
   );
-  const loadouts = new Set([...used.map(([key]) => key), `forest${suffix}`]).size;
+  const loadouts = new Set([...used.map(([key]) => key), `forest${suffix}`])
+    .size;
   const level = getLevel(xp, LEVELING.HOTF, LEVELING.leveling_caps.HOTF);
   const centerLevel = Number(nodes.center_of_the_forest ?? 0);
 
   const whispers = (type: Whisper) => {
     const pool = member.foraging_core?.whispers?.[type];
     const spending = pool?.[slot];
-    return { total: pool?.total ?? 0, spent: add(spending?.spent ?? 0, spending?.spent_non_refundable ?? 0) };
+    return {
+      total: pool?.total ?? 0,
+      spent: add(spending?.spent ?? 0, spending?.spent_non_refundable ?? 0),
+    };
   };
 
   return {
@@ -49,10 +53,15 @@ export function getHotf(member: RawMember): HotfSection | null {
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: {
       spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0,
-      total: add(CENTER_TOKENS[centerLevel], ...TIER_TOKENS.slice(0, level.level)),
+      total: add(
+        CENTER_TOKENS[centerLevel],
+        ...TIER_TOKENS.slice(0, level.level),
+      ),
     },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
-    whispers: Object.fromEntries(WHISPERS.map((type) => [type, whispers(type)])) as HotfSection["whispers"],
+    whispers: Object.fromEntries(
+      WHISPERS.map((type) => [type, whispers(type)]),
+    ) as HotfSection["whispers"],
     nodes: treeNodes(HOTF_LAYOUT, nodes),
   };
 }
@@ -62,8 +71,19 @@ if (import.meta.vitest) {
 
   test("getHotf counts the selected loadout's whispers spent, refundable or not", () => {
     const hotf = getHotf({
-      skill_tree: { experience: { foraging: 0 }, selected_skill_tree_slot: { foraging: 2 } },
-      foraging_core: { whispers: { forest: { total: 900, 1: { spent: 100 }, 2: { spent: 300, spent_non_refundable: 50 } } } },
+      skill_tree: {
+        experience: { foraging: 0 },
+        selected_skill_tree_slot: { foraging: 2 },
+      },
+      foraging_core: {
+        whispers: {
+          forest: {
+            total: 900,
+            1: { spent: 100 },
+            2: { spent: 300, spent_non_refundable: 50 },
+          },
+        },
+      },
     });
 
     expect(hotf?.whispers.forest).toEqual({ total: 900, spent: 350 });

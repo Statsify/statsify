@@ -9,51 +9,94 @@
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { ItemSlot } from "./components/ItemSlot.js";
-import { DOJO_BELT_COLORS, DOJO_GRADE_COLORS, FACTION_COLORS } from "@statsify/skyblock/display";
+import {
+  DOJO_BELT_COLORS,
+  DOJO_GRADE_COLORS,
+  FACTION_COLORS,
+} from "@statsify/skyblock/display";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
 import type { Faction, MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const crimsonIcons = ({ crimson }: MemberView) => crimson?.kuudra.map(({ texture }) => texture) ?? [];
+export const crimsonIcons = ({ crimson }: MemberView) =>
+  crimson?.kuudra.map(({ texture }) => texture) ?? [];
 
-export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockCrimsonProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const crimson = profile.member.crimson;
 
   if (!crimson) {
-    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noCrimson")} />;
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noCrimson")}
+      />
+    );
   }
 
   const { faction, reputation, reputationRanks } = crimson;
-  const withRank = (side: Faction) => `${t(reputation[side])} §7${t(`skyblock.reputationRanks.${reputationRanks[side]}`)}`;
+  const withRank = (side: Faction) =>
+    `${t(reputation[side])} §7${t(`skyblock.reputationRanks.${reputationRanks[side]}`)}`;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.faction"), faction ? `${FACTION_COLORS[faction]}${prettify(faction)}` : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.faction"),
+      faction
+        ? `${FACTION_COLORS[faction]}${prettify(faction)}`
+        : t("skyblock.none"),
+      "§e",
+    ],
     [t("skyblock.reputation.mages"), withRank("mages"), FACTION_COLORS.mages],
-    [t("skyblock.reputation.barbarians"), withRank("barbarians"), FACTION_COLORS.barbarians],
+    [
+      t("skyblock.reputation.barbarians"),
+      withRank("barbarians"),
+      FACTION_COLORS.barbarians,
+    ],
     [t("skyblock.dojoPoints"), t(crimson.dojoPoints), "§6"],
-    [t("skyblock.dojoBelt"), prettify(crimson.dojoBelt), DOJO_BELT_COLORS[crimson.dojoBelt]],
+    [
+      t("skyblock.dojoBelt"),
+      prettify(crimson.dojoBelt),
+      DOJO_BELT_COLORS[crimson.dojoBelt],
+    ],
   ];
 
-  const kuudra = crimson.kuudra.map(({ tier, completions, highestWave, texture }) => (
-    <box direction="column" location="center" width="100%">
-      <ItemSlot icon={icons.get(texture)} />
-      <text margin={{ top: 4, bottom: 4 }}>{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
-      <text margin={{ top: 0, bottom: 4 }}>{`§^3^§f${t(completions)}`}</text>
-      <text margin={{ top: 0, bottom: 4 }}>
-        {highestWave === undefined ?
-          (completions > 0 ? "" : `§8${t("skyblock.none")}`) :
-          `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`}
-      </text>
-    </box>
-  ));
+  const kuudra = crimson.kuudra.map(
+    ({ tier, completions, highestWave, texture }) => (
+      <box direction="column" location="center" width="100%">
+        <ItemSlot icon={icons.get(texture)} />
+        <text
+          margin={{ top: 4, bottom: 4 }}
+        >{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
+        <text margin={{ top: 0, bottom: 4 }}>{`§^3^§f${t(completions)}`}</text>
+        <text margin={{ top: 0, bottom: 4 }}>
+          {highestWave === undefined
+            ? completions > 0
+              ? ""
+              : `§8${t("skyblock.none")}`
+            : `§7${t("skyblock.highestWave", { wave: t(highestWave) })}`}
+        </text>
+      </box>
+    ),
+  );
 
   const dojo = crimson.dojo.map(({ test, points, grade, time }) => (
     <box direction="column" location="center" width="100%">
-      <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§6${t(`skyblock.dojoTests.${test}`)}`}</text>
+      <text
+        margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+      >{`§6${t(`skyblock.dojoTests.${test}`)}`}</text>
       <text margin={{ top: 0, bottom: 4 }}>
-        {grade === undefined ? `§8${t("skyblock.none")}` : `§f${t(points)} ${DOJO_GRADE_COLORS[grade]}${grade}`}
+        {grade === undefined
+          ? `§8${t("skyblock.none")}`
+          : `§f${t(points)} ${DOJO_GRADE_COLORS[grade]}${grade}`}
       </text>
-      <text margin={{ top: 0, bottom: 8 }}>{`§7${time === undefined ? t("skyblock.none") : formatTime(time)}`}</text>
+      <text
+        margin={{ top: 0, bottom: 8 }}
+      >{`§7${time === undefined ? t("skyblock.none") : formatTime(time)}`}</text>
     </box>
   ));
 
@@ -71,7 +114,12 @@ export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockP
           {arrayGroup(crimson.minibosses, 3).map((row) => (
             <Table.tr>
               {row.map(({ boss, kills }) => (
-                <Table.td title={prettify(boss)} value={t(kills)} color="§e" size="small" />
+                <Table.td
+                  title={prettify(boss)}
+                  value={t(kills)}
+                  color="§e"
+                  size="small"
+                />
               ))}
             </Table.tr>
           ))}

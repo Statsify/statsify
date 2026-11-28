@@ -19,21 +19,30 @@ const FAMILIES = BESTIARY.pages.flatMap(({ families }) => families);
 
 // player_stats counts a mob by its kill id without the level, which can span families (unburried_zombie)
 const withoutLevel = (id: string) => id.replace(/_\d+$/, "");
-const BESTIARY_MOBS = new Set(FAMILIES.flatMap(({ ids }) => ids.map(withoutLevel)));
+const BESTIARY_MOBS = new Set(
+  FAMILIES.flatMap(({ ids }) => ids.map(withoutLevel)),
+);
 
 /**
  * The most counted by name: bestiary families from the bestiary's counts, when it has any, and the rest (the void,
  * falls, mobs it doesn't list) from `player_stats`, without its "total" entry. Two families share a name on two pages.
  */
-function topOf(bestiary: Record<string, number> | undefined, counts: Record<string, number> = {}) {
+function topOf(
+  bestiary: Record<string, number> | undefined,
+  counts: Record<string, number> = {},
+) {
   const tracked = bestiary !== undefined && Object.keys(bestiary).length > 0;
   const byName = new Map<string, number>();
-  const count = (name: string, amount: number) => byName.set(name, (byName.get(name) ?? 0) + amount);
+  const count = (name: string, amount: number) =>
+    byName.set(name, (byName.get(name) ?? 0) + amount);
 
-  if (tracked) for (const { name, ids } of FAMILIES) count(name, add(...ids.map((id) => bestiary[id] ?? 0)));
+  if (tracked)
+    for (const { name, ids } of FAMILIES)
+      count(name, add(...ids.map((id) => bestiary[id] ?? 0)));
 
   for (const [id, amount] of Object.entries(counts)) {
-    if (id !== "total" && !(tracked && BESTIARY_MOBS.has(withoutLevel(id)))) count(prettify(id), amount);
+    if (id !== "total" && !(tracked && BESTIARY_MOBS.has(withoutLevel(id))))
+      count(prettify(id), amount);
   }
 
   return [...byName]
@@ -44,14 +53,46 @@ function topOf(bestiary: Record<string, number> | undefined, counts: Record<stri
 }
 
 // Each permanent consumable's count, and how many the game takes: the wiki's maximums (an owner exception)
-const CONSUMABLES: { id: string; max: number; used: (member: RawMember) => number | undefined }[] = [
-  { id: "METAPHYSICAL_SERUM", max: 3, used: (member) => member.experimentation?.serums_drank },
-  { id: "REAPER_PEPPER", max: 5, used: (member) => member.player_data?.reaper_peppers_eaten },
-  { id: "WRIGGLING_LARVA", max: 5, used: (member) => member.garden_player_data?.larva_consumed },
-  { id: "REFINED_DARK_CACAO_TRUFFLE", max: 5, used: (member) => member.events?.easter?.refined_dark_cacao_truffles },
-  { id: "REFINED_BOTTLE_OF_JYRRE", max: 5, used: (member) => member.winter_player_data?.refined_jyrre_uses },
-  { id: "BEE_SALIVA", max: 5, used: (member) => member.player_data?.bee_saliva_eaten },
-  { id: "ISOPOD_HUSK", max: 5, used: (member) => member.player_data?.isopod_husks_eaten },
+const CONSUMABLES: {
+  id: string;
+  max: number;
+  used: (member: RawMember) => number | undefined;
+}[] = [
+  {
+    id: "METAPHYSICAL_SERUM",
+    max: 3,
+    used: (member) => member.experimentation?.serums_drank,
+  },
+  {
+    id: "REAPER_PEPPER",
+    max: 5,
+    used: (member) => member.player_data?.reaper_peppers_eaten,
+  },
+  {
+    id: "WRIGGLING_LARVA",
+    max: 5,
+    used: (member) => member.garden_player_data?.larva_consumed,
+  },
+  {
+    id: "REFINED_DARK_CACAO_TRUFFLE",
+    max: 5,
+    used: (member) => member.events?.easter?.refined_dark_cacao_truffles,
+  },
+  {
+    id: "REFINED_BOTTLE_OF_JYRRE",
+    max: 5,
+    used: (member) => member.winter_player_data?.refined_jyrre_uses,
+  },
+  {
+    id: "BEE_SALIVA",
+    max: 5,
+    used: (member) => member.player_data?.bee_saliva_eaten,
+  },
+  {
+    id: "ISOPOD_HUSK",
+    max: 5,
+    used: (member) => member.player_data?.isopod_husks_eaten,
+  },
 ];
 
 // Every song played has a best; its completions keys also come as _perfect_completions
@@ -59,7 +100,8 @@ const HARP_SONG = /^song_(.+)_best_completion$/;
 
 /** Each song played on the harp, from `foraging.songs.harp`, or `quests.harp_quest` where it was before. */
 function harpSongs(harp: RawHarp = {}): MiscSection["harp"] {
-  const count = (key: string) => (typeof harp[key] === "number" ? (harp[key] as number) : 0);
+  const count = (key: string) =>
+    typeof harp[key] === "number" ? (harp[key] as number) : 0;
   return Object.keys(harp)
     .flatMap((key) => HARP_SONG.exec(key)?.[1] ?? [])
     .map((song) => ({
@@ -102,17 +144,28 @@ function getConsumables(member: RawMember, items: ItemsResource): Consumable[] {
 /** Each community upgrade at its highest tier; the profile keeps one entry per tier bought. */
 function getUpgrades(profile: RawProfile): MiscSection["upgrades"] {
   const tiers = new Map<string, number>();
-  for (const { upgrade, tier } of profile.community_upgrades?.upgrade_states ?? [])
+  for (const { upgrade, tier } of profile.community_upgrades?.upgrade_states ??
+    [])
     tiers.set(upgrade, Math.max(tier, tiers.get(upgrade) ?? 0));
-  return [...tiers].map(([upgrade, tier]) => ({ upgrade, tier })).toSorted((a, b) => a.upgrade.localeCompare(b.upgrade));
+  return [...tiers]
+    .map(([upgrade, tier]) => ({ upgrade, tier }))
+    .toSorted((a, b) => a.upgrade.localeCompare(b.upgrade));
 }
 
 /** Numbers from a map, leaving out its other entries (tree_gifts keeps milestone_tier_claimed beside the trees). */
 const numbersOf = (record: Record<string, unknown> = {}) =>
-  Object.fromEntries(Object.entries(record).filter((entry): entry is [string, number] => typeof entry[1] === "number"));
+  Object.fromEntries(
+    Object.entries(record).filter(
+      (entry): entry is [string, number] => typeof entry[1] === "number",
+    ),
+  );
 
 /** The member's lifetime counters from `player_stats` and the smaller systems, their soulflow, and the profile's upgrades. */
-export function getMisc(profile: RawProfile, member: RawMember, items: ItemsResource): MiscSection {
+export function getMisc(
+  profile: RawProfile,
+  member: RawMember,
+  items: ItemsResource,
+): MiscSection {
   const stats = member.player_stats ?? {};
   const auctions = stats.auctions ?? {};
   const winter = stats.winter ?? {};
@@ -135,8 +188,14 @@ export function getMisc(profile: RawProfile, member: RawMember, items: ItemsReso
       goldEarned: auctions.gold_earned ?? 0,
       fees: auctions.fees ?? 0,
     },
-    gifts: { given: stats.gifts?.total_given ?? 0, received: stats.gifts?.total_received ?? 0 },
-    mythological: { kills: stats.mythos?.kills ?? 0, chains: stats.mythos?.burrows_chains_complete?.total ?? 0 },
+    gifts: {
+      given: stats.gifts?.total_given ?? 0,
+      received: stats.gifts?.total_received ?? 0,
+    },
+    mythological: {
+      kills: stats.mythos?.kills ?? 0,
+      chains: stats.mythos?.burrows_chains_complete?.total ?? 0,
+    },
     candy: stats.candy_collected?.total ?? 0,
     soulflow: member.item_data?.soulflow ?? 0,
     jerry: {
@@ -170,7 +229,13 @@ if (import.meta.vitest) {
       enderman_1: 3,
       enderman_50: 2,
     };
-    const stats = { total: 999, zealot_enderman: 38, unburried_zombie: 5, enderman: 5, void: 7 };
+    const stats = {
+      total: 999,
+      zealot_enderman: 38,
+      unburried_zombie: 5,
+      enderman: 5,
+      void: 7,
+    };
 
     expect(topOf(bestiary, stats)).toEqual([
       { name: "Zealot", count: 40 },

@@ -14,45 +14,78 @@ import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSkillsProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockSkillsProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { skills } = profile.member;
 
-  const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
+  const sidebar: SidebarItem[] = skills
+    ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
+    : [];
 
   // Laid out three to a row: four "XP past max" notes in one row set the card's width
-  const bars: LevelBarProps[] = skills ?
-    SKILLS.map((name) => {
-      const level = skills.skills[name];
-      const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 && !level.unverified ?
-        [`§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`] :
-        [];
+  const bars: LevelBarProps[] = skills
+    ? SKILLS.map((name) => {
+        const level = skills.skills[name];
+        const pastMax =
+          level.xpForNext === undefined &&
+          level.xpCurrent > 0 &&
+          !level.unverified
+            ? [
+                `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`,
+              ]
+            : [];
 
-      return { title: prettify(name), level, color: SKILL_COLORS[name], t, notes: pastMax };
-    }) :
-    [];
+        return {
+          title: prettify(name),
+          level,
+          color: SKILL_COLORS[name],
+          t,
+          notes: pastMax,
+        };
+      })
+    : [];
 
   // A new profile has no skills of its own yet
-  const highestSkills = profile.newProfile ? undefined : profile.player?.highestSkills;
+  const highestSkills = profile.newProfile
+    ? undefined
+    : profile.player?.highestSkills;
   const highest = SKILLS.flatMap((name) => {
     const level = highestSkills?.[name];
-    return level === undefined ? [] : [<Table.td title={prettify(name)} value={t(level)} color={SKILL_COLORS[name]} size="small" />];
+    return level === undefined
+      ? []
+      : [
+          <Table.td
+            title={prettify(name)}
+            value={t(level)}
+            color={SKILL_COLORS[name]}
+            size="small"
+          />,
+        ];
   });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {skills ?
-        (
-          <Table.table>{levelBarRows(bars, 3)}</Table.table>
-        ) :
-        highest.length > 0 ?
-          (
-            <Table.table>
-              <Table.ts title={`§7${t("skyblock.highestOnAnyProfile")}`}>
-                {arrayGroup(highest, 3).map((row) => <Table.tr>{row}</Table.tr>)}
-              </Table.ts>
-            </Table.table>
-          ) :
-          <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
+      {skills ? (
+        <Table.table>{levelBarRows(bars, 3)}</Table.table>
+      ) : highest.length > 0 ? (
+        <Table.table>
+          <Table.ts title={`§7${t("skyblock.highestOnAnyProfile")}`}>
+            {arrayGroup(highest, 3).map((row) => (
+              <Table.tr>{row}</Table.tr>
+            ))}
+          </Table.ts>
+        </Table.table>
+      ) : (
+        <EmptySection
+          setting="skills"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noSkills")}
+          t={t}
+        />
+      )}
     </Card>
   );
 };

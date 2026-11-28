@@ -11,11 +11,28 @@ export * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { type MayorView, type Perk, toMayorView } from "./election.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
-export { describeKey, labelVariants, parseBazaar, toPriceView } from "./prices.js";
+export {
+  describeKey,
+  labelVariants,
+  parseBazaar,
+  toPriceView,
+} from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
-export { findProfile, gameModeOf, isMember, toPlayerExtras, toProfileSummary, toProfilesView } from "./profiles.js";
-export { MEMBER_STATS_SECTIONS, type MemberStat, type MemberStats, toMemberStats } from "./member-stats.js";
+export {
+  findProfile,
+  gameModeOf,
+  isMember,
+  toPlayerExtras,
+  toProfileSummary,
+  toProfilesView,
+} from "./profiles.js";
+export {
+  MEMBER_STATS_SECTIONS,
+  type MemberStat,
+  type MemberStats,
+  toMemberStats,
+} from "./member-stats.js";
 export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
