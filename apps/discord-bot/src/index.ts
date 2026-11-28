@@ -38,7 +38,9 @@ if (sentryDsn) {
 }
 
 await Promise.all(
-  [I18nLoaderService, FontLoaderService, ResourcePacksService].map((service) => Container.get(service).init())
+  [I18nLoaderService, FontLoaderService, ResourcePacksService].map((service) =>
+    Container.get(service).init()
+  )
 );
 
 const rest = new RestClient({ token: await config("discordBot.token"), timeout: 60 * 1000 });
