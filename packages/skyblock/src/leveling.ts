@@ -69,14 +69,22 @@ export const toLevelCosts = (thresholds: number[]) =>
 export function boostedRarity(pet: RawPet): Rarity {
   const rarity = pet.tier as Rarity;
   if (pet.heldItem !== "PET_ITEM_TIER_BOOST") return rarity;
-  return PET_RARITIES[RARITIES.indexOf(rarity) + 1] ?? rarity;
+
+  // The wiki's Tier Boost page says only the Bingo pet can reach Mythic.
+  const highest = pet.type === "BINGO" ? "MYTHIC" : "LEGENDARY";
+  const index = RARITIES.indexOf(rarity);
+  return index < RARITIES.indexOf(highest) ? PET_RARITIES[index + 1] : rarity;
 }
 
 // Custom tables add levels past 100, like Golden Dragon's to 200.
-export function getPetLevel(pet: RawPet, rarity: Rarity): Level {
+export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   const custom = PETS.custom_pet_leveling[pet.type] ?? {};
+  const offsets = custom.rarity_offset ?? {};
+  // Bingo's offsets stop at Legendary, so a boosted Mythic uses the highest.
+  const highest = PET_RARITIES.findLast((candidate) => candidate in offsets);
   const offset =
-    custom.rarity_offset?.[rarity] ?? PETS.pet_rarity_offset[rarity];
+    offsets[rarity] ??
+    (highest ? offsets[highest] : PETS.pet_rarity_offset[rarity]);
   const maxLevel = custom.max_level ?? 100;
   const table = [
     ...PETS.pet_levels.slice(offset, offset + 99),
@@ -168,6 +176,17 @@ if (import.meta.vitest) {
         level: 100,
         maxLevel: 200,
       });
+    });
+
+    it("should level a boosted Bingo pet on its highest offset", () => {
+      const bingo = {
+        type: "BINGO",
+        tier: "LEGENDARY",
+        exp: 5_624_785,
+        heldItem: "PET_ITEM_TIER_BOOST",
+        active: false,
+      };
+      expect(getPetLevel(bingo).level).toBe(100);
     });
   });
 }

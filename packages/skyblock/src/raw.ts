@@ -169,9 +169,42 @@ export interface RawResourceItem {
   skin?: { value: string };
   origin?: string;
   rift_transferrable?: boolean;
+  npc_sell_price?: number;
 }
 
 export interface RawItemsResource {
   lastUpdated: number;
   items: RawResourceItem[];
+}
+
+// The auction fields the price builder reads, where bin isn't in docs.json.
+export interface RawAuction {
+  uuid: string;
+  starting_bid: number;
+  // docs.json says an object, but Hypixel sends a string.
+  item_bytes: string | RawNbt;
+  bin?: boolean;
+}
+
+export interface RawAuctionsPage {
+  totalPages: number;
+  lastUpdated: number;
+  auctions: RawAuction[];
+}
+
+export interface RawBazaar {
+  lastUpdated: number;
+  products: Record<
+    string,
+    {
+      sell_summary: { pricePerUnit: number }[];
+      buy_summary: { pricePerUnit: number }[];
+      quick_status: {
+        sellPrice: number;
+        sellMovingWeek: number;
+        buyPrice: number;
+        buyMovingWeek: number;
+      };
+    }
+  >;
 }

@@ -8,6 +8,8 @@
 
 export * from "./types.js";
 export * from "./raw.js";
+export { buildPriceMap, type SeenIndex } from "./auctions.js";
+export { parseBazaar } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";

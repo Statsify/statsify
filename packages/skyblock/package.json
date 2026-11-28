@@ -42,6 +42,10 @@
       "types": "./src/nbt.ts",
       "default": "./dist/nbt.js"
     },
+    "#prices": {
+      "types": "./src/prices.ts",
+      "default": "./dist/prices.js"
+    },
     "#textures": {
       "types": "./src/textures.ts",
       "default": "./dist/textures.js"

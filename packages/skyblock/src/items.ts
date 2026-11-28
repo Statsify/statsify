@@ -83,6 +83,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           skin,
           origin,
           rift_transferrable,
+          npc_sell_price,
         }) => [
           id,
           {
@@ -98,6 +99,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
             skin: skin && skinHash(skin.value),
             riftOnly:
               origin === "RIFT" && !rift_transferrable ? true : undefined,
+            npcPrice: npc_sell_price,
           },
         ],
       ),

@@ -167,16 +167,30 @@ export interface PetView {
   texture: ItemTexture;
 }
 
-export interface PriceEntry {
-  // A price is for one item, not a stack.
-  coins: number;
-  source: "bazaar" | "bin";
-  listings?: number;
-}
+// coins is per unit, and a bazaar entry's coins is its sell price.
+export type PriceEntry =
+  | { coins: number; source: "bin"; listings: number }
+  | { coins: number; source: "bazaar"; buy: number }
+  | { coins: number; source: "npc" };
 
 export interface PriceMap {
   asOf: number;
   entries: Record<string, PriceEntry>;
+}
+
+export interface BazaarProduct {
+  id: string;
+  instantBuy?: number;
+  instantSell?: number;
+  buyPrice: number;
+  sellPrice: number;
+  buyMovingWeek: number;
+  sellMovingWeek: number;
+}
+
+export interface Bazaar {
+  lastUpdated: number;
+  products: Record<string, BazaarProduct>;
 }
 
 export interface MissingAccessory {
@@ -242,6 +256,7 @@ export interface ItemsResource {
       color?: string;
       category?: string;
       riftOnly?: boolean;
+      npcPrice?: number;
     }
   >;
 }
