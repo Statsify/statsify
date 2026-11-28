@@ -42,8 +42,7 @@ const PACK_FORMAT = 97;
 
 const HYPIXEL_PACK = "SkyBlock";
 
-// Hypixel's pack LICENSE (v1.0, 2026-07-07) by sha256. A pack under any other license is held
-// until someone reviews it and updates this
+// A pack under any other license than this sha256 waits for a review
 const REVIEWED_LICENSE =
   "22d27db6dc242dbdfdb0bac60ee16a488a8791d724be1734eedc23d85ad8068c";
 
@@ -53,7 +52,7 @@ const HELD = "held.json";
 const LOCK = "update.lock";
 const STAGING = ".staging-";
 
-// The holder touches the lock every minute, so one untouched for five was left by an update that crashed
+// A lock untouched for five minutes was left by a crashed update
 const HEARTBEAT = 60 * 1000;
 const STALE_LOCK = 5 * HEARTBEAT;
 
@@ -74,7 +73,6 @@ interface VersionMetadata {
   downloads: { client: { url: string; sha1: string } };
 }
 
-/** Pack archives under the cache folder, lowest priority first */
 interface Generation {
   packs: string[];
 }
@@ -89,7 +87,7 @@ const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) =>
 
 const generationId = ({ packs }: Generation) => packs.join(" ");
 
-// Unlike Promise.all, this waits for every write or delete before throwing, so none outlives the update's lock
+// Unlike Promise.all, this waits for every write so none outlives the lock
 async function settle<T>(promises: Promise<T>[]) {
   const results = await Promise.allSettled(promises);
 
@@ -123,7 +121,7 @@ async function download(url: string, sha1: string) {
   return data;
 }
 
-/** Renames a staged folder into place whole, so a pack folder that exists is complete */
+// A pack folder that exists is complete, since it's renamed into place
 async function store(
   folder: string,
   files: Record<string, Uint8Array | string>,
@@ -228,13 +226,15 @@ async function probe(stack: PackStack) {
   setCanvasBackend(skiaCanvas);
   const renderer = new ItemRenderer(stack);
 
-  // The first pack's own definitions include some the renderer doesn't draw yet, like banners
-  const ids = stack.packs.slice(1).flatMap(({ files }) =>
-    [...files.keys()].flatMap((path) => {
+  // The client jar has definitions the renderer can't draw yet, like banners
+  const ids: string[] = [];
+
+  for (const { files } of stack.packs.slice(1)) {
+    for (const path of files.keys()) {
       const definition = /^assets\/([^/]+)\/items\/(.+)\.json$/.exec(path);
-      return definition ? [`${definition[1]}:${definition[2]}`] : [];
-    }),
-  );
+      if (definition) ids.push(`${definition[1]}:${definition[2]}`);
+    }
+  }
 
   const draws = await Promise.allSettled(
     ids.map((id) =>
@@ -302,13 +302,12 @@ async function lock() {
   }
 }
 
-/** The active packs' id, or undefined until an update first activates some. Another process can activate packs too */
+// Another process can activate packs too
 export async function activeResourcePacks() {
   const active = await readGeneration(ACTIVE);
   return active && generationId(active);
 }
 
-/** The active packs, or undefined until an update first activates some */
 export async function loadResourcePacks(): Promise<
   { id: string; stack: PackStack } | undefined
 > {
@@ -318,7 +317,7 @@ export async function loadResourcePacks(): Promise<
   try {
     return { id: generationId(active), stack: await loadStack(active) };
   } catch (error) {
-    // An update can prune these packs while they load, once it has activated newer ones
+    // An update can prune these while they load, once newer packs are active
     const replaced = (await activeResourcePacks()) !== generationId(active);
     if ((error as NodeJS.ErrnoException).code === "ENOENT" && replaced)
       return loadResourcePacks();
@@ -326,10 +325,7 @@ export async function loadResourcePacks(): Promise<
   }
 }
 
-/**
- * Downloads Minecraft's client jar and Hypixel's SkyBlock pack, checks them, and activates them. One update runs
- * at a time, and the active packs stay when anything fails or a pack's license changes.
- */
+// The active packs stay when anything fails or a pack's license changes
 export async function updateResourcePacks(): Promise<PackUpdate> {
   await mkdir(ROOT, { recursive: true });
 
@@ -353,7 +349,7 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
       return { status: "held", license };
     }
 
-    // Items that fail to draw fall back to their 1.8 icons, so they don't hold back the rest
+    // Items that fail to draw fall back to their 1.8 icons
     const failedItems = await probe(await loadStack(generation));
 
     if (!lease.owned()) throw new Error("Another update took over the lock");
