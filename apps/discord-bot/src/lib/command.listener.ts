@@ -17,6 +17,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { Container } from "typedi";
+import { MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -97,13 +98,25 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService.incrementCommand(commandName);
 
-    return this.executeCommand({
+    const ran = await this.executeCommand({
       commandName,
       command,
       context,
       preconditions,
       message: this.getTipResponse(commandName, user),
     });
+
+    if (ran) this.recordLookups(command, context, id);
+  }
+
+  private recordLookups(command: CommandResolvable, context: CommandContext, userId: string) {
+    for (const arg of command.args) {
+      const type = arg.autocompleteType?.(context);
+      const name = context.option<string>(arg.name);
+      if (!type || !name || name.length > MAX_AUTOCOMPLETE_NAME_LENGTH) continue;
+
+      this.apiService.addAutocompleteHistory(type, userId, name).catch((err) => this.logger.error(err));
+    }
   }
 
   private cooldownPrecondition(

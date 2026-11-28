@@ -12,10 +12,10 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
+import { AutocompleteType, MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { LocalizationString } from "#messages";
-import { MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
 
 const apiClient = Container.get(ApiService);
 
@@ -33,7 +33,13 @@ export class PlayerArgument extends AbstractArgument {
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
     const query = context.option<string>(this.name).toLowerCase();
-    return autocompleteNames(query, 16, () => apiClient.getPlayerAutocomplete(query));
+    return autocompleteNames(query, 16, () =>
+      apiClient.getAutocomplete(AutocompleteType.PLAYER, context.getInteraction().getUserId(), query)
+    );
+  }
+
+  public autocompleteType() {
+    return AutocompleteType.PLAYER;
   }
 }
 

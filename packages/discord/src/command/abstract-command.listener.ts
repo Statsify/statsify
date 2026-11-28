@@ -128,7 +128,7 @@ export abstract class AbstractCommandListener {
     context,
     preconditions = [],
     message,
-  }: ExecuteCommandOptions) {
+  }: ExecuteCommandOptions): Promise<boolean> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
@@ -138,22 +138,26 @@ export abstract class AbstractCommandListener {
 
       const response = await command.execute(context);
 
-      if (typeof response !== "object") return;
+      if (typeof response !== "object") return true;
       transaction?.finish();
 
       context.reply({
         ...message,
         ...response,
       });
+
+      return true;
     } catch (err) {
       if (err instanceof Message) {
         transaction?.finish();
-        return context.reply(err);
+        await context.reply(err);
+        return false;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
+      return false;
     }
   }
 

@@ -39,4 +39,18 @@ export class ResetCommand {
       ephemeral: true,
     };
   }
+
+  @SubCommand({ description: (t) => t("commands.reset-searches") })
+  public async searches(context: CommandContext): Promise<IMessage> {
+    await this.apiService.clearAutocompleteHistory(context.getInteraction().getUserId());
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .description((t) => t("config.searches.reset"));
+
+    return {
+      embeds: [embed],
+      ephemeral: true,
+    };
+  }
 }

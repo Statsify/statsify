@@ -64,7 +64,7 @@ export class CommandListener extends AbstractCommandListener {
 
     const preconditions = [this.tierPrecondition.bind(this, command, user)];
 
-    return this.executeCommand({ commandName, command, context, preconditions });
+    await this.executeCommand({ commandName, command, context, preconditions });
   }
 
   public static create(

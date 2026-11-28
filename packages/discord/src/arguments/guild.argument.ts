@@ -12,10 +12,10 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
+import { AutocompleteType, GuildQuery, MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { ChoiceArgument } from "./choice.argument.js";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
-import { GuildQuery, MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
 import { PlayerArgument, autocompleteNames } from "./player.argument.js";
 
@@ -43,12 +43,17 @@ class GuildQueryArgument extends AbstractArgument {
     if (type === GuildQuery.PLAYER) return this.playerArgument.autocompleteHandler(context);
     if (type === GuildQuery.ID) return [];
 
-    const query = context.option<string>(this.name);
-    if (!query) return [];
+    const query = context.option<string>(this.name, "");
 
     return autocompleteNames(query, MAX_AUTOCOMPLETE_NAME_LENGTH, () =>
-      apiClient.getGuildAutocomplete(query)
+      apiClient.getAutocomplete(AutocompleteType.GUILD, context.getInteraction().getUserId(), query)
     );
+  }
+
+  public autocompleteType(context: CommandContext) {
+    const type = context.option<GuildQuery>("type");
+    if (type === GuildQuery.ID) return undefined;
+    return type === GuildQuery.PLAYER ? AutocompleteType.PLAYER : AutocompleteType.GUILD;
   }
 }
 

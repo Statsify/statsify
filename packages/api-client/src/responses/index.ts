@@ -8,6 +8,7 @@
 
 export * from "./delete.player.response.js";
 export * from "./error.response.js";
+export * from "./get.autocomplete.response.js";
 export * from "./get.gamecounts.response.js";
 export * from "./get.guild.response.js";
 export * from "./get.guild-search.response.js";

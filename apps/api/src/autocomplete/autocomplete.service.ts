@@ -1,0 +1,232 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import {
+  AutocompleteType,
+  MAX_AUTOCOMPLETE_CHOICES,
+} from "@statsify/api-client";
+import { Guild, Player, User } from "@statsify/schemas";
+import { GuildService } from "#guild";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "#redis";
+import { Injectable } from "@nestjs/common";
+import { Logger } from "@statsify/logger";
+import { PlayerSearchService } from "#player";
+import type { Redis } from "ioredis";
+import type { ReturnModelType } from "@typegoose/typegoose";
+
+const HISTORY_MS = 14 * 86_400_000;
+const HALF_LIFE_MS = 3 * 86_400_000;
+const LOOKUPS_PER_ENTRY = 10;
+
+interface HistoryEntry {
+  name: string;
+  lookups: number[];
+}
+
+const frecency = (lookups: number[], now: number) =>
+  lookups.reduce(
+    (score, time) => score + 0.5 ** ((now - time) / HALF_LIFE_MS),
+    0,
+  );
+
+const sortByFrecency = (entries: HistoryEntry[], now: number) =>
+  entries.sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now));
+
+const blend = (query: string, personal: string[], global: string[]) => {
+  const prefix = query.toLowerCase();
+  const seen = new Set<string>();
+  const names: string[] = [];
+
+  const push = (name: string) => {
+    const lower = name.toLowerCase();
+    if (seen.has(lower)) return;
+    seen.add(lower);
+    names.push(name);
+  };
+
+  for (const name of personal)
+    if (name.toLowerCase().startsWith(prefix)) push(name);
+  for (const name of global) push(name);
+
+  const exact = names.findIndex((name) => name.toLowerCase() === prefix);
+  if (exact > 0) names.unshift(...names.splice(exact, 1));
+
+  return names.slice(0, MAX_AUTOCOMPLETE_CHOICES);
+};
+
+const historyKey = (type: AutocompleteType, id: string) =>
+  `autocomplete:history:${type}:${id}`;
+
+@Injectable()
+export class AutocompleteService {
+  private readonly logger = new Logger("AutocompleteService");
+
+  public constructor(
+    @InjectRedis() private readonly redis: Redis,
+    private readonly playerSearchService: PlayerSearchService,
+    private readonly guildService: GuildService,
+    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
+    @InjectModel(Player) private readonly playerModel: ReturnModelType<
+      typeof Player
+    >,
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<
+      typeof Guild
+    >,
+  ) {}
+
+  public suggest(
+    type: AutocompleteType,
+    id: string,
+    query: string,
+  ): Promise<string[]> {
+    return type === AutocompleteType.GUILD
+      ? this.suggestGuilds(id, query)
+      : this.suggestPlayers(id, query);
+  }
+
+  public async record(type: AutocompleteType, id: string, name: string) {
+    const now = Date.now();
+
+    const [stored, entries] = await Promise.all([
+      this.findStoredName(type, name),
+      this.readHistory(type, id, now),
+    ]);
+
+    if (!stored) return;
+
+    const previous = entries.find((e) => e.name === stored)?.lookups ?? [];
+    const recorded = {
+      name: stored,
+      lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY),
+    };
+    const others = sortByFrecency(
+      entries.filter((e) => e.name !== stored),
+      now,
+    );
+
+    // A new name can score below a full history's names, so it goes in ahead of the cut
+    const kept = [recorded, ...others.slice(0, MAX_AUTOCOMPLETE_CHOICES - 1)];
+    await this.redis.set(
+      historyKey(type, id),
+      JSON.stringify(kept),
+      "PX",
+      HISTORY_MS,
+    );
+  }
+
+  public async clear(id: string) {
+    await this.redis.del(
+      historyKey(AutocompleteType.PLAYER, id),
+      historyKey(AutocompleteType.GUILD, id),
+    );
+  }
+
+  private async suggestPlayers(id: string, query: string) {
+    const [history, guild, global] = await Promise.all([
+      this.orEmpty(this.getHistory(AutocompleteType.PLAYER, id), []),
+      this.orEmpty(this.getLinkedGuild(id), null),
+      query ? this.playerSearchService.get(query) : [],
+    ]);
+
+    // Guild members whose name couldn't be found are stored as `ERROR <uuid>`.
+    const guildmates = (guild?.members ?? [])
+      .map((member) => member.username)
+      .filter(
+        (username): username is string =>
+          !!username && !username.startsWith("ERROR "),
+      )
+      .sort((a, b) => a.localeCompare(b));
+
+    return blend(query, [...history, ...guildmates], global);
+  }
+
+  private async suggestGuilds(id: string, query: string) {
+    const [history, guild, global] = await Promise.all([
+      this.orEmpty(this.getHistory(AutocompleteType.GUILD, id), []),
+      this.orEmpty(this.getLinkedGuild(id), null),
+      this.orEmpty(this.guildService.search(query), []),
+    ]);
+
+    return blend(
+      query,
+      guild ? [...history, guild.name] : history,
+      global.map((g) => g.name),
+    );
+  }
+
+  private orEmpty<T>(read: Promise<T>, empty: T) {
+    return read.catch((error) => {
+      this.logger.error(error);
+      return empty;
+    });
+  }
+
+  private async getHistory(type: AutocompleteType, id: string) {
+    const now = Date.now();
+    const entries = await this.readHistory(type, id, now);
+    return sortByFrecency(entries, now).map((entry) => entry.name);
+  }
+
+  private async readHistory(type: AutocompleteType, id: string, now: number) {
+    const raw = await this.redis.get(historyKey(type, id));
+    if (!raw) return [];
+
+    return (JSON.parse(raw) as HistoryEntry[])
+      .map((entry) => ({
+        ...entry,
+        lookups: entry.lookups.filter((time) => now - time < HISTORY_MS),
+      }))
+      .filter((entry) => entry.lookups.length > 0);
+  }
+
+  private async findStoredName(type: AutocompleteType, name: string) {
+    const lower = name.toLowerCase();
+
+    if (type === AutocompleteType.PLAYER) {
+      const player = await this.playerModel
+        .findOne({ usernameToLower: lower })
+        .select({ username: true })
+        .lean()
+        .exec();
+
+      return player?.username;
+    }
+
+    const guild = await this.guildModel
+      .findOne({ nameToLower: lower })
+      .select({ name: true })
+      .lean()
+      .exec();
+
+    return guild?.name;
+  }
+
+  private async getLinkedGuild(id: string) {
+    const user = await this.userModel
+      .findOne({ id })
+      .select({ uuid: true })
+      .lean()
+      .exec();
+    if (!user?.uuid) return null;
+
+    const player = await this.playerModel
+      .findOne({ uuid: user.uuid })
+      .select({ guildId: true })
+      .lean()
+      .exec();
+
+    if (!player?.guildId) return null;
+
+    return this.guildModel
+      .findOne({ id: player.guildId })
+      .select({ name: true, "members.username": true })
+      .lean()
+      .exec();
+  }
+}
