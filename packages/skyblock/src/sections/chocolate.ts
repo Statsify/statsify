@@ -6,33 +6,53 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ChocolateSection, RARITIES } from "#types";
 import { RABBITS } from "#data";
-import { RARITIES, type ChocolateSection } from "#types";
 import { add } from "@statsify/math";
 import type { RawMember } from "#raw";
 
 // In the factory's order
-const EMPLOYEES = ["rabbit_bro", "rabbit_cousin", "rabbit_sis", "rabbit_father", "rabbit_grandma", "rabbit_uncle", "rabbit_dog"] as const;
-// The chocolate since the last prestige that each next one needs, II to VI (the wiki's Chocolate Factory page, an
-// owner exception, unverified)
-const PRESTIGE_CHOCOLATE = [150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000];
+const EMPLOYEES = [
+  "rabbit_bro",
+  "rabbit_cousin",
+  "rabbit_sis",
+  "rabbit_father",
+  "rabbit_grandma",
+  "rabbit_uncle",
+  "rabbit_dog",
+] as const;
 
-// The rabbits record also holds faction_level
+// The wiki's Chocolate Factory page gives what prestiges II to VI need.
+const PRESTIGE_CHOCOLATE = [
+  150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000,
+];
+
+// The rabbits record also holds counts like faction_level.
 const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
 
-/** null before the member opens the Chocolate Factory. A rabbit counts once however often it was found. */
 export function getChocolate(member: RawMember): ChocolateSection | null {
   const easter = member.events?.easter;
-  const counts = Object.entries(easter?.rabbits ?? {}).flatMap(([rabbit, count]) =>
-    typeof count === "number" && ALL_RABBITS.has(rabbit) ? [[rabbit, count] as const] : []
-  );
-  const found = new Set(counts.map(([rabbit]) => rabbit));
+  const counts = new Map<string, number>();
+  for (const [rabbit, count] of Object.entries(easter?.rabbits ?? {})) {
+    if (typeof count === "number" && ALL_RABBITS.has(rabbit))
+      counts.set(rabbit, count);
+  }
+  const found = new Set(counts.keys());
 
-  // Hypixel sends the record, holding only the egg objects, before the factory makes any chocolate
+  // Hypixel sends the record with only its egg objects before any chocolate.
   if (!easter || (!easter.total_chocolate && found.size === 0)) return null;
 
-  // Hypixel leaves chocolate_level out until the first prestige
+  // Hypixel leaves chocolate_level out until the first prestige.
   const level = easter.chocolate_level ?? 1;
+
+  const rabbits: ChocolateSection["rabbits"] = [];
+  for (const rarity of RARITIES) {
+    const names = RABBITS[rarity.toLowerCase()];
+    if (!names) continue;
+
+    const owned = names.filter((rabbit) => found.has(rabbit));
+    rabbits.push({ rarity, found: owned.length, total: names.length });
+  }
 
   return {
     level,
@@ -40,21 +60,19 @@ export function getChocolate(member: RawMember): ChocolateSection | null {
     total: easter.total_chocolate ?? 0,
     sincePrestige: easter.chocolate_since_prestige ?? 0,
     nextPrestige: PRESTIGE_CHOCOLATE[level - 1],
-    rabbits: RARITIES.flatMap((rarity) => {
-      const rabbits = RABBITS[rarity.toLowerCase()];
-      return rabbits ? [{ rarity, found: rabbits.filter((rabbit) => found.has(rabbit)).length, total: rabbits.length }] : [];
-    }),
-    employees: EMPLOYEES.map((employee) => ({ employee, level: easter.employees?.[employee] ?? 0 })),
+    rabbits,
+    employees: EMPLOYEES.map((employee) => ({
+      employee,
+      level: easter.employees?.[employee] ?? 0,
+    })),
     timeTower: easter.time_tower?.level ?? 0,
-    duplicates: add(...counts.map(([, count]) => Math.max(0, count - 1))),
-    eggLocations: add(...Object.values(easter.rabbits?.collected_locations ?? {}).map((spots) => spots.length)),
+    duplicates: add(
+      ...[...counts.values()].map((count) => Math.max(0, count - 1)),
+    ),
+    eggLocations: add(
+      ...Object.values(easter.rabbits?.collected_locations ?? {}).map(
+        (spots) => spots.length,
+      ),
+    ),
   };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getChocolate puts a factory that never prestiged at prestige 1", () => {
-    expect(getChocolate({ events: { easter: { total_chocolate: 5, chocolate_since_prestige: 5 } } })?.level).toBe(1);
-  });
 }

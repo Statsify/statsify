@@ -12,6 +12,7 @@ import { FormattedGame } from "#game";
 import { formatTime } from "@statsify/util";
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
 
+// The default limits are sized for player boards, so each board sets its own.
 const BOARD_LIMIT = 50_000;
 
 export class SkyBlockFloorBoards {
@@ -76,7 +77,7 @@ export class SkyBlockFloorsBoards {
   public master7: SkyBlockFloorBoards;
 }
 
-/** Jacob's contest personal best per crop. */
+// Each crop's board ranks the member's best Jacob's contest.
 export class SkyBlockCropBoards {
   @Field({ leaderboard: { limit: BOARD_LIMIT } })
   public cactus: number;
@@ -118,10 +119,7 @@ export class SkyBlockCropBoards {
   public wildRose: number;
 }
 
-/**
- * Keyed as `boards.json` lists them, which @statsify/skyblock's sync-data writes since schemas can't import it. Hundreds
- * of boards, so each keeps a shallower depth than the main ones.
- */
+// sync-data writes boards.json, since schemas can't import @statsify/skyblock.
 export class SkyBlockCollectionBoards {
   [key: string]: number;
 }
@@ -130,6 +128,7 @@ export class SkyBlockBestiaryBoards {
   [key: string]: number;
 }
 
+// There are hundreds of these boards, so each keeps a shallower depth.
 for (const [key, name] of boards.collections) {
   Field({
     type: () => Number,
@@ -144,10 +143,6 @@ for (const [key, name] of boards.bestiary) {
   })(SkyBlockBestiaryBoards.prototype, key);
 }
 
-/**
- * One mode's boards for a member of a profile, from `toMemberStats` in `@statsify/skyblock`. Each board sets its 50,000
- * rows, since the default limits are sized for player boards.
- */
 export class SkyBlockBoards {
   @Field({
     leaderboard: {
@@ -170,7 +165,7 @@ export class SkyBlockBoards {
   })
   public nonCosmeticNetworth: number;
 
-  // Maxed members tie on the average, so the board ranks by `skillAverageOrder` (the shown average, then the XP under it)
+  // Maxed members tie on the average, so the board ranks skillAverageOrder.
   @Field({
     leaderboard: {
       fieldName: "Skill Average",
@@ -599,7 +594,6 @@ export const skyblockStatsId = (uuid: string, profileId: string) =>
   `${uuid}:${profileId}`;
 export const skyblockStatsUuid = (id: string) => id.split(":")[0];
 
-/** A member of a profile on the SkyBlock leaderboards: every profile is on `overall`, and a special mode's on its own too. */
 @ModelOptions({
   schemaOptions: { collection: "skyblockstats", versionKey: false },
 })

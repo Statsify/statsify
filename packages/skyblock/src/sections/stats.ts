@@ -7,102 +7,240 @@
  */
 
 import {
+  ATTRIBUTE_SHARDS,
+  HOTF_LAYOUT,
+  HOTM_LAYOUT,
+  PET_ITEMS,
+  PET_STATS,
+  POWERS,
+  STAT_TABLES,
+} from "#data";
+import {
   type ItemView,
   type ItemsResource,
   PLAYER_STATS,
   type PetView,
   type PlayerStat,
-  SKILLS,
-  SLAYER_BOSSES,
-  STAT_SLAYERS,
-  STAT_SOURCES,
   type Slots,
-  type StatSource,
   type StatTotal,
+  type StatValue,
   type Stats,
   type StatsSection,
   type TreeLayout,
   type TreeNode,
 } from "#types";
-import { ATTRIBUTE_SHARDS, HOTF_LAYOUT, HOTM_LAYOUT, PET_ITEMS, PET_STATS, POWERS, STAT_TABLES } from "#data";
+import { SLAYER_BOSSES, type SlayerBoss, getSlayers } from "./slayers.js";
+import { SKILLS, getSkills } from "./skills.js";
 import { add, roundTo } from "@statsify/math";
-import { attributeLevel } from "./attributes.js";
-import { TUNING, bagAccessories, heldAccessories, highestTiers, powerScale, stonePowerStats } from "./accessories.js";
+import {
+  TUNING,
+  getHeldAccessories,
+  getHighestTiers,
+  getPowerScale,
+  getPowerStats,
+  readBag,
+} from "./accessories.js";
+import { parsePieceBonuses, parseStatLine, parseStatName } from "#lore";
 import { decodeSlots } from "#items";
-import { skyblockLevel } from "../profiles.js";
+import { getAttributeLevel } from "./attributes.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getPets } from "./pets.js";
-import { getSkills } from "./skills.js";
-import { getSlayers } from "./slayers.js";
 import { isWeapon } from "./gear.js";
-import { parsePieceBonuses, parseStatLine, statNamed } from "../lore.js";
+import { toSkyBlockLevel } from "#leveling";
 import type { RawMember, RawProfile } from "#raw";
 
-const sumStats = (all: Iterable<Stats>): Stats => {
+// Vampire's level stats are Rift Time, a Rift-only stat.
+const STAT_SLAYERS = SLAYER_BOSSES.filter(
+  (boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire",
+);
+
+export const STAT_SOURCES = [
+  "base",
+  "wikiBase",
+  "armor",
+  "equipment",
+  "weapon",
+  "accessories",
+  "power",
+  "tuning",
+  "pet",
+  "skills",
+  ...STAT_SLAYERS,
+  "slayerTiers",
+  "petScore",
+  "essence",
+  "fortuneUpgrades",
+  "hotm",
+  "hotf",
+  "bestiary",
+  "catacombs",
+  "level",
+  "peppers",
+  // Attribute stats are in byAttribute, so this is only for unverified.
+  "attributes",
+] as const;
+
+export type StatSource = (typeof STAT_SOURCES)[number];
+
+function sumStats(all: Iterable<Stats>): Stats {
   const sum: Stats = {};
+
   for (const stats of all) {
-    for (const [stat, value] of Object.entries(stats) as [PlayerStat, number][]) sum[stat] = add(sum[stat] ?? 0, value);
+    for (const [stat, value] of Object.entries(stats) as [
+      PlayerStat,
+      number,
+    ][]) {
+      sum[stat] = add(sum[stat] ?? 0, value);
+    }
   }
+
   return sum;
-};
-
-/** The stat lines in the items' lore, which already count each item's reforge, gems, enchantments and stars. */
-const loreStats = (items: Slots): Stats =>
-  sumStats(
-    items.flatMap((item) => {
-      const lore = item?.lore ?? [];
-      return [...lore.flatMap((line) => parseStatLine(line) ?? []), ...parsePieceBonuses(lore)].map(({ stat, value }) => ({
-        [stat]: value,
-      }));
-    })
-  );
-
-const upTo = (levels: readonly Stats[], level: number) => sumStats(levels.slice(0, level));
-
-const scaleStats = (stats: Stats, factor: number): Stats =>
-  Object.fromEntries(Object.entries(stats).map(([stat, value]) => [stat, value * factor]));
-
-// Learned Powers' stats per unit of powerScale (wiki: Powers); stone Powers list theirs on the stone
-const LEARNED_POWERS: Record<string, Stats> = {
-  fortuitous: { health: 3.35, defense: 1.2, strength: 4.8, crit_chance: 4.35, crit_damage: 4.8 },
-  pretty: { health: 1.65, defense: 1.2, speed: 0.65, strength: 4.8, intelligence: 10.8, crit_chance: 0.475, crit_damage: 1.2 },
-  protected: { health: 11.75, defense: 10.8, strength: 2.4, crit_chance: 0.475, crit_damage: 1.2 },
-  simple: { health: 5.02, defense: 3.6, speed: 1.2, strength: 3.6, intelligence: 5.4, crit_chance: 1.45, crit_damage: 3.6 },
-  warrior: { health: 3.35, defense: 1.2, strength: 8.4, crit_chance: 2.4, crit_damage: 6 },
-  commando: { health: 5.02, defense: 2.4, strength: 8.4, crit_chance: 0.475, crit_damage: 8.4 },
-  disciplined: { health: 5.02, defense: 2.4, strength: 7.2, crit_chance: 1.45, crit_damage: 7.2 },
-  inspired: { health: 1.65, defense: 1.2, strength: 4.8, intelligence: 16.2, crit_chance: 0.95, crit_damage: 3.6 },
-  ominous: { health: 5.02, speed: 0.95, strength: 3.6, intelligence: 6.1, crit_chance: 1.45, crit_damage: 3.6, attack_speed: 0.9 },
-  prepared: { health: 12.4, defense: 11.3, strength: 1.95, crit_chance: 0.4, crit_damage: 0.95 },
-};
-
-function powerStats(power: string | undefined, accessoryPower: number): Stats | undefined {
-  const stone = power ? POWERS[power] : undefined;
-  if (stone) {
-    return sumStats(
-      stonePowerStats(stone, accessoryPower).flatMap(({ name, value }) => {
-        const stat = statNamed(name);
-        return stat ? [{ [stat]: value }] : [];
-      })
-    );
-  }
-
-  const learned = power ? LEARNED_POWERS[power] : undefined;
-  return learned && scaleStats(learned, powerScale(accessoryPower));
 }
 
-const tuningStats = (points: Record<string, number>): Stats =>
-  sumStats(
-    Object.entries(points).flatMap(([key, count]) => {
-      const tuned = TUNING[key];
-      return tuned && count > 0 ? [{ [tuned[0]]: count * tuned[1] }] : [];
-    })
+const sumValues = (values: StatValue[]) =>
+  sumStats(values.map(({ stat, value }) => ({ [stat]: value })));
+
+const sumLevels = (levels: Stats[], level: number) =>
+  sumStats(levels.slice(0, level));
+
+const scaleStats = (stats: Stats, factor: number): Stats =>
+  Object.fromEntries(
+    Object.entries(stats).map(([stat, value]) => [stat, value * factor]),
   );
 
-/** The active pet's stats at its level, raised by its item's percents, plus the item's own stats. */
-function petStats(pet: PetView | undefined): Stats | undefined {
+function getLoreStats(items: Slots): Stats {
+  const values: StatValue[] = [];
+
+  for (const item of items) {
+    if (!item) continue;
+
+    for (const line of item.lore) {
+      const value = parseStatLine(line);
+      if (value) values.push(value);
+    }
+
+    values.push(...parsePieceBonuses(item.lore));
+  }
+
+  return sumValues(values);
+}
+
+// Learned Powers' stats per unit of power scale, from the wiki's Powers page.
+const LEARNED_POWERS: Record<string, Stats> = {
+  fortuitous: {
+    health: 3.35,
+    defense: 1.2,
+    strength: 4.8,
+    crit_chance: 4.35,
+    crit_damage: 4.8,
+  },
+  pretty: {
+    health: 1.65,
+    defense: 1.2,
+    speed: 0.65,
+    strength: 4.8,
+    intelligence: 10.8,
+    crit_chance: 0.475,
+    crit_damage: 1.2,
+  },
+  protected: {
+    health: 11.75,
+    defense: 10.8,
+    strength: 2.4,
+    crit_chance: 0.475,
+    crit_damage: 1.2,
+  },
+  simple: {
+    health: 5.02,
+    defense: 3.6,
+    speed: 1.2,
+    strength: 3.6,
+    intelligence: 5.4,
+    crit_chance: 1.45,
+    crit_damage: 3.6,
+  },
+  warrior: {
+    health: 3.35,
+    defense: 1.2,
+    strength: 8.4,
+    crit_chance: 2.4,
+    crit_damage: 6,
+  },
+  commando: {
+    health: 5.02,
+    defense: 2.4,
+    strength: 8.4,
+    crit_chance: 0.475,
+    crit_damage: 8.4,
+  },
+  disciplined: {
+    health: 5.02,
+    defense: 2.4,
+    strength: 7.2,
+    crit_chance: 1.45,
+    crit_damage: 7.2,
+  },
+  inspired: {
+    health: 1.65,
+    defense: 1.2,
+    strength: 4.8,
+    intelligence: 16.2,
+    crit_chance: 0.95,
+    crit_damage: 3.6,
+  },
+  ominous: {
+    health: 5.02,
+    speed: 0.95,
+    strength: 3.6,
+    intelligence: 6.1,
+    crit_chance: 1.45,
+    crit_damage: 3.6,
+    attack_speed: 0.9,
+  },
+  prepared: {
+    health: 12.4,
+    defense: 11.3,
+    strength: 1.95,
+    crit_chance: 0.4,
+    crit_damage: 0.95,
+  },
+};
+
+function getSelectedPowerStats(
+  power: string | undefined,
+  accessoryPower: number,
+): Stats | undefined {
+  if (!power) return undefined;
+
+  const stone = POWERS[power];
+  if (stone) {
+    const values: StatValue[] = [];
+
+    for (const { name, value } of getPowerStats(stone, accessoryPower)) {
+      const stat = parseStatName(name);
+      if (stat) values.push({ stat, value });
+    }
+
+    return sumValues(values);
+  }
+
+  const learned = LEARNED_POWERS[power];
+  return learned && scaleStats(learned, getPowerScale(accessoryPower));
+}
+
+const getTuningStats = (points: Record<string, number>) =>
+  sumStats(
+    Object.entries(points)
+      .filter(([key, count]) => TUNING[key] && count > 0)
+      .map(([key, count]) => {
+        const [stat, perPoint] = TUNING[key];
+        return { [stat]: count * perPoint };
+      }),
+  );
+
+function getPetStats(pet: PetView | undefined): Stats | undefined {
   if (!pet) return undefined;
 
   const table = PET_STATS[pet.type]?.[pet.rarity];
@@ -110,19 +248,26 @@ function petStats(pet: PetView | undefined): Stats | undefined {
   const [from, to] = table?.levels ?? [1, 100];
   const progress = (Math.min(pet.level.level, to) - from) / (to - from);
 
-  // A dragon below its table's first level is still an egg, with no stats of its own
-  const own = (pet.level.level < from ? [] : Object.keys({ ...table?.first, ...table?.last })).map((key) => {
+  // A dragon below its table's first level is an egg with no stats.
+  const keys =
+    pet.level.level < from
+      ? []
+      : Object.keys({ ...table?.first, ...table?.last });
+
+  const own = keys.map((key) => {
     const stat = key as PlayerStat;
     const first = table?.first[stat] ?? 0;
-    const boost = 1 + ((item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0)) / 100;
-    return { [stat]: (first + ((table?.last[stat] ?? 0) - first) * progress) * boost };
+    const last = table?.last[stat] ?? 0;
+    const percent = (item?.allPetStats ?? 0) + (item?.petStats?.[stat] ?? 0);
+    return {
+      [stat]: (first + (last - first) * progress) * (1 + percent / 100),
+    };
   });
 
   return sumStats([...own, item?.stats ?? {}]);
 }
 
-// Essence shop perks that count everywhere, per level (wiki: Essence Shops' pages). The Catacombs perks count only in
-// dungeons, and the rest only on an island or against some mobs.
+// Only the essence perks that count everywhere, per level.
 const ESSENCE_PERKS: Record<string, Stats> = {
   permanent_health: { health: 2 },
   permanent_defense: { defense: 1 },
@@ -133,44 +278,56 @@ const ESSENCE_PERKS: Record<string, Stats> = {
   frozen_skin: { cold_resistance: 1 },
   extreme_pressure: { pressure_resistance: 3 },
   lumberjack: { foraging_fortune: 2 },
-  // Its Speed and Mana Regen are the Rift's
+  // Its Speed and Mana Regen only count in the Rift.
   blessing_of_time: { health: 5, strength: 2, intelligence: 2, defense: 2 },
 };
 
-const essenceStats = (perks: Record<string, number>) =>
+const getEssenceStats = (perks: Record<string, number | boolean>) =>
   sumStats(
-    Object.entries(perks).flatMap(([perk, level]) => {
-      const stats = ESSENCE_PERKS[perk];
-      return stats ? [scaleStats(stats, level)] : [];
-    })
+    Object.entries(perks)
+      .filter(([perk]) => ESSENCE_PERKS[perk])
+      .map(([perk, level]) => scaleStats(ESSENCE_PERKS[perk], Number(level))),
   );
 
-/** The stats of a tree's perks that grant them outright, while the perk is on. */
-const treeStats = (nodes: TreeNode[], layout: TreeLayout) =>
+const getTreeStats = (nodes: TreeNode[], layout: TreeLayout) =>
   sumStats(
-    nodes.flatMap(({ id, level, enabled }) =>
-      enabled ? (layout[id]?.stats ?? []).map((stat) => ({ [stat.id]: stat.base + stat.perLevel * level })) : []
-    )
+    nodes
+      .filter(({ enabled }) => enabled)
+      .flatMap(({ id, level }) =>
+        (layout[id]?.stats ?? []).map((stat) => ({
+          [stat.id]: stat.base + stat.perLevel * level,
+        })),
+      ),
   );
 
-// Defaults NEU's base_stats leaves out (wiki: Stats), and its Magic Find of 10, which the wiki puts at 0
+// Base stats NEU leaves out, plus its Magic Find, which the wiki puts at 0.
 const { magic_find: baseMagicFind, ...BASE } = STAT_TABLES.base;
-const WIKI_BASE: Stats = { swing_range: 3, health_regen: 100, vitality: 100, mending: 100, respiration: 30, magic_find: baseMagicFind };
+const WIKI_BASE: Stats = {
+  swing_range: 3,
+  health_regen: 100,
+  vitality: 100,
+  mending: 100,
+  respiration: 30,
+  magic_find: baseMagicFind,
+};
 
-// wiki: Health, and SkyBlock Levels for the level's stats. Fairy souls stopped giving stats in 2022.
+// Fairy souls stopped giving stats in 2022, so they aren't a source.
 const BESTIARY_HEALTH = 2;
 const CATACOMBS_HEALTH = { perLevel: 2, maxLevel: 50 };
 const LEVEL_STATS = { health: 5, strengthEvery: 5 };
 const PEPPER_HEALTH = 1;
 
-const neuHealth = (levels: Stats[]) => levels.map(({ health }) => (health ? { health } : {}));
+const getHealthLevels = (levels: Stats[]) =>
+  levels.map(({ health }) => (health ? { health } : {}));
 
-// Each boss's level stats, NEU's and the wiki's. NEU's Zombie, Spider and Enderman tables predate 0.19.2, so only their
-// Health (which matches the wiki's) is kept, and it has no Blaze table.
+// Only Health is current in NEU's Zombie, Spider and Enderman tables.
 const SLAYER_LEVELS = {
-  zombie: { neu: neuHealth(STAT_TABLES.slayers.zombie), wiki: [{}, {}, {}, {}, {}, {}, {}, { health_regen: 30 }, {}] },
+  zombie: {
+    neu: getHealthLevels(STAT_TABLES.slayers.zombie),
+    wiki: [{}, {}, {}, {}, {}, {}, {}, { health_regen: 30 }, {}],
+  },
   spider: {
-    neu: neuHealth(STAT_TABLES.slayers.spider),
+    neu: getHealthLevels(STAT_TABLES.slayers.spider),
     wiki: [
       { crit_damage: 1 },
       { crit_damage: 1 },
@@ -185,8 +342,18 @@ const SLAYER_LEVELS = {
   },
   wolf: { neu: STAT_TABLES.slayers.wolf, wiki: [] },
   enderman: {
-    neu: neuHealth(STAT_TABLES.slayers.enderman),
-    wiki: [{}, { intelligence: 2 }, {}, { intelligence: 2 }, {}, { intelligence: 5 }, {}, { intelligence: 4 }, { tracking: 5 }],
+    neu: getHealthLevels(STAT_TABLES.slayers.enderman),
+    wiki: [
+      {},
+      { intelligence: 2 },
+      {},
+      { intelligence: 2 },
+      {},
+      { intelligence: 5 },
+      {},
+      { intelligence: 4 },
+      { tracking: 5 },
+    ],
   },
   blaze: {
     neu: [],
@@ -202,132 +369,222 @@ const SLAYER_LEVELS = {
       { health: 7 },
     ],
   },
-} satisfies Record<(typeof STAT_SLAYERS)[number], { neu: Stats[]; wiki: Stats[] }>;
+} satisfies Record<
+  (typeof STAT_SLAYERS)[number],
+  { neu: Stats[]; wiki: Stats[] }
+>;
 
-// Combat Wisdom for each boss tier killed once: 1 for tiers I to III, 2 for IV and V, Vampire's too (the wiki's Combat
-// Wisdom page, an owner exception, unverified)
-const tierWisdom = (kills: number[]) => add(...kills.map((count, tier) => (count > 0 ? (tier < 3 ? 1 : 2) : 0)));
+// Each boss tier killed once gives 1 Combat Wisdom, or 2 from tier IV up.
+function getSlayerTierWisdom(bosses: Record<SlayerBoss, { kills: number[] }>) {
+  let wisdom = 0;
 
-// Anita's Extra Farming Fortune and Agatha's and Miria's log fortunes, per level (wiki: Farming, Fig, Mangrove and Helix
-// Fortune)
+  for (const boss of SLAYER_BOSSES) {
+    for (const [tier, count] of bosses[boss].kills.entries()) {
+      if (count > 0) wisdom += tier < 3 ? 1 : 2;
+    }
+  }
+
+  return wisdom;
+}
+
 const FORTUNE_PER_UPGRADE = 4;
 
-// Pet score's Magic Find past NEU's last step at 325 (wiki: Pet Score)
-const PET_SCORE_STEPS = { ...STAT_TABLES.pet_score, 375: 11, 450: 12, 500: 13 };
+// NEU's pet score steps stop at 325, so the wiki gives the rest.
+const PET_SCORE_STEPS = {
+  ...STAT_TABLES.pet_score,
+  375: 11,
+  450: 12,
+  500: 13,
+};
 const UNVERIFIED_PET_SCORE = 375;
 
-const petScoreMagicFind = (score: number) =>
-  Math.max(0, ...Object.entries(PET_SCORE_STEPS).flatMap(([at, magicFind]) => (score >= Number(at) ? [magicFind] : [])));
+const getPetScoreMagicFind = (score: number) =>
+  Math.max(
+    0,
+    ...Object.entries(PET_SCORE_STEPS)
+      .filter(([at]) => score >= Number(at))
+      .map(([, magicFind]) => magicFind),
+  );
 
-type AttributeStat = { stat: PlayerStat; name: string; value: number };
+interface AttributeStat {
+  stat: PlayerStat;
+  name: string;
+  value: number;
+}
 
-/**
- * The Hunting attributes whose level I grants stats outright, at the wiki's scaling: level I's amounts times the level
- * (unverified).
- */
-function attributeStats(member: RawMember): AttributeStat[] {
-  return ATTRIBUTE_SHARDS.shards.flatMap((shard) => {
+// The wiki scales level I's stats by the level.
+function getAttributeStats(member: RawMember): AttributeStat[] {
+  const stats: AttributeStat[] = [];
+
+  for (const shard of ATTRIBUTE_SHARDS.shards) {
     const { attributeName, grants = [] } = shard;
-    const level = grants.length > 0 ? attributeLevel(shard, member) : 0;
-    return level > 0 ? grants.map(({ stat, value }) => ({ stat, name: attributeName, value: value * level })) : [];
-  });
+    if (grants.length === 0) continue;
+
+    const level = getAttributeLevel(shard, member);
+    if (level === 0) continue;
+
+    for (const { stat, value } of grants) {
+      stats.push({ stat, name: attributeName, value: value * level });
+    }
+  }
+
+  return stats;
 }
 
-/** Each stat with a source, by source and by attribute; rounded to two places, as lore shows them. */
-function toTotals(sources: Partial<Record<StatSource, Stats>>, attributes: AttributeStat[]): StatTotal[] {
-  return PLAYER_STATS.flatMap(({ id: stat }) => {
-    const bySource = Object.fromEntries(
-      STAT_SOURCES.flatMap((source) => {
-        const value = roundTo(sources[source]?.[stat] ?? 0);
-        return value === 0 ? [] : [[source, value]];
-      })
-    );
-    const byAttribute = Object.fromEntries(attributes.filter((attribute) => attribute.stat === stat).map(({ name, value }) => [name, roundTo(value)]));
+// Lore shows stats to two places, so each value rounds the same way.
+function toTotals(
+  sources: Partial<Record<StatSource, Stats>>,
+  attributes: AttributeStat[],
+): StatTotal[] {
+  const totals: StatTotal[] = [];
+
+  for (const { id: stat } of PLAYER_STATS) {
+    const bySource: Partial<Record<StatSource, number>> = {};
+
+    for (const source of STAT_SOURCES) {
+      const value = roundTo(sources[source]?.[stat] ?? 0);
+      if (value !== 0) bySource[source] = value;
+    }
+
+    const byAttribute: Record<string, number> = {};
+    for (const { stat: granted, name, value } of attributes) {
+      if (granted === stat) byAttribute[name] = roundTo(value);
+    }
+
     const values = [...Object.values(bySource), ...Object.values(byAttribute)];
-    if (values.length === 0) return [];
-    return [{ stat, total: roundTo(add(...values)), bySource, ...(Object.keys(byAttribute).length > 0 && { byAttribute }) }];
-  });
+    if (values.length === 0) continue;
+
+    const total: StatTotal = { stat, total: roundTo(add(...values)), bySource };
+    if (Object.keys(byAttribute).length > 0) total.byAttribute = byAttribute;
+    totals.push(total);
+  }
+
+  return totals;
 }
 
-/**
- * The permanent stat sheet. Gear, the weapon, accessories and the Power need the inventory API and skills the skills
- * API; with either off, those sources are left out.
- */
-export function getStats(profile: RawProfile, member: RawMember, items: ItemsResource): StatsSection {
+export function getStats(
+  profile: RawProfile,
+  member: RawMember,
+  items: ItemsResource,
+): StatsSection {
   const inventory = member.inventory;
-  const bag = bagAccessories(member, items);
+  const bag = readBag(member, items);
   const storage = member.accessory_bag_storage;
-  const power = bag ? powerStats(storage?.selected_power, bag.accessoryPower) : undefined;
-  const tuning = tuningStats(storage?.tuning?.slot_0 ?? {});
-  const inventoryItems = inventory?.inv_contents ? decodeSlots(inventory.inv_contents) : [];
-  const weapon = inventoryItems.slice(0, 9).find((item): item is ItemView => item !== null && isWeapon(item));
-  const held = bag ? heldAccessories(inventoryItems, items, bag.owned) : [];
-  const accessories = bag ? highestTiers([...bag.active, ...held]) : [];
+  const power = bag
+    ? getSelectedPowerStats(storage?.selected_power, bag.accessoryPower)
+    : undefined;
+  const tuning = getTuningStats(storage?.tuning?.slot_0 ?? {});
+  const inventoryItems = inventory?.inv_contents
+    ? decodeSlots(inventory.inv_contents)
+    : [];
+
+  // The API has no held slot, so the first weapon in the hotbar counts.
+  const weapon = inventoryItems
+    .slice(0, 9)
+    .find((item): item is ItemView => item !== null && isWeapon(item));
+
+  const held = bag ? getHeldAccessories(inventoryItems, items, bag.owned) : [];
+  const accessories = bag ? getHighestTiers([...bag.active, ...held]) : [];
 
   const skills = getSkills(profile, member);
   const slayers = getSlayers(member).bosses;
   const pets = getPets(member);
   const perks = member.player_data?.perks ?? {};
-  const essence = essenceStats(perks);
+  const essence = getEssenceStats(perks);
   const catacombs = getDungeons(member).catacombs.level;
-  const level = skyblockLevel(member.leveling?.experience ?? 0);
+  const level = toSkyBlockLevel(member.leveling?.experience ?? 0).level;
   const peppers = member.player_data?.reaper_peppers_eaten ?? 0;
-  const slayerTiers = add(...SLAYER_BOSSES.map((boss) => tierWisdom(slayers[boss].kills)));
+  const bestiaryMilestone =
+    member.bestiary?.milestone?.last_claimed_milestone ?? 0;
+  const slayerTiers = getSlayerTierWisdom(slayers);
 
   const slayerStats = STAT_SLAYERS.map((boss) => {
     const { neu, wiki } = SLAYER_LEVELS[boss];
     const level = slayers[boss].level.level;
-    return { boss, neu: upTo(neu, level), wiki: upTo(wiki, level) };
+    return { boss, neu: sumLevels(neu, level), wiki: sumLevels(wiki, level) };
   });
+
+  // Anita's Extra Farming Fortune upgrade is the API's double_drops.
   const fortuneUpgrades = scaleStats(
     {
       farming_fortune: member.jacobs_contest?.perks?.double_drops ?? 0,
-      fig_fortune: perks.agatha_fig_fortune ?? 0,
-      mangrove_fortune: perks.agatha_mangrove_fortune ?? 0,
-      helix_fortune: perks.miria_helix_fortune ?? 0,
+      fig_fortune: Number(perks.agatha_fig_fortune ?? 0),
+      mangrove_fortune: Number(perks.agatha_mangrove_fortune ?? 0),
+      helix_fortune: Number(perks.miria_helix_fortune ?? 0),
     },
-    FORTUNE_PER_UPGRADE
+    FORTUNE_PER_UPGRADE,
   );
 
   const sources: Partial<Record<StatSource, Stats>> = {
     base: BASE,
     wikiBase: WIKI_BASE,
-    armor: inventory?.inv_armor ? loreStats(decodeSlots(inventory.inv_armor)) : undefined,
-    equipment: inventory?.equipment_contents ? loreStats(decodeSlots(inventory.equipment_contents)) : undefined,
-    weapon: weapon && loreStats([weapon]),
-    accessories: bag ? loreStats(accessories) : undefined,
+    armor: inventory?.inv_armor
+      ? getLoreStats(decodeSlots(inventory.inv_armor))
+      : undefined,
+    equipment: inventory?.equipment_contents
+      ? getLoreStats(decodeSlots(inventory.equipment_contents))
+      : undefined,
+    weapon: weapon && getLoreStats([weapon]),
+    accessories: bag ? getLoreStats(accessories) : undefined,
     power,
     tuning,
-    skills: skills ? sumStats(SKILLS.map((skill) => upTo(STAT_TABLES.skills[skill], skills.skills[skill].level))) : undefined,
-    ...Object.fromEntries(slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])])),
+    skills: skills
+      ? sumStats(
+          SKILLS.map((skill) =>
+            sumLevels(STAT_TABLES.skills[skill], skills.skills[skill].level),
+          ),
+        )
+      : undefined,
+    ...Object.fromEntries(
+      slayerStats.map(({ boss, neu, wiki }) => [boss, sumStats([neu, wiki])]),
+    ),
     slayerTiers: { combat_wisdom: slayerTiers },
-    pet: petStats(pets.active),
-    petScore: { magic_find: petScoreMagicFind(pets.score) },
+    pet: getPetStats(pets.active),
+    petScore: { magic_find: getPetScoreMagicFind(pets.score) },
     essence,
-    hotm: treeStats(getHotm(member).nodes, HOTM_LAYOUT),
-    hotf: treeStats(getHotf(member)?.nodes ?? [], HOTF_LAYOUT),
-    bestiary: { health: BESTIARY_HEALTH * (member.bestiary?.milestone?.last_claimed_milestone ?? 0) },
-    catacombs: { health: CATACOMBS_HEALTH.perLevel * Math.min(catacombs, CATACOMBS_HEALTH.maxLevel) },
-    level: { health: LEVEL_STATS.health * level, strength: Math.floor(level / LEVEL_STATS.strengthEvery) },
+    hotm: getTreeStats(getHotm(member).nodes, HOTM_LAYOUT),
+    hotf: getTreeStats(getHotf(member)?.nodes ?? [], HOTF_LAYOUT),
+    bestiary: { health: BESTIARY_HEALTH * bestiaryMilestone },
+    catacombs: {
+      health:
+        CATACOMBS_HEALTH.perLevel *
+        Math.min(catacombs, CATACOMBS_HEALTH.maxLevel),
+    },
+    level: {
+      health: LEVEL_STATS.health * level,
+      strength: Math.floor(level / LEVEL_STATS.strengthEvery),
+    },
     peppers: { health: PEPPER_HEALTH * peppers },
     fortuneUpgrades,
   };
 
   const unverified: StatSource[] = ["wikiBase"];
-  if (accessories.some((view) => held.includes(view))) unverified.push("accessories");
+  if (accessories.some((view) => held.includes(view))) {
+    unverified.push("accessories");
+  }
   if (power) unverified.push("power");
   if (Object.keys(tuning).length > 0) unverified.push("tuning");
-  unverified.push(...slayerStats.flatMap(({ boss, wiki }) => (Object.keys(wiki).length > 0 ? [boss] : [])));
+  unverified.push(
+    ...slayerStats
+      .filter(({ wiki }) => Object.keys(wiki).length > 0)
+      .map(({ boss }) => boss),
+  );
   if (slayerTiers > 0) unverified.push("slayerTiers");
   if (pets.score >= UNVERIFIED_PET_SCORE) unverified.push("petScore");
   if (Object.keys(essence).length > 0) unverified.push("essence");
-  if (member.bestiary?.milestone?.last_claimed_milestone) unverified.push("bestiary");
+  if (bestiaryMilestone) unverified.push("bestiary");
   if (catacombs > 0) unverified.push("catacombs");
   if (level > 0) unverified.push("level");
   if (peppers > 0) unverified.push("peppers");
-  if (Object.values(fortuneUpgrades).some((value) => value > 0)) unverified.push("fortuneUpgrades");
-  const attributes = attributeStats(member);
+  if (Object.values(fortuneUpgrades).some((value) => value > 0)) {
+    unverified.push("fortuneUpgrades");
+  }
+  const attributes = getAttributeStats(member);
   if (attributes.length > 0) unverified.push("attributes");
 
-  return { stats: toTotals(sources, attributes), weapon: weapon?.name, unverified };
+  return {
+    stats: toTotals(sources, attributes),
+    weapon: weapon?.name,
+    unverified,
+  };
 }

@@ -39,34 +39,6 @@ export interface Config {
     timeout: number;
   };
 
-  skyblock?: {
-    /**
-     * How many keyed Hypixel calls SkyBlock lookups may make in each 5-minute window
-     * @example 60
-     */
-    hypixelBudget: number;
-    /**
-     * SkyBlock lookups stop once the key's RateLimit-Remaining would fall under this, leaving the rest for minigames
-     * @example 100
-     */
-    reserve: number;
-    /**
-     * How much time in milliseconds to wait for each SkyBlock call to Hypixel
-     * @example 10000
-     */
-    timeout: number;
-    /**
-     * How old in minutes the SkyBlock price map can get before a read rebuilds it
-     * @example 15
-     */
-    pricesRefreshMinutes: number;
-    /**
-     * The site's origin, for the /skyblock cards' Full Profile link to the profile's page; empty hides the link
-     * @example "https://statsify.net"
-     */
-    siteUrl?: string;
-  };
-
   api: {
     /**
      * What port to run the Statsify API on
