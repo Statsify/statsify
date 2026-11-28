@@ -7,6 +7,8 @@ mod error;
 mod geometry;
 mod model;
 #[cfg(not(target_arch = "wasm32"))]
+mod mount;
+#[cfg(not(target_arch = "wasm32"))]
 mod native;
 mod pose;
 #[cfg(not(target_arch = "wasm32"))]

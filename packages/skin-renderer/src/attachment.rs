@@ -20,10 +20,13 @@ const SNEAKING_HAND_DROP: Vector3<f32> = Vector3::new(0.0, -3.25, 0.0);
 
 // The game draws a player at 0.9375 of the size it draws other entities, and this renderer draws
 // the player at a pixel per model unit, so other entities grow by the inverse around the feet
-const PLAYER_SCALE: f32 = 0.9375;
+pub(crate) const PLAYER_SCALE: f32 = 0.9375;
 
-// An entity's model origin, this renderer's neck, is drawn 1.5078125 blocks above its feet
-const FEET: Vector3<f32> = Vector3::new(0.0, 7.0 - 1.5078125 * UNITS_PER_BLOCK, 0.0);
+// The game draws an entity's model origin 1.5078125 blocks above its feet, times its scale
+pub(crate) const MODEL_HEIGHT: f32 = 1.5078125 * UNITS_PER_BLOCK;
+
+// The player's feet, below its model origin at this renderer's neck
+pub(crate) const FEET: Vector3<f32> = Vector3::new(0.0, 7.0 - MODEL_HEIGHT, 0.0);
 
 // An armor stand hangs its head a pixel below a player's
 const STAND_HEAD_DROP: Vector3<f32> = Vector3::new(0.0, -1.0, 0.0);

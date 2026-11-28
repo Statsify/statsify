@@ -23,14 +23,15 @@ const size = (fallback: number) =>
 
 export const sceneCamera = (
   camera: { yaw: number; pitch: number; width: number; height: number },
-  descriptions: { height?: string } = {},
+  descriptions: { yaw?: string; pitch?: string; height?: string } = {},
 ) =>
   z.object({
     yaw: queryAngle(Math.PI * 2, camera.yaw).describe(
-      "Camera angle around the scene in radians: 0 faces the front, π the back",
+      descriptions.yaw ??
+        "Camera angle around the scene in radians: 0 faces the front, π the back",
     ),
     pitch: queryAngle(Math.PI / 2, camera.pitch).describe(
-      "Camera angle above the horizon in radians",
+      descriptions.pitch ?? "Camera angle above the horizon in radians",
     ),
     width: size(camera.width),
     height: size(camera.height).meta({ description: descriptions.height }),

@@ -1,7 +1,7 @@
 pub mod coordinate;
 pub mod vertex;
 
-use cgmath::{Deg, Quaternion, Rad, Vector3};
+use cgmath::{Quaternion, Rad, Vector3};
 
 use self::vertex::Vertex;
 
@@ -27,8 +27,8 @@ pub(crate) fn tan(angle: impl Into<Rad<f32>>) -> f32 {
   f64::from(angle.into().0).tan() as f32
 }
 
-pub fn axis_angle(axis: Vector3<f32>, angle: Deg<f32>) -> Quaternion<f32> {
-  let (sin, cos) = sin_cos(Rad::from(angle) / 2.0);
+pub fn axis_angle(axis: Vector3<f32>, angle: impl Into<Rad<f32>>) -> Quaternion<f32> {
+  let (sin, cos) = sin_cos(angle.into() / 2.0);
   Quaternion::from_sv(cos, axis * sin)
 }
 

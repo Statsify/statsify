@@ -25,8 +25,10 @@ import { createCanvas, loadImage } from "@statsify/rendering";
 import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
 import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
 import {
+  type WarlordsMount,
   getWarlordsArmor,
   getWarlordsHelmetModel,
+  getWarlordsMount,
   getWarlordsWeaponModel,
 } from "./warlords-cosmetics.js";
 import { join } from "node:path";
@@ -36,6 +38,7 @@ import {
   type ArmorPiece,
   type ModelInstance,
   ModelLibrary,
+  type SceneMount,
   renderScene,
   renderSkin,
 } from "@statsify/skin-renderer";
@@ -133,15 +136,17 @@ export class SkinService {
     const { armor: piece } = warlords;
     const suit = { chestplate: piece, leggings: piece, boots: piece };
 
-    const [library, player, armor] = await Promise.all([
+    const [library, player, armor, mount] = await Promise.all([
       this.getLibrary(WARLORDS_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
       resolvePackArmor(WARLORDS_PACK, suit),
+      warlords.mount && loadMount(warlords.mount),
     ]);
 
     return renderWarlords(library, warlords, {
       ...options,
       player: player && { ...player, armor },
+      mount,
     });
   }
 
@@ -366,6 +371,8 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 export const SMASH_PACK = resourcePack("Smash Heroes", "smash");
+// The 1.8.9 client's own textures for what no game pack draws, such as mounts
+export const VANILLA_PACK = resourcePack("Minecraft 1.8.9", "vanilla-1.8.9");
 
 // The kart is worn by an armor stand the rider sits on: the stand's mounted offset
 // (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
@@ -386,8 +393,8 @@ async function readPackFiles<T>(
   );
 }
 
-export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
-  // Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
+// Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
+async function assertInstalled(pack: ResourcePack) {
   await access(pack.path).catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") {
       throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
@@ -395,6 +402,10 @@ export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary>
 
     throw error;
   });
+}
+
+export async function loadPackLibrary(pack: ResourcePack): Promise<ModelLibrary> {
+  await assertInstalled(pack);
 
   const [models, textures, mcmeta] = await Promise.all([
     readPackFiles(pack, "models", ".json", (path) => readFile(path, "utf8")),
@@ -490,22 +501,32 @@ export function renderKart(
 export interface WarlordsScene {
   models: ModelInstance[];
   armor?: ArmorPieceDto;
+  mount?: WarlordsMount;
 }
 
 export function resolveWarlords(
-  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon">,
-  standing: boolean
+  cosmetics: Pick<WarlordsRenderDto, "class" | "helmet" | "armor" | "team" | "weapon" | "mount">,
+  withPlayer: boolean
 ): WarlordsScene {
   const { class: playerClass, helmet = 0, armor = 0, team = "blue", weapon } = cosmetics;
   const weaponModel = weapon === undefined ? undefined : getWarlordsWeaponModel(weapon);
+  const mount = cosmetics.mount === undefined ? undefined : getWarlordsMount(cosmetics.mount);
 
-  if (!standing) {
+  if (!withPlayer) {
     const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
     if (worn.some((value) => value !== undefined)) {
       throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
     }
 
-    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon");
+    if (weaponModel && mount) {
+      throw new BadRequestException("A weapon needs a uuid to hold it on a mount");
+    }
+
+    if (mount) return { models: [], mount };
+
+    if (!weaponModel) {
+      throw new BadRequestException("A render without a uuid needs a weapon or a mount");
+    }
 
     return { models: [{ model: weaponModel, bone: "root" }] };
   }
@@ -520,20 +541,35 @@ export function resolveWarlords(
 
   if (weaponModel) models.push({ model: weaponModel, bone: "rightHand", display: "thirdperson" });
 
-  return { models, armor: getWarlordsArmor(armor, team) };
+  return { models, armor: getWarlordsArmor(armor, team), mount };
 }
 
 export interface WarlordsRenderOptions
   extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
+  mount?: SceneMount;
+}
+
+async function loadMount({ entity, textures }: WarlordsMount): Promise<SceneMount> {
+  await assertInstalled(VANILLA_PACK);
+
+  const horse = join(VANILLA_PACK.path, "textures/entity/horse");
+
+  const layers = await Promise.all(
+    textures.map((texture) => readFile(join(horse, `${texture}.png`)))
+  );
+
+  return { entity, textures: layers };
 }
 
 export function renderWarlords(
   library: ModelLibrary,
   { models }: WarlordsScene,
-  { player, extruded = false, ...camera }: WarlordsRenderOptions
+  { player, mount, extruded = false, ...camera }: WarlordsRenderOptions
 ): Promise<Buffer> {
-  const defaults = player ? WARLORDS_CAMERA.player : WARLORDS_CAMERA.weapon;
+  let defaults = WARLORDS_CAMERA.weapon;
+  if (player) defaults = WARLORDS_CAMERA.player;
+  if (mount) defaults = WARLORDS_CAMERA.mount;
 
   const output = {
     width: camera.width ?? defaults.width,
@@ -542,13 +578,11 @@ export function renderWarlords(
     pitch: camera.pitch ?? defaults.pitch,
   };
 
-  if (!player) return renderScene(library, { models }, output);
+  const scene = { models, mount };
 
-  return renderScene(
-    library,
-    { player: { ...player, extruded, pose: "standing" }, models },
-    output
-  );
+  if (!player) return renderScene(library, scene, output);
+
+  return renderScene(library, { ...scene, player: { ...player, extruded } }, output);
 }
 
 export interface SmashScene

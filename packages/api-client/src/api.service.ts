@@ -201,6 +201,7 @@ export class ApiService {
       armor?: number;
       team?: "blue" | "red";
       weapon?: string;
+      mount?: string;
     }
   ) {
     return this.requestImage(

@@ -7,6 +7,7 @@
  */
 
 import type { ArmorPieceDto } from "#dtos";
+import type { SceneMount } from "@statsify/skin-renderer";
 import { SUIT_DYES, lookup } from "./kart-cosmetics.js";
 
 export const WARLORDS_HELMETS = {
@@ -96,8 +97,36 @@ export const WARLORDS_ARMOR = {
   2: { blue: { material: "gold" }, red: { material: "diamond" } },
 } as const satisfies Record<number, Record<"blue" | "red", ArmorPieceDto>>;
 
+export interface WarlordsMount extends Pick<SceneMount, "entity"> {
+  // Layers under textures/entity/horse, in the order the game draws them
+  textures: string[];
+}
+
+// Unconfirmed: each mount's look is guessed from its menu icon, name and lore
+export const WARLORDS_MOUNTS = {
+  noble_steed: { entity: "horse", textures: ["horse_brown"] },
+  undying_mare: { entity: "horse", textures: ["horse_skeleton"] },
+  corpse_mare: { entity: "horse", textures: ["horse_zombie"] },
+  war_horse: {
+    entity: "horse",
+    textures: ["horse_white", "armor/horse_armor_diamond"],
+  },
+  battle_beast: {
+    entity: "horse",
+    textures: ["horse_darkbrown", "armor/horse_armor_iron"],
+  },
+  raging_stallion: {
+    entity: "horse",
+    textures: ["horse_black", "armor/horse_armor_gold"],
+  },
+  molly_the_donkey: { entity: "donkey", textures: ["donkey"] },
+} satisfies Record<string, WarlordsMount>;
+
 export const getWarlordsWeaponModel = (weapon: string) =>
   lookup(WARLORDS_WEAPONS, weapon, `Unknown weapon ${weapon}`);
+
+export const getWarlordsMount = (mount: string): WarlordsMount =>
+  lookup(WARLORDS_MOUNTS, mount, `Unknown mount ${mount}`);
 
 export function getWarlordsHelmetModel(
   playerClass: string,

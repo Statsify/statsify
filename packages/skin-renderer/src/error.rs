@@ -37,6 +37,10 @@ pub enum Error {
   MissingGlint,
 
   #[cfg(not(target_arch = "wasm32"))]
+  #[error("A mount needs a texture")]
+  MissingMountTexture,
+
+  #[cfg(not(target_arch = "wasm32"))]
   #[error("Failed to render: {0}")]
   RenderPanicked(String),
 
