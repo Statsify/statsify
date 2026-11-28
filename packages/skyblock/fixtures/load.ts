@@ -9,7 +9,7 @@
 // Test-only fake items.
 import nbt from "prismarine-nbt";
 import { gzipSync } from "node:zlib";
-import type { RawItem } from "#types";
+import type { RawItem } from "#raw";
 
 const toTag = (value: unknown): nbt.Tags[nbt.TagType] => {
   if (typeof value === "string") return nbt.string(value);

@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Typed views of the data scripts/sync-data.ts writes to src/generated/: NEU-REPO's (MIT, see src/generated/NOTICE.md),
-// plus the skill tables and max levels from Hypixel's skills resource.
+// scripts/sync-data.ts generates these from the sources in NOTICE.md.
 import accessories from "./generated/accessories.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
@@ -22,7 +21,7 @@ export const LEVELING = leveling as {
   leveling_xp: number[];
   max_levels: Record<string, number>;
   runecrafting_xp: number[];
-  sblevel_colours: Record<string, string>; // the lowest level of each bracket → a Minecraft color id
+  sblevel_colours: Record<string, string>; // a bracket's first level → color id
   slayer_to_highest_tier: Record<string, number>;
   slayer_xp: Record<string, number[]>;
   social: number[];
@@ -31,7 +30,12 @@ export const LEVELING = leveling as {
 export const PETS = pets as {
   custom_pet_leveling: Record<
     string,
-    { type?: number; pet_levels?: number[]; max_level?: number; rarity_offset?: Record<string, number> }
+    {
+      type?: number;
+      pet_levels?: number[];
+      max_level?: number;
+      rarity_offset?: Record<string, number>;
+    }
   >;
   id_to_display_name: Record<string, string>;
   pet_levels: number[];
@@ -43,10 +47,13 @@ export const PET_TEXTURES = petTextures as {
   skins: Record<string, string>;
 };
 
-/** An accessory → the ids that make it inactive: its higher tiers, or a variant (Dante's Talisman and Ring). */
-export const ACCESSORY_UPGRADES = accessories.upgrades as Record<string, string[]>;
+// An accessory's higher tiers, or a variant like Dante's Talisman and Ring.
+export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
+  string,
+  string[]
+>;
 
-export const IGNORED_ACCESSORIES: ReadonlySet<string> = new Set(accessories.ignored);
+export const IGNORED_ACCESSORIES = new Set<string>(accessories.ignored);
 
 export const HOTM_LAYOUT = hotmLayout as Record<
   string,

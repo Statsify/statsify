@@ -6,28 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ItemTexture, ItemsResource, RawItem } from "#types";
+import { PET_TEXTURES } from "#data";
+import {
+  RARITIES,
+  type ItemTexture,
+  type ItemsResource,
+  type Rarity,
+} from "#types";
+import type { RawItem, RawPet } from "#raw";
 
-/** The texture hash in a base64 skin value (`{"textures":{"SKIN":{"url":…}}}`). */
-export function skinHash(value: string): string | undefined {
-  const { textures } = JSON.parse(Buffer.from(value, "base64").toString("utf8")) as {
-    textures?: { SKIN?: { url?: string } };
-  };
-
-  return textures?.SKIN?.url?.split("/").at(-1);
-}
-
-export function textureOf(item: RawItem): ItemTexture {
-  const value = item.tag?.SkullOwner?.Properties?.textures?.[0]?.Value;
-  const skin = value && skinHash(value);
-  if (skin) return { kind: "head", skin };
-
-  // Exact leather colors identify rare armor, and a shade up to 7 off per channel looks the same
-  const color = item.tag?.display?.color;
-  return { kind: "item", id: item.id, damage: item.Damage, ...(color === undefined ? {} : { color: color & 0xf8_f8_f8 }) };
-}
-
-// 1.8 ids for the material names the items resource gives accessories that aren't heads.
+// 1.8 ids for the items resource's accessory materials.
 const MATERIAL_IDS: Record<string, number> = {
   BOOK: 340,
   COMPASS: 345,
@@ -42,23 +30,105 @@ const MATERIAL_IDS: Record<string, number> = {
   STRING: 287,
 };
 
-/** The texture of an item the player doesn't own, from the items resource. undefined for a material not in MATERIAL_IDS. */
-export function resourceTexture({ skin, material, durability }: ItemsResource["items"][string]): ItemTexture | undefined {
+export function skinHash(value: string): string | undefined {
+  const { textures } = JSON.parse(
+    Buffer.from(value, "base64").toString("utf8"),
+  ) as {
+    textures?: { SKIN?: { url?: string } };
+  };
+
+  return textures?.SKIN?.url?.split("/").at(-1);
+}
+
+export function getItemTexture(item: RawItem): ItemTexture {
+  const value = item.tag?.SkullOwner?.Properties?.textures?.[0]?.Value;
+  const skin = value && skinHash(value);
+  if (skin) return { kind: "head", skin };
+
+  // Exact leather colors mark rare armor, and 7 off per channel looks the same.
+  const color = item.tag?.display?.color;
+  return {
+    kind: "item",
+    id: item.id,
+    damage: item.Damage,
+    ...(color === undefined ? {} : { color: color & 0xf8_f8_f8 }),
+  };
+}
+
+export function resourceTexture({
+  skin,
+  material,
+  durability,
+}: ItemsResource["items"][string]): ItemTexture | undefined {
   if (skin) return { kind: "head", skin };
   const id = MATERIAL_IDS[material];
-  return id === undefined ? undefined : { kind: "item", id, damage: durability ?? 0 };
+  return id === undefined
+    ? undefined
+    : { kind: "item", id, damage: durability ?? 0 };
+}
+
+export function getPetTexture(
+  pet: RawPet,
+  rarity: Rarity,
+  items: ItemsResource | undefined,
+): ItemTexture {
+  // The items resource has the skins newer than the NEU pin.
+  const skin =
+    pet.skin &&
+    (PET_TEXTURES.skins[pet.skin] ??
+      items?.items[`PET_SKIN_${pet.skin}`]?.skin);
+  if (skin) return { kind: "head", skin };
+
+  const textures = PET_TEXTURES.pets[pet.type] ?? {};
+  const distance = (candidate: Rarity) =>
+    Math.abs(RARITIES.indexOf(candidate) - RARITIES.indexOf(rarity));
+  const hash = RARITIES.toSorted((a, b) => distance(a) - distance(b))
+    .map((candidate) => textures[candidate])
+    .find(Boolean);
+
+  // A type newer than the NEU pin has no head.
+  return hash
+    ? { kind: "head", skin: hash }
+    : { kind: "item", id: 397, damage: 3 };
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("resourceTexture reads heads and known materials", () => {
-    expect(resourceTexture({ name: "Head", material: "SKULL_ITEM", skin: "abc123" })).toEqual({ kind: "head", skin: "abc123" });
-    expect(resourceTexture({ name: "Zombie", material: "SKULL_ITEM", durability: 2 })).toEqual({ kind: "item", id: 397, damage: 2 });
-    expect(resourceTexture({ name: "New", material: "TRIAL_KEY" })).toBeUndefined();
+  suite("resourceTexture", () => {
+    it("should read a head's skin", () => {
+      expect(
+        resourceTexture({ name: "Head", material: "SKULL_ITEM", skin: "abc" }),
+      ).toEqual({ kind: "head", skin: "abc" });
+    });
+
+    it("should map a known material to its 1.8 id", () => {
+      expect(
+        resourceTexture({
+          name: "Zombie",
+          material: "SKULL_ITEM",
+          durability: 2,
+        }),
+      ).toEqual({ kind: "item", id: 397, damage: 2 });
+    });
+
+    it("should skip an unknown material", () => {
+      expect(
+        resourceTexture({ name: "New", material: "TRIAL_KEY" }),
+      ).toBeUndefined();
+    });
   });
 
-  test("textureOf rounds a dyed item's color down to the nearest 8 a channel", () => {
-    expect(textureOf({ id: 301, Count: 1, Damage: 0, tag: { display: { color: 0x0f_10_17 } } })).toMatchObject({ color: 0x08_10_10 });
+  suite("getItemTexture", () => {
+    it("should round a dyed color down to the nearest 8 a channel", () => {
+      expect(
+        getItemTexture({
+          id: 301,
+          Count: 1,
+          Damage: 0,
+          tag: { display: { color: 0x0f_10_17 } },
+        }),
+      ).toMatchObject({ color: 0x08_10_10 });
+    });
   });
 }

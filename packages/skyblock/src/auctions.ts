@@ -7,9 +7,9 @@
  */
 
 import { decodeInventory } from "#nbt";
-import { getPetLevel } from "./sections/pets.js";
-import type { Bazaar, ItemsResource, PriceEntry, PriceMap, RawItem } from "#types";
-import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
+import { getPetLevel } from "#leveling";
+import type { Bazaar, ItemsResource, PriceEntry, PriceMap } from "#types";
+import type { RawAuction, RawAuctionsPage, RawItem, RawPet } from "#raw";
 
 // The networth library looks prices up by exact key, so each function below turns an item into one of its key formats.
 
