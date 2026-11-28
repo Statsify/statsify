@@ -70,7 +70,7 @@ export type MemberStat =
 
 export type MemberStats = Record<MemberStat, number>;
 
-// 13 bits hold the average in hundredths and 40 the XP, an exact integer.
+// 13 bits hold hundredths of an average up to 60, and 40 bits the XP.
 const XP_SPAN = 2 ** 40;
 
 // Maxed members tie on the shown average, so the XP under it breaks ties.
@@ -114,6 +114,7 @@ export function toMemberStats(
     const members = Object.keys(profile.members).filter((other) =>
       isMember(profile, other),
     ).length;
+    // The bank is the co-op's, so a member's networth counts only their share.
     const othersBank = networth.bank - networth.bank / members;
     stats.networth = networth.noInventory
       ? 0
