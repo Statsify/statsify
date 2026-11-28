@@ -11,6 +11,7 @@ import chalk from "chalk";
 import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { inspect } from "node:util";
+import type { RequestAttributes } from "./event.js";
 
 const LOG_LEVELS = [
   "log",
@@ -50,30 +51,10 @@ const SentryLogByLogLevel: Record<LogLevel, typeof Sentry.logger.info> = {
   fatal: Sentry.logger.fatal,
 };
 
-const isProduction = (await config("environment")) === "prod";
+export const isProduction = (await config("environment")) === "prod";
 
-// Sentry doesn't scrub these, so no Discord usernames or API keys
-export type RequestAttributes = {
-  "discord.command"?: string;
-  "discord.guild.id"?: string;
-  "discord.locale"?: string;
-  "statsify.user.tier"?: string;
-  "statsify.user.uuid"?: string;
-  "statsify.mode"?: string;
-  "statsify.submode"?: string;
-  "statsify.outcome"?: "message";
-  "statsify.api.route"?: string;
-  "statsify.api.role"?: string;
-  "statsify.player"?: string;
-  "statsify.player.tag"?: string;
-  "statsify.guild.tag"?: string;
-  "statsify.cache.hit"?: boolean;
-};
-
-export const setRequestAttributes = (attributes: RequestAttributes) => {
-  Sentry.setAttributes(attributes);
-  Sentry.setTags(attributes);
-};
+const isErrorLevel = (level: LogLevel) =>
+  level === "error" || level === "fatal";
 
 const format = (message: unknown) => {
   if (typeof message === "string") return message;
@@ -81,8 +62,16 @@ const format = (message: unknown) => {
   return inspect(message, { depth: 3, breakLength: Infinity, compact: true });
 };
 
+export const captureError = (error: unknown) => {
+  const span = Sentry.getActiveSpan();
+  if (span)
+    Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
+
+  Sentry.captureException(error);
+};
+
 /**
- * Prints `{icon} {context} {time} {message}` and sends the message to Sentry Logs.
+ * Prints `{icon} {context} {time} {message} {attributes}` and sends the message to Sentry Logs with its attributes.
  * Errors passed to `error` or `fatal` are also captured as Sentry issues.
  */
 export class Logger {
@@ -90,46 +79,39 @@ export class Logger {
 
   public constructor(private readonly context = "Default") {}
 
-  public log(message: unknown) {
-    this.write("log", message);
+  public log(message: unknown, attributes?: RequestAttributes) {
+    this.write("log", message, attributes);
   }
 
-  public error(message: unknown) {
-    this.write("error", message);
+  public error(message: unknown, attributes?: RequestAttributes) {
+    this.write("error", message, attributes);
   }
 
-  public warn(message: unknown) {
-    this.write("warn", message);
+  public warn(message: unknown, attributes?: RequestAttributes) {
+    this.write("warn", message, attributes);
   }
 
-  public debug(message: unknown) {
-    this.write("debug", message);
+  public debug(message: unknown, attributes?: RequestAttributes) {
+    this.write("debug", message, attributes);
   }
 
-  public verbose(message: unknown) {
-    this.write("verbose", message);
+  public verbose(message: unknown, attributes?: RequestAttributes) {
+    this.write("verbose", message, attributes);
   }
 
-  public fatal(message: unknown) {
-    this.write("fatal", message);
+  public fatal(message: unknown, attributes?: RequestAttributes) {
+    this.write("fatal", message, attributes);
   }
 
-  private write(level: LogLevel, message: unknown) {
-    const isErrorLevel = level === "error" || level === "fatal";
-    const output = format(message);
-
-    if (isErrorLevel && message instanceof Error) {
-      const span = Sentry.getActiveSpan();
-      if (span)
-        Sentry.getRootSpan(span).setStatus({
-          code: 2,
-          message: "internal_error",
-        });
-
-      Sentry.captureException(message);
-    }
-
-    const icon = chalk.bold(isErrorLevel ? "📉" : "📈");
+  /**
+   * Prints to stdout or stderr without sending to Sentry Logs.
+   */
+  public print(
+    level: LogLevel,
+    message: unknown,
+    attributes: RequestAttributes = {},
+  ) {
+    const icon = chalk.bold(isErrorLevel(level) ? "📉" : "📈");
     const context = chalk.hex(ColorByLogLevel[level].toString(16))(
       this.context,
     );
@@ -137,15 +119,31 @@ export class Logger {
       `${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`,
     );
 
-    process[isErrorLevel ? "stderr" : "stdout"].write(
-      `${icon} ${context} ${time} ${output}\n`,
+    const fields = Object.entries(attributes)
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => ` ${key}=${value}`)
+      .join("");
+
+    process[isErrorLevel(level) ? "stderr" : "stdout"].write(
+      `${icon} ${context} ${time} ${format(message)}${chalk.gray(fields)}\n`,
     );
+  }
+
+  private write(
+    level: LogLevel,
+    message: unknown,
+    attributes?: RequestAttributes,
+  ) {
+    if (isErrorLevel(level) && message instanceof Error) captureError(message);
+
+    this.print(level, message, attributes);
 
     SentryLogByLogLevel[level](
-      message instanceof Error ? message.message : output,
+      message instanceof Error ? message.message : format(message),
       {
         context: this.context,
         ...(message instanceof Error && { "error.type": message.name }),
+        ...attributes,
       },
     );
   }

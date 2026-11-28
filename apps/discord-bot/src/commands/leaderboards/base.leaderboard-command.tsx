@@ -100,6 +100,7 @@ export class BaseLeaderboardCommand {
 
     const changePage =
       (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+        context.setActorTier(interaction);
         if (user?.locale) interaction.setLocale(user.locale);
 
         const params = fn();
@@ -187,15 +188,15 @@ export class BaseLeaderboardCommand {
         )
       );
 
-    listener.addHook(searchDocument.getCustomId(), () => ({
-      type: InteractionResponseType.Modal,
-      data: documentModal.build(t),
-    }));
+    listener.addHook(searchDocument.getCustomId(), (interaction) => {
+      context.setActorTier(interaction);
+      return { type: InteractionResponseType.Modal, data: documentModal.build(t) };
+    });
 
-    listener.addHook(searchPosition.getCustomId(), () => ({
-      type: InteractionResponseType.Modal,
-      data: positionModal.build(t),
-    }));
+    listener.addHook(searchPosition.getCustomId(), (interaction) => {
+      context.setActorTier(interaction);
+      return { type: InteractionResponseType.Modal, data: positionModal.build(t) };
+    });
 
     listener.addHook(documentModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
@@ -211,6 +212,7 @@ export class BaseLeaderboardCommand {
 
       const position = Number(positionInput);
 
+      context.setActorTier(interaction);
       if (user?.locale) interaction.setLocale(user.locale);
 
       if (!/^\d+$/.test(positionInput) || position < 1) {
