@@ -196,7 +196,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
       museum[id] = { category, xp: data.donation_xp, upgrade: parent?.[id] };
     }
 
-    // Sponge's equipment gives a point less than its armor and names no upgrade.
+    // Sponge's equipment gives a point less than its armor, with no upgrade.
     for (const [set, xp] of Object.entries(data.armor_set_donation_xp ?? {})) {
       const seen = museum[set];
       museum[set] = {
