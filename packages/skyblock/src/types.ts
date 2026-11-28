@@ -141,6 +141,7 @@ export interface MemberView {
   dungeons?: DungeonsSection;
   slayers?: SlayersSection;
   networth?: NetworthSection;
+  values?: ValuesSection;
   level?: SkyBlockLevelSection;
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
@@ -224,6 +225,36 @@ export interface InventoriesSection {
     glint: boolean;
     texture?: ItemTexture;
   }[];
+}
+
+// Each slot's worth as networth prices it, laid out as InventoriesSection.
+export interface InventoryValues {
+  // A null slot has no price.
+  pages: Partial<Record<InventoryId, (number | null)[][]>>;
+  backpackIcons: (number | null)[];
+  // A backpack's total adds its icon.
+  totals: Partial<Record<InventoryId, number>>;
+  // Sacks list only the priced items, by id.
+  sacks: Record<string, number>;
+}
+
+export interface MissingPet {
+  type: string;
+  name: string;
+  rarity: Rarity;
+  // The price is unset on a profile without the market.
+  price?: number;
+  // points is the pet score the pet would add.
+  points: number;
+  texture: ItemTexture;
+}
+
+export interface ValuesSection {
+  pricesAsOf: number;
+  // The inventories are null with the inventory API off.
+  inventories: InventoryValues | null;
+  // Missing pets are cheapest first, or by name without the market.
+  missingPets: MissingPet[];
 }
 
 export interface MuseumView {

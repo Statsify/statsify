@@ -83,7 +83,10 @@ export function parseBazaar(raw: RawBazaar): Bazaar {
 const toUpperCase = (value: unknown) => String(value).toUpperCase();
 
 // Pet keys use the API's tier, without Tier Boost.
-const petKey = (pet: RawPet, level: number) =>
+export const petKey = (
+  pet: Pick<RawPet, "tier" | "type" | "skin">,
+  level: number,
+) =>
   `LVL_${level}_${pet.tier}_${pet.type}${pet.skin ? `${SKINNED}${pet.skin}` : ""}`;
 
 const bookKeys = (attributes: Attributes) =>
@@ -273,7 +276,10 @@ export function getPriceEntries(
   for (const product of Object.values(bazaar.products)) {
     if (product.sellPrice <= 0) continue;
     entries[product.id] = {
-      coins: product.sellPrice,
+      coins: Math.max(
+        product.sellPrice,
+        items.items[product.id]?.npcPrice ?? 0,
+      ),
       source: "bazaar",
       buy: product.buyPrice,
     };
@@ -646,6 +652,27 @@ if (import.meta.vitest) {
         HYPERION: { coins: 900, source: "bin", listings: 1 },
         ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
         ARROW: { coins: 2, source: "npc" },
+      });
+    });
+
+    it("should never price a bazaar item under its NPC price", () => {
+      const status = { buyMovingWeek: 1, sellMovingWeek: 1 };
+      const bazaar: Bazaar = {
+        lastUpdated: 1,
+        products: {
+          LOW_BID: { id: "LOW_BID", sellPrice: 10, buyPrice: 2000, ...status },
+        },
+      };
+      const items: ItemsResource = {
+        lastUpdated: 1,
+        museum: {},
+        items: {
+          LOW_BID: { name: "Low Bid", material: "STONE", npcPrice: 50 },
+        },
+      };
+
+      expect(getPriceEntries(new Map(), bazaar, items)).toEqual({
+        LOW_BID: { coins: 50, source: "bazaar", buy: 2000 },
       });
     });
   });

@@ -13,7 +13,7 @@ import {
   type Rarity,
   type Slots,
 } from "#types";
-import { decodeAttributes, decodeInventory } from "#nbt";
+import { decodeInventory } from "#nbt";
 import { getItemTexture, resourceTexture, skinHash } from "#textures";
 import { RARITY_COLORS } from "./display.js";
 import { normalizeItemText } from "#lore";
@@ -153,10 +153,9 @@ export function toItemView(item: RawItem): ItemView {
 
 // A toolkit's tool has no name or lore, so the items resource draws it.
 export function toToolkitItemView(
-  blob: RawNbt,
+  attributes: RawItemAttributes,
   items: ItemsResource,
 ): ItemView | null {
-  const attributes = decodeAttributes(blob);
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;

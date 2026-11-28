@@ -6,32 +6,50 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { EQUIPMENT_PIECES } from "../sections/gear.js";
 import {
   type Item,
+  ItemNetworthCalculator,
   type Items,
   ProfileNetworthCalculator,
   parseItems,
   setItems,
 } from "skyhelper-networth";
+import { PET_STATS, getPetName } from "#data";
+import {
+  type InventoryValues,
+  type ItemTexture,
+  type ItemsResource,
+  type MissingPet,
+  type NetworthItem,
+  type NetworthSection,
+  type PriceMap,
+  RARITIES,
+  type Rarity,
+} from "#types";
 import { add } from "@statsify/math";
-import { boostedRarity } from "#leveling";
-import { describeKey, lookupKeys } from "#prices";
+import { boostedRarity, getPetScorePoints } from "#leveling";
+import { decodeAttributes, decodeInventory, decodeNestedInventory } from "#nbt";
+import { describeKey, lookupKeys, petKey } from "#prices";
+import { getInventoryPages, sortByKey } from "../sections/inventories.js";
 import { getItemTexture, getPetTexture, resourceTexture } from "#textures";
+import { hasMarket } from "../profiles.js";
 import { normalizeItemText } from "#lore";
 import { prettify } from "@statsify/util";
+import { toToolkitItemView } from "#items";
 import type {
-  ItemTexture,
-  ItemsResource,
-  NetworthItem,
-  NetworthSection,
-  PriceMap,
-} from "#types";
-import type { RawItem, RawItemsResource, RawPet } from "#raw";
+  RawItem,
+  RawItemsResource,
+  RawMember,
+  RawNbt,
+  RawPet,
+} from "#raw";
 import {
   NETWORTH_SECTION,
   SECTIONS,
   type Section,
   type SkyBlockSection,
+  VALUES_SECTION,
 } from "../sections/index.js";
 
 const TOP_ITEMS = 10;
@@ -154,7 +172,7 @@ function setNetworthItems(resource: RawItemsResource) {
   networthItemsUpdated = resource.lastUpdated;
 }
 
-// The price worker can't afford this library, so it stays out of SECTIONS.
+// The price worker can't afford this library, so these stay out of SECTIONS.
 const NETWORTH: Section<"networth"> = {
   needs: ["museum", "prices", "items"],
   async compute({ profile, member, museum, prices, items, rawItems }) {
@@ -212,9 +230,237 @@ const NETWORTH: Section<"networth"> = {
   },
 };
 
+function getCheapestRarity(
+  type: string,
+  rarities: (typeof PET_STATS)[string],
+  map: PriceMap,
+) {
+  let cheapest: { rarity: Rarity; price: number } | undefined;
+  for (const rarity of Object.keys(rarities) as Rarity[]) {
+    const entry = map.entries[petKey({ tier: rarity, type }, 1)];
+    if (getPetScorePoints(rarity) === 0 || !entry) continue;
+    if (!cheapest || entry.coins < cheapest.price) {
+      cheapest = { rarity, price: entry.coins };
+    }
+  }
+  return cheapest;
+}
+
+function getMissingPets(
+  member: RawMember,
+  map: PriceMap,
+  items: ItemsResource,
+  market: boolean,
+): MissingPet[] {
+  const owned = new Set(member.pets_data?.pets?.map(({ type }) => type));
+  const missing = Object.entries(PET_STATS).filter(
+    ([type]) => !owned.has(type),
+  );
+
+  const toMissingPet = (
+    type: string,
+    rarity: Rarity,
+    price?: number,
+  ): MissingPet => ({
+    type,
+    name: getPetName(type),
+    rarity,
+    price,
+    points: getPetScorePoints(rarity),
+    texture: getPetTexture(type, rarity, { items }),
+  });
+
+  if (!market) {
+    const pets: MissingPet[] = [];
+    for (const [type, rarities] of missing) {
+      const rarity = RARITIES.find(
+        (rarity) => rarity in rarities && getPetScorePoints(rarity) > 0,
+      );
+      if (rarity) pets.push(toMissingPet(type, rarity));
+    }
+    return pets.toSorted((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const priced: { type: string; rarity: Rarity; price: number }[] = [];
+  for (const [type, rarities] of missing) {
+    const cheapest = getCheapestRarity(type, rarities, map);
+    if (cheapest) priced.push({ type, ...cheapest });
+  }
+
+  return priced
+    .toSorted((a, b) => a.price - b.price)
+    .map(({ type, rarity, price }) => toMissingPet(type, rarity, price));
+}
+
+// The library prices a toolkit's tool as an item named from the resource.
+function toToolkitItem(blob: RawNbt, items: ItemsResource): RawItem | null {
+  const attributes = decodeAttributes(blob);
+  const view = toToolkitItemView(attributes, items);
+  if (!view) return null;
+
+  return {
+    id: 0,
+    Count: 1,
+    Damage: 0,
+    tag: { display: { Name: view.name }, ExtraAttributes: attributes },
+  };
+}
+
+// The library adds these years in its profile parse, which items skip.
+function setCakeBagYears(item: RawItem) {
+  const attributes = item.tag?.ExtraAttributes;
+  if (!attributes?.new_year_cake_bag_data) return;
+
+  const cakes = decodeNestedInventory(attributes.new_year_cake_bag_data);
+  attributes.new_year_cake_bag_years = cakes
+    .map((cake) => cake?.tag?.ExtraAttributes?.new_years_cake)
+    .filter((year) => year !== undefined);
+}
+
+// The library's ITEMS_WITH_UNIQUE_MODIFIERS, which it doesn't export.
+const UNIQUE_MODIFIER_ITEMS = new Set(["SAFARI_BELT"]);
+
+// A unique modifier counts on the first item in the library's order.
+const NETWORTH_ORDER = [
+  "inventory",
+  "enderChest",
+  "accessoryBag",
+  "personalVault",
+  "fishingBag",
+  "potionBag",
+  "sacksBag",
+  "quiver",
+  "backpacks",
+];
+
+function getNetworthOrder(id: string) {
+  const index = NETWORTH_ORDER.indexOf(id);
+  return index === -1 ? NETWORTH_ORDER.length : index;
+}
+
+function getEquipment(member: RawMember) {
+  const blobs = [member.inventory?.equipment_contents];
+  for (const set of Object.values(member.loadout?.equipment ?? {})) {
+    if (typeof set === "number") continue;
+    blobs.push(...EQUIPMENT_PIECES.map((piece) => set[piece]));
+  }
+
+  return blobs
+    .filter((blob) => blob !== undefined)
+    .flatMap((blob) => decodeInventory(blob));
+}
+
+async function getInventoryValues(
+  member: RawMember,
+  map: PriceMap,
+  items: ItemsResource,
+): Promise<InventoryValues | null> {
+  // Networth leaves out a tool its toolkit doesn't hold.
+  const unheld = new Set<RawItem>();
+  const inventories = await getInventoryPages(
+    member,
+    decodeInventory,
+    (blob, held) => {
+      const item = toToolkitItem(blob, items);
+      if (item && !held) unheld.add(item);
+      return item;
+    },
+  );
+  if (!inventories) return null;
+
+  const options = { prices: toNetworthPrices(map) };
+  const price = async (item: RawItem | null) => {
+    // The item calculator throws on an item without ExtraAttributes.
+    if (!item?.tag?.ExtraAttributes || unheld.has(item)) return null;
+    setCakeBagYears(item);
+    return new ItemNetworthCalculator(item).getNetworth(options);
+  };
+
+  const [priced, pricedIcons, pricedEquipment] = await Promise.all([
+    Promise.all(
+      Object.entries(inventories).map(async ([id, pages]) => {
+        const prices = await Promise.all(
+          pages.map((page) => Promise.all(page.map(price))),
+        );
+        return [id, prices] as const;
+      }),
+    ),
+    Promise.all(
+      sortByKey(member.inventory?.backpack_icons).map((blob) =>
+        price(decodeInventory(blob)[0] ?? null),
+      ),
+    ),
+    Promise.all(getEquipment(member).map(price)),
+  ]);
+
+  const counted = new Set<string>();
+  const getWorth = (result: Item | null) => {
+    if (!result) return null;
+
+    let coins = result.price;
+    if (UNIQUE_MODIFIER_ITEMS.has(result.id)) {
+      for (const { type, id, price } of result.calculation ?? []) {
+        const key = `${result.id}:${type}:${id}`;
+        if (counted.has(key)) coins -= price;
+        else counted.add(key);
+      }
+    }
+    return coins > 0 ? coins : null;
+  };
+
+  // Worn and loadout equipment come first in the library's order.
+  for (const result of pricedEquipment) getWorth(result);
+
+  const pages: InventoryValues["pages"] = Object.fromEntries(
+    priced
+      .toSorted(([a], [b]) => getNetworthOrder(a) - getNetworthOrder(b))
+      .map(([id, pages]) => [id, pages.map((page) => page.map(getWorth))]),
+  );
+  const backpackIcons = pricedIcons.map(getWorth);
+
+  const totals: InventoryValues["totals"] = Object.fromEntries(
+    Object.entries(pages).map(([id, pages]) => [
+      id,
+      add(...pages.flat().map((coins) => coins ?? 0)),
+    ]),
+  );
+  totals.backpacks = add(
+    totals.backpacks ?? 0,
+    ...backpackIcons.map((coins) => coins ?? 0),
+  );
+
+  const sacks: InventoryValues["sacks"] = {};
+  for (const [id, count] of Object.entries(
+    member.inventory?.sacks_counts ?? {},
+  )) {
+    const coins = map.entries[id]?.coins;
+    if (count > 0 && coins) sacks[id] = count * coins;
+  }
+
+  return { pages, backpackIcons, totals, sacks };
+}
+
+const VALUES: Section<"values"> = {
+  needs: ["prices", "items"],
+  async compute({ profile, member, prices, items, rawItems }) {
+    if (!prices || !items || !rawItems) {
+      throw new TypeError("values needs prices and items");
+    }
+
+    setNetworthItems(rawItems);
+
+    return {
+      pricesAsOf: prices.asOf,
+      inventories: await getInventoryValues(member, prices, items),
+      missingPets: getMissingPets(member, prices, items, hasMarket(profile)),
+    };
+  },
+};
+
 export const ALL_SECTIONS: { [K in SkyBlockSection]: Section<K> } = {
   ...SECTIONS,
   [NETWORTH_SECTION]: NETWORTH,
+  [VALUES_SECTION]: VALUES,
 };
 
 if (import.meta.vitest) {

@@ -17,7 +17,7 @@ import type { RawMember, RawNbt } from "#raw";
 
 const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
 
-const EQUIPMENT_PIECES = [
+export const EQUIPMENT_PIECES = [
   "EQUIPMENT_SLOT_1",
   "EQUIPMENT_SLOT_2",
   "EQUIPMENT_SLOT_3",
