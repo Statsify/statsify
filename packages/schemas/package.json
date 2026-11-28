@@ -16,7 +16,7 @@
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.24",
-    "@typegoose/typegoose": "^12.22.0",
+    "@typegoose/typegoose": "^13.5.0",
     "luxon": "^3.7.2"
   },
   "devDependencies": {
