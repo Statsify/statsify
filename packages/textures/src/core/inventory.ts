@@ -29,7 +29,6 @@ export interface IconSource {
     scale: number,
     tick?: number,
   ): Promise<OffscreenCanvas>;
-  /** Whether an item's icon changes from tick to tick */
   animates(item: ItemStack): boolean;
 }
 
@@ -68,7 +67,6 @@ export function countOrigin(size: InventorySize, slot: number) {
   return [x + 18, y + 10] as const;
 }
 
-/** The slot under a point, in GUI pixels from the inventory's top left, or -1 */
 export function slotAt(
   { rows, cols, title }: InventorySize,
   x: number,
@@ -147,12 +145,10 @@ export class InventoryRenderer {
     return tooltipLines(item, this.names);
   }
 
-  /** Whether an item's icon changes from tick to tick */
   public animates(item: ItemStack) {
     return this.icons.animates(item);
   }
 
-  /** An item's icon at a game tick */
   public icon(item: ItemStack, scale: number, tick: number) {
     return this.icons.render(item, scale, tick);
   }

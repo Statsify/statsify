@@ -330,7 +330,6 @@ export class ItemRenderer {
         ?.files.has(legacy) ?? false;
   }
 
-  /** Whether an item's icon changes over time, from an animated texture or the glint */
   public animates(item: ItemStack) {
     return (
       Boolean(item.enchanted) ||

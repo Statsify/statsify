@@ -9,7 +9,6 @@
 import type { McInventory } from "./mc-inventory.js";
 import { TOOLTIP_PADDING } from "../core/tooltip.js";
 
-/** One tooltip canvas for the page, its text 12 GUI pixels right of and above the cursor as in 1.8 */
 class TooltipOverlay {
   private canvas = document.createElement("canvas");
   private scale = 1;
@@ -33,7 +32,6 @@ class TooltipOverlay {
     });
   }
 
-  /** Makes `owner` the inventory whose tooltip is open, closing any other's */
   public claim(owner: McInventory) {
     if (owner !== this.owner) this.owner?.unhover();
     this.owner = owner;
@@ -72,7 +70,6 @@ class TooltipOverlay {
     this.canvas.style.display = "none";
   }
 
-  /** Hides the tooltip if `owner` shows it */
   public release(owner: McInventory) {
     if (owner !== this.owner) return;
     this.hide();

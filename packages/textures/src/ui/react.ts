@@ -28,10 +28,7 @@ export interface InventoryProps {
   onTooltipChange?: (change: TooltipChange | null) => void;
 }
 
-/**
- * <mc-inventory> for React. The element loads only in the browser, and `pack` and `slots` wait for
- * it: React would set them as attributes on an element that isn't defined yet.
- */
+// React would set `pack` and `slots` as attributes before the element loads
 export function Inventory({
   pack,
   slots,
