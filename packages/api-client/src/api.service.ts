@@ -114,10 +114,11 @@ export class ApiService {
     );
   }
 
-  public getGuild(tag: string, type: GuildQuery) {
+  public getCachedGuild(tag: string, type: GuildQuery, cache: CacheLevel) {
     return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
       guild: tag,
       type,
+      cache,
     });
   }
 
