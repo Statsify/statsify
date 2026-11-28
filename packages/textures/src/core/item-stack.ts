@@ -6,11 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { DyeColor } from "./tints.js";
 import type { TextComponent } from "./text.js";
 
 export interface PotionEffect {
   id: string;
   amplifier?: number;
+}
+
+export interface BannerLayer {
+  pattern: string;
+  color: DyeColor;
 }
 
 export interface ItemStack {
@@ -21,6 +27,10 @@ export interface ItemStack {
   effects?: PotionEffect[];
   enchanted?: boolean;
   skin?: string;
+  // Bottom layer first
+  patterns?: BannerLayer[];
+  // Banners take their base color from their id
+  baseColor?: DyeColor;
   name?: TextComponent;
   lore?: TextComponent[];
   tooltip?: TextComponent[];

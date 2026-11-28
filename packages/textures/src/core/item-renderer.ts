@@ -14,6 +14,7 @@ import {
 } from "./models.js";
 import {
   type Quad,
+  type Transformation,
   boxQuads,
   elementQuads,
   rasterize,
@@ -28,9 +29,9 @@ import {
 } from "./canvas.js";
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
-import type { ItemStack } from "./item-stack.js";
+import type { BannerLayer, ItemStack } from "./item-stack.js";
 import { type PackStack, assetPath, namespaced } from "./pack.js";
-import { tintColor } from "./tints.js";
+import { dyeColor, tintColor } from "./tints.js";
 
 const SIZE = 16;
 
@@ -48,6 +49,25 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
 };
 
 const DEFAULT_SKIN = "entity/player/wide/steve";
+
+// A banner in a slot has its flag at the start of its wave
+const FLAG_TILT = (-0.0125 + 0.01) * Math.PI;
+const FLAG_POSE: Transformation = {
+  left_rotation: [Math.sin(FLAG_TILT / 2), 0, 0, Math.cos(FLAG_TILT / 2)],
+  translation: [0, -44 / 16, 0],
+};
+
+export const PATTERN_FOLDERS = {
+  "minecraft:banner": "banner",
+  "minecraft:shield": "shield",
+} as const;
+
+const PATTERNED = new Set(Object.keys(PATTERN_FOLDERS));
+
+const entityTexture = (folder: string, id: string) => {
+  const [namespace, name] = namespaced(id).split(":");
+  return `${namespace}:entity/${folder}/${name}`;
+};
 
 const GLINT = "misc/enchanted_glint_item";
 const LEGACY_GLINT = "misc/enchanted_item_glint";
@@ -377,6 +397,7 @@ export class ItemRenderer {
           special?.type,
           special?.kind,
           special?.texture,
+          special?.color,
           ...colors.map(hex),
         ]
           .filter(Boolean)
@@ -384,6 +405,14 @@ export class ItemRenderer {
       ),
       layers.some(({ special }) => special?.type === "minecraft:player_head")
         ? item.skin
+        : undefined,
+      layers.some(({ special }) => special && PATTERNED.has(special.type))
+        ? [
+            item.baseColor,
+            ...(item.patterns ?? []).map(
+              ({ pattern, color }) => `${pattern}:${color}`,
+            ),
+          ].join(",")
         : undefined,
       frames.length > 0 ? frames.join(",") : undefined,
       scale,
@@ -433,20 +462,18 @@ export class ItemRenderer {
           if (layer.model.generated && !layer.special)
             return this.sprites(layer, tick);
 
-          const quads = layer.special
-            ? await this.specialQuads(layer.special, item)
-            : await this.elementQuads(layer, tick);
+          const passes = layer.special
+            ? await this.specialPasses(layer.special, item)
+            : [await this.elementQuads(layer, tick)];
 
-          return [
-            {
-              pixels: rasterize(
-                quads,
-                layer.model.display.gui,
-                layer.model.guiLight,
-                scale,
-              ),
-            },
-          ];
+          return passes.map((quads) => ({
+            pixels: rasterize(
+              quads,
+              layer.model.display.gui,
+              layer.model.guiLight,
+              scale,
+            ),
+          }));
         },
       ),
     );
@@ -485,24 +512,93 @@ export class ItemRenderer {
     );
   }
 
-  private async specialQuads(
+  private async specialPasses(
     special: SpecialModel,
     item: ItemStack,
-  ): Promise<Quad[]> {
+  ): Promise<Quad[][]> {
+    const place = (quads: Quad[]) =>
+      transformQuads(quads, special.transformation);
+
     if (special.type === "minecraft:chest" && special.texture) {
-      const [namespace, name] = namespaced(special.texture).split(":");
       const texture = await this.textures.get(
-        `${namespace}:entity/chest/${name}`,
+        entityTexture("chest", special.texture),
       );
 
-      return transformQuads(
-        [
+      return [
+        place([
           ...boxQuads([1, 0, 1], [14, 10, 14], [0, 19], texture),
           ...boxQuads([1, 9, 1], [14, 5, 14], [0, 0], texture),
           ...boxQuads([7, 7, 15], [2, 4, 1], [0, 0], texture),
-        ],
-        special.transformation,
+        ]),
+      ];
+    }
+
+    if (special.type === "minecraft:shulker_box" && special.texture) {
+      const texture = await this.textures.get(
+        entityTexture("shulker", special.texture),
       );
+
+      return [
+        place([
+          ...boxQuads([-8, 16, -8], [16, 8, 16], [0, 28], texture),
+          ...boxQuads([-8, 8, -8], [16, 12, 16], [0, 0], texture),
+        ]),
+      ];
+    }
+
+    if (special.type === "minecraft:banner" && special.color) {
+      const texture = await this.textures.get("entity/banner/banner_base");
+      const flag = (layer: ImageData) =>
+        place(
+          transformQuads(
+            boxQuads([-10, 0, -2], [20, 40, 1], [0, 0], layer),
+            FLAG_POSE,
+          ),
+        );
+
+      return [
+        [
+          ...place([
+            ...boxQuads([-1, -42, -1], [2, 42, 2], [44, 0], texture),
+            ...boxQuads([-10, -44, -1], [20, 2, 2], [0, 42], texture),
+          ]),
+          ...flag(texture),
+        ],
+        ...(await this.patternPasses(
+          flag,
+          "banner",
+          special.color,
+          item.patterns ?? [],
+        )),
+      ];
+    }
+
+    // A shield with only patterns has a white base under them
+    if (special.type === "minecraft:shield") {
+      const patterned =
+        item.baseColor !== undefined || Boolean(item.patterns?.length);
+      const texture = await this.textures.get(
+        patterned
+          ? "entity/shield/shield_base"
+          : "entity/shield/shield_base_nopattern",
+      );
+      const plate = (layer: ImageData) =>
+        place(boxQuads([-6, -11, -2], [12, 22, 1], [0, 0], layer));
+
+      return [
+        [
+          ...place(boxQuads([-1, -3, -1], [2, 6, 6], [26, 0], texture)),
+          ...plate(texture),
+        ],
+        ...(patterned
+          ? await this.patternPasses(
+              plate,
+              "shield",
+              item.baseColor ?? "white",
+              item.patterns ?? [],
+            )
+          : []),
+      ];
     }
 
     let head: { texture?: string; hat: boolean } | undefined;
@@ -528,7 +624,25 @@ export class ItemRenderer {
     if (head.hat)
       quads.push(...boxQuads([-4, -8, -4], [8, 8, 8], [32, 0], texture, 0.25));
 
-    return transformQuads(quads, special.transformation);
+    return [place(quads)];
+  }
+
+  // Each pattern gets its own pass, or it would lose depth ties and stripe
+  private async patternPasses(
+    part: (texture: ImageData) => Quad[],
+    folder: (typeof PATTERN_FOLDERS)[keyof typeof PATTERN_FOLDERS],
+    base: string,
+    patterns: BannerLayer[],
+  ) {
+    const layers = [{ pattern: "minecraft:base", color: base }, ...patterns];
+
+    return Promise.all(
+      layers.map(async ({ pattern, color }) => {
+        const texture = await this.textures.get(entityTexture(folder, pattern));
+        const tint = dyeColor(color);
+        return part(texture).map((quad) => ({ ...quad, tint }));
+      }),
+    );
   }
 
   private async skin(url: string) {

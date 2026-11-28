@@ -12,7 +12,7 @@ import { decodePng } from "./canvas.js";
 const STORE = "icons";
 
 // Bump this when icons draw differently, so browsers drop old icons
-const VERSION = 2;
+const VERSION = 3;
 
 interface Icons extends DBSchema {
   [STORE]: { key: string; value: Blob };

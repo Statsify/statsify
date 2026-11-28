@@ -15,4 +15,5 @@ export * from "./core/legacy-items.js";
 export { resolveTextures } from "./core/models.js";
 export * from "./core/pack.js";
 export * from "./core/text.js";
+export { DYES, type DyeColor } from "./core/tints.js";
 export { drawTooltip, tooltipLines } from "./core/tooltip.js";

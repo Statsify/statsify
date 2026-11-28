@@ -23,19 +23,22 @@ Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. 
 the 1.8.9 client jar) gives its textures and models under their 26.3 names, and block items draw
 from its item models, as 1.8.9 drew them. Its 3D models get the
 turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
-and its glint is tinted and moved the way 1.8 did it. Chests and heads use 26.3's models, which
-are drawn in code. Banners aren't supported yet. A stack needs at least one 26.3 pack, which
-has the item model definitions.
+and its glint is tinted and moved the way 1.8 did it. Chests, heads and banners use 26.3's models,
+which are drawn in code, and banners keep 26.3's pattern textures, since 1.8's are masks. A stack
+needs at least one 26.3 pack, which has the item model definitions.
 
 ## Items
 
 - Flat items with tints: leather dye, potion colors, spawn eggs.
 - Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
   rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
-- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL), mob heads, chests.
-  The renderer never fetches a skin: `new ItemRenderer(stack, cache, loadSkin)` takes a function
-  that gives a skin URL's PNG, so the caller picks where skins come from and how long they're kept,
-  and a skin that fails to load throws.
+- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL), mob heads, chests,
+  shulker boxes. The renderer never fetches a skin: `new ItemRenderer(stack, cache, loadSkin)` takes
+  a function that gives a skin URL's PNG, so the caller picks where skins come from and how long
+  they're kept, and a skin that fails to load throws.
+- Banners and shields with their patterns: `item.patterns`, as 26.3's `banner_patterns` component
+  has them (`{ pattern: "minecraft:border", color: "red" }`), and a shield's `item.baseColor`.
+  A banner's base color is in its id.
 - The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
 
 `legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table comes from
