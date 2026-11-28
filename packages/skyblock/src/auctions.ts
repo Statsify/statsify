@@ -10,7 +10,7 @@ import { type Bins, getPriceEntries, listingKey } from "#prices";
 import { decodeInventory } from "#nbt";
 import type { Bazaar, ItemsResource, PriceMap } from "#types";
 import type { RawAuction, RawAuctionsPage, RawItem } from "#raw";
-import type { NBT, TagType, Tags } from "prismarine-nbt";
+import type { NBT } from "prismarine-nbt";
 
 interface Listing {
   key: string;
@@ -94,21 +94,12 @@ if (import.meta.vitest) {
   const { gzipSync } = await import("node:zlib");
   const { default: nbt } = await import("prismarine-nbt");
 
-  const toTag = (value: unknown): Tags[TagType] => {
-    if (typeof value === "string") return nbt.string(value);
-    if (typeof value === "number") return nbt.int(value);
-    const entries = Object.entries(value as object);
-    return nbt.comp(
-      Object.fromEntries(entries.map(([key, child]) => [key, toTag(child)])),
-    );
-  };
-
   const itemBytes = (id: string, count = 1) => {
     const slot = {
       id: nbt.short(397),
       Count: nbt.byte(count),
       Damage: nbt.short(3),
-      tag: toTag({ ExtraAttributes: { id } }),
+      tag: nbt.comp({ ExtraAttributes: nbt.comp({ id: nbt.string(id) }) }),
     };
     const list = { type: "list", value: { type: "compound", value: [slot] } };
     const root = { type: "compound", name: "", value: { i: list } };
