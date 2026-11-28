@@ -90,8 +90,10 @@ export interface RawMember {
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
-    kills?: Record<string, number>; // by mob id, plus "total"
-    deaths?: Record<string, number>; // by cause, plus "total"
+    // Kills are by mob id, plus "total".
+    kills?: Record<string, number>;
+    // Deaths are by cause, plus "total".
+    deaths?: Record<string, number>;
     highest_damage?: number;
     highest_critical_damage?: number;
     auctions?: {
@@ -148,7 +150,8 @@ export interface RawMember {
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
-    unique_brackets?: Record<string, string[]>; // the crops at each bracket
+    // Each bracket maps to the crops that reached it.
+    unique_brackets?: Record<string, string[]>;
     personal_bests?: Record<string, number>;
     contests?: Record<string, unknown>;
   };
