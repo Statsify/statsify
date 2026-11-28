@@ -6,7 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type InventoryLayout, InventoryRenderer, type InventorySize, LAYOUTS, slotAt, slotOrigin } from "../core/inventory.js";
+import {
+  type InventoryLayout,
+  InventoryRenderer,
+  type InventorySize,
+  LAYOUTS,
+  slotAt,
+  slotOrigin,
+} from "../core/inventory.js";
 import { context, createCanvas } from "../core/canvas.js";
 import { IconCache } from "../core/icon-cache.js";
 import { ItemRenderer, MS_PER_TICK } from "../core/item-renderer.js";
@@ -25,7 +32,8 @@ const resources = new WeakMap<PackStack, Resources>();
 /** A player head's skin from the texture server, which allows cross-origin reads */
 async function fetchSkin(url: string) {
   const response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  if (!response.ok)
+    throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 }
 
@@ -34,7 +42,10 @@ function resourcesFor(pack: PackStack) {
 
   if (!shared) {
     shared = {
-      renderer: InventoryRenderer.load(pack, new ItemRenderer(pack, cache, fetchSkin)),
+      renderer: InventoryRenderer.load(
+        pack,
+        new ItemRenderer(pack, cache, fetchSkin),
+      ),
       tooltips: new WeakMap(),
     };
     resources.set(pack, shared);
@@ -57,7 +68,14 @@ interface View {
 
 /** <mc-inventory>: a container drawn the way Minecraft draws one, from a resource pack */
 export class McInventory extends HTMLElement {
-  public static observedAttributes = ["rows", "cols", "scale", "label", "layout", "freeze"];
+  public static observedAttributes = [
+    "rows",
+    "cols",
+    "scale",
+    "label",
+    "layout",
+    "freeze",
+  ];
 
   // Inventories with moving slots share one clock, so their animations stay in step. It runs on
   // animation frames, which browsers pause in background tabs
@@ -90,7 +108,10 @@ export class McInventory extends HTMLElement {
       for (const inventory of McInventory.playing) void inventory.step();
     }
 
-    McInventory.frame = McInventory.playing.size > 0 ? requestAnimationFrame(McInventory.run) : undefined;
+    McInventory.frame =
+      McInventory.playing.size > 0
+        ? requestAnimationFrame(McInventory.run)
+        : undefined;
   }
 
   public constructor() {
@@ -159,7 +180,8 @@ export class McInventory extends HTMLElement {
   }
 
   private get size(): InventorySize {
-    const layout = LAYOUTS[this.getAttribute("layout") as InventoryLayout] ?? LAYOUTS.chest;
+    const layout =
+      LAYOUTS[this.getAttribute("layout") as InventoryLayout] ?? LAYOUTS.chest;
     return {
       rows: Number(this.getAttribute("rows") ?? layout.rows),
       cols: Number(this.getAttribute("cols") ?? layout.cols),
@@ -179,8 +201,10 @@ export class McInventory extends HTMLElement {
     const bounds = this.canvas.getBoundingClientRect();
     const slot = slotAt(
       size,
-      (event.clientX - bounds.left) / (size.scale * (bounds.width / this.canvas.width)),
-      (event.clientY - bounds.top) / (size.scale * (bounds.height / this.canvas.height)),
+      (event.clientX - bounds.left) /
+        (size.scale * (bounds.width / this.canvas.width)),
+      (event.clientY - bounds.top) /
+        (size.scale * (bounds.height / this.canvas.height)),
     );
     const overlay = tooltipOverlay();
 
@@ -202,7 +226,10 @@ export class McInventory extends HTMLElement {
     let tooltip = tooltips.get(item);
 
     if (tooltip?.scale !== size.scale) {
-      tooltip = { scale: size.scale, canvas: renderer.tooltip(item, size.scale, this.tick) };
+      tooltip = {
+        scale: size.scale,
+        canvas: renderer.tooltip(item, size.scale, this.tick),
+      };
       tooltips.set(item, tooltip);
     }
 
@@ -221,11 +248,19 @@ export class McInventory extends HTMLElement {
 
     const shown = this.items.slice(0, size.rows * size.cols);
     const frozen = this.hasAttribute("freeze");
-    const moving = shown.flatMap((item, slot) => (item && !frozen && renderer.animates(item) ? [slot] : []));
+    const moving = shown.flatMap((item, slot) =>
+      item && !frozen && renderer.animates(item) ? [slot] : [],
+    );
 
     const [still, icons] = await Promise.all([
-      renderer.draw(shown.map((item, slot) => (moving.includes(slot) ? undefined : item)), size, tick),
-      Promise.all(moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick))),
+      renderer.draw(
+        shown.map((item, slot) => (moving.includes(slot) ? undefined : item)),
+        size,
+        tick,
+      ),
+      Promise.all(
+        moving.map((slot) => renderer.icon(shown[slot]!, size.scale, tick)),
+      ),
     ]);
 
     if (drawing !== this.drawing) return;
@@ -255,7 +290,11 @@ export class McInventory extends HTMLElement {
     const { renderer, size, items } = view;
 
     try {
-      const icons = await Promise.all(this.moving.map((slot) => renderer.icon(items[slot]!, size.scale, this.tick)));
+      const icons = await Promise.all(
+        this.moving.map((slot) =>
+          renderer.icon(items[slot]!, size.scale, this.tick),
+        ),
+      );
 
       if (view === this.view) {
         this.movingIcons = icons;
@@ -282,7 +321,12 @@ export class McInventory extends HTMLElement {
     if (this.hovered >= 0) {
       const [x, y] = slotOrigin(size, this.hovered);
       ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.fillRect((x + 1) * size.scale, (y + 1) * size.scale, 16 * size.scale, 16 * size.scale);
+      ctx.fillRect(
+        (x + 1) * size.scale,
+        (y + 1) * size.scale,
+        16 * size.scale,
+        16 * size.scale,
+      );
     }
 
     const screen = this.canvas.getContext("2d")!;
@@ -300,4 +344,5 @@ export class McInventory extends HTMLElement {
   }
 }
 
-if (!customElements.get("mc-inventory")) customElements.define("mc-inventory", McInventory);
+if (!customElements.get("mc-inventory"))
+  customElements.define("mc-inventory", McInventory);
