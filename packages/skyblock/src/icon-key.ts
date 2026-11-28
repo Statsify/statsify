@@ -19,14 +19,17 @@ const MAX_DAMAGE = 32_767;
 
 // No leading zeros or capitals, so each texture has exactly one key and one edge cache entry
 const NUMBER = "(0|[1-9]\\d{0,4})";
-const ITEM_KEY = new RegExp(`^item-${NUMBER}-${NUMBER}(?:-(0|[1-9a-f][\\da-f]{0,5}))?$`);
+const ITEM_KEY = new RegExp(
+  `^item-${NUMBER}-${NUMBER}(?:-(0|[1-9a-f][\\da-f]{0,5}))?$`,
+);
 // Texture URLs drop a hash's leading zeros, so some are shorter than 64
 const HEAD_KEY = /^head-([\da-f]{1,64})$/;
 
 /** The icon route's key: `item-<id>-<damage>[-<color hex>]` or `head-<hash>`. */
 export function iconKey(texture: ItemTexture): string {
   if (texture.kind === "head") return `head-${texture.skin}`;
-  const color = texture.color === undefined ? "" : `-${texture.color.toString(16)}`;
+  const color =
+    texture.color === undefined ? "" : `-${texture.color.toString(16)}`;
   return `item-${texture.id}-${texture.damage}${color}`;
 }
 
@@ -41,10 +44,13 @@ export function parseIconKey(key: string): ItemTexture | undefined {
   const [id, damage] = [Number(item[1]), Number(item[2])];
   if (id > MAX_ITEM_ID || damage > MAX_DAMAGE) return undefined;
 
-  return item[3] === undefined ? { kind: "item", id, damage } : { kind: "item", id, damage, color: Number.parseInt(item[3], 16) };
+  return item[3] === undefined
+    ? { kind: "item", id, damage }
+    : { kind: "item", id, damage, color: Number.parseInt(item[3], 16) };
 }
 
-export const isIconSize = (size: number): size is IconSize => (ICON_SIZES as readonly number[]).includes(size);
+export const isIconSize = (size: number): size is IconSize =>
+  (ICON_SIZES as readonly number[]).includes(size);
 
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
@@ -58,7 +64,8 @@ if (import.meta.vitest) {
       { kind: "head", skin: "a".repeat(64) },
       { kind: "head", skin: "1".repeat(61) },
     ];
-    for (const texture of textures) expect(parseIconKey(iconKey(texture))).toEqual(texture);
+    for (const texture of textures)
+      expect(parseIconKey(iconKey(texture))).toEqual(texture);
 
     for (const key of [
       "item-2268-0",

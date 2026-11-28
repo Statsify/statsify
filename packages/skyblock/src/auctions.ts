@@ -6,7 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RARITIES, type Bazaar, type ItemsResource, type PriceEntry, type PriceMap, type RawItem } from "#types";
+import {
+  RARITIES,
+  type Bazaar,
+  type ItemsResource,
+  type PriceEntry,
+  type PriceMap,
+  type RawItem,
+} from "#types";
 import { getPetLevel, petName } from "./sections/pets.js";
 import { decodeInventory } from "#nbt";
 import { prettify } from "@statsify/util";
@@ -16,7 +23,12 @@ import type { RawAuction, RawAuctionsPage, RawPet } from "#raw";
 
 type Attributes = NonNullable<NonNullable<RawItem["tag"]>["ExtraAttributes"]>;
 
-const COLOR_HATS = new Set(["PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025"]);
+const COLOR_HATS = new Set([
+  "PARTY_HAT_CRAB",
+  "PARTY_HAT_CRAB_ANIMATED",
+  "BALLOON_HAT_2024",
+  "BALLOON_HAT_2025",
+]);
 const RUNES = new Set(["RUNE", "UNIQUE_RUNE"]);
 const PRICED_PET_LEVELS = [1, 100, 200] as const;
 
@@ -41,14 +53,21 @@ export function parsePetKey(key: string) {
   const [, level, tier, type] = PET_KEY.exec(key) ?? [];
   const rarity = RARITIES.find((candidate) => candidate === tier);
   if (!rarity || key.includes(SKINNED)) return;
-  return { type, rarity, level: Number(level), name: `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}` };
+  return {
+    type,
+    rarity,
+    level: Number(level),
+    name: `[Lvl ${level}] ${prettify(rarity)} ${petName(type)}`,
+  };
 }
 
 export const BOOK_KEY = /^ENCHANTMENT_(.+)_(\d{1,2})$/;
 
 function bookKeys(attributes: Attributes) {
   const enchantments = Object.entries(attributes.enchantments ?? {});
-  return enchantments.map(([name, level]) => `ENCHANTMENT_${upper(name)}_${level}`);
+  return enchantments.map(
+    ([name, level]) => `ENCHANTMENT_${upper(name)}_${level}`,
+  );
 }
 
 function bookKey(attributes: Attributes) {
@@ -57,20 +76,32 @@ function bookKey(attributes: Attributes) {
 }
 
 function runeKey(attributes: Attributes) {
-  const [rune] = Object.entries((attributes.runes ?? {}) as Record<string, number>);
+  const [rune] = Object.entries(
+    (attributes.runes ?? {}) as Record<string, number>,
+  );
   return rune && upper(`RUNE_${rune[0]}_${rune[1]}`);
 }
 
-const cakeKey = (attributes: Attributes) => `NEW_YEAR_CAKE_${attributes.new_years_cake}`;
+const cakeKey = (attributes: Attributes) =>
+  `NEW_YEAR_CAKE_${attributes.new_years_cake}`;
 
 function hatKey(id: string, attributes: Attributes): string | undefined {
-  if (COLOR_HATS.has(id) && attributes.party_hat_color) return `${id}_${upper(attributes.party_hat_color)}`;
-  return id === "PARTY_HAT_SLOTH" && attributes.party_hat_emoji ? `${id}_${upper(attributes.party_hat_emoji)}` : undefined;
+  if (COLOR_HATS.has(id) && attributes.party_hat_color)
+    return `${id}_${upper(attributes.party_hat_color)}`;
+  return id === "PARTY_HAT_SLOTH" && attributes.party_hat_emoji
+    ? `${id}_${upper(attributes.party_hat_emoji)}`
+    : undefined;
 }
 
 function editionKey(id: string, attributes: Attributes): string | undefined {
-  if ((id === "DCTR_SPACE_HELM" || id === "ANCIENT_ELEVATOR") && attributes.edition !== undefined) return `${id}_EDITIONED`;
-  return id === "CREATIVE_MIND" && !attributes.edition ? "CREATIVE_MIND_UNEDITIONED" : undefined;
+  if (
+    (id === "DCTR_SPACE_HELM" || id === "ANCIENT_ELEVATOR") &&
+    attributes.edition !== undefined
+  )
+    return `${id}_EDITIONED`;
+  return id === "CREATIVE_MIND" && !attributes.edition
+    ? "CREATIVE_MIND_UNEDITIONED"
+    : undefined;
 }
 
 const CROWNS = ["CROWN_OF_AVARICE", "CROWN_OF_AVARICE_1B"] as const;
@@ -85,15 +116,22 @@ function crownKey(attributes: Attributes): string | undefined {
 /** A Midas weapon bought at the Dark Auction's max bid has its own key; any other is the plain id. */
 function midasKey(id: string, attributes: Attributes) {
   const { maxBid, key } = MIDAS_WEAPONS[id];
-  return Number(attributes.winning_bid ?? 0) + Number(attributes.additional_coins ?? 0) >= maxBid ? key : id;
+  return Number(attributes.winning_bid ?? 0) +
+    Number(attributes.additional_coins ?? 0) >=
+    maxBid
+    ? key
+    : id;
 }
 
-const skinnedKey = (id: string, attributes: Attributes) => `${id}${SKINNED}${attributes.skin}`;
+const skinnedKey = (id: string, attributes: Attributes) =>
+  `${id}${SKINNED}${attributes.skin}`;
 
 const shinyKey = (id: string) => `${id}_SHINY`;
 
 const petOf = (attributes: Attributes | undefined) =>
-  typeof attributes?.petInfo === "string" ? (JSON.parse(attributes.petInfo) as RawPet) : undefined;
+  typeof attributes?.petInfo === "string"
+    ? (JSON.parse(attributes.petInfo) as RawPet)
+    : undefined;
 
 /** The one key a BIN listing proves, or undefined when it proves none. */
 export function listingKey(item: RawItem): string | undefined {
@@ -101,7 +139,9 @@ export function listingKey(item: RawItem): string | undefined {
   const pet = petOf(attributes);
   if (pet) {
     const { level } = getPetLevel(pet);
-    return PRICED_PET_LEVELS.some((priced) => priced === level) ? petKey(pet, level) : undefined;
+    return PRICED_PET_LEVELS.some((priced) => priced === level)
+      ? petKey(pet, level)
+      : undefined;
   }
 
   const id = attributes?.id;
@@ -122,7 +162,11 @@ function networthId(id: string, attributes: Attributes, map: PriceMap) {
 
   // It compares `prices[skinned] > prices[id]`, which is false while the plain id is unpriced.
   const plain = price(id);
-  if (attributes.skin && plain !== undefined && (price(skinnedKey(id, attributes)) ?? 0) > plain) {
+  if (
+    attributes.skin &&
+    plain !== undefined &&
+    (price(skinnedKey(id, attributes)) ?? 0) > plain
+  ) {
     return skinnedKey(id, attributes);
   }
 
@@ -131,7 +175,9 @@ function networthId(id: string, attributes: Attributes, map: PriceMap) {
   const rune = RUNES.has(id) && runeKey(attributes);
   if (rune) return rune;
   if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
-  const variant = (COLOR_HATS.has(id) && hatKey(id, attributes)) || editionKey(id, attributes);
+  const variant =
+    (COLOR_HATS.has(id) && hatKey(id, attributes)) ||
+    editionKey(id, attributes);
   if (variant) return variant;
   if (attributes.is_shiny && price(shinyKey(id))) return shinyKey(id);
   const unstarred = id.replace(/^STARRED_/, "");
@@ -224,14 +270,19 @@ function addListing(bins: Map<string, Bins>, key: string, price: number) {
 // A lowest BIN under half the second lowest is bait or a fat finger, so the second wins, but only when a third
 // within twice the second backs it: with two asks, either one could be the outlier.
 const binPrice = ({ lowest, second, third }: Bins) =>
-  second !== undefined && third !== undefined && lowest < second / 2 && third <= second * 2 ? second : lowest;
+  second !== undefined &&
+  third !== undefined &&
+  lowest < second / 2 &&
+  third <= second * 2
+    ? second
+    : lowest;
 
 /** Auctions in `seen` reuse their key, so only new ones are decoded. asOf is the first page's lastUpdated. */
 export async function buildPriceMap(
   pages: AsyncIterable<RawAuctionsPage>,
   bazaar: Bazaar,
   items: ItemsResource,
-  seen: SeenIndex = new Map()
+  seen: SeenIndex = new Map(),
 ): Promise<{ map: PriceMap; seen: SeenIndex }> {
   const next: SeenIndex = new Map();
   const bins = new Map<string, Bins>();
@@ -243,25 +294,39 @@ export async function buildPriceMap(
     // Pages shift during a pull, so one auction can show up on two of them.
     for (const auction of page.auctions) {
       if (!auction.bin || next.has(auction.uuid)) continue;
-      const listing = seen.get(auction.uuid) ?? (seen.has(auction.uuid) ? null : toListing(auction));
+      const listing =
+        seen.get(auction.uuid) ??
+        (seen.has(auction.uuid) ? null : toListing(auction));
       next.set(auction.uuid, listing);
-      if (listing) addListing(bins, listing.key, auction.starting_bid / listing.count);
+      if (listing)
+        addListing(bins, listing.key, auction.starting_bid / listing.count);
     }
   }
 
   if (asOf === undefined) throw new Error("the auction pull had no pages");
 
   const entries: Record<string, PriceEntry> = {};
-  for (const [key, bin] of bins) entries[key] = { coins: binPrice(bin), source: "bin", listings: bin.listings };
+  for (const [key, bin] of bins)
+    entries[key] = {
+      coins: binPrice(bin),
+      source: "bin",
+      listings: bin.listings,
+    };
 
   // quick_status averages the top orders, so one order can't move it.
   for (const product of Object.values(bazaar.products)) {
-    if (product.sellPrice > 0) entries[product.id] = { coins: product.sellPrice, source: "bazaar", buy: product.buyPrice };
+    if (product.sellPrice > 0)
+      entries[product.id] = {
+        coins: product.sellPrice,
+        source: "bazaar",
+        buy: product.buyPrice,
+      };
   }
 
   // Many NPC-sold items (arrows, starter tools, low talismans) are never listed as BIN, and the NPC always pays this.
   for (const [id, { npcPrice }] of Object.entries(items.items)) {
-    if (npcPrice && !entries[id]) entries[id] = { coins: npcPrice, source: "npc" };
+    if (npcPrice && !entries[id])
+      entries[id] = { coins: npcPrice, source: "npc" };
   }
 
   return { map: { asOf, entries }, seen: next };
@@ -273,68 +338,189 @@ if (import.meta.vitest) {
   const { itemBytes, rawItem } = await import("#fixtures");
 
   const pet = (type: string, tier: string, exp: number, skin?: string) =>
-    rawItem({ id: "PET", attributes: { petInfo: JSON.stringify({ type, tier, exp, active: false, skin }) } });
+    rawItem({
+      id: "PET",
+      attributes: {
+        petInfo: JSON.stringify({ type, tier, exp, active: false, skin }),
+      },
+    });
 
   test("listingKey gives each format its key", () => {
     const cases: [RawItem, string | undefined][] = [
       [rawItem({ id: "GOBLIN_CHESTPLATE" }), "GOBLIN_CHESTPLATE"],
       [pet("GRIFFIN", "COMMON", 0), "LVL_1_COMMON_GRIFFIN"],
-      [pet("REINDEER", "LEGENDARY", 30_000_000, "REINDEER_AURORA"), "LVL_100_LEGENDARY_REINDEER_SKINNED_REINDEER_AURORA"],
+      [
+        pet("REINDEER", "LEGENDARY", 30_000_000, "REINDEER_AURORA"),
+        "LVL_100_LEGENDARY_REINDEER_SKINNED_REINDEER_AURORA",
+      ],
       [pet("ROSE_DRAGON", "LEGENDARY", 1e12), "LVL_200_LEGENDARY_ROSE_DRAGON"],
       [pet("GRIFFIN", "LEGENDARY", 1_000_000), undefined],
-      [rawItem({ id: "ENCHANTED_BOOK", attributes: { enchantments: { ultimate_wise: 5 } } }), "ENCHANTMENT_ULTIMATE_WISE_5"],
-      [rawItem({ id: "ENCHANTED_BOOK", attributes: { enchantments: { sharpness: 5, smite: 5 } } }), undefined],
-      [rawItem({ id: "RUNE", attributes: { runes: { MUSIC: 1 } } }), "RUNE_MUSIC_1"],
-      [rawItem({ id: "UNIQUE_RUNE", attributes: { runes: { FLOWER_CARPET: 3 } } }), "RUNE_FLOWER_CARPET_3"],
-      [rawItem({ id: "NEW_YEAR_CAKE", attributes: { new_years_cake: 522 } }), "NEW_YEAR_CAKE_522"],
-      [rawItem({ id: "BALLOON_HAT_2024", attributes: { party_hat_color: "pink" } }), "BALLOON_HAT_2024_PINK"],
-      [rawItem({ id: "PARTY_HAT_SLOTH", attributes: { party_hat_emoji: "flushed" } }), "PARTY_HAT_SLOTH_FLUSHED"],
-      [rawItem({ id: "CAKE_HAT_2026", attributes: { party_hat_color: "green" } }), "CAKE_HAT_2026"],
-      [rawItem({ id: "DCTR_SPACE_HELM", attributes: { edition: 12 } }), "DCTR_SPACE_HELM_EDITIONED"],
+      [
+        rawItem({
+          id: "ENCHANTED_BOOK",
+          attributes: { enchantments: { ultimate_wise: 5 } },
+        }),
+        "ENCHANTMENT_ULTIMATE_WISE_5",
+      ],
+      [
+        rawItem({
+          id: "ENCHANTED_BOOK",
+          attributes: { enchantments: { sharpness: 5, smite: 5 } },
+        }),
+        undefined,
+      ],
+      [
+        rawItem({ id: "RUNE", attributes: { runes: { MUSIC: 1 } } }),
+        "RUNE_MUSIC_1",
+      ],
+      [
+        rawItem({
+          id: "UNIQUE_RUNE",
+          attributes: { runes: { FLOWER_CARPET: 3 } },
+        }),
+        "RUNE_FLOWER_CARPET_3",
+      ],
+      [
+        rawItem({ id: "NEW_YEAR_CAKE", attributes: { new_years_cake: 522 } }),
+        "NEW_YEAR_CAKE_522",
+      ],
+      [
+        rawItem({
+          id: "BALLOON_HAT_2024",
+          attributes: { party_hat_color: "pink" },
+        }),
+        "BALLOON_HAT_2024_PINK",
+      ],
+      [
+        rawItem({
+          id: "PARTY_HAT_SLOTH",
+          attributes: { party_hat_emoji: "flushed" },
+        }),
+        "PARTY_HAT_SLOTH_FLUSHED",
+      ],
+      [
+        rawItem({
+          id: "CAKE_HAT_2026",
+          attributes: { party_hat_color: "green" },
+        }),
+        "CAKE_HAT_2026",
+      ],
+      [
+        rawItem({ id: "DCTR_SPACE_HELM", attributes: { edition: 12 } }),
+        "DCTR_SPACE_HELM_EDITIONED",
+      ],
       [rawItem({ id: "CREATIVE_MIND" }), "CREATIVE_MIND_UNEDITIONED"],
       [rawItem({ id: "CROWN_OF_AVARICE" }), "CROWN_OF_AVARICE"],
-      [rawItem({ id: "CROWN_OF_AVARICE", attributes: { collected_coins: 5_000_000 } }), undefined],
-      [rawItem({ id: "CROWN_OF_AVARICE", attributes: { collected_coins: 2_000_000_000 } }), "CROWN_OF_AVARICE_1B"],
-      [rawItem({ id: "STARRED_MIDAS_SWORD", attributes: { winning_bid: 250_000_000 } }), "STARRED_MIDAS_SWORD_250M"],
-      [rawItem({ id: "MIDAS_SWORD", attributes: { winning_bid: 12_390_000 } }), "MIDAS_SWORD"],
-      [rawItem({ id: "WITHER_HELMET", attributes: { skin: "WITHER_HELMET_X" } }), "WITHER_HELMET_SKINNED_WITHER_HELMET_X"],
-      [rawItem({ id: "POWER_WITHER_CHESTPLATE", attributes: { is_shiny: 1 } }), "POWER_WITHER_CHESTPLATE_SHINY"],
+      [
+        rawItem({
+          id: "CROWN_OF_AVARICE",
+          attributes: { collected_coins: 5_000_000 },
+        }),
+        undefined,
+      ],
+      [
+        rawItem({
+          id: "CROWN_OF_AVARICE",
+          attributes: { collected_coins: 2_000_000_000 },
+        }),
+        "CROWN_OF_AVARICE_1B",
+      ],
+      [
+        rawItem({
+          id: "STARRED_MIDAS_SWORD",
+          attributes: { winning_bid: 250_000_000 },
+        }),
+        "STARRED_MIDAS_SWORD_250M",
+      ],
+      [
+        rawItem({ id: "MIDAS_SWORD", attributes: { winning_bid: 12_390_000 } }),
+        "MIDAS_SWORD",
+      ],
+      [
+        rawItem({
+          id: "WITHER_HELMET",
+          attributes: { skin: "WITHER_HELMET_X" },
+        }),
+        "WITHER_HELMET_SKINNED_WITHER_HELMET_X",
+      ],
+      [
+        rawItem({ id: "POWER_WITHER_CHESTPLATE", attributes: { is_shiny: 1 } }),
+        "POWER_WITHER_CHESTPLATE_SHINY",
+      ],
       [{ id: 1, Count: 1, Damage: 0 }, undefined],
     ];
 
-    expect(cases.map(([item]) => listingKey(item))).toEqual(cases.map(([, key]) => key));
+    expect(cases.map(([item]) => listingKey(item))).toEqual(
+      cases.map(([, key]) => key),
+    );
   });
 
   test("lookupKeys picks the keys the networth library reads", () => {
-    const entries = { HELMET: 10, HELMET_SKINNED_GOLD: 20, BONZO_STAFF: 5, ARMOR_SHINY: 9, MIDAS_SWORD_50M: 99 };
+    const entries = {
+      HELMET: 10,
+      HELMET_SKINNED_GOLD: 20,
+      BONZO_STAFF: 5,
+      ARMOR_SHINY: 9,
+      MIDAS_SWORD_50M: 99,
+    };
     const map: PriceMap = {
       asOf: 1,
-      entries: Object.fromEntries(Object.entries(entries).map(([key, coins]) => [key, { coins, source: "bin", listings: 2 }])),
+      entries: Object.fromEntries(
+        Object.entries(entries).map(([key, coins]) => [
+          key,
+          { coins, source: "bin", listings: 2 },
+        ]),
+      ),
     };
-    const keys = (item: Parameters<typeof rawItem>[0]) => lookupKeys(rawItem(item), map);
+    const keys = (item: Parameters<typeof rawItem>[0]) =>
+      lookupKeys(rawItem(item), map);
 
-    expect(keys({ id: "HELMET", attributes: { skin: "GOLD" } })).toEqual(["HELMET_SKINNED_GOLD"]);
-    expect(keys({ id: "BOOTS", attributes: { skin: "GOLD" } })).toEqual(["BOOTS"]);
+    expect(keys({ id: "HELMET", attributes: { skin: "GOLD" } })).toEqual([
+      "HELMET_SKINNED_GOLD",
+    ]);
+    expect(keys({ id: "BOOTS", attributes: { skin: "GOLD" } })).toEqual([
+      "BOOTS",
+    ]);
     expect(keys({ id: "STARRED_BONZO_STAFF" })).toEqual(["BONZO_STAFF"]);
-    expect(keys({ id: "ARMOR", attributes: { is_shiny: 1 } })).toEqual(["ARMOR_SHINY"]);
-    expect(keys({ id: "MIDAS_SWORD", attributes: { winning_bid: 50_000_000 } })).toEqual(["MIDAS_SWORD_50M"]);
-    expect(keys({ id: "ENCHANTED_BOOK", attributes: { enchantments: { sharpness: 6, telekinesis: 1 } } })).toEqual([
-      "ENCHANTMENT_SHARPNESS_6",
-      "ENCHANTMENT_TELEKINESIS_1",
+    expect(keys({ id: "ARMOR", attributes: { is_shiny: 1 } })).toEqual([
+      "ARMOR_SHINY",
     ]);
-    expect(keys({ id: "CROWN_OF_AVARICE", attributes: { collected_coins: 5_000_000 } })).toHaveLength(2);
-    expect(lookupKeys({ type: "GRIFFIN", tier: "EPIC", exp: 0, active: false, skin: "X" }, map)).toEqual([
-      "LVL_1_EPIC_GRIFFIN",
-      "LVL_100_EPIC_GRIFFIN",
-    ]);
-    expect(lookupKeys(pet("GOLDEN_DRAGON", "LEGENDARY", 30_000_000), map)).toEqual([
+    expect(
+      keys({ id: "MIDAS_SWORD", attributes: { winning_bid: 50_000_000 } }),
+    ).toEqual(["MIDAS_SWORD_50M"]);
+    expect(
+      keys({
+        id: "ENCHANTED_BOOK",
+        attributes: { enchantments: { sharpness: 6, telekinesis: 1 } },
+      }),
+    ).toEqual(["ENCHANTMENT_SHARPNESS_6", "ENCHANTMENT_TELEKINESIS_1"]);
+    expect(
+      keys({
+        id: "CROWN_OF_AVARICE",
+        attributes: { collected_coins: 5_000_000 },
+      }),
+    ).toHaveLength(2);
+    expect(
+      lookupKeys(
+        { type: "GRIFFIN", tier: "EPIC", exp: 0, active: false, skin: "X" },
+        map,
+      ),
+    ).toEqual(["LVL_1_EPIC_GRIFFIN", "LVL_100_EPIC_GRIFFIN"]);
+    expect(
+      lookupKeys(pet("GOLDEN_DRAGON", "LEGENDARY", 30_000_000), map),
+    ).toEqual([
       "LVL_100_LEGENDARY_GOLDEN_DRAGON",
       "LVL_200_LEGENDARY_GOLDEN_DRAGON",
     ]);
     expect(lookupKeys({ id: 1, Count: 1, Damage: 0 }, map)).toEqual([]);
   });
 
-  const auction = (uuid: number, bid: number, item: Parameters<typeof itemBytes>[0], bin = true): RawAuction => ({
+  const auction = (
+    uuid: number,
+    bid: number,
+    item: Parameters<typeof itemBytes>[0],
+    bin = true,
+  ): RawAuction => ({
     uuid: uuid.toString(16).padStart(32, "0"),
     starting_bid: bid,
     bin,
@@ -355,7 +541,16 @@ if (import.meta.vitest) {
         auction(6, 400_000, { id: "KAT_BOUQUET", count: 4 }),
         auction(7, 5, { id: "ASPECT_OF_THE_END" }, false),
         auction(8, 1_000_000, { id: "ENCHANTED_DIAMOND" }),
-        auction(9, 70_000_000, { id: "PET", attributes: { petInfo: JSON.stringify({ type: "GRIFFIN", tier: "LEGENDARY", exp: 1e6 }) } }),
+        auction(9, 70_000_000, {
+          id: "PET",
+          attributes: {
+            petInfo: JSON.stringify({
+              type: "GRIFFIN",
+              tier: "LEGENDARY",
+              exp: 1e6,
+            }),
+          },
+        }),
       ],
     },
     {
@@ -377,7 +572,11 @@ if (import.meta.vitest) {
   const bazaar: Bazaar = {
     lastUpdated: 990,
     products: {
-      ENCHANTED_DIAMOND: { id: "ENCHANTED_DIAMOND", sellPrice: 1700, ...quickStatus },
+      ENCHANTED_DIAMOND: {
+        id: "ENCHANTED_DIAMOND",
+        sellPrice: 1700,
+        ...quickStatus,
+      },
       UNSOLD: { id: "UNSOLD", sellPrice: 0, ...quickStatus },
     },
   };
@@ -387,14 +586,22 @@ if (import.meta.vitest) {
     raw: [],
     items: {
       ARROW: { name: "Arrow", material: "ARROW", npcPrice: 2 },
-      ENCHANTED_DIAMOND: { name: "Enchanted Diamond", material: "DIAMOND", npcPrice: 1280 },
+      ENCHANTED_DIAMOND: {
+        name: "Enchanted Diamond",
+        material: "DIAMOND",
+        npcPrice: 1280,
+      },
       HYPERION: { name: "Hyperion", material: "IRON_SWORD", npcPrice: 100 },
     },
     museum: {},
   };
 
   test("buildPriceMap keeps the lowest BIN per unit behind the outlier guard, the bazaar wins, and NPC prices fill in", async () => {
-    const { map, seen } = await buildPriceMap(Readable.from(pages), bazaar, items);
+    const { map, seen } = await buildPriceMap(
+      Readable.from(pages),
+      bazaar,
+      items,
+    );
 
     expect(map.asOf).toBe(1000);
     expect(map.entries).toEqual({
@@ -408,13 +615,27 @@ if (import.meta.vitest) {
       ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
       ARROW: { coins: 2, source: "npc" },
     });
-    expect([...seen.values()].filter((listing) => listing === null)).toHaveLength(1);
+    expect(
+      [...seen.values()].filter((listing) => listing === null),
+    ).toHaveLength(1);
     expect(seen.size).toBe(14);
 
     // A second pull reuses what it saw: this blob no longer decodes, so the key can only come from `seen`.
-    const again = { ...pages[0], auctions: [{ ...pages[0].auctions[1], item_bytes: "not nbt" }] };
-    const second = await buildPriceMap(Readable.from([again]), bazaar, items, seen);
-    expect(second.map.entries.HYPERION).toEqual({ coins: 900_000_000, source: "bin", listings: 1 });
+    const again = {
+      ...pages[0],
+      auctions: [{ ...pages[0].auctions[1], item_bytes: "not nbt" }],
+    };
+    const second = await buildPriceMap(
+      Readable.from([again]),
+      bazaar,
+      items,
+      seen,
+    );
+    expect(second.map.entries.HYPERION).toEqual({
+      coins: 900_000_000,
+      source: "bin",
+      listings: 1,
+    });
     expect(second.seen.size).toBe(1);
   });
 }

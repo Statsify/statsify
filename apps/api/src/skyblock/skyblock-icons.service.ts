@@ -38,7 +38,7 @@ export class SkyBlockIconsService implements OnModuleInit {
 
   public constructor(
     private readonly httpService: HttpService,
-    @InjectRedis() private readonly redis: Redis
+    @InjectRedis() private readonly redis: Redis,
   ) {}
 
   public onModuleInit() {
@@ -46,14 +46,20 @@ export class SkyBlockIconsService implements OnModuleInit {
   }
 
   /** undefined when the 1.8 pack has no texture for the item. */
-  public async getIcon(texture: ItemTexture, size: IconSize, glint: boolean): Promise<Icon | undefined> {
+  public async getIcon(
+    texture: ItemTexture,
+    size: IconSize,
+    glint: boolean,
+  ): Promise<Icon | undefined> {
     const icon = await getItemIcon(texture, { size, glint });
     if (!icon) return undefined;
 
     // Only after drawing: it loads the head, which marks a failed load
     const [png, failed] = await Promise.all([
       icon.toBuffer("png"),
-      texture.kind === "head" ? this.redis.exists(failedHeadKey(texture.skin)) : 0,
+      texture.kind === "head"
+        ? this.redis.exists(failedHeadKey(texture.skin))
+        : 0,
     ]);
 
     return { png, standIn: failed > 0 };
@@ -61,15 +67,25 @@ export class SkyBlockIconsService implements OnModuleInit {
 
   private getHead(hash: string): Promise<Buffer | undefined> {
     return this.singleflight.run(hash, async () => {
-      const [stored, failed] = await Promise.all([this.redis.getBuffer(headKey(hash)), this.redis.exists(failedHeadKey(hash))]);
+      const [stored, failed] = await Promise.all([
+        this.redis.getBuffer(headKey(hash)),
+        this.redis.exists(failedHeadKey(hash)),
+      ]);
       if (stored) return stored;
       if (failed) return undefined;
 
       const response = await lastValueFrom(
-        this.httpService.get<ArrayBuffer>(`${SKIN_URL}${hash}`, { responseType: "arraybuffer" })
+        this.httpService.get<ArrayBuffer>(`${SKIN_URL}${hash}`, {
+          responseType: "arraybuffer",
+        }),
       ).catch(async (error) => {
         this.logger.warn(`Couldn't load the head ${hash}: ${String(error)}`);
-        await this.redis.set(failedHeadKey(hash), "1", "EX", FAILED_HEAD_SECONDS);
+        await this.redis.set(
+          failedHeadKey(hash),
+          "1",
+          "EX",
+          FAILED_HEAD_SECONDS,
+        );
         return undefined;
       });
       if (!response) return undefined;

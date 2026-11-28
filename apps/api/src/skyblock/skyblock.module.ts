@@ -27,7 +27,12 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     HttpModule.register({ timeout: IMAGE_DOWNLOAD_TIMEOUT }),
   ],
   controllers: [SkyBlockController],
-  providers: [SkyBlockService, SkyBlockBudgetService, SkyBlockPricesService, SkyBlockIconsService],
+  providers: [
+    SkyBlockService,
+    SkyBlockBudgetService,
+    SkyBlockPricesService,
+    SkyBlockIconsService,
+  ],
   exports: [SkyBlockService, SkyBlockPricesService],
 })
 export class SkyBlockModule {}

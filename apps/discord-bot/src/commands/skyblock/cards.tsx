@@ -7,10 +7,16 @@
  */
 
 import { FormattedGame } from "@statsify/schemas";
-import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
+import {
+  SkyBlockAccessoriesProfile,
+  accessoryIcons,
+} from "./accessories.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
-import { SkyBlockDungeonsProfile, SkyBlockEssenceProfile } from "./dungeons.profile.js";
+import {
+  SkyBlockDungeonsProfile,
+  SkyBlockEssenceProfile,
+} from "./dungeons.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
@@ -23,7 +29,13 @@ import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
 import { formatProfileName } from "@statsify/skyblock/display";
 import { getBackground } from "@statsify/assets";
-import type { ApiSettings, ItemTexture, MemberView, SkyBlockProfileView, SkyBlockSection } from "@statsify/skyblock";
+import type {
+  ApiSettings,
+  ItemTexture,
+  MemberView,
+  SkyBlockProfileView,
+  SkyBlockSection,
+} from "@statsify/skyblock";
 import type { LocalizationString, LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -80,8 +92,18 @@ export const SKYBLOCK_CARDS = {
     sections: ["dungeons"],
     settings: [],
     profile: [
-      { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
-      { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
+      {
+        label: (t) => t("skyblock.catacombs"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="normal" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.masterMode"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="master" />
+        ),
+      },
       { label: (t) => t("skyblock.essence"), profile: SkyBlockEssenceProfile },
     ],
   },
@@ -91,12 +113,16 @@ export const SKYBLOCK_CARDS = {
     profile: [
       {
         label: (t) => t("skyblock.accessories"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="missing" />,
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="missing" />
+        ),
         icons: accessoryIcons("missing"),
       },
       {
         label: (t) => t("skyblock.inactive"),
-        profile: (props) => <SkyBlockAccessoriesProfile {...props} page="inactive" />,
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="inactive" />
+        ),
         icons: accessoryIcons("inactive"),
       },
     ],
@@ -117,8 +143,18 @@ export const SKYBLOCK_CARDS = {
     sections: ["fishing"],
     settings: [],
     profile: [
-      { label: (t) => t("skyblock.trophyFish"), profile: (props) => <SkyBlockFishingProfile {...props} page="trophyFish" /> },
-      { label: (t) => t("skyblock.seaCreatures"), profile: (props) => <SkyBlockFishingProfile {...props} page="seaCreatures" /> },
+      {
+        label: (t) => t("skyblock.trophyFish"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="trophyFish" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.seaCreatures"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="seaCreatures" />
+        ),
+      },
     ],
   },
   jacob: {
@@ -141,7 +177,11 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
-export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
+export function skyBlockTitle(
+  t: LocalizeFunction,
+  profile: SkyBlockProfileView,
+  name: SkyBlockCardName,
+) {
   return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${formatProfileName(profile)}§r)`;
 }
 

@@ -20,33 +20,53 @@ const PETS_SHOWN = 18;
 const topPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
 
 export const petIcons = (member: MemberView) =>
-  topPets(member).flatMap(({ texture, heldItemTexture }) => (heldItemTexture ? [texture, heldItemTexture] : [texture]));
+  topPets(member).flatMap(({ texture, heldItemTexture }) =>
+    heldItemTexture ? [texture, heldItemTexture] : [texture],
+  );
 
-export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockPetsProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const { score, active, pets, totalXp } = profile.member.pets!;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.petScore"), t(score), "§b"],
     [t("skyblock.pets"), t(pets.length), "§a"],
     [t("skyblock.totalPetXp"), t(Math.floor(totalXp)), "§d"],
-    [t("skyblock.activePet"), active ? `${RARITY_COLORS[active.rarity]}${active.name}` : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.activePet"),
+      active
+        ? `${RARITY_COLORS[active.rarity]}${active.name}`
+        : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  const items = topPets(profile.member).map(({ name, rarity, level, texture, heldItemTexture, candyUsed }) => {
-    const candy = candyUsed > 0 ? ` §8• §c${t("skyblock.candyUsed", { candy: t(candyUsed) })}` : "";
-    return {
-      texture,
-      badge: heldItemTexture,
-      name: `${RARITY_COLORS[rarity]}${name}`,
-      value: `§7${t("skyblock.petLevel", { level: t(level.level) })}${candy}`,
-    };
-  });
+  const items = topPets(profile.member).map(
+    ({ name, rarity, level, texture, heldItemTexture, candyUsed }) => {
+      const candy =
+        candyUsed > 0
+          ? ` §8• §c${t("skyblock.candyUsed", { candy: t(candyUsed) })}`
+          : "";
+      return {
+        texture,
+        badge: heldItemTexture,
+        name: `${RARITY_COLORS[rarity]}${name}`,
+        value: `§7${t("skyblock.petLevel", { level: t(level.level) })}${candy}`,
+      };
+    },
+  );
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={3} /> :
-        <Empty text={t("skyblock.noPets")} />}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} columns={3} />
+      ) : (
+        <Empty text={t("skyblock.noPets")} />
+      )}
     </Card>
   );
 };

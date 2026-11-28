@@ -41,8 +41,14 @@ export function getMisc(member: RawMember): MiscSection {
       goldEarned: auctions.gold_earned ?? 0,
       fees: auctions.fees ?? 0,
     },
-    gifts: { given: stats.gifts?.total_given ?? 0, received: stats.gifts?.total_received ?? 0 },
-    mythological: { kills: stats.mythos?.kills ?? 0, chains: stats.mythos?.burrows_chains_complete?.total ?? 0 },
+    gifts: {
+      given: stats.gifts?.total_given ?? 0,
+      received: stats.gifts?.total_received ?? 0,
+    },
+    mythological: {
+      kills: stats.mythos?.kills ?? 0,
+      chains: stats.mythos?.burrows_chains_complete?.total ?? 0,
+    },
     candy: stats.candy_collected?.total ?? 0,
     soulflow: member.item_data?.soulflow ?? 0,
   };

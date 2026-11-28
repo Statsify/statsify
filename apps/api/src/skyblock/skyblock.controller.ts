@@ -16,8 +16,22 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
-import { BadRequestException, Controller, Get, NotFoundException, Query, Res, StreamableFile } from "@nestjs/common";
-import { CachedPlayerDto, SkyBlockIconDto, SkyBlockItemsDto, SkyBlockPriceDto, SkyBlockProfileDto } from "#dtos";
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  NotFoundException,
+  Query,
+  Res,
+  StreamableFile,
+} from "@nestjs/common";
+import {
+  CachedPlayerDto,
+  SkyBlockIconDto,
+  SkyBlockItemsDto,
+  SkyBlockPriceDto,
+  SkyBlockProfileDto,
+} from "#dtos";
 import {
   ErrorResponse,
   GetSkyBlockItemsResponse,
@@ -27,7 +41,10 @@ import {
   SkyBlockNotFoundException,
   SkyBlockUnavailableException,
 } from "@statsify/api-client";
-import { FAILED_HEAD_SECONDS, SkyBlockIconsService } from "./skyblock-icons.service.js";
+import {
+  FAILED_HEAD_SECONDS,
+  SkyBlockIconsService,
+} from "./skyblock-icons.service.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
 import { parseIconKey } from "@statsify/skyblock/icon-key";
@@ -39,16 +56,20 @@ export class SkyBlockController {
   public constructor(
     private readonly skyblockService: SkyBlockService,
     private readonly pricesService: SkyBlockPricesService,
-    private readonly iconsService: SkyBlockIconsService
+    private readonly iconsService: SkyBlockIconsService,
   ) {}
 
   @ApiOperation({
     summary: "Get a Player's SkyBlock Profiles",
-    description: "When Hypixel can't be asked, the stored copy is returned with stale set and its fetchedAt.",
+    description:
+      "When Hypixel can't be asked, the stored copy is returned with stale set and its fetchedAt.",
   })
   @ApiOkResponse({ type: GetSkyBlockProfilesResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "player or skyblock" })
+  @ApiNotFoundResponse({
+    type: SkyBlockNotFoundException,
+    description: "player or skyblock",
+  })
   @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
   @Auth({ role: AuthRole.WORKER, weight: 2 })
   @Get("/profiles")
@@ -68,12 +89,22 @@ export class SkyBlockController {
   })
   @ApiOkResponse({ type: GetSkyBlockProfileResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "player, skyblock or profile" })
+  @ApiNotFoundResponse({
+    type: SkyBlockNotFoundException,
+    description: "player, skyblock or profile",
+  })
   @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
   @Auth({ role: AuthRole.WORKER, weight: 3 })
   @Get("/profile")
-  public async getProfile(@Query() { player, profile: name, sections, cache }: SkyBlockProfileDto) {
-    const profile = await this.skyblockService.getProfile(player, sections, cache, name);
+  public async getProfile(
+    @Query() { player, profile: name, sections, cache }: SkyBlockProfileDto,
+  ) {
+    const profile = await this.skyblockService.getProfile(
+      player,
+      sections,
+      cache,
+      name,
+    );
 
     return {
       success: true,
@@ -84,8 +115,14 @@ export class SkyBlockController {
   @ApiOperation({ summary: "Get What a SkyBlock Item is Worth" })
   @ApiOkResponse({ type: GetSkyBlockPriceResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: SkyBlockNotFoundException, description: "item or price" })
-  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException, description: "market" })
+  @ApiNotFoundResponse({
+    type: SkyBlockNotFoundException,
+    description: "item or price",
+  })
+  @ApiServiceUnavailableResponse({
+    type: SkyBlockUnavailableException,
+    description: "market",
+  })
   @Auth({ role: AuthRole.WORKER, weight: 1 })
   @Get("/price")
   public async getPrice(@Query() { item }: SkyBlockPriceDto) {
@@ -104,20 +141,33 @@ export class SkyBlockController {
   @Get("/icons")
   @Auth({ role: AuthRole.WORKER, weight: 0 })
   @ApiExcludeEndpoint()
-  public async getIcon(@Query() { texture: key, size, glint }: SkyBlockIconDto, @Res({ passthrough: true }) reply: FastifyReply) {
+  public async getIcon(
+    @Query() { texture: key, size, glint }: SkyBlockIconDto,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
     const texture = parseIconKey(key);
     if (!texture) throw new BadRequestException("texture must be an icon key");
 
     const icon = await this.iconsService.getIcon(texture, size, glint === 1);
     if (!icon) throw new NotFoundException("no texture");
 
-    reply.header("Cache-Control", icon.standIn ? `public, max-age=${FAILED_HEAD_SECONDS}` : "public, max-age=31536000, immutable");
+    reply.header(
+      "Cache-Control",
+      icon.standIn
+        ? `public, max-age=${FAILED_HEAD_SECONDS}`
+        : "public, max-age=31536000, immutable",
+    );
     return new StreamableFile(icon.png, { type: "image/png" });
   }
 
-  @ApiOperation({ summary: "Get a Fuzzy Searched List of Priced SkyBlock Items" })
+  @ApiOperation({
+    summary: "Get a Fuzzy Searched List of Priced SkyBlock Items",
+  })
   @ApiOkResponse({ type: GetSkyBlockItemsResponse })
-  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException, description: "market" })
+  @ApiServiceUnavailableResponse({
+    type: SkyBlockUnavailableException,
+    description: "market",
+  })
   @Auth({ role: AuthRole.WORKER, weight: 0 })
   @Get("/items")
   public async getItems(@Query() { query }: SkyBlockItemsDto) {

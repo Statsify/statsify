@@ -23,7 +23,10 @@ export function getExperiments(member: RawMember): ExperimentsSection | null {
       attempts: data[`attempts_${tier}`],
       claims: data[`claims_${tier}`] ?? 0,
       bestScore: data[`best_score_${tier}`],
-    })).filter(({ attempts, claims, bestScore }) => attempts !== undefined || claims > 0 || bestScore !== undefined);
+    })).filter(
+      ({ attempts, claims, bestScore }) =>
+        attempts !== undefined || claims > 0 || bestScore !== undefined,
+    );
 
     return { game, bonusClicks: data.bonus_clicks ?? 0, tiers };
   });

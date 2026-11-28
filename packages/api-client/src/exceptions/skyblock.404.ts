@@ -14,10 +14,16 @@ import { NotFoundException } from "./base.404.js";
  * no such profile. item: a key the price search can't name. price: a key with no bazaar product, BIN listing or NPC price.
  */
 export class SkyBlockNotFoundException extends NotFoundException {
-  @ApiProperty({ required: false, description: "The item's name, for a key with no price" })
+  @ApiProperty({
+    required: false,
+    description: "The item's name, for a key with no price",
+  })
   public itemName?: string;
 
-  public constructor(message: "skyblock" | "not_fetched" | "profile" | "item" | "price", itemName?: string) {
+  public constructor(
+    message: "skyblock" | "not_fetched" | "profile" | "item" | "price",
+    itemName?: string,
+  ) {
     super({ message, itemName });
   }
 }

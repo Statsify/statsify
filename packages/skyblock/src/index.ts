@@ -10,10 +10,20 @@ export * from "./types.js";
 export * from "./raw.js";
 export { getApiSettings } from "./api-settings.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
-export { describeKey, labelVariants, parseBazaar, toPriceView } from "./prices.js";
+export {
+  describeKey,
+  labelVariants,
+  parseBazaar,
+  toPriceView,
+} from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
-export { findProfile, gameModeOf, toProfileSummary, toProfilesView } from "./profiles.js";
+export {
+  findProfile,
+  gameModeOf,
+  toProfileSummary,
+  toProfilesView,
+} from "./profiles.js";
 export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
 export { resourceTexture, textureOf } from "./textures.js";
 export {
