@@ -12,64 +12,120 @@ import { EmptySection } from "./components/EmptySection.js";
 import { ItemGrid, gridRows, outOf } from "./components/ItemGrid.js";
 import { MUSEUM_MILESTONES } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
-import type { GearSection, ItemView, MemberView, Slots } from "@statsify/skyblock";
+import type {
+  GearSection,
+  ItemView,
+  MemberView,
+  Slots,
+} from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const WEAPONS = 4;
 
-const filled = (slots: Slots) => slots.filter((item): item is ItemView => item !== null);
+const filled = (slots: Slots) =>
+  slots.filter((item): item is ItemView => item !== null);
 
-const gearKinds = (gear: GearSection) => [filled(gear.armor), filled(gear.equipment), gear.weapons.slice(0, WEAPONS)];
+const gearKinds = (gear: GearSection) => [
+  filled(gear.armor),
+  filled(gear.equipment),
+  gear.weapons.slice(0, WEAPONS),
+];
 
-export const gearIcons = ({ gear }: MemberView) => (gear ? gearKinds(gear).flat().map(({ texture }) => texture) : []);
+export const gearIcons = ({ gear }: MemberView) =>
+  gear
+    ? gearKinds(gear)
+        .flat()
+        .map(({ texture }) => texture)
+    : [];
 
-export const SkyBlockGearProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockGearProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const { gear } = profile.member;
 
-  const sidebar: SidebarItem[] = gear ?
-    [
-      [t("skyblock.wardrobeSets"), t(gear.wardrobe.length), "§b"],
-      [t("skyblock.equipmentSets"), t(gear.equipmentSets.length), "§b"],
-      [t("skyblock.weapons"), t(gear.weapons.length), "§c"],
-    ] :
-    [];
+  const sidebar: SidebarItem[] = gear
+    ? [
+        [t("skyblock.wardrobeSets"), t(gear.wardrobe.length), "§b"],
+        [t("skyblock.equipmentSets"), t(gear.equipmentSets.length), "§b"],
+        [t("skyblock.weapons"), t(gear.weapons.length), "§c"],
+      ]
+    : [];
 
   // Each kind starts a row
-  const items = gear ? gearKinds(gear).flatMap((kind) => (kind.length % 2 === 0 ? kind : [...kind, undefined])) : [];
+  const items = gear
+    ? gearKinds(gear).flatMap((kind) =>
+        kind.length % 2 === 0 ? kind : [...kind, undefined],
+      )
+    : [];
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {gear ?
-        (
-          <ItemGrid
-            items={items.map((item) => (item ? { texture: item.texture, name: item.name, value: "" } : { name: "", value: "" }))}
-            icons={icons}
-            columns={2}
-          />
-        ) :
-        <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noGear")} t={t} />}
+      {gear ? (
+        <ItemGrid
+          items={items.map((item) =>
+            item
+              ? { texture: item.texture, name: item.name, value: "" }
+              : { name: "", value: "" },
+          )}
+          icons={icons}
+          columns={2}
+        />
+      ) : (
+        <EmptySection
+          setting="inventory"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noGear")}
+          t={t}
+        />
+      )}
     </Card>
   );
 };
 
-export const SkyBlockMuseumProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockMuseumProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { museum } = profile.member;
 
   if (!museum) {
-    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noMuseum")} />;
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noMuseum")}
+      />
+    );
   }
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.museumValue"), t(Math.floor(museum.value)), "§6"],
     [t("skyblock.itemsDonated"), t(museum.items.length), "§a"],
     [t("skyblock.specialItems"), t(museum.special.length), "§d"],
-    [t("skyblock.appraised"), t(museum.appraisal ? "skyblock.yes" : "skyblock.no"), museum.appraisal ? "§a" : "§c"],
+    [
+      t("skyblock.appraised"),
+      t(museum.appraisal ? "skyblock.yes" : "skyblock.no"),
+      museum.appraisal ? "§a" : "§c",
+    ],
     [t("skyblock.museumXp"), outOf(t, museum.xp, museum.maxXp, "§b"), "§b"],
-    [t("skyblock.museumMilestone"), outOf(t, museum.milestone, MUSEUM_MILESTONES, "§e"), "§e"],
+    [
+      t("skyblock.museumMilestone"),
+      outOf(t, museum.milestone, MUSEUM_MILESTONES, "§e"),
+      "§e",
+    ],
   ];
 
   const categories = museum.donated.map(({ category, count, total }) => (
-    <Table.td title={prettify(category)} value={outOf(t, count, total, "§a")} color="§a" size="small" />
+    <Table.td
+      title={prettify(category)}
+      value={outOf(t, count, total, "§a")}
+      color="§a"
+      size="small"
+    />
   ));
 
   return (

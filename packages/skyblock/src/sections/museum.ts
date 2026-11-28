@@ -22,19 +22,36 @@ const XP_PER_MILESTONE = 100;
  * Donating an item's upgrade counts as donating the item (the wiki's Template:MuseumItemRow, from the resource's
  * `parent`); that it carries up the whole chain is unverified.
  */
-function isDonated(key: string, donated: Set<string>, museum: ItemsResource["museum"]) {
+function isDonated(
+  key: string,
+  donated: Set<string>,
+  museum: ItemsResource["museum"],
+) {
   const seen = new Set<string>();
-  for (let at: string | undefined = key; at !== undefined && !seen.has(at); at = museum[at]?.upgrade) {
+  for (
+    let at: string | undefined = key;
+    at !== undefined && !seen.has(at);
+    at = museum[at]?.upgrade
+  ) {
     if (donated.has(at)) return true;
     seen.add(at);
   }
   return false;
 }
 
-function museumCategories(donated: Set<string>, museum: ItemsResource["museum"]): MuseumCategory[] {
+function museumCategories(
+  donated: Set<string>,
+  museum: ItemsResource["museum"],
+): MuseumCategory[] {
   const categories = new Map<string, MuseumCategory>();
   for (const [key, { category, xp }] of Object.entries(museum)) {
-    const entry = categories.get(category) ?? { category, count: 0, total: 0, xp: 0, maxXp: 0 };
+    const entry = categories.get(category) ?? {
+      category,
+      count: 0,
+      total: 0,
+      xp: 0,
+      maxXp: 0,
+    };
     entry.total++;
     entry.maxXp += xp;
     if (isDonated(key, donated, museum)) {
@@ -50,24 +67,42 @@ function museumCategories(donated: Set<string>, museum: ItemsResource["museum"])
  * The member's donations; null when there are none to show: the museum wasn't fetched (the profile's `museumFetchedAt`
  * tells), its API is off, or nothing is donated.
  */
-export async function getMuseum(museum: RawMuseumMember | undefined, items: ItemsResource): Promise<MuseumView | null> {
+export async function getMuseum(
+  museum: RawMuseumMember | undefined,
+  items: ItemsResource,
+): Promise<MuseumView | null> {
   if (!museum?.items && !museum?.special) return null;
 
   const donations: MuseumView["items"] = [];
-  for (const [index, [id, { donated_time, items: blob }]] of Object.entries(museum.items ?? {}).entries()) {
+  for (const [index, [id, { donated_time, items: blob }]] of Object.entries(
+    museum.items ?? {},
+  ).entries()) {
     // oxlint-disable-next-line no-await-in-loop -- each donation is a synchronous gunzip and NBT parse, so other requests run between batches
     if (index > 0 && index % DONATIONS_PER_TURN === 0) await setImmediate();
-    donations.push({ id, category: items.museum[id]?.category, donatedAt: donated_time, items: blob ? decodeSlots(blob) : [] });
+    donations.push({
+      id,
+      category: items.museum[id]?.category,
+      donatedAt: donated_time,
+      items: blob ? decodeSlots(blob) : [],
+    });
   }
 
-  const donated = museumCategories(new Set(donations.map(({ id }) => id)), items.museum);
+  const donated = museumCategories(
+    new Set(donations.map(({ id }) => id)),
+    items.museum,
+  );
   const xp = add(...donated.map((category) => category.xp));
 
   return {
     value: museum.value ?? 0,
     appraisal: museum.appraisal ?? false,
-    items: donations.toSorted((a, b) => (b.donatedAt ?? 0) - (a.donatedAt ?? 0)),
-    special: (museum.special ?? []).map(({ donated_time, items: blob }) => ({ donatedAt: donated_time, items: blob ? decodeSlots(blob) : [] })),
+    items: donations.toSorted(
+      (a, b) => (b.donatedAt ?? 0) - (a.donatedAt ?? 0),
+    ),
+    special: (museum.special ?? []).map(({ donated_time, items: blob }) => ({
+      donatedAt: donated_time,
+      items: blob ? decodeSlots(blob) : [],
+    })),
     donated,
     xp,
     maxXp: add(...donated.map((category) => category.maxXp)),

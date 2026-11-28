@@ -25,10 +25,18 @@ const petName = ({ name, rarity, skinColor }: PetView) =>
   `${RARITY_COLORS[rarity]}${name}${skinColor ? `${skinColor} ✦` : ""}`;
 
 export const petIcons = (member: MemberView) =>
-  topPets(member).flatMap(({ texture, heldItemTexture }) => (heldItemTexture ? [texture, heldItemTexture] : [texture]));
+  topPets(member).flatMap(({ texture, heldItemTexture }) =>
+    heldItemTexture ? [texture, heldItemTexture] : [texture],
+  );
 
-export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
-  const { score, active, pets, totalXp, skinned, candyUsed, activeStats } = profile.member.pets!;
+export const SkyBlockPetsProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
+  const { score, active, pets, totalXp, skinned, candyUsed, activeStats } =
+    profile.member.pets!;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.petScore"), t(score), "§b"],
@@ -36,7 +44,11 @@ export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProf
     [t("skyblock.skinnedPets"), t(skinned), "§d"],
     [t("skyblock.totalPetXp"), t(Math.floor(totalXp)), "§d"],
     [t("skyblock.petCandyUsed"), t(candyUsed), "§c"],
-    [t("skyblock.activePet"), active ? petName(active) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.activePet"),
+      active ? petName(active) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
   const stats = PLAYER_STATS.flatMap(({ id, color }) => {
@@ -45,7 +57,10 @@ export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProf
   });
 
   const items = topPets(profile.member).map((pet) => {
-    const candy = pet.candyUsed > 0 ? ` §8• §c${t("skyblock.candyUsed", { candy: t(pet.candyUsed) })}` : "";
+    const candy =
+      pet.candyUsed > 0
+        ? ` §8• §c${t("skyblock.candyUsed", { candy: t(pet.candyUsed) })}`
+        : "";
     return {
       texture: pet.texture,
       badge: pet.heldItemTexture,
@@ -56,10 +71,16 @@ export const SkyBlockPetsProfile = ({ profile, t, icons, ...card }: SkyBlockProf
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {stats.length > 0 ? <StatLines label={t("skyblock.activePet")} stats={stats} t={t} /> : <></>}
-      {items.length > 0 ?
-        <ItemGrid items={items} icons={icons} columns={3} stacked /> :
-        <Empty text={t("skyblock.noPets")} />}
+      {stats.length > 0 ? (
+        <StatLines label={t("skyblock.activePet")} stats={stats} t={t} />
+      ) : (
+        <></>
+      )}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} columns={3} stacked />
+      ) : (
+        <Empty text={t("skyblock.noPets")} />
+      )}
     </Card>
   );
 };

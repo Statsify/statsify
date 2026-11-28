@@ -21,8 +21,11 @@ export interface StatLinesProps {
 export const StatLines = ({ label, stats, t }: StatLinesProps) => {
   const lineCount = Math.ceil(stats.length / MAX_STATS_PER_LINE);
   const lines = arrayGroup(
-    stats.map(({ name, color, value }) => `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`),
-    Math.ceil(stats.length / lineCount)
+    stats.map(
+      ({ name, color, value }) =>
+        `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`,
+    ),
+    Math.ceil(stats.length / lineCount),
   );
 
   return (

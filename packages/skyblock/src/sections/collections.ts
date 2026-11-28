@@ -11,7 +11,13 @@ import { add } from "@statsify/math";
 import { coopMembers } from "../profiles.js";
 import { stepsReached } from "#leveling";
 import { resourceTexture } from "#textures";
-import { type BossCollection, type CollectionView, type CollectionsSection, type ItemsResource, KUUDRA_TIERS } from "#types";
+import {
+  type BossCollection,
+  type CollectionView,
+  type CollectionsSection,
+  type ItemsResource,
+  KUUDRA_TIERS,
+} from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
 // Each boss's tiers, from its wiki page's Collection section, fit every saved member. Owner exceptions (unverified):
@@ -29,7 +35,11 @@ const FLOOR_BOSSES = [
 ];
 const KUUDRA_COLLECTION = [10, 100, 500, 2000, 5000];
 
-const bossCollection = (boss: string, amount: number, tiers: number[]): BossCollection => {
+const bossCollection = (
+  boss: string,
+  amount: number,
+  tiers: number[],
+): BossCollection => {
   const tier = stepsReached(amount, tiers);
   return { boss, amount, tier, maxTier: tiers.length, next: tiers[tier] };
 };
@@ -41,10 +51,16 @@ function getBossCollections(member: RawMember): BossCollection[] {
   return [
     ...FLOOR_BOSSES.map(({ boss, tiers }, i) => {
       const floor = String(i + 1);
-      const amount = (types?.catacombs?.tier_completions?.[floor] ?? 0) + 2 * (types?.master_catacombs?.tier_completions?.[floor] ?? 0);
+      const amount =
+        (types?.catacombs?.tier_completions?.[floor] ?? 0) +
+        2 * (types?.master_catacombs?.tier_completions?.[floor] ?? 0);
       return bossCollection(boss, amount, tiers);
     }),
-    bossCollection("kuudra", add(...KUUDRA_TIERS.map((tier, i) => (i + 1) * (kuudra[tier] ?? 0))), KUUDRA_COLLECTION),
+    bossCollection(
+      "kuudra",
+      add(...KUUDRA_TIERS.map((tier, i) => (i + 1) * (kuudra[tier] ?? 0))),
+      KUUDRA_COLLECTION,
+    ),
   ];
 }
 
@@ -63,7 +79,11 @@ function unlockedTiers(unlocked: string[]) {
  * The whole co-op's gathering, for the resource's collections only (the API keeps retired ones like ENCHANTED_DIAMOND).
  * With the member's Collections API off, only tiers come, from `unlocked_coll_tiers`, which can trail the co-op's.
  */
-export function getCollections(profile: RawProfile, member: RawMember, items?: ItemsResource): CollectionsSection | null {
+export function getCollections(
+  profile: RawProfile,
+  member: RawMember,
+  items?: ItemsResource,
+): CollectionsSection | null {
   const unlocked = member.player_data?.unlocked_coll_tiers;
   if (!member.collection && !unlocked) return null;
 
@@ -82,7 +102,15 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
       const unlockedTier = Math.min(reached.get(id) ?? 0, tiers.length);
 
       if (!member.collection) {
-        return { id, name, texture, tier: unlockedTier, maxTier: tiers.length, next: tiers[unlockedTier], members: [] };
+        return {
+          id,
+          name,
+          texture,
+          tier: unlockedTier,
+          maxTier: tiers.length,
+          next: tiers[unlockedTier],
+          members: [],
+        };
       }
 
       const parts = counted
@@ -110,7 +138,9 @@ export function getCollections(profile: RawProfile, member: RawMember, items?: I
     categories,
     maxed: all.filter(({ tier, maxTier }) => tier === maxTier).length,
     total: all.length,
-    hidden: members.filter(([, other]) => !other.collection).map(([uuid]) => uuid),
+    hidden: members
+      .filter(([, other]) => !other.collection)
+      .map(([uuid]) => uuid),
     bosses: getBossCollections(member),
   };
 }
@@ -120,8 +150,15 @@ if (import.meta.vitest) {
 
   // A co-op of two, the other member with the Collections API off
   const tierOf = (amount: number, unlocked: string[]) => {
-    const member: RawMember = { collection: { "INK_SACK:3": amount }, player_data: { unlocked_coll_tiers: unlocked } };
-    const profile = { profile_id: "p", cute_name: "Apple", members: { a: member, b: {} } };
+    const member: RawMember = {
+      collection: { "INK_SACK:3": amount },
+      player_data: { unlocked_coll_tiers: unlocked },
+    };
+    const profile = {
+      profile_id: "p",
+      cute_name: "Apple",
+      members: { a: member, b: {} },
+    };
     return getCollections(profile, member)
       ?.categories.flatMap(({ items }) => items)
       .find(({ id }) => id === "INK_SACK:3")?.tier;
@@ -134,12 +171,20 @@ if (import.meta.vitest) {
   });
 
   test("unlockedTiers keeps each collection's highest tier", () => {
-    expect(unlockedTiers(["BONE_-1", "INK_SACK:3_2", "INK_SACK:3_9", "INK_SACK:3_8", "MUTTON_1"])).toEqual(
+    expect(
+      unlockedTiers([
+        "BONE_-1",
+        "INK_SACK:3_2",
+        "INK_SACK:3_9",
+        "INK_SACK:3_8",
+        "MUTTON_1",
+      ]),
+    ).toEqual(
       new Map([
         ["BONE", 0],
         ["INK_SACK:3", 9],
         ["MUTTON", 1],
-      ])
+      ]),
     );
   });
 }

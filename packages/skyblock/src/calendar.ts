@@ -40,11 +40,16 @@ export interface SkyBlockDate {
 
 export const skyblockDate = (time: number): SkyBlockDate => {
   const days = Math.floor((time - EPOCH) / DAY);
-  return { year: Math.floor(days / YEAR_DAYS) + 1, month: Math.floor((days % YEAR_DAYS) / MONTH_DAYS), day: (days % MONTH_DAYS) + 1 };
+  return {
+    year: Math.floor(days / YEAR_DAYS) + 1,
+    month: Math.floor((days % YEAR_DAYS) / MONTH_DAYS),
+    day: (days % MONTH_DAYS) + 1,
+  };
 };
 
 /** When a SkyBlock day begins. */
-export const skyblockTime = ({ year, month, day }: SkyBlockDate) => EPOCH + ((year - 1) * YEAR_DAYS + month * MONTH_DAYS + day - 1) * DAY;
+export const skyblockTime = ({ year, month, day }: SkyBlockDate) =>
+  EPOCH + ((year - 1) * YEAR_DAYS + month * MONTH_DAYS + day - 1) * DAY;
 
 const ELECTION_END = { month: 2, day: 27 } as const;
 
@@ -71,7 +76,11 @@ interface Cycle {
   days: number;
 }
 
-const yearsFrom = (year: number, every: number) => ({ every: every * YEAR_DAYS, at: [((year - 1) % every) * YEAR_DAYS], days: YEAR_DAYS });
+const yearsFrom = (year: number, every: number) => ({
+  every: every * YEAR_DAYS,
+  at: [((year - 1) % every) * YEAR_DAYS],
+  days: YEAR_DAYS,
+});
 
 // Events on other cycles, from the wiki's Calendar, Events, Dark Auction, Jacob's Farming Contest and Cult of the Fallen
 // Star pages (an owner exception, unverified). The 12-year ones are the only years of that cycle the wiki names.
@@ -93,7 +102,12 @@ const TERM = { every: YEAR_DAYS, at: [dayOfYear(2, 27)], days: YEAR_DAYS };
 // The events a mayor's or minister's perk brings (the wiki's Events/Mayor Events Table, an owner exception, unverified),
 // a whole-term one from the election's end. Foxy's Extra Event and Diaz's Stock Exchange are left out: no set time.
 const PERK_EVENTS = {
-  "Fishing Festival": { key: "fishingFestival", every: MONTH_DAYS, at: [0], days: 3 },
+  "Fishing Festival": {
+    key: "fishingFestival",
+    every: MONTH_DAYS,
+    at: [0],
+    days: 3,
+  },
   "Mining Fiesta": { key: "miningFiesta", ...TERM },
   "Mythological Ritual": { key: "mythologicalRitual", ...TERM },
   "Chivalrous Carnival": { key: "carnival", ...TERM },
@@ -129,19 +143,26 @@ export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
   const term = termOf(mayor, time);
   // A perk brings its events only while its term lasts
   const perks =
-    mayor && term ?
-      [...mayor.mayor.perks, ...(mayor.minister ? [mayor.minister.perk] : [])].map(({ name }) => name) :
-      [];
+    mayor && term
+      ? [
+          ...mayor.mayor.perks,
+          ...(mayor.minister ? [mayor.minister.perk] : []),
+        ].map(({ name }) => name)
+      : [];
   // With Finnegan's Grand Feast perk in office, the Harvest Feast runs his whole term (the wiki's Harvest Feast page,
   // unverified)
   const grandFeast = perks.includes("Grand Feast");
   const perkEvents = perks.flatMap((perk) =>
-    Object.hasOwn(PERK_EVENTS, perk) ? [PERK_EVENTS[perk as keyof typeof PERK_EVENTS]] : []
+    Object.hasOwn(PERK_EVENTS, perk)
+      ? [PERK_EVENTS[perk as keyof typeof PERK_EVENTS]]
+      : [],
   );
   const perkKeys = new Set<SkyBlockEvent>(perkEvents.map(({ key }) => key));
   const cycles: (Cycle & { key: SkyBlockEvent })[] = [
     ...EVENTS.map(({ key, month, day, days }) =>
-      key === "harvestFeast" && grandFeast ? { key, ...TERM } : { key, every: YEAR_DAYS, at: [dayOfYear(month, day)], days }
+      key === "harvestFeast" && grandFeast
+        ? { key, ...TERM }
+        : { key, every: YEAR_DAYS, at: [dayOfYear(month, day)], days },
     ),
     ...CYCLES,
     ...perkEvents,
@@ -149,10 +170,22 @@ export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
 
   return cycles
     .map(({ key, every, at, days }) => {
-      const start = Math.min(...at.map((offset) => offset + every * (Math.floor((now - offset - days) / every) + 1)));
-      return { key, start: EPOCH + start * DAY, end: EPOCH + (start + days) * DAY };
+      const start = Math.min(
+        ...at.map(
+          (offset) =>
+            offset + every * (Math.floor((now - offset - days) / every) + 1),
+        ),
+      );
+      return {
+        key,
+        start: EPOCH + start * DAY,
+        end: EPOCH + (start + days) * DAY,
+      };
     })
-    .filter(({ key, start }) => start < (term && perkKeys.has(key) ? term.end : time + YEAR_DAYS * DAY))
+    .filter(
+      ({ key, start }) =>
+        start < (term && perkKeys.has(key) ? term.end : time + YEAR_DAYS * DAY),
+    )
     .toSorted((a, b) => a.start - b.start);
 }
 
@@ -161,37 +194,93 @@ if (import.meta.vitest) {
 
   test("skyblockDate counts 20-minute days, 31-day months and 12-month years from the epoch", () => {
     expect(skyblockDate(EPOCH)).toEqual({ year: 1, month: 0, day: 1 });
-    expect(skyblockDate(EPOCH + 31 * DAY - 1)).toEqual({ year: 1, month: 0, day: 31 });
-    expect(skyblockDate(EPOCH + YEAR_DAYS * DAY)).toEqual({ year: 2, month: 0, day: 1 });
-    expect(skyblockDate(1_794_105_965_338)).toEqual({ year: 524, month: 9, day: 24 });
+    expect(skyblockDate(EPOCH + 31 * DAY - 1)).toEqual({
+      year: 1,
+      month: 0,
+      day: 31,
+    });
+    expect(skyblockDate(EPOCH + YEAR_DAYS * DAY)).toEqual({
+      year: 2,
+      month: 0,
+      day: 1,
+    });
+    expect(skyblockDate(1_794_105_965_338)).toEqual({
+      year: 524,
+      month: 9,
+      day: 24,
+    });
   });
 
   test("nextEvents puts an event on now first and moves a past one to next year", () => {
     const zoo = skyblockTime({ year: 10, month: 3, day: 2 });
     const [first] = nextEvents(zoo);
-    expect(first).toEqual({ key: "travelingZoo", start: skyblockTime({ year: 10, month: 3, day: 1 }), end: skyblockTime({ year: 10, month: 3, day: 4 }) });
-    expect(nextEvents(zoo).find(({ key }) => key === "newYear")?.start).toBe(skyblockTime({ year: 10, month: 11, day: 29 }));
-    expect(nextEvents(zoo).find(({ key }) => key === "electionOver")?.start).toBe(skyblockTime({ year: 11, month: 2, day: 27 }));
+    expect(first).toEqual({
+      key: "travelingZoo",
+      start: skyblockTime({ year: 10, month: 3, day: 1 }),
+      end: skyblockTime({ year: 10, month: 3, day: 4 }),
+    });
+    expect(nextEvents(zoo).find(({ key }) => key === "newYear")?.start).toBe(
+      skyblockTime({ year: 10, month: 11, day: 29 }),
+    );
+    expect(
+      nextEvents(zoo).find(({ key }) => key === "electionOver")?.start,
+    ).toBe(skyblockTime({ year: 11, month: 2, day: 27 }));
   });
 
   test("nextEvents runs the Harvest Feast through the whole term under Grand Feast, and not past it", () => {
-    const finnegan = { mayor: { name: "Finnegan", perks: [{ name: "Grand Feast", description: "" }] }, term: 9 };
-    const feast = (time: number) => nextEvents(time, finnegan).find(({ key }) => key === "harvestFeast");
-    expect(feast(skyblockTime({ year: 10, month: 0, day: 5 }))).toEqual({ key: "harvestFeast", start: skyblockTime({ year: 9, month: 2, day: 27 }), end: skyblockTime({ year: 10, month: 2, day: 27 }) });
-    expect(feast(skyblockTime({ year: 10, month: 3, day: 1 }))?.start).toBe(skyblockTime({ year: 10, month: 6, day: 1 }));
+    const finnegan = {
+      mayor: {
+        name: "Finnegan",
+        perks: [{ name: "Grand Feast", description: "" }],
+      },
+      term: 9,
+    };
+    const feast = (time: number) =>
+      nextEvents(time, finnegan).find(({ key }) => key === "harvestFeast");
+    expect(feast(skyblockTime({ year: 10, month: 0, day: 5 }))).toEqual({
+      key: "harvestFeast",
+      start: skyblockTime({ year: 9, month: 2, day: 27 }),
+      end: skyblockTime({ year: 10, month: 2, day: 27 }),
+    });
+    expect(feast(skyblockTime({ year: 10, month: 3, day: 1 }))?.start).toBe(
+      skyblockTime({ year: 10, month: 6, day: 1 }),
+    );
   });
 
-  const startOf = (key: SkyBlockEvent, time: number, mayor?: MayorView) => nextEvents(time, mayor).find((event) => event.key === key)?.start;
+  const startOf = (key: SkyBlockEvent, time: number, mayor?: MayorView) =>
+    nextEvents(time, mayor).find((event) => event.key === key)?.start;
 
   test("nextEvents repeats the other cycles and lists a 12-year event only within a year of it", () => {
     const spring8 = skyblockTime({ year: 10, month: 0, day: 8 });
 
-    expect(startOf("darkAuction", spring8)).toBe(skyblockTime({ year: 10, month: 0, day: 10 }));
-    expect(startOf("cult", spring8)).toBe(skyblockTime({ year: 10, month: 0, day: 14 }));
-    const marina = { mayor: { name: "Marina", perks: [{ name: "Fishing Festival", description: "" }] }, term: 9 };
-    expect(startOf("fishingFestival", spring8, marina)).toBe(skyblockTime({ year: 10, month: 1, day: 1 }));
-    expect(startOf("fishingFestival", skyblockTime({ year: 10, month: 2, day: 5 }), marina)).toBeUndefined();
-    expect(startOf("yearOfTheSeal", skyblockTime({ year: 401, month: 1, day: 1 }))).toBe(skyblockTime({ year: 402, month: 0, day: 1 }));
-    expect(startOf("yearOfTheSeal", skyblockTime({ year: 400, month: 11, day: 31 }))).toBeUndefined();
+    expect(startOf("darkAuction", spring8)).toBe(
+      skyblockTime({ year: 10, month: 0, day: 10 }),
+    );
+    expect(startOf("cult", spring8)).toBe(
+      skyblockTime({ year: 10, month: 0, day: 14 }),
+    );
+    const marina = {
+      mayor: {
+        name: "Marina",
+        perks: [{ name: "Fishing Festival", description: "" }],
+      },
+      term: 9,
+    };
+    expect(startOf("fishingFestival", spring8, marina)).toBe(
+      skyblockTime({ year: 10, month: 1, day: 1 }),
+    );
+    expect(
+      startOf(
+        "fishingFestival",
+        skyblockTime({ year: 10, month: 2, day: 5 }),
+        marina,
+      ),
+    ).toBeUndefined();
+    expect(
+      startOf("yearOfTheSeal", skyblockTime({ year: 401, month: 1, day: 1 })),
+    ).toBe(skyblockTime({ year: 402, month: 0, day: 1 }));
+    expect(
+      startOf("yearOfTheSeal", skyblockTime({ year: 400, month: 11, day: 31 })),
+    ).toBeUndefined();
   });
 }

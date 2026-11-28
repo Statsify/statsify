@@ -8,12 +8,25 @@
 
 import { costOf } from "#prices";
 import { parsePetKey } from "#auctions";
-import { PET_RARITIES, getPets, petMaxLevel, petName, petScorePoints, petTexture } from "./pets.js";
+import {
+  PET_RARITIES,
+  getPets,
+  petMaxLevel,
+  petName,
+  petScorePoints,
+  petTexture,
+} from "./pets.js";
 import { PET_TEXTURES, SKYBLOCK_XP } from "#data";
 import { SKYBLOCK_XP_PER_LEVEL, skyblockLevel } from "../profiles.js";
 import { cheapestFirst, getAccessories } from "./accessories.js";
 import { prettify } from "@statsify/util";
-import type { ItemsResource, Level, MissingAccessory, PriceMap, SkyBlockLevelSection } from "#types";
+import type {
+  ItemsResource,
+  Level,
+  MissingAccessory,
+  PriceMap,
+  SkyBlockLevelSection,
+} from "#types";
 import type { RawMember } from "#raw";
 
 type Source = SkyBlockLevelSection["sources"][number];
@@ -33,13 +46,22 @@ function toLevel(xp: number): Level {
 }
 
 /** SkyBlock XP is never taken back, so a task pays only for what goes past the highest value it has reached. */
-const gainOver = (current: number, highest: number | undefined, added: number) =>
-  Math.max(0, current + added - Math.max(current, highest ?? 0));
+const gainOver = (
+  current: number,
+  highest: number | undefined,
+  added: number,
+) => Math.max(0, current + added - Math.max(current, highest ?? 0));
 
-const accessoryXp = (power: number, highest: number | undefined, added: number) =>
-  gainOver(power, highest, added) * SKYBLOCK_XP.accessory_bag_xp;
+const accessoryXp = (
+  power: number,
+  highest: number | undefined,
+  added: number,
+) => gainOver(power, highest, added) * SKYBLOCK_XP.accessory_bag_xp;
 
-const compareSources = cheapestFirst<Source>((source) => source.coinsPerXp, (source) => source.xp);
+const compareSources = cheapestFirst<Source>(
+  (source) => source.coinsPerXp,
+  (source) => source.xp,
+);
 
 /**
  * Missing accessories and pet types the player has none of, each at its cheapest tier. Without a market, nothing has a
@@ -49,29 +71,62 @@ export function getSkyBlockLevel(
   member: RawMember,
   items: ItemsResource,
   prices: PriceMap,
-  market: boolean
+  market: boolean,
 ): SkyBlockLevelSection {
   // Each chain keeps its cheapest step per XP, since under the highest the cheapest per accessory power can pay none. A
   // step that pays none goes last, and so does a tier reached in place, so its chain keeps a step this list can show.
-  const accessories = getAccessories(member, items, prices, market, (power, highest) => {
-    const xp = (step: MissingAccessory) => accessoryXp(power, highest, step.accessoryPower);
-    const cheapest = cheapestFirst<MissingAccessory>((step) => step.cost && step.cost.coins / xp(step), xp);
-    const last = (step: MissingAccessory) => Number(xp(step) === 0 || step.nextTier !== undefined);
-    return (a, b) => last(a) - last(b) || cheapest(a, b);
-  });
+  const accessories = getAccessories(
+    member,
+    items,
+    prices,
+    market,
+    (power, highest) => {
+      const xp = (step: MissingAccessory) =>
+        accessoryXp(power, highest, step.accessoryPower);
+      const cheapest = cheapestFirst<MissingAccessory>(
+        (step) => step.cost && step.cost.coins / xp(step),
+        xp,
+      );
+      const last = (step: MissingAccessory) =>
+        Number(xp(step) === 0 || step.nextTier !== undefined);
+      return (a, b) => last(a) - last(b) || cheapest(a, b);
+    },
+  );
   const { score, pets } = getPets(member);
   const owned = new Set(pets.map((pet) => pet.type));
 
   const petXp = (tier: string, maxed = false) =>
-    gainOver(score, member.leveling?.highest_pet_score, petScorePoints(tier) + Number(maxed)) * SKYBLOCK_XP.pet_score_xp;
+    gainOver(
+      score,
+      member.leveling?.highest_pet_score,
+      petScorePoints(tier) + Number(maxed),
+    ) * SKYBLOCK_XP.pet_score_xp;
 
   const sources: Source[] = !accessories
     ? []
-    : accessories.missing.flatMap(({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
-        const xp = accessoryXp(accessories.accessoryPower, accessories.highestAccessoryPower, accessoryPower);
-        if (xp === 0 || nextTier || (market && !outsideBag && !cost)) return [];
-        return [{ kind: "accessory", id, name, xp, outsideBag, cost, coinsPerXp: cost && cost.coins / xp, texture }];
-      });
+    : accessories.missing.flatMap(
+        ({ id, name, accessoryPower, outsideBag, cost, texture, nextTier }) => {
+          const xp = accessoryXp(
+            accessories.accessoryPower,
+            accessories.highestAccessoryPower,
+            accessoryPower,
+          );
+          if (xp === 0 || nextTier || (market && !outsideBag && !cost))
+            return [];
+          return [
+            {
+              kind: "accessory",
+              id,
+              name,
+              xp,
+              outsideBag,
+              cost,
+              coinsPerXp: cost && cost.coins / xp,
+              texture,
+            },
+          ];
+        },
+      );
 
   const best = new Map<string, Source>();
   if (market) {
@@ -106,7 +161,14 @@ export function getSkyBlockLevel(
       if (xp === 0) continue;
 
       const name = `${prettify(tier)} ${petName(type)}`;
-      best.set(type, { kind: "pet", id: type, name, xp, outsideBag: false, texture: petTexture(type, tier) });
+      best.set(type, {
+        kind: "pet",
+        id: type,
+        name,
+        xp,
+        outsideBag: false,
+        texture: petTexture(type, tier),
+      });
     }
   }
 
