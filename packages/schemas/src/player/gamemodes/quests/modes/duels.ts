@@ -14,7 +14,7 @@ export const DuelsQuests = createGameModeQuests({
   fieldPrefix: "duels",
   daily: [
     { field: "player", propertyKey: "player" },
-    { field: "kills", propertyKey: "kills" },
+    { field: "killer", propertyKey: "kills" },
     { field: "winner", propertyKey: "winner" },
   ],
   weekly: [
