@@ -81,6 +81,8 @@ function getPetSources(member: RawMember, prices: PriceMap, market: boolean) {
     SKYBLOCK_XP.pet_score_xp;
 
   const owned = new Set((member.pets_data?.pets ?? []).map(({ type }) => type));
+  const montezuma = member.rift?.dead_cats?.montezuma;
+  if (montezuma) owned.add(montezuma.type);
   const best = new Map<string, Source>();
 
   if (!market) {

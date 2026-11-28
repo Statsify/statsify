@@ -240,9 +240,10 @@ export class SkyBlockCommand {
     ]);
 
     const generator =
-      (id: string, Profile: SkyBlockProfile) => async (t: LocalizeFunction) => {
+      (id: string, Profile: SkyBlockProfile, getIcons = card.icons) =>
+      async (t: LocalizeFunction) => {
         const view = await getView(id);
-        const icons = await loadItemIcons(card.icons?.(view.member) ?? []);
+        const icons = await loadItemIcons(getIcons?.(view.member) ?? []);
         const title = getSkyBlockTitle(t, view, name);
 
         const canvas = render(
@@ -278,9 +279,9 @@ export class SkyBlockCommand {
       const page = { label: cuteName, emoji: GAME_MODES[gameMode].emoji };
 
       if (Array.isArray(card.profile)) {
-        const subPages = card.profile.map(({ label, profile }) => ({
+        const subPages = card.profile.map(({ label, profile, icons }) => ({
           label,
-          generator: generator(id, profile),
+          generator: generator(id, profile, icons),
         }));
         return { ...page, subPages };
       }

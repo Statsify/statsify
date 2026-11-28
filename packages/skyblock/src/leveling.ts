@@ -117,16 +117,17 @@ export const getPetScorePoints = (tier: string) =>
   PET_RARITIES.indexOf(tier as Rarity) + 1;
 
 export function getPetScore(member: RawMember) {
-  // The score ranks each type's pets by the API's tier, without Tier Boost.
+  // The wiki's Rift Ferret page says Tier Boost counts (unverified).
   const best = new Map<
     string,
     { points: number; level: number; maxed: boolean }
   >();
   for (const pet of member.pets_data?.pets ?? []) {
-    const points = getPetScorePoints(pet.tier);
+    const rarity = boostedRarity(pet);
+    const points = getPetScorePoints(rarity);
     if (points === 0) continue;
 
-    const { level, maxLevel } = getPetLevel(pet);
+    const { level, maxLevel } = getPetLevel(pet, rarity);
     const seen = best.get(pet.type);
     if (
       !seen ||

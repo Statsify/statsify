@@ -7,9 +7,10 @@
  */
 
 import { Card } from "./components/Card.js";
+import { Color } from "@statsify/schemas";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { POWDERS, type Powder } from "@statsify/skyblock";
+import { type HotmSection, POWDERS, type Powder } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -19,12 +20,75 @@ const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
+const TREE_WIDTH = 7;
+const TREE_HEIGHT = 10;
+const PERK_SIZE = 14;
+
+function getPerkColor({
+  level,
+  maxLevel,
+  enabled,
+}: HotmSection["nodes"][number]) {
+  if (level === 0) return new Color("§8").hex;
+  if (!enabled) return new Color("§c").hex;
+  return new Color(level === maxLevel ? "§a" : "§e").hex;
+}
+
+const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
+  const nodesByPosition = new Map(
+    nodes.map((node) => [`${node.x},${node.y}`, node]),
+  );
+
+  return (
+    <div direction="column" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
+      {Array.from({ length: TREE_HEIGHT }, (_, y) => (
+        <div>
+          {Array.from({ length: TREE_WIDTH }, (_, x) => {
+            const node = nodesByPosition.get(`${x},${y}`);
+            if (!node) {
+              return <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
+            }
+
+            return (
+              <box
+                width={PERK_SIZE}
+                height={PERK_SIZE}
+                color={getPerkColor(node)}
+                padding={0}
+                margin={1}
+                border={{
+                  topLeft: 0,
+                  topRight: 0,
+                  bottomLeft: 0,
+                  bottomRight: 0,
+                }}
+                shadowDistance={0}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export const SkyBlockHotmProfile = ({
   profile,
   t,
   ...card
 }: SkyBlockProfileProps) => {
-  const { level, loadout, tokens, ability, powder } = profile.member.hotm!;
+  const {
+    level,
+    coreLevel,
+    loadout,
+    tokens,
+    ability,
+    powder,
+    nodes,
+    crystals,
+    nucleusRuns,
+    glacite,
+  } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
     [
@@ -32,6 +96,7 @@ export const SkyBlockHotmProfile = ({
       `${t(tokens.spent)}§7/§5${t(tokens.total)}`,
       "§5",
     ],
+    [t("skyblock.coreOfTheMountain"), t(coreLevel), "§6"],
     [
       t("skyblock.pickaxeAbility"),
       ability ? prettify(ability) : t("skyblock.none"),
@@ -65,6 +130,15 @@ export const SkyBlockHotmProfile = ({
     );
   });
 
+  const stats: [string, number, string][] = [
+    [t("skyblock.crystalsFound"), crystals.found, "§d"],
+    [t("skyblock.crystalsPlaced"), crystals.placed, "§d"],
+    [t("skyblock.nucleusRuns"), nucleusRuns, "§5"],
+    [t("skyblock.corpsesLooted"), glacite.corpses, "§b"],
+    [t("skyblock.fossilsDonated"), glacite.fossils, "§6"],
+    [t("skyblock.mineshafts"), glacite.mineshafts, "§3"],
+  ];
+
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
@@ -77,6 +151,18 @@ export const SkyBlockHotmProfile = ({
           />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
+        <Table.tr>
+          <box width="100%" location="center">
+            <PerkTree nodes={nodes} />
+          </box>
+          <box direction="column" location="center" width="100%">
+            {stats.map(([name, value, color]) => (
+              <text
+                margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
+              >{`§7${name}: ${color}${t(value)}`}</text>
+            ))}
+          </box>
+        </Table.tr>
       </Table.table>
     </Card>
   );

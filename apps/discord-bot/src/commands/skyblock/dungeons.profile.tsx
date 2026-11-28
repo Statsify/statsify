@@ -7,19 +7,38 @@
  */
 
 import { Card } from "./components/Card.js";
-import { DUNGEON_CLASSES } from "@statsify/skyblock";
+import {
+  DUNGEON_CLASSES,
+  type DungeonClass,
+  type DungeonFloor,
+  type DungeonGrade,
+} from "@statsify/skyblock";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { LevelBar } from "./components/LevelBar.js";
+import {
+  LevelBar,
+  type LevelBarProps,
+  getLevelBarRows,
+} from "./components/LevelBar.js";
 import { arrayGroup, formatTime, prettify } from "@statsify/util";
+import { getGridRows } from "./components/ItemGrid.js";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-const CLASS_COLORS: Record<(typeof DUNGEON_CLASSES)[number], string> = {
+const CLASS_COLORS: Record<DungeonClass, string> = {
   healer: "§d",
   mage: "§b",
   berserk: "§c",
   archer: "§6",
   tank: "§7",
+};
+
+const GRADE_COLORS: Record<DungeonGrade, string> = {
+  "S+": "§6",
+  S: "§e",
+  A: "§5",
+  B: "§a",
+  C: "§9",
+  D: "§c",
 };
 
 export interface SkyBlockDungeonsProfileProps extends SkyBlockProfileProps {
@@ -56,43 +75,52 @@ export const SkyBlockDungeonsProfile = ({
     ],
   ];
 
-  const classes = DUNGEON_CLASSES.map((name) => (
-    <LevelBar
-      title={prettify(name)}
-      level={dungeons.classes[name]}
-      color={CLASS_COLORS[name]}
-      t={t}
-    />
-  ));
+  if (mode === "normal") {
+    sidebar.push([t("skyblock.watcherKills"), t(dungeons.watcherKills), "§4"]);
+  }
+
+  const classes = DUNGEON_CLASSES.map((name): LevelBarProps => {
+    const color = CLASS_COLORS[name];
+    const damage = dungeons.mostDamage[mode][name];
+    const mostDamage = `§7${t("skyblock.mostDamage")}: ${color}${t(Math.floor(damage))}`;
+
+    return {
+      title: prettify(name),
+      level: dungeons.classes[name],
+      color,
+      t,
+      notes: damage > 0 ? [mostDamage] : [],
+    };
+  });
 
   const time = (ms?: number) => (ms === undefined ? none : formatTime(ms));
+  const score = (best?: DungeonFloor["best"]) =>
+    best ? `${t(best.score)} ${GRADE_COLORS[best.grade]}${best.grade}` : none;
 
   const floors = dungeons.floors[mode]
     .filter(({ played }) => played > 0)
-    .map(
-      ({ floor, completions, bestScore, fastest, fastestS, fastestSPlus }) => (
-        <box direction="column" location="center" width="100%">
-          <text
-            margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
-          >{`§l§c${floorName(floor)}`}</text>
-          <text
-            margin={{ top: 0, bottom: 2 }}
-          >{`§7${t("skyblock.completions")}: §a${t(completions)}`}</text>
-          <text
-            margin={{ top: 0, bottom: 2 }}
-          >{`§7${t("skyblock.bestScore")}: §e${bestScore === undefined ? none : t(bestScore)}`}</text>
-          <text
-            margin={{ top: 0, bottom: 2 }}
-          >{`§7${t("skyblock.fastest")}: §6${time(fastest)}`}</text>
-          <text
-            margin={{ top: 0, bottom: 2 }}
-          >{`§7${t("skyblock.fastestS")}: §6${time(fastestS)}`}</text>
-          <text
-            margin={{ top: 0, bottom: 8 }}
-          >{`§7${t("skyblock.fastestSPlus")}: §6${time(fastestSPlus)}`}</text>
-        </box>
-      ),
-    );
+    .map(({ floor, completions, best, fastest, fastestS, fastestSPlus }) => (
+      <box direction="column" location="center" width="100%">
+        <text
+          margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+        >{`§l§c${floorName(floor)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 2 }}
+        >{`§7${t("skyblock.completions")}: §a${t(completions)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 2 }}
+        >{`§7${t("skyblock.bestScore")}: §e${score(best)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 2 }}
+        >{`§7${t("skyblock.fastest")}: §6${time(fastest)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 2 }}
+        >{`§7${t("skyblock.fastestS")}: §6${time(fastestS)}`}</text>
+        <text
+          margin={{ top: 0, bottom: 8 }}
+        >{`§7${t("skyblock.fastestSPlus")}: §6${time(fastestSPlus)}`}</text>
+      </box>
+    ));
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
@@ -106,7 +134,8 @@ export const SkyBlockDungeonsProfile = ({
               t={t}
             />
           </Table.tr>,
-          <Table.tr>{classes}</Table.tr>,
+          // Five classes in one row set the card's width, so they wrap.
+          ...getLevelBarRows(classes, 3),
           ...(floors.length > 0
             ? arrayGroup(floors, 4).map((row) => <Table.tr>{row}</Table.tr>)
             : [
@@ -116,6 +145,36 @@ export const SkyBlockDungeonsProfile = ({
               ]),
         ]}
       </Table.table>
+    </Card>
+  );
+};
+
+export const SkyBlockEssenceProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
+  const { essence } = profile.member.dungeons!;
+
+  const cells = essence.map(({ type, amount, perks, maxPerks }) => (
+    <box direction="column" location="center" width="100%">
+      <text
+        margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+      >{`§d${prettify(type)}`}</text>
+      <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>
+        {amount === undefined
+          ? `§^3^§7${t("skyblock.notAvailable")}`
+          : `§^3^§f${t(amount)}`}
+      </text>
+      <text margin={{ top: 0, bottom: 8, left: 10, right: 10 }}>
+        {`§7${t("skyblock.perksBought", { bought: t(perks), total: t(maxPerks) })}`}
+      </text>
+    </box>
+  ));
+
+  return (
+    <Card {...card} name={profile.displayName}>
+      <Table.table>{getGridRows(cells, 4)}</Table.table>
     </Card>
   );
 };

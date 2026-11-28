@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES } from "#data";
+import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
 import { add } from "@statsify/math";
 import { decodeInventory } from "#nbt";
 import { getItemCost } from "#prices";
@@ -14,6 +14,7 @@ import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
 import type {
   AccessoriesSection,
+  InactiveAccessory,
   ItemView,
   ItemsResource,
   MissingAccessory,
@@ -34,7 +35,7 @@ const ACCESSORY_POWER: Partial<Record<Rarity, number>> = {
 interface Bag {
   accessoryPower: number;
   active: ItemView[];
-  inactive: ItemView[];
+  inactive: InactiveAccessory[];
   owned: Set<string>;
   contacts: number;
 }
@@ -71,6 +72,30 @@ function getAccessoryPower(
   if (id === "HEGEMONY_ARTIFACT") return power * 2;
   if (id === "ABICASE") return power + Math.floor(contacts / 2);
   return power;
+}
+
+// The wiki's scaling of a Power's stats with accessory power.
+const getPowerScale = (accessoryPower: number) =>
+  29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
+
+function getPowerStats(
+  { accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string],
+  accessoryPower: number,
+) {
+  const scale = getPowerScale(accessoryPower);
+  const listedScale = getPowerScale(listedAt);
+  const scaled = stats.map((stat) => ({
+    ...stat,
+    value: (stat.value * scale) / listedScale,
+  }));
+
+  for (const extra of bonus) {
+    const stat = scaled.find(({ name }) => name === extra.name);
+    if (stat) stat.value = add(stat.value, extra.value);
+    else scaled.push({ ...extra });
+  }
+
+  return scaled;
 }
 
 // Rift-only and ignored accessories can't go in the bag.
@@ -128,18 +153,26 @@ function readBag(member: RawMember, items: ItemsResource): Bag | null {
   const owned = new Set([...prism, ...views.map(({ id }) => id)]);
   const counted = new Set(prism);
   const active: ItemView[] = [];
-  const inactive: ItemView[] = [];
+  const inactive: InactiveAccessory[] = [];
 
   // Only the best tier of each chain counts, and one of two variants.
   for (const view of views) {
-    const replaced =
-      counted.has(view.id) ||
-      getUpgrades(view.id).some(
-        (id) => counted.has(id) || (owned.has(id) && !isVariant(view.id, id)),
-      );
+    const upgrades = getUpgrades(view.id);
+    const replacedBy =
+      upgrades.find((id) => counted.has(id)) ??
+      upgrades.find((id) => owned.has(id) && !isVariant(view.id, id));
 
-    if (replaced) {
-      inactive.push(view);
+    if (counted.has(view.id)) {
+      inactive.push({ ...view, reason: "duplicate" });
+    } else if (replacedBy) {
+      const replacement = items.items[replacedBy];
+      if (!replacement) continue;
+
+      inactive.push({
+        ...view,
+        reason: "replaced",
+        replacedBy: { id: replacedBy, name: replacement.name },
+      });
     } else {
       active.push(view);
       counted.add(view.id);
@@ -284,11 +317,19 @@ export function getAccessories(
   );
 
   const storage = member.accessory_bag_storage;
+  const tuning = storage?.tuning?.slot_0 ?? {};
+  const stone = storage?.selected_power
+    ? POWERS[storage.selected_power]
+    : undefined;
+
   return {
     accessoryPower: bag.accessoryPower,
     highestAccessoryPower: storage?.highest_magical_power,
     selectedPower: storage?.selected_power,
-    tuning: storage?.tuning?.slot_0 ?? {},
+    powerStats: stone && getPowerStats(stone, bag.accessoryPower),
+    tuning,
+    tuningPoints: add(...Object.values(tuning)),
+    enrichments: bag.active.filter((view) => view.enrichment).length,
     pricesAsOf: prices.asOf,
     market,
     active: bag.active,

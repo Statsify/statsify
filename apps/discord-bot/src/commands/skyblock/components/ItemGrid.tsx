@@ -41,6 +41,7 @@ export const getGridRows = (cells: JSX.Element[], columns: number) =>
 
 export interface ItemGridEntry {
   texture?: ItemTexture;
+  badge?: ItemTexture;
   name: string;
   value: string;
 }
@@ -59,9 +60,19 @@ export const ItemGrid = ({
   columns = 2,
   stacked = false,
 }: ItemGridProps) => {
-  const cells = items.map(({ texture, name, value }) => (
+  const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <ItemSlot icon={texture && icons.get(texture)} />
+      {badge && icons.has(badge) ? (
+        <img
+          image={icons.get(badge)!}
+          width={16}
+          height={16}
+          margin={{ left: -14, top: 18 }}
+        />
+      ) : (
+        <></>
+      )}
       {stacked ? (
         <>
           {/* Left-aligned, so a wide card's cells line up down a column. */}

@@ -1,0 +1,672 @@
+{
+  "adept": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 100
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 50
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 161.99
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 92.56
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 34.71
+      }
+    ]
+  },
+  "bizarre": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Ability Damage",
+        "value": 5
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": -23.14
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": -23.14
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 416.54
+      }
+    ]
+  },
+  "bloody": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 10
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 104.13
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 104.13
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 34.71
+      }
+    ]
+  },
+  "bubba": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§3",
+        "name": "Combat Wisdom",
+        "value": 2
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 48.6
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": -92.56
+      },
+      {
+        "color": "§f",
+        "name": "True Defense",
+        "value": 7.87
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 57.85
+      },
+      {
+        "color": "§9",
+        "name": "Crit Chance",
+        "value": 9.26
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 104.13
+      },
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 17.36
+      }
+    ]
+  },
+  "buttery": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 5
+      }
+    ],
+    "stats": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 20.83
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 23.14
+      }
+    ]
+  },
+  "crumbly": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 25
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 97.19
+      },
+      {
+        "color": "§f",
+        "name": "True Defense",
+        "value": 15.74
+      },
+      {
+        "color": "§9",
+        "name": "Crit Chance",
+        "value": 4.63
+      },
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 6.94
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 52.07
+      }
+    ]
+  },
+  "demonic": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 50
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 53.22
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 267.28
+      }
+    ]
+  },
+  "forceful": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Ferocity",
+        "value": 4
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 16.2
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 173.56
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 46.28
+      }
+    ]
+  },
+  "frozen": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§f",
+        "name": "True Defense",
+        "value": 10
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 25
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 25
+      }
+    ],
+    "stats": [
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 127.27
+      },
+      {
+        "color": "§f",
+        "name": "True Defense",
+        "value": 17.7
+      }
+    ]
+  },
+  "healthy": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 200
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 323.97
+      }
+    ]
+  },
+  "hurtful": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 15
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 46.28
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 185.13
+      }
+    ]
+  },
+  "itchy": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 15
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 15
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 69.42
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 80.99
+      },
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 20.83
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 5.79
+      }
+    ]
+  },
+  "mythical": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 150
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 40
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 55.08
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 39.34
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 39.34
+      },
+      {
+        "color": "§9",
+        "name": "Crit Chance",
+        "value": 15.74
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 39.34
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 59.01
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 9.26
+      }
+    ]
+  },
+  "pleasant": {
+    "accessoryPower": 250,
+    "bonus": [],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 129.59
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 138.85
+      }
+    ]
+  },
+  "sanguisuge": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 100
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 32.4
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 138.85
+      },
+      {
+        "color": "§9",
+        "name": "Crit Chance",
+        "value": 9.26
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 46.28
+      }
+    ]
+  },
+  "scorching": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Ferocity",
+        "value": 7
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 80.99
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 92.56
+      },
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 17.36
+      }
+    ]
+  },
+  "shaded": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 3
+      },
+      {
+        "color": "§c",
+        "name": "Ferocity",
+        "value": 3
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 46.28
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 173.56
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 5.79
+      }
+    ]
+  },
+  "sighted": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Ability Damage",
+        "value": 3
+      }
+    ],
+    "stats": [
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 347.11
+      }
+    ]
+  },
+  "silky": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 5
+      }
+    ],
+    "stats": [
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 219.84
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 5.79
+      }
+    ]
+  },
+  "slender": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 100
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 50
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 80.99
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 57.85
+      },
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 57.85
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 57.85
+      },
+      {
+        "color": "§e",
+        "name": "Attack Speed",
+        "value": 10.41
+      },
+      {
+        "color": "§b",
+        "name": "Intelligence",
+        "value": 86.78
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 5.79
+      }
+    ]
+  },
+  "strong": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 25
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 25
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Strength",
+        "value": 115.7
+      },
+      {
+        "color": "§9",
+        "name": "Crit Damage",
+        "value": 115.7
+      }
+    ]
+  },
+  "sweet": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 5
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": 145.79
+      },
+      {
+        "color": "§a",
+        "name": "Defense",
+        "value": 104.13
+      },
+      {
+        "color": "§f",
+        "name": "Speed",
+        "value": 11.57
+      }
+    ]
+  },
+  "unhealthy": {
+    "accessoryPower": 250,
+    "bonus": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": -200
+      }
+    ],
+    "stats": [
+      {
+        "color": "§c",
+        "name": "Health",
+        "value": -324
+      }
+    ]
+  }
+}

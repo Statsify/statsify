@@ -8,14 +8,16 @@
 
 // scripts/sync-data.ts generates these from the sources in NOTICE.md.
 import accessories from "./generated/accessories.json" with { type: "json" };
+import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
+import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
 import textures from "./generated/textures-1.8.json" with { type: "json" };
 import { prettify } from "@statsify/util";
-import type { Rarity } from "#types";
+import type { PowerStat, Rarity } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
@@ -75,4 +77,16 @@ export const IGNORED_ACCESSORIES = new Set<string>(accessories.ignored);
 export const HOTM_LAYOUT = hotmLayout as Record<
   string,
   { name: string; x: number; y: number; maxLevel: number }
+>;
+
+// Each essence shop's perk ids, with each perk's max level.
+export const ESSENCE_SHOPS = essenceShops as Record<
+  string,
+  Record<string, number>
+>;
+
+// Stats scale from the listed accessoryPower, but the bonus never scales.
+export const POWERS = powers as Record<
+  string,
+  { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }
 >;

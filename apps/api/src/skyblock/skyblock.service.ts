@@ -50,7 +50,7 @@ const LIVE_REUSE_MS = 60_000;
 const FAILURE_BACKOFF_MS = 60_000;
 const SECTION_CACHE_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves old ones.
-const SECTION_VERSION = 1;
+const SECTION_VERSION = 2;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
 const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 

@@ -34,7 +34,7 @@ const AVERAGED = SKILLS.filter(
   (skill) => skill !== "runecrafting" && skill !== "social",
 );
 
-// The extra cap seems to skip the shop's unlocks, so past 53 is a guess.
+// Past 50 and the three log unlocks, the cap rests on the shop perks.
 const FORAGING_VERIFIED = 53;
 
 const getSkillXp = (member: RawMember, skill: Skill) =>
@@ -61,12 +61,14 @@ function getLevelCap(skill: Skill, member: RawMember) {
   }
 
   if (skill === "foraging") {
-    const experience = member.player_data?.experience;
-    // NEU's leveling_caps still says 50.
-    return Math.min(
-      54 + (experience?.SKILL_FORAGING_extra_level_cap ?? 0),
-      max,
-    );
+    const data = member.player_data;
+    const unlocks = data?.experience?.SKILL_FORAGING_extra_level_cap ?? 0;
+    const agatha = Number(data?.perks?.agatha_power ?? 0);
+    const miria = Number(data?.perks?.miria_power ?? 0);
+    // Agatha's Milestone IV raises the cap by two, and Miria's IV and V by one.
+    const shops =
+      2 * Number(agatha >= 4) + Number(miria >= 4) + Number(miria >= 5);
+    return Math.min(50 + unlocks + shops, max);
   }
 
   return cap;

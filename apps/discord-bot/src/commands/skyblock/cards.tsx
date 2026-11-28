@@ -11,7 +11,10 @@ import {
   SkyBlockAccessoriesProfile,
   getAccessoryIcons,
 } from "./accessories.profile.js";
-import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
+import {
+  SkyBlockDungeonsProfile,
+  SkyBlockEssenceProfile,
+} from "./dungeons.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, getLevelIcons } from "./level.profile.js";
 import {
@@ -75,9 +78,13 @@ export interface SkyBlockCard {
   // Never museum, since its response leaves out members who donated nothing.
   settings: Exclude<keyof ApiSettings, "museum">[];
   icons?: (member: MemberView) => ItemTexture[];
-  profile:
-    | SkyBlockProfile
-    | { label: LocalizationString; profile: SkyBlockProfile }[];
+  profile: SkyBlockProfile | SkyBlockSubPage[];
+}
+
+interface SkyBlockSubPage {
+  label: LocalizationString;
+  profile: SkyBlockProfile;
+  icons?: SkyBlockCard["icons"];
 }
 
 export const SKYBLOCK_CARDS = {
@@ -129,13 +136,28 @@ export const SKYBLOCK_CARDS = {
           <SkyBlockDungeonsProfile {...props} mode="master" />
         ),
       },
+      { label: (t) => t("skyblock.essence"), profile: SkyBlockEssenceProfile },
     ],
   },
   accessories: {
     sections: ["accessories"],
     settings: ["inventory"],
-    icons: getAccessoryIcons,
-    profile: SkyBlockAccessoriesProfile,
+    profile: [
+      {
+        label: (t) => t("skyblock.accessories"),
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="missing" />
+        ),
+        icons: getAccessoryIcons("missing"),
+      },
+      {
+        label: (t) => t("skyblock.inactive"),
+        profile: (props) => (
+          <SkyBlockAccessoriesProfile {...props} page="inactive" />
+        ),
+        icons: getAccessoryIcons("inactive"),
+      },
+    ],
   },
   level: {
     sections: ["level"],

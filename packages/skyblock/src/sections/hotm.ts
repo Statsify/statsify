@@ -20,6 +20,15 @@ export type Powder = (typeof POWDERS)[number];
 const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 3, 2, 2, 2];
 const CORE_TOKENS = [0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 5];
 
+// A Crystal Nucleus run places each of these once.
+const NUCLEUS_CRYSTALS = [
+  "amber",
+  "amethyst",
+  "jade",
+  "sapphire",
+  "topaz",
+] as const;
+
 export function getHotm(member: RawMember): HotmSection {
   const tree = member.skill_tree;
   // Members from before loadouts keep their tree in mining_core.
@@ -38,9 +47,12 @@ export function getHotm(member: RawMember): HotmSection {
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) =>
     /^mountain(_\d+)?$/.test(key),
   ).length;
+  const crystals = Object.values(core.crystals ?? {});
+  const glacite = member.glacite_player_data;
 
   return {
     level,
+    coreLevel,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: {
       spent:
@@ -75,5 +87,20 @@ export function getHotm(member: RawMember): HotmSection {
         enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false,
       };
     }),
+    crystals: {
+      found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),
+      placed: add(...crystals.map((crystal) => crystal.total_placed ?? 0)),
+    },
+    // The NUCLEUS_RUNS completion stops counting at 50.
+    nucleusRuns: Math.min(
+      ...NUCLEUS_CRYSTALS.map(
+        (gem) => core.crystals?.[`${gem}_crystal`]?.total_placed ?? 0,
+      ),
+    ),
+    glacite: {
+      corpses: add(...Object.values(glacite?.corpses_looted ?? {})),
+      fossils: glacite?.fossils_donated?.length ?? 0,
+      mineshafts: glacite?.mineshafts_entered ?? 0,
+    },
   };
 }

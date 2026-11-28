@@ -14,11 +14,12 @@ import {
   type PetsSection,
 } from "#types";
 import { getPetName } from "#data";
-import { getPetTexture } from "#textures";
+import { getPetTexture, resourceTexture } from "#textures";
 import type { RawMember, RawPet } from "#raw";
 
 function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
   const rarity = boostedRarity(pet);
+  const heldItem = pet.heldItem ? items?.items[pet.heldItem] : undefined;
 
   return {
     uuid: pet.uuid ?? undefined,
@@ -27,6 +28,7 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
     rarity,
     level: getPetLevel(pet, rarity),
     heldItem: pet.heldItem ?? undefined,
+    heldItemTexture: heldItem && resourceTexture(heldItem),
     skin: pet.skin ?? undefined,
     candyUsed: pet.candyUsed ?? 0,
     active: pet.active,
@@ -35,7 +37,12 @@ function toPetView(pet: RawPet, items: ItemsResource | undefined): PetView {
 }
 
 export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
-  const pets = (member.pets_data?.pets ?? [])
+  const raw = [...(member.pets_data?.pets ?? [])];
+  // The Rift keeps Montezuma apart, and its active means summoned there.
+  const montezuma = member.rift?.dead_cats?.montezuma;
+  if (montezuma) raw.push({ ...montezuma, active: false });
+
+  const pets = raw
     .map((pet) => toPetView(pet, items))
     .toSorted(
       (a, b) =>
@@ -48,5 +55,6 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
     score: getPetScore(member),
     active: pets.find((pet) => pet.active),
     pets,
+    totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
   };
 }

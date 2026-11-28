@@ -19,7 +19,9 @@ const PETS_SHOWN = 18;
 const getTopPets = ({ pets }: MemberView) => pets!.pets.slice(0, PETS_SHOWN);
 
 export const getPetIcons = (member: MemberView) =>
-  getTopPets(member).map(({ texture }) => texture);
+  getTopPets(member).flatMap(({ texture, heldItemTexture }) =>
+    heldItemTexture ? [texture, heldItemTexture] : [texture],
+  );
 
 export const SkyBlockPetsProfile = ({
   profile,
@@ -27,11 +29,12 @@ export const SkyBlockPetsProfile = ({
   icons,
   ...card
 }: SkyBlockProfileProps) => {
-  const { score, active, pets } = profile.member.pets!;
+  const { score, active, pets, totalXp } = profile.member.pets!;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.petScore"), t(score), "§b"],
     [t("skyblock.pets"), t(pets.length), "§a"],
+    [t("skyblock.totalPetXp"), t(Math.floor(totalXp)), "§d"],
     [
       t("skyblock.activePet"),
       active
@@ -41,13 +44,17 @@ export const SkyBlockPetsProfile = ({
     ],
   ];
 
-  const items = getTopPets(profile.member).map(
-    ({ name, rarity, level, texture }) => ({
-      texture,
-      name: `${RARITY_COLORS[rarity]}${name}`,
-      value: `§7${t("skyblock.petLevel", { level: t(level.level) })}`,
-    }),
-  );
+  const items = getTopPets(profile.member).map((pet) => {
+    const level = `§7${t("skyblock.petLevel", { level: t(pet.level.level) })}`;
+    const candy = t("skyblock.candyUsed", { candy: t(pet.candyUsed) });
+
+    return {
+      texture: pet.texture,
+      badge: pet.heldItemTexture,
+      name: `${RARITY_COLORS[pet.rarity]}${pet.name}`,
+      value: pet.candyUsed > 0 ? `${level} §8• §c${candy}` : level,
+    };
+  });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>

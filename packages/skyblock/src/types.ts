@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { DungeonClass } from "./sections/dungeons.js";
 import type { Powder } from "./sections/hotm.js";
 import type { Skill } from "./sections/skills.js";
 import type { SlayerBoss } from "./sections/slayers.js";
@@ -93,6 +94,7 @@ export interface Level {
   level: number;
   maxLevel: number;
   xp: number;
+  // At the max level, this is all the XP past it.
   xpCurrent: number;
   xpForNext?: number;
   progress: number;
@@ -114,11 +116,13 @@ export interface SlayersSection {
   bosses: Record<SlayerBoss, { level: Level; kills: number[] }>;
 }
 
+export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
+
 export interface DungeonFloor {
   floor: number;
   played: number;
   completions: number;
-  bestScore?: number;
+  best?: { score: number; grade: DungeonGrade };
   fastest?: number;
   fastestS?: number;
   fastestSPlus?: number;
@@ -126,16 +130,28 @@ export interface DungeonFloor {
 
 export interface DungeonsSection {
   catacombs: Level;
-  classes: Record<string, Level>;
+  classes: Record<DungeonClass, Level>;
   classAverage: number;
   selectedClass?: string;
   secrets: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
+  mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>;
+  watcherKills: number;
+  essence: Essence[];
+}
+
+export interface Essence {
+  type: string;
+  // Hypixel sends no balance for some shops.
+  amount?: number;
+  perks: number;
+  maxPerks: number;
 }
 
 export interface HotmSection {
   level: Level;
+  coreLevel: number;
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
@@ -149,12 +165,16 @@ export interface HotmSection {
     y: number;
     enabled: boolean;
   }[];
+  crystals: { found: number; placed: number };
+  nucleusRuns: number;
+  glacite: { corpses: number; fossils: number; mineshafts: number };
 }
 
 export interface PetsSection {
   score: number;
   active?: PetView;
   pets: PetView[];
+  totalXp: number;
 }
 
 export interface PetView {
@@ -164,6 +184,7 @@ export interface PetView {
   rarity: Rarity;
   level: Level;
   heldItem?: string;
+  heldItemTexture?: ItemTexture;
   skin?: string;
   candyUsed: number;
   active: boolean;
@@ -220,15 +241,30 @@ export interface AccessoriesSection {
   accessoryPower: number;
   highestAccessoryPower?: number;
   selectedPower?: string;
+  // Only a Power learned from a stone has these.
+  powerStats?: PowerStat[];
   tuning: Record<string, number>;
+  tuningPoints: number;
+  enrichments: number;
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];
-  // Inactive ones are duplicates and tiers an upgrade in the bag replaces.
-  inactive: ItemView[];
+  inactive: InactiveAccessory[];
   // Missing ones outside the bag come first, then the cheapest per power.
   missing: MissingAccessory[];
 }
+
+export interface PowerStat {
+  name: string;
+  color: string;
+  value: number;
+}
+
+export type InactiveAccessory = ItemView &
+  (
+    | { reason: "duplicate" }
+    | { reason: "replaced"; replacedBy: { id: string; name: string } }
+  );
 
 export interface NetworthSection {
   total: number;
@@ -291,6 +327,8 @@ export interface ItemView {
   stars?: number;
   recombobulated: boolean;
   enchantments?: Record<string, number>;
+  // An accessory's enrichment is its stat id.
+  enrichment?: string;
 }
 
 // An item's id is its 1.8 numeric id, and a head's skin is a texture hash.
