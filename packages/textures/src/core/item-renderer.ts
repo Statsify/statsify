@@ -42,7 +42,7 @@ const CACHE_LIMIT = 2000;
 function promiseCache<T extends NonNullable<unknown>>() {
   return new LRUCache<string, T, () => Promise<T>>({
     max: CACHE_LIMIT,
-    // Without it, a load still running when 2000 newer ones push it out rejects as aborted
+    // Without it, an evicted load that's still running rejects as aborted
     ignoreFetchAbort: true,
     fetchMethod: (_key, _stale, { context }) => context(),
   });

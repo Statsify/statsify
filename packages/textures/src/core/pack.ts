@@ -271,8 +271,7 @@ export async function loadPack(
   const data = (await readSource(source)) as Uint8Array<ArrayBuffer>;
   const [hash, entries] = await Promise.all([sha256(data), unzipAssets(data)]);
 
-  // Packs zipped with their folder have pack.mcmeta one level down
-  // none beside their assets, only their data packs'. A pack's assets can be in its overlays alone
+  // pack.mcmeta can sit one level down, and client jars only have data packs'
   const paths = Object.keys(entries);
   const metaRoot = paths
     .filter((path) => path.endsWith("pack.mcmeta"))
