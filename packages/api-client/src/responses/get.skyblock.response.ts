@@ -21,7 +21,7 @@ export class GetSkyBlockProfilesResponse extends SuccessResponse {
     description:
       "The player, when the profiles were fetched, and a summary of each",
   })
-  public profiles: SkyBlockProfilesView;
+  public player: SkyBlockProfilesView;
 }
 
 export class GetSkyBlockProfileResponse extends SuccessResponse {

@@ -123,9 +123,9 @@ export class ApiService {
   }
 
   public getCachedSkyBlockProfiles(tag: string, cache: CacheLevel) {
-    return this.requestKey<GetSkyBlockProfilesResponse, "profiles">(
+    return this.requestKey<GetSkyBlockProfilesResponse, "player">(
       "/skyblock/profiles",
-      "profiles",
+      "player",
       { player: tag, cache },
       "GET",
       { timeout: SKYBLOCK_REQUEST_TIMEOUT }

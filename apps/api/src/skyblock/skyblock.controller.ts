@@ -51,11 +51,9 @@ export class SkyBlockController {
   @Auth({ role: AuthRole.WORKER, weight: 2 })
   @Get("/profiles")
   public async getProfiles(@Query() { player, cache }: CachedPlayerDto) {
-    const profiles = await this.skyblockService.getProfiles(player, cache);
-
     return {
       success: true,
-      profiles,
+      player: await this.skyblockService.getProfiles(player, cache),
     };
   }
 
