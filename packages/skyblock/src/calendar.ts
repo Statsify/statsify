@@ -188,6 +188,9 @@ export function getNextEvents(time: number, mayor?: MayorView): EventTime[] {
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
+  const findAt = (key: SkyBlockEvent, time: number, mayor?: MayorView) =>
+    getNextEvents(time, mayor).find((event) => event.key === key)?.start;
+
   suite("toSkyBlockDate", () => {
     it("should count 20-minute days, 31-day months and 12-month years", () => {
       expect(toSkyBlockDate(EPOCH_MS)).toEqual({ year: 1, month: 0, day: 1 });
@@ -262,9 +265,6 @@ if (import.meta.vitest) {
         },
         term: 9,
       };
-      const findAt = (key: SkyBlockEvent, time: number, mayor?: MayorView) =>
-        getNextEvents(time, mayor).find((event) => event.key === key)?.start;
-
       expect(findAt("darkAuction", spring8)).toBe(
         getDayStart({ year: 10, month: 0, day: 10 }),
       );
