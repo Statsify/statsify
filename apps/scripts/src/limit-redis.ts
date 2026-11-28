@@ -6,16 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
+import type { Constructor } from "@statsify/util";
 import { Guild, scanMetadata, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 
 const logger = new Logger("Redis Limiter");
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(process.env.REDIS_URL!);
 
-const runLimit = async (constructors, prefixes) => {
+const runLimit = async (
+  constructors: Constructor[],
+  prefixes?: CurrentHistoricalType[],
+) => {
   for (const [i, constructor] of constructors.entries()) {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
@@ -24,21 +28,28 @@ const runLimit = async (constructors, prefixes) => {
     const fields = scanMetadata(constructor);
 
     for (const [key, value] of fields) {
-      const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
-      if (!value.leaderboard.enabled || (prefixes ? !value.historical.enabled : false))
+      const path = prefixes
+        ? `${prefixes[i]}:${name}.${key}`
+        : `${name}.${key}`;
+      if (
+        !value.leaderboard.enabled ||
+        (prefixes ? !value.historical.enabled : false)
+      )
         oldLeaderboardPipeline.del(path);
     }
 
     // oxlint-disable-next-line no-await-in-loop
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = prefixes ?
-      fields.filter(([, value]) => value.historical.enabled) :
-      fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = prefixes
+      ? fields.filter(([, value]) => value.historical.enabled)
+      : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
     for (const [key, value] of leaderboards) {
+      if (!value.leaderboard.enabled) continue;
+
       const path = `${name}.${key}`;
       const { sort } = value.leaderboard;
       let { limit } = value.leaderboard;
@@ -63,10 +74,10 @@ const runLimit = async (constructors, prefixes) => {
     logger.log(
       `There are ${memberCount.toLocaleString()} possible members in the ${
         prefixes ? prefixes[i].toLowerCase() : "lifetime"
-      } ${name} leaderboards`
+      } ${name} leaderboards`,
     );
   }
-}
+};
 
 const limit = async () => {
   await Promise.all([
@@ -77,7 +88,7 @@ const limit = async () => {
         CurrentHistoricalType.DAILY,
         CurrentHistoricalType.WEEKLY,
         CurrentHistoricalType.MONTHLY,
-      ]
+      ],
     ),
   ]);
 };
