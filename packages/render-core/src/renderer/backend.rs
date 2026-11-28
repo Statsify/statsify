@@ -38,7 +38,11 @@ pub trait Backend {
   fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView;
 
   #[cfg(not(target_arch = "wasm32"))]
-  fn handle_encoder_after_render(&self, encoder: wgpu::CommandEncoder) -> RenderResult<Vec<u8>>;
+  fn handle_encoder_after_render(
+    &self,
+    encoder: wgpu::CommandEncoder,
+    output_texture: OutputTexture<'_>,
+  ) -> RenderResult<Vec<u8>>;
 
   #[cfg(target_arch = "wasm32")]
   fn handle_encoder_after_render(

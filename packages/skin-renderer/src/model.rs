@@ -1,4 +1,4 @@
-use cgmath::{Deg, Quaternion, Rotation as _, Vector3};
+use cgmath::{Deg, Matrix4, Quaternion, Rotation as _, SquareMatrix, Vector3};
 use image::DynamicImage;
 use statsify_render_core::material::Material;
 use statsify_render_core::mesh::Mesh;
@@ -575,12 +575,13 @@ impl Model {
     });
   }
 
-  // Every pipeline blends and writes depth, so this order shows in the render
+  // Partly transparent texels blend in this order, so what the player wears goes over the skin
   pub fn draw_items(&self) -> Vec<DrawItem<'_>> {
     let skin = self.meshes.iter().map(|mesh| DrawItem {
       mesh,
       material: &self.material,
-      pipeline: Pipeline::Main,
+      pipeline: Pipeline::Worn(None),
+      transform: Matrix4::identity(),
     });
 
     let attachments = self
@@ -590,7 +591,8 @@ impl Model {
       .map(|attachment| DrawItem {
         mesh: &attachment.mesh,
         material: &attachment.material,
-        pipeline: Pipeline::Attachment,
+        pipeline: Pipeline::Worn(None),
+        transform: Matrix4::identity(),
       });
 
     let enchanted = self.glint.iter().flat_map(|glint| {
@@ -601,7 +603,8 @@ impl Model {
         .map(move |attachment| DrawItem {
           mesh: &attachment.mesh,
           material: &attachment.material,
-          pipeline: Pipeline::Enchanted(glint),
+          pipeline: Pipeline::Worn(Some(glint)),
+          transform: Matrix4::identity(),
         })
     });
 

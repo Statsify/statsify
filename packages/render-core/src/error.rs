@@ -9,6 +9,9 @@ pub enum Error {
   #[error("Failed to render")]
   RenderFailure,
 
+  #[error("The output's width and height must be whole numbers from 1 to {0}")]
+  OutputSize(u32),
+
   #[error(transparent)]
   RequestDevice(#[from] wgpu::RequestDeviceError),
 
