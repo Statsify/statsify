@@ -26,8 +26,7 @@ const fetchJson = async <T>(path: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-// minecraft-data's 1.13 names that 26.3 renamed (stone_slab still exists but names another block,
-// so the pack check can't catch it). null drops eggs for entity types that never had one
+// The pack check misses renames whose old name now means another block
 const RENAMES: Record<string, string | null> = {
   grass: "short_grass",
   sign: "oak_sign",
@@ -42,7 +41,7 @@ const RENAMES: Record<string, string | null> = {
   giant_spawn_egg: null,
 };
 
-// 1.8's dye items by color, with silver as 1.8's name for light gray
+// 1.8 calls light gray dye silver
 const DYES: Record<string, string> = {
   white: "bone_meal",
   orange: "orange_dye",
@@ -62,8 +61,7 @@ const DYES: Record<string, string> = {
   black: "ink_sac",
 };
 
-// 1.8 ids minecraft-data's legacy table skips or names by a later version: 31:0 is the shrub, which the game
-// draws as a dead bush, and 1.8's only bed is red
+// Ids the legacy table skips or names by a later version
 const LEGACY_ITEMS: Record<string, string> = {
   "31:0": "minecraft:dead_bush",
   "355:0": "minecraft:red_bed",
@@ -84,7 +82,7 @@ const RECORDS = [
   "ward",
 ] as const;
 
-// 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
+// These models were renamed too, so no same-named model pairs them up
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   ...Object.fromEntries(
     Object.entries(DYES).flatMap(([color, dye]) => [
@@ -163,11 +161,10 @@ const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   "items/potion_bottle_splash": "item/splash_potion",
   "items/reeds": "item/sugar_cane",
   "items/sign": "item/oak_sign",
-  // 1.8 animated these strips in code; a slot shows 26.3's first entry, frame 0 of 64 and 16 of 32.
-  // Packs replace them with strips of any length, so the frame is kept as a point along the strip
+  // 1.8 animated these in code, so a slot shows one point along the strip
   "items/clock": { texture: "item/clock_00", position: 0 },
   "items/compass": { texture: "item/compass_16", position: 0.5 },
-  // 26.3 draws beds in code, and gives each spawn egg its own texture where 1.8 tinted one
+  // 26.3 draws beds in code and gives each spawn egg its own texture
   "items/bed": null,
   "items/spawn_egg": null,
   "items/spawn_egg_overlay": null,
@@ -235,7 +232,6 @@ async function readAssets(source: string) {
   return { models, textures };
 }
 
-/** A model's textures with its parents' merged in and #references followed */
 function modelTextures(models: Map<string, ModelFile>, id: string) {
   const chain: ModelFile[] = [];
 
@@ -318,7 +314,7 @@ const mobs = new Map(
     .map((entity) => [entity.id, entity]),
 );
 
-// The legacy table also has later versions' Damage values, like 1.12's bed colors and 1.9's dragon head
+// The legacy table also has later versions' Damage values
 const legacyDamages = new Map<number, Set<number>>();
 for (const { id, variations = [] } of [...items, ...blocks]) {
   legacyDamages.set(
@@ -331,8 +327,7 @@ for (const { id, variations = [] } of [...items, ...blocks]) {
   );
 }
 
-// With LEGACY_ITEMS, the legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
-// its id alone, and any Damage on it (tool wear) still finds it
+// An id with only :0 is keyed by its id alone, so tool wear still finds it
 const variants = Map.groupBy(
   Object.entries({ ...legacy.items, ...LEGACY_ITEMS })
     .map(([key, name]) => {
@@ -346,10 +341,10 @@ const variants = Map.groupBy(
 for (const [id, entries] of variants) {
   if (id === 0) continue;
 
-  // Potions take their effects from the Damage value at runtime, see legacy-items.ts
+  // Potions take their effects from Damage at runtime, see legacy-items.ts
   if (id === POTION) continue;
 
-  // Spawn eggs are keyed by their mob below. The table's one egg, 383:0, is 1.8's untyped egg, which 26.3 has no item for
+  // The table's only egg, 383:0, is an untyped egg 26.3 has no item for
   if (id === SPAWN_EGG) continue;
 
   for (const { damage, name } of entries) {
@@ -361,7 +356,7 @@ for (const [id, entries] of variants) {
   }
 }
 
-// The legacy table has no mob's spawn egg, whose Damage is the mob's entity id
+// A spawn egg's Damage is its mob's entity id
 const eggs = items.find(({ id }) => id === SPAWN_EGG)?.variations ?? [];
 
 for (const { metadata } of eggs) {
@@ -405,7 +400,7 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
-// 1.8's command block texture has several 26.3 counterparts; the most common pairing wins
+// Where a 1.8 texture has several 26.3 counterparts, the most common wins
 const pairings = new Map<string, Map<string, number>>();
 
 for (const id of legacyAssets.models.keys()) {
@@ -442,14 +437,16 @@ const itemTextures = new Set(
     .flatMap((id) => Object.values(modelTextures(legacyAssets.models, id))),
 );
 
-for (const texture of [...legacyAssets.textures].toSorted()) {
+const findLegacyTarget = (texture: string) => {
+  if (texture in LEGACY_TEXTURES) return LEGACY_TEXTURES[texture];
+  if (modernAssets.textures.has(sameName(texture))) return sameName(texture);
+
   const paired = pairings.get(texture);
-  const target =
-    texture in LEGACY_TEXTURES
-      ? LEGACY_TEXTURES[texture]
-      : modernAssets.textures.has(sameName(texture))
-        ? sameName(texture)
-        : paired && mostPaired(paired);
+  return paired && mostPaired(paired);
+};
+
+for (const texture of [...legacyAssets.textures].toSorted()) {
+  const target = findLegacyTarget(texture);
 
   if (target === undefined) {
     if (itemTextures.has(texture)) missing.push(`texture ${texture}`);
@@ -471,7 +468,6 @@ const renamedTexture = (texture: string) => {
   return typeof target === "string" ? target : target?.texture;
 };
 
-/** Whether a model's elements use a texture variable it never sets, as a parent template does */
 function isTemplate(models: Map<string, ModelFile>, id: string) {
   const textures = modelTextures(models, id);
   let elements: ModelFile["elements"];
@@ -493,8 +489,7 @@ function isTemplate(models: Map<string, ModelFile>, id: string) {
   );
 }
 
-// A 1.8.9 model whose name 26.3 gives another role (1.8's block/anvil is its damage levels'
-// template, 26.3's is the anvil) moves aside, so it doesn't replace 26.3's, and its children follow it
+// A 1.8.9 model whose name 26.3 uses for another model moves aside
 const moved = new Set(
   [...legacyAssets.models.keys()].filter(
     (id) =>
@@ -506,34 +501,33 @@ const moved = new Set(
 
 for (const id of moved) output.legacyModels[id] = `legacy/${id}`;
 
-const modelNames = Map.groupBy(
-  [...legacyAssets.models.keys()]
-    .filter((id) => !modernAssets.models.has(id))
-    .flatMap((id) => {
-      const name = Object.values(modelTextures(legacyAssets.models, id))
-        .map(renamedTexture)
-        .find(
-          (texture) =>
-            texture?.startsWith(id.slice(0, id.indexOf("/") + 1)) &&
-            modernAssets.models.has(texture) &&
-            (!legacyAssets.models.has(texture) || moved.has(texture)),
-        );
+const renamedModels: { id: string; name: string }[] = [];
+for (const id of legacyAssets.models.keys()) {
+  if (modernAssets.models.has(id)) continue;
 
-      return name ? [{ id, name }] : [];
-    }),
-  ({ name }) => name,
-);
+  const name = Object.values(modelTextures(legacyAssets.models, id))
+    .map(renamedTexture)
+    .find(
+      (texture) =>
+        texture?.startsWith(id.slice(0, id.indexOf("/") + 1)) &&
+        modernAssets.models.has(texture) &&
+        (!legacyAssets.models.has(texture) || moved.has(texture)),
+    );
+
+  if (name) renamedModels.push({ id, name });
+}
+
+const modelNames = Map.groupBy(renamedModels, ({ name }) => name);
 
 for (const [name, models] of modelNames) {
   if (models.length === 1) output.legacyModels[models[0].id] = name;
 }
 
-// Flat items whose frame 1.8 picked in code, which the pinned strip frames above stand in for
+// 1.8 picked these frames in code, so they draw the pinned strip frames
 output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
 
-// Block items draw 1.8.9's item model of the same name, but these 1.8 names are other 26.3 items
-// (1.8's nether_brick is the block, and its netherbrick the item)
+// These 1.8 block item names are other items in 26.3
 Object.assign(output.legacyModels, {
   "item/double_grass": "item/tall_grass",
   "item/nether_brick": "legacy/item/nether_brick",

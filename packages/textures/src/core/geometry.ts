@@ -29,7 +29,6 @@ type Mat3 = [
   number,
 ];
 
-/** A textured rectangle in block pixels (0 to 16), with uvs from 0 to 1 */
 export interface Quad {
   corners: [Vec3, Vec3, Vec3, Vec3];
   uvs: [Vec2, Vec2, Vec2, Vec2];
@@ -105,7 +104,6 @@ function cross(a: Vec3, b: Vec3): Vec3 {
   ];
 }
 
-/** A special model's transformation, with its translation in blocks */
 export interface Transformation {
   left_rotation?: Quaternion;
   right_rotation?: Quaternion;
@@ -113,7 +111,6 @@ export interface Transformation {
   translation?: Vec3;
 }
 
-/** Moves quads from a special model's own space into block pixels */
 export function transformQuads(
   quads: Quad[],
   transformation: Transformation = {},
@@ -144,7 +141,6 @@ export function transformQuads(
   }));
 }
 
-// The corners of each face in the order Minecraft assigns uvs to them
 const FACE_CORNERS: Record<Direction, (from: Vec3, to: Vec3) => Vec3[]> = {
   down: (f, t) => [
     [f[0], f[1], t[2]],
@@ -184,7 +180,6 @@ const FACE_CORNERS: Record<Direction, (from: Vec3, to: Vec3) => Vec3[]> = {
   ],
 };
 
-// The uvs a face gets from its element's position when it doesn't list any
 const DEFAULT_UVS: Record<
   Direction,
   (from: Vec3, to: Vec3) => [number, number, number, number]
@@ -197,7 +192,6 @@ const DEFAULT_UVS: Record<
   east: (f, t) => [16 - t[2], 16 - t[1], 16 - f[2], 16 - f[1]],
 };
 
-/** A block model element's faces, with each face's texture and tint looked up by the caller */
 export function elementQuads(
   element: ModelElement,
   look: (face: ModelFace) => { texture: ImageData; tint?: number },
@@ -261,7 +255,6 @@ export function elementQuads(
   );
 }
 
-/** An entity cube with Minecraft's texture layout and downward y axis */
 export function boxQuads(
   origin: Vec3,
   size: Vec3,
@@ -310,8 +303,7 @@ export function boxQuads(
   ];
 }
 
-// The two lights Minecraft sets up for 3D items in a GUI, moved
-// into model space after the y flip GUI rendering applies
+// The game's two GUI item lights, moved into model space after the y flip
 const LIGHT_0: Vec3 = [-0.9334, 0.2627, -0.2443];
 const LIGHT_1: Vec3 = [-0.1036, 0.9766, 0.1884];
 
@@ -328,7 +320,7 @@ const displayMatrix = (display?: Transform) =>
 
 const degrees = (radians: number) => (radians * 180) / Math.PI;
 
-/** One display transform that applies `inner` and then `outer`, whose scale must be uniform */
+// The outer transform's scale must be uniform
 export function composeTransforms(
   outer: Transform,
   inner: Transform,
@@ -341,7 +333,6 @@ export function composeTransforms(
   const [ox, oy, oz] = outer.translation ?? [0, 0, 0];
   const [tx, ty, tz] = apply(outerMatrix, [ix * scale, iy * scale, iz * scale]);
 
-  // Back to x, y, z angles for displayMatrix's Rx · Ry · Rz
   const y = Math.asin(Math.max(-1, Math.min(1, matrix[2])));
   const [x, z] =
     Math.abs(matrix[2]) < 0.999_999
@@ -355,7 +346,6 @@ export function composeTransforms(
   };
 }
 
-/** Draws quads as a 3D item in a slot: orthographic, back faces culled, nearest texels, cut out below 10% alpha */
 export function rasterize(
   quads: Quad[],
   display: Transform | undefined,
@@ -390,7 +380,6 @@ export function rasterize(
       return {
         quad,
         normal: normal.map((value) => value / length) as Vec3,
-        // Screen pixels, y down, and depth towards the camera
         screen: points.map(
           ([x, y, z]) => [(8 + x) * scale, (8 - y) * scale, z] as Vec3,
         ),
@@ -407,8 +396,7 @@ export function rasterize(
     const green = (((tint >> 8) & 0xff) / 255) * shade;
     const blue = ((tint & 0xff) / 255) * shade;
 
-    // Orthographic projection keeps every rectangle a parallelogram, so a pixel's place on
-    // the face is p0 + s (p1 - p0) + t (p3 - p0)
+    // A pixel's place on the face is p0 + s (p1 - p0) + t (p3 - p0)
     const [p0, p1, , p3] = screen;
     const ax = p1[0] - p0[0];
     const ay = p1[1] - p0[1];
@@ -468,7 +456,6 @@ export function rasterize(
           pixels.data[out + 3] = 255;
           depth[index] = z;
         } else {
-          // Translucent faces blend over what's behind them without hiding it
           const a = alpha / 255;
           const below = pixels.data[out + 3] / 255;
           const total = a + below * (1 - a);
