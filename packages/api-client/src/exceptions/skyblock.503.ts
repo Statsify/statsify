@@ -9,7 +9,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ServiceUnavailableException } from "@nestjs/common";
 
-export const SKYBLOCK_UNAVAILABLE_REASONS = [
+const SKYBLOCK_UNAVAILABLE_REASONS = [
   "throttled",
   "hypixel",
   "market",

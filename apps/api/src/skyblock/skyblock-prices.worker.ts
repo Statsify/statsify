@@ -52,7 +52,7 @@ async function* getPages(timeout: number): AsyncGenerator<RawAuctionsPage> {
     const pages = Array.from({ length: count }, (_, i) =>
       getPage(start + i, timeout),
     );
-    // oxlint-disable-next-line no-await-in-loop -- each batch is decoded before the next is fetched
+    // oxlint-disable-next-line no-await-in-loop -- decode a batch before the next
     yield* await Promise.all(pages);
   }
 }
