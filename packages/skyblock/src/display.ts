@@ -29,9 +29,14 @@ export {
 export { REPUTATION_RANKS } from "./sections/crimson.js";
 export { DUNGEON_CLASSES } from "./sections/dungeons.js";
 export { JACOB_MEDALS } from "./sections/jacob.js";
-export { MUSEUM_MILESTONES } from "./sections/museum.js";
 export { POWDERS } from "./sections/hotm.js";
-export { INVENTORIES, PLAYER_STATS, RARITIES, STAT_GROUPS } from "#types";
+export {
+  INVENTORIES,
+  MUSEUM_MILESTONES,
+  PLAYER_STATS,
+  RARITIES,
+  STAT_GROUPS,
+} from "#types";
 export { RIFT_TOTALS } from "./sections/rift.js";
 export { SKILLS } from "./sections/skills.js";
 export { SLAYER_BOSSES } from "./sections/slayers.js";
