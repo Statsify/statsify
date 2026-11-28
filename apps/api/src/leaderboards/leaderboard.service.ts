@@ -27,6 +27,21 @@ const DAYS_IN_WEEK = {
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
+export const PAGE_SIZE = 10;
+
+export const toLeaderboardQuery = (
+  search: string | null | undefined,
+  position: number | undefined,
+  page: number
+): { input: number | string; type: LeaderboardQuery } => {
+  if (search) return { input: search, type: LeaderboardQuery.INPUT };
+  if (position) return { input: position, type: LeaderboardQuery.POSITION };
+  return { input: page, type: LeaderboardQuery.PAGE };
+};
+
+export const isRankedScore = (value: unknown): value is number =>
+  typeof value === "number" && value !== 0 && !Number.isNaN(value);
+
 @Injectable()
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
@@ -51,10 +66,10 @@ export abstract class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     for (const [field, metadata] of fields) {
-      const value = instance[field] as unknown as number;
+      const value = instance[field];
       const key = `${name}.${String(field)}`;
 
-      if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
+      if (remove || !isRankedScore(value)) {
         pipeline.zrem(key, id);
         continue;
       }
@@ -78,20 +93,7 @@ export abstract class LeaderboardService {
     input: number | string,
     type: LeaderboardQuery
   ) {
-    const PAGE_SIZE = 10;
-
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+    const { sort } = getLeaderboardField(constructor, field);
 
     let top: number;
     let bottom: number;
@@ -126,6 +128,31 @@ export abstract class LeaderboardService {
       bottom - 1,
       sort
     );
+
+    return this.formatLeaderboard(
+      constructor,
+      field,
+      leaderboard,
+      top / PAGE_SIZE,
+      highlight
+    );
+  }
+
+  protected async formatLeaderboard<T>(
+    constructor: Constructor<T>,
+    field: string,
+    leaderboard: { id: string; score: number; index: number }[],
+    page: number,
+    highlight?: number
+  ) {
+    const {
+      fieldName,
+      additionalFields = [],
+      extraDisplay,
+      formatter,
+      name,
+      hidden,
+    } = getLeaderboardField(constructor, field);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       getLeaderboardField(constructor, k, false)
@@ -185,7 +212,7 @@ export abstract class LeaderboardService {
       name,
       fields,
       data,
-      page: top / PAGE_SIZE,
+      page,
     };
   }
 

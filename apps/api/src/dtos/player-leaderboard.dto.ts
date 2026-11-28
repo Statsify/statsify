@@ -20,3 +20,7 @@ export class PlayerLeaderboardDto extends createZodDto(
     position: z.coerce.number().int().min(1).optional(),
   })
 ) {}
+
+export class GuildMemberLeaderboardDto extends createZodDto(
+  PlayerLeaderboardDto.schema.extend({ guild: z.string().min(3).max(32) })
+) {}

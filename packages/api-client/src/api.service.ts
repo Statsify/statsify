@@ -88,11 +88,15 @@ export class ApiService {
   public getPlayerLeaderboard(
     field: string,
     input: string | number,
-    type: LeaderboardQuery
+    type: LeaderboardQuery,
+    guild?: string
   ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>("/player/leaderboards", {}, "POST", {
+    const path = guild ? "/guild/leaderboards/members" : "/player/leaderboards";
+
+    return this.request<PostLeaderboardResponse>(path, {}, "POST", {
       body: {
         field,
+        guild,
         [type === LeaderboardQuery.INPUT ? "player" : type]: input,
       },
     });

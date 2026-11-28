@@ -11,14 +11,24 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import {
+  AbstractArgument,
+  ApiService,
+  type CommandContext,
+  type LocalizationString,
+  autocompleteNames,
+} from "@statsify/discord";
 import {
   ClassMetadata,
   METADATA_KEY,
   PlayerStats,
   getLeaderboardFields,
 } from "@statsify/schemas";
+import { Container } from "typedi";
+import { MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { removeFormatting } from "@statsify/util";
+
+const apiClient = Container.get(ApiService);
 
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
@@ -71,3 +81,32 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
       .slice(0, 25);
   }
 }
+
+class PlayerLeaderboardGuildArgument extends AbstractArgument {
+  public name = "guild";
+  public description: LocalizationString;
+  public type = ApplicationCommandOptionType.String;
+  public required = false;
+  public autocomplete = true;
+
+  public constructor() {
+    super();
+    this.description = (t) => t("arguments.guild-filter");
+  }
+
+  public async autocompleteHandler(
+    context: CommandContext
+  ): Promise<APIApplicationCommandOptionChoice[]> {
+    const query = context.option<string>(this.name);
+    if (!query) return [];
+
+    return autocompleteNames(query, MAX_AUTOCOMPLETE_NAME_LENGTH, () =>
+      apiClient.getGuildAutocomplete(query)
+    );
+  }
+}
+
+export const createPlayerLeaderboardArguments = (prefix: keyof PlayerStats) => [
+  new PlayerLeaderboardArgument(prefix),
+  new PlayerLeaderboardGuildArgument(),
+];
