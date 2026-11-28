@@ -16,9 +16,13 @@ import { GetAutocompleteResponse, SuccessResponse } from "@statsify/api-client";
 @Controller("/autocomplete")
 @ApiTags("Autocomplete")
 export class AutocompleteController {
-  public constructor(private readonly autocompleteService: AutocompleteService) {}
+  public constructor(
+    private readonly autocompleteService: AutocompleteService,
+  ) {}
 
-  @ApiOperation({ summary: "Get Player or Guild Names Ranked for a Discord User" })
+  @ApiOperation({
+    summary: "Get Player or Guild Names Ranked for a Discord User",
+  })
   @ApiOkResponse({ type: GetAutocompleteResponse })
   @Auth({ role: AuthRole.ADMIN, weight: 0 })
   @Get()

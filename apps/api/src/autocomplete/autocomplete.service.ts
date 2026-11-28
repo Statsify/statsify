@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AutocompleteType, MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
+import {
+  AutocompleteType,
+  MAX_AUTOCOMPLETE_CHOICES,
+} from "@statsify/api-client";
 import { Guild, Player, User } from "@statsify/schemas";
 import { GuildService } from "#guild";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -27,7 +30,10 @@ interface HistoryEntry {
 }
 
 const frecency = (lookups: number[], now: number) =>
-  lookups.reduce((score, time) => score + 0.5 ** ((now - time) / HALF_LIFE_MS), 0);
+  lookups.reduce(
+    (score, time) => score + 0.5 ** ((now - time) / HALF_LIFE_MS),
+    0,
+  );
 
 const sortByFrecency = (entries: HistoryEntry[], now: number) =>
   entries.sort((a, b) => frecency(b.lookups, now) - frecency(a.lookups, now));
@@ -44,7 +50,8 @@ const blend = (query: string, personal: string[], global: string[]) => {
     names.push(name);
   };
 
-  for (const name of personal) if (name.toLowerCase().startsWith(prefix)) push(name);
+  for (const name of personal)
+    if (name.toLowerCase().startsWith(prefix)) push(name);
   for (const name of global) push(name);
 
   const exact = names.findIndex((name) => name.toLowerCase() === prefix);
@@ -53,7 +60,8 @@ const blend = (query: string, personal: string[], global: string[]) => {
   return names.slice(0, MAX_AUTOCOMPLETE_CHOICES);
 };
 
-const historyKey = (type: AutocompleteType, id: string) => `autocomplete:history:${type}:${id}`;
+const historyKey = (type: AutocompleteType, id: string) =>
+  `autocomplete:history:${type}:${id}`;
 
 @Injectable()
 export class AutocompleteService {
@@ -64,14 +72,22 @@ export class AutocompleteService {
     private readonly playerSearchService: PlayerSearchService,
     private readonly guildService: GuildService,
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
+    @InjectModel(Player) private readonly playerModel: ReturnModelType<
+      typeof Player
+    >,
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<
+      typeof Guild
+    >,
   ) {}
 
-  public suggest(type: AutocompleteType, id: string, query: string): Promise<string[]> {
-    return type === AutocompleteType.GUILD ?
-      this.suggestGuilds(id, query) :
-      this.suggestPlayers(id, query);
+  public suggest(
+    type: AutocompleteType,
+    id: string,
+    query: string,
+  ): Promise<string[]> {
+    return type === AutocompleteType.GUILD
+      ? this.suggestGuilds(id, query)
+      : this.suggestPlayers(id, query);
   }
 
   public async record(type: AutocompleteType, id: string, name: string) {
@@ -85,18 +101,29 @@ export class AutocompleteService {
     if (!stored) return;
 
     const previous = entries.find((e) => e.name === stored)?.lookups ?? [];
-    const recorded = { name: stored, lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY) };
-    const others = sortByFrecency(entries.filter((e) => e.name !== stored), now);
+    const recorded = {
+      name: stored,
+      lookups: [now, ...previous].slice(0, LOOKUPS_PER_ENTRY),
+    };
+    const others = sortByFrecency(
+      entries.filter((e) => e.name !== stored),
+      now,
+    );
 
     // A new name can score below a full history's names, so it goes in ahead of the cut
     const kept = [recorded, ...others.slice(0, MAX_AUTOCOMPLETE_CHOICES - 1)];
-    await this.redis.set(historyKey(type, id), JSON.stringify(kept), "PX", HISTORY_MS);
+    await this.redis.set(
+      historyKey(type, id),
+      JSON.stringify(kept),
+      "PX",
+      HISTORY_MS,
+    );
   }
 
   public async clear(id: string) {
     await this.redis.del(
       historyKey(AutocompleteType.PLAYER, id),
-      historyKey(AutocompleteType.GUILD, id)
+      historyKey(AutocompleteType.GUILD, id),
     );
   }
 
@@ -110,7 +137,10 @@ export class AutocompleteService {
     // Guild members whose name couldn't be found are stored as `ERROR <uuid>`.
     const guildmates = (guild?.members ?? [])
       .map((member) => member.username)
-      .filter((username): username is string => !!username && !username.startsWith("ERROR "))
+      .filter(
+        (username): username is string =>
+          !!username && !username.startsWith("ERROR "),
+      )
       .sort((a, b) => a.localeCompare(b));
 
     return blend(query, [...history, ...guildmates], global);
@@ -123,7 +153,11 @@ export class AutocompleteService {
       this.orEmpty(this.guildService.search(query), []),
     ]);
 
-    return blend(query, guild ? [...history, guild.name] : history, global.map((g) => g.name));
+    return blend(
+      query,
+      guild ? [...history, guild.name] : history,
+      global.map((g) => g.name),
+    );
   }
 
   private orEmpty<T>(read: Promise<T>, empty: T) {
@@ -174,7 +208,11 @@ export class AutocompleteService {
   }
 
   private async getLinkedGuild(id: string) {
-    const user = await this.userModel.findOne({ id }).select({ uuid: true }).lean().exec();
+    const user = await this.userModel
+      .findOne({ id })
+      .select({ uuid: true })
+      .lean()
+      .exec();
     if (!user?.uuid) return null;
 
     const player = await this.playerModel

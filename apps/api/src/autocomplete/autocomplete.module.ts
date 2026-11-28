@@ -15,7 +15,11 @@ import { PlayerModule } from "#player";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [GuildModule, PlayerModule, TypegooseModule.forFeature([Guild, Player, User])],
+  imports: [
+    GuildModule,
+    PlayerModule,
+    TypegooseModule.forFeature([Guild, Player, User]),
+  ],
   controllers: [AutocompleteController],
   providers: [AutocompleteService],
 })
