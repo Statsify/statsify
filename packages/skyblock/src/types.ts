@@ -105,6 +105,8 @@ export const BANK_TIERS = [
 
 export type BankTier = (typeof BANK_TIERS)[number];
 
+export const MUSEUM_MILESTONES = 25;
+
 export interface ProfileSummary {
   id: string;
   cuteName: string;

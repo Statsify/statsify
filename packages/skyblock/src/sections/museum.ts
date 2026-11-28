@@ -9,12 +9,15 @@
 import { add } from "@statsify/math";
 import { decodeSlots } from "#items";
 import { setImmediate } from "node:timers/promises";
-import type { ItemsResource, MuseumCategory, MuseumView } from "#types";
+import {
+  type ItemsResource,
+  MUSEUM_MILESTONES,
+  type MuseumCategory,
+  type MuseumView,
+} from "#types";
 import type { RawMuseumMember } from "#raw";
 
 const DONATIONS_PER_TURN = 50;
-
-export const MUSEUM_MILESTONES = 25;
 
 const XP_PER_MILESTONE = 100;
 

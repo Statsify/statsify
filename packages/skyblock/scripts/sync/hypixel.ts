@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { fetchNeuBeforeRemoval, readNeuStats, sumStatValues } from "./neu.ts";
 import { normalizeItemText, parseStatRewards } from "#lore";
-import { fetchOk } from "./textures.ts";
+import { readNeuStats, sumStatValues } from "./stats.ts";
+import { fetchNeuBeforeRemoval } from "./neu.ts";
+import { fetchOk } from "./fetch.ts";
 import { getCollectionBoards } from "@statsify/skyblock";
 import { toLevelCosts } from "#leveling";
 import type { SyncContext } from "../sync-data.ts";

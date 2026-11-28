@@ -14,10 +14,12 @@ import {
   type PowerStat,
   type StatValue,
 } from "#types";
-import { add, roundTo } from "@statsify/math";
 import { normalizeItemText, parseStatName, parseStatRewards } from "#lore";
 import { prettify, removeFormatting } from "@statsify/util";
-import { fetchMinecraftData, fetchOk } from "./textures.ts";
+import { readNeuStats, sumStatValues } from "./stats.ts";
+import { fetchMinecraftData } from "./textures.ts";
+import { fetchOk } from "./fetch.ts";
+import { roundTo } from "@statsify/math";
 import { getBestiaryBoards } from "@statsify/skyblock";
 import { join } from "node:path";
 import { legacyItem } from "@statsify/textures";
@@ -35,31 +37,6 @@ export async function fetchNeuBeforeRemoval<T>(path: string) {
     `https://raw.githubusercontent.com/${NEU_REPO}/${NEU_BEFORE_REMOVAL}/${path}`,
   );
   return (await response.json()) as T;
-}
-
-// Rounding to 4 places drops the float noise of running totals.
-export function sumStatValues(values: StatValue[]) {
-  const totals: Partial<Record<PlayerStat, number>> = {};
-  for (const { stat, value } of values) {
-    totals[stat] = add(totals[stat] ?? 0, value);
-  }
-
-  return Object.fromEntries(
-    Object.entries(totals)
-      .filter(([, value]) => value !== 0)
-      .map(([stat, value]) => [stat, roundTo(value, 4)]),
-  );
-}
-
-// NEU's ids for a stat that isn't a player's, like damage, are left out.
-export function readNeuStats(stats: Record<string, number>) {
-  const values: StatValue[] = [];
-  for (const [id, value] of Object.entries(stats)) {
-    const stat = parseStatName(prettify(id));
-    if (stat) values.push({ stat, value });
-  }
-
-  return sumStatValues(values);
 }
 
 // No pet has base Magic Find since 0.27.3, though NEU still lists two.
