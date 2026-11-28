@@ -44,6 +44,13 @@
   "deep_waters": {
     "maxLevel": 50,
     "name": "Deep Waters",
+    "stats": [
+      {
+        "base": 0,
+        "id": "pressure_resistance",
+        "perLevel": 1
+      }
+    ],
     "x": 1,
     "y": 5
   },
@@ -56,6 +63,13 @@
   "efficient_forager": {
     "maxLevel": 100,
     "name": "Efficient Forager",
+    "stats": [
+      {
+        "base": 5,
+        "id": "foraging_wisdom",
+        "perLevel": 0.1
+      }
+    ],
     "x": 5,
     "y": 2
   },
@@ -68,12 +82,31 @@
   "foraging_fortune": {
     "maxLevel": 50,
     "name": "Foraging Fortune",
+    "stats": [
+      {
+        "base": 0,
+        "id": "foraging_fortune",
+        "perLevel": 3
+      }
+    ],
     "x": 3,
     "y": 6
   },
   "foraging_madness": {
     "maxLevel": 1,
     "name": "Foraging Madness",
+    "stats": [
+      {
+        "base": 10,
+        "id": "sweep",
+        "perLevel": 0
+      },
+      {
+        "base": 50,
+        "id": "foraging_fortune",
+        "perLevel": 0
+      }
+    ],
     "x": 1,
     "y": 4
   },
@@ -128,12 +161,26 @@
   "hunters_luck": {
     "maxLevel": 50,
     "name": "Hunters Luck",
+    "stats": [
+      {
+        "base": 0,
+        "id": "hunting_fortune",
+        "perLevel": 1
+      }
+    ],
     "x": 3,
     "y": 5
   },
   "iron_lungs": {
     "maxLevel": 50,
     "name": "Iron Lungs",
+    "stats": [
+      {
+        "base": 0,
+        "id": "respiration",
+        "perLevel": 1
+      }
+    ],
     "x": 2,
     "y": 4
   },
@@ -194,12 +241,26 @@
   "sweep": {
     "maxLevel": 50,
     "name": "Sweep",
+    "stats": [
+      {
+        "base": 0,
+        "id": "sweep",
+        "perLevel": 1
+      }
+    ],
     "x": 3,
     "y": 7
   },
   "timber": {
     "maxLevel": 10,
     "name": "Timber",
+    "stats": [
+      {
+        "base": 0,
+        "id": "timber",
+        "perLevel": 0.1
+      }
+    ],
     "x": 3,
     "y": 0
   },

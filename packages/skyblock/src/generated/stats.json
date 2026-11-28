@@ -1,0 +1,2224 @@
+{
+  "base": {
+    "crit_chance": 30,
+    "crit_damage": 50,
+    "health": 100,
+    "magic_find": 10,
+    "sea_creature_chance": 20,
+    "speed": 100
+  },
+  "pet_score": {
+    "10": 1,
+    "25": 2,
+    "50": 3,
+    "75": 4,
+    "100": 5,
+    "130": 6,
+    "175": 7,
+    "225": 8,
+    "275": 9,
+    "325": 10
+  },
+  "skills": {
+    "alchemy": [
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "intelligence": 2
+      }
+    ],
+    "carpentry": [
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      },
+      {
+        "health": 1
+      }
+    ],
+    "combat": [
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      },
+      {
+        "crit_chance": 0.5
+      }
+    ],
+    "enchanting": [
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 1
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      },
+      {
+        "ability_damage": 0.5,
+        "intelligence": 2
+      }
+    ],
+    "farming": [
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 2
+      },
+      {
+        "farming_fortune": 4,
+        "health": 3
+      },
+      {
+        "farming_fortune": 4,
+        "health": 3
+      },
+      {
+        "farming_fortune": 4,
+        "health": 3
+      },
+      {
+        "farming_fortune": 4,
+        "health": 3
+      },
+      {
+        "farming_fortune": 4,
+        "health": 3
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 4
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      },
+      {
+        "farming_fortune": 4,
+        "health": 5
+      }
+    ],
+    "fishing": [
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 2,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 3,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 3,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 3,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 3,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 3,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 4,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      },
+      {
+        "health": 5,
+        "treasure_chance": 0.1
+      }
+    ],
+    "foraging": [
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 1
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      },
+      {
+        "foraging_fortune": 4,
+        "strength": 2
+      }
+    ],
+    "hunting": [
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      },
+      {
+        "charm_chance": 0.04,
+        "hunting_fortune": 1
+      }
+    ],
+    "mining": [
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 1,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      },
+      {
+        "defense": 2,
+        "mining_fortune": 4
+      }
+    ],
+    "runecrafting": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "social": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "taming": [
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      },
+      {
+        "pet_luck": 1
+      }
+    ]
+  },
+  "slayers": {
+    "enderman": [
+      {
+        "health": 1
+      },
+      {
+        "intelligence": 1
+      },
+      {
+        "health": 2
+      },
+      {
+        "intelligence": 2
+      },
+      {
+        "health": 3
+      },
+      {
+        "intelligence": 3
+      },
+      {
+        "health": 4
+      },
+      {
+        "intelligence": 4
+      },
+      {
+        "health": 5
+      }
+    ],
+    "spider": [
+      {
+        "crit_damage": 1
+      },
+      {
+        "crit_damage": 1
+      },
+      {
+        "crit_damage": 1
+      },
+      {
+        "crit_damage": 1
+      },
+      {
+        "crit_damage": 2
+      },
+      {
+        "crit_damage": 2
+      },
+      {
+        "crit_chance": 1
+      },
+      {
+        "crit_damage": 3
+      },
+      {
+        "crit_damage": 3
+      }
+    ],
+    "wolf": [
+      {
+        "speed": 1
+      },
+      {
+        "health": 2
+      },
+      {
+        "speed": 1
+      },
+      {
+        "health": 2
+      },
+      {
+        "crit_damage": 1
+      },
+      {
+        "health": 3
+      },
+      {
+        "crit_damage": 2
+      },
+      {
+        "speed": 1
+      },
+      {
+        "health": 5
+      }
+    ],
+    "zombie": [
+      {
+        "health": 2
+      },
+      {
+        "health": 2
+      },
+      {
+        "health": 3
+      },
+      {
+        "health": 3
+      },
+      {
+        "health": 4
+      },
+      {
+        "health": 4
+      },
+      {
+        "health": 5
+      },
+      {
+        "health": 5
+      },
+      {
+        "health": 6
+      }
+    ]
+  }
+}

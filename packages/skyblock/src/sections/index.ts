@@ -25,6 +25,7 @@ import { getPets } from "./pets.js";
 import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
+import { getStats } from "./stats.js";
 import { hasMarket } from "../profiles.js";
 import type { ApiSettings, ItemsResource, MemberView, PriceMap } from "#types";
 import type {
@@ -133,6 +134,13 @@ export const SECTIONS: {
     compute: async ({ profile, member }) => getSkills(profile, member),
   },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
+  stats: {
+    needs: ["items"],
+    compute: async ({ profile, member, items }) => {
+      if (!items) throw new TypeError("stats needs items");
+      return getStats(profile, member, items);
+    },
+  },
 };
 
 export type SectionKey = keyof typeof SECTIONS;

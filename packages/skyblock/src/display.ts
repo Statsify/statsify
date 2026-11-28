@@ -21,7 +21,7 @@ export { CATCHES, TROPHY_TIERS } from "./sections/fishing.js";
 export { DUNGEON_CLASSES } from "./sections/dungeons.js";
 export { JACOB_MEDALS } from "./sections/jacob.js";
 export { POWDERS } from "./sections/hotm.js";
-export { INVENTORIES, RARITIES } from "#types";
+export { INVENTORIES, PLAYER_STATS, RARITIES, STAT_GROUPS } from "#types";
 export { SKILLS } from "./sections/skills.js";
 export { SLAYER_BOSSES } from "./sections/slayers.js";
 export { WHISPERS } from "./sections/hotf.js";

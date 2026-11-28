@@ -71,3 +71,4 @@ export {
   getSlayers,
   type SlayerBoss,
 } from "./sections/slayers.js";
+export { STAT_SOURCES, getStats, type StatSource } from "./sections/stats.js";

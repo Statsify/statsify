@@ -16,6 +16,9 @@ const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
 // The rarity line ends with the item type, as in "EPIC BOW".
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
+export const isWeapon = (item: ItemView) =>
+  WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
+
 function getWardrobe(
   member: RawMember,
   worn: Slots,
@@ -79,9 +82,7 @@ export function getGear(member: RawMember): GearSection | null {
       : [null, null, null, null],
     ...getWardrobe(member, armor),
     weapons: decodeSlots(inventory.inv_contents).filter(
-      (item): item is ItemView =>
-        item !== null &&
-        WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim()),
+      (item): item is ItemView => item !== null && isWeapon(item),
     ),
   };
 }

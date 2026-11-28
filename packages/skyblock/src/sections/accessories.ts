@@ -21,6 +21,7 @@ import {
   type MissingAccessory,
   type PriceMap,
   type Rarity,
+  type Slots,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -76,10 +77,10 @@ function getAccessoryPower(
 }
 
 // The wiki's scaling of a Power's stats with accessory power.
-const getPowerScale = (accessoryPower: number) =>
+export const getPowerScale = (accessoryPower: number) =>
   29.97 * Math.log(0.0019 * accessoryPower + 1) ** 1.2;
 
-function getPowerStats(
+export function getPowerStats(
   { accessoryPower: listedAt, stats, bonus }: (typeof POWERS)[string],
   accessoryPower: number,
 ) {
@@ -135,7 +136,7 @@ function getStoredAccessories(member: RawMember, items: ItemsResource) {
   return stored;
 }
 
-function readBag(member: RawMember, items: ItemsResource): Bag | null {
+export function readBag(member: RawMember, items: ItemsResource): Bag | null {
   const bag = member.inventory?.bag_contents?.talisman_bag;
   if (!bag) return null;
 
@@ -187,6 +188,38 @@ function readBag(member: RawMember, items: ItemsResource): Bag | null {
   );
 
   return { accessoryPower, active, inactive, owned, contacts };
+}
+
+// An accessory in the inventory gives its stats but no accessory power.
+export function getHeldAccessories(
+  inventory: Slots,
+  items: ItemsResource,
+  owned: Set<string>,
+) {
+  const held = new Map<string, ItemView>();
+
+  for (const view of inventory) {
+    if (!view || held.has(view.id) || owned.has(view.id)) continue;
+
+    const resource = items.items[view.id];
+    if (resource && isCandidate(view.id, resource)) held.set(view.id, view);
+  }
+
+  return [...held.values()];
+}
+
+// Of two variants that replace each other, the first one listed counts.
+export function getHighestTiers(accessories: ItemView[]) {
+  const indexes = new Map(accessories.map(({ id }, index) => [id, index]));
+
+  return accessories.filter(
+    ({ id }, index) =>
+      !getUpgrades(id).some(
+        (upgrade) =>
+          indexes.has(upgrade) &&
+          (!isVariant(id, upgrade) || indexes.get(upgrade)! < index),
+      ),
+  );
 }
 
 // Every unowned tier above the bag's best in a chain is a step.

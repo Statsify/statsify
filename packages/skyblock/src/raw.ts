@@ -116,12 +116,14 @@ export interface RawMember {
       last_killed_mob?: string;
       [mob: string]: number | string | undefined;
     };
+    milestone?: { last_claimed_milestone?: number };
   };
   // Each fish's count by tier, beside total_caught and lists like rewards
   trophy_fish?: Record<string, unknown>;
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number | boolean>;
+    reaper_peppers_eaten?: number;
   };
   collection?: Record<string, number>;
   inventory?: {
