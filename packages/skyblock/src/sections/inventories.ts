@@ -87,7 +87,7 @@ export async function getInventoryPages<T>(
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
-    // oxlint-disable-next-line no-await-in-loop -- one bag per turn
+    // oxlint-disable-next-line no-await-in-loop -- yields to other requests
     if (blob) pages[id] = toPages(await decode(blob));
   }
 
