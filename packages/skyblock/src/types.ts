@@ -218,7 +218,8 @@ export const KUUDRA_TIERS = [
 export interface KuudraTier {
   tier: string;
   completions: number;
-  texture: ItemTexture; // its key's
+  // The texture is the tier's key.
+  texture: ItemTexture;
 }
 
 export interface FishingSection {
@@ -229,7 +230,8 @@ export interface FishingSection {
     number
   >;
   seaCreatureKills: number;
-  seaCreatures: { name: string; kills: number }[]; // the most killed first
+  // Sea creatures sort by the most kills first.
+  seaCreatures: { name: string; kills: number }[];
 }
 
 export interface TrophyFish {
@@ -239,26 +241,33 @@ export interface TrophyFish {
 }
 
 export interface JacobSection {
-  medals: Record<JacobMedal, number>; // unspent
+  // Medals count only the unspent ones.
+  medals: Record<JacobMedal, number>;
   contests: number;
   crops: JacobCrop[];
-  perks: { farmingFortune: number; farmingLevelCap: number }; // Anita's
+  // These perks are the ones bought from Anita.
+  perks: { farmingFortune: number; farmingLevelCap: number };
 }
 
 export interface JacobCrop {
-  id: string; // the API's item id, like INK_SACK:3
+  // The id is the API's item id, like INK_SACK:3.
+  id: string;
   name: string;
   texture?: ItemTexture;
-  bracket?: JacobBracket; // the best one reached
+  // The bracket is the best one reached.
+  bracket?: JacobBracket;
   personalBest?: number;
 }
 
 export interface ChocolateSection {
-  level: number; // one more for each prestige
+  // The level goes up by one for each prestige.
+  level: number;
   chocolate: number;
-  total: number; // all-time
+  // The total counts all-time chocolate.
+  total: number;
   sincePrestige: number;
-  nextPrestige?: number; // none after prestige VI, the last
+  // Prestige VI is the last, so it has no next prestige.
+  nextPrestige?: number;
   rabbits: { rarity: Rarity; found: number; total: number }[];
   employees: { employee: string; level: number }[];
   timeTower: number;
