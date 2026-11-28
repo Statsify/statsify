@@ -14,7 +14,10 @@ import type { ItemsResource, MinionsSection } from "#types";
 import type { RawProfile } from "#raw";
 
 // The wiki's table, which no data source has (unverified): 5 slots, and one more at each of these unique crafts
-const SLOT_CRAFTS = [5, 15, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 450, 500, 550, 600, 650, 700];
+const SLOT_CRAFTS = [
+  5, 15, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 450,
+  500, 550, 600, 650, 700,
+];
 
 /** The minion slots unique crafts give, and the unique crafts the next one needs. */
 export function craftedSlots(unique: number) {
@@ -32,8 +35,14 @@ const parseCraft = (craft: string) => {
  * Minion slots are the island's, so unique crafts are the co-op's: a tier any member crafted counts once. Each minion's
  * tiers come from the items resource, whose `<TYPE>_GENERATOR_<n>` items carry their type and tier.
  */
-export function getMinions(profile: RawProfile, items: ItemsResource): MinionsSection {
-  const minions = new Map<string, { tier1?: ItemsResource["items"][string]; maxTier: number }>();
+export function getMinions(
+  profile: RawProfile,
+  items: ItemsResource,
+): MinionsSection {
+  const minions = new Map<
+    string,
+    { tier1?: ItemsResource["items"][string]; maxTier: number }
+  >();
   for (const item of Object.values(items.items)) {
     if (!item.generator || item.generatorTier === undefined) continue;
     const minion = minions.get(item.generator) ?? { maxTier: 0 };
@@ -48,31 +57,36 @@ export function getMinions(profile: RawProfile, items: ItemsResource): MinionsSe
     for (const craft of own) {
       const parsed = parseCraft(craft);
       if (!parsed || !minions.has(parsed.type)) continue;
-      crafted.set(parsed.type, (crafted.get(parsed.type) ?? new Set()).add(parsed.tier));
+      crafted.set(
+        parsed.type,
+        (crafted.get(parsed.type) ?? new Set()).add(parsed.tier),
+      );
     }
     return own.size > 0 ? [{ uuid, amount: own.size }] : [];
   });
 
   const views = [...minions].flatMap(([id, { tier1, maxTier }]) =>
-    tier1 ?
-      [
-        {
-          id,
-          // "Wheat Minion I"
-          name: tier1.name.replace(/ [IVXL]+$/, ""),
-          texture: resourceTexture(tier1),
-          tiers: [...(crafted.get(id) ?? [])].toSorted((a, b) => a - b),
-          maxTier,
-        },
-      ] :
-      []
+    tier1
+      ? [
+          {
+            id,
+            // "Wheat Minion I"
+            name: tier1.name.replace(/ [IVXL]+$/, ""),
+            texture: resourceTexture(tier1),
+            tiers: [...(crafted.get(id) ?? [])].toSorted((a, b) => a - b),
+            maxTier,
+          },
+        ]
+      : [],
   );
 
   const unique = add(...views.map(({ tiers }) => tiers.length));
   const { slots, next } = craftedSlots(unique);
   const community = Math.max(
     0,
-    ...(profile.community_upgrades?.upgrade_states ?? []).filter(({ upgrade }) => upgrade === "minion_slots").map(({ tier }) => tier)
+    ...(profile.community_upgrades?.upgrade_states ?? [])
+      .filter(({ upgrade }) => upgrade === "minion_slots")
+      .map(({ tier }) => tier),
   );
 
   return {

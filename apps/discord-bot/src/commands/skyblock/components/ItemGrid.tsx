@@ -13,12 +13,25 @@ import type { ItemTexture } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
 export const pricesAsOf = (t: LocalizeFunction, asOf: number) =>
-  t("skyblock.pricesAsOf", { time: formatTime(Date.now() - asOf, { entries: 1 }) });
+  t("skyblock.pricesAsOf", {
+    time: formatTime(Date.now() - asOf, { entries: 1 }),
+  });
 
 // Table.tr splits its width by its cells, so a short last row is padded to keep the columns unless it spreads
-export const gridRows = (cells: JSX.Element[], columns: number, spreadLastRow = false) =>
+export const gridRows = (
+  cells: JSX.Element[],
+  columns: number,
+  spreadLastRow = false,
+) =>
   arrayGroup(cells, columns).map((row) => (
-    <Table.tr>{spreadLastRow ? row : [...row, ...Array.from({ length: columns - row.length }, () => <div />)]}</Table.tr>
+    <Table.tr>
+      {spreadLastRow
+        ? row
+        : [
+            ...row,
+            ...Array.from({ length: columns - row.length }, () => <div />),
+          ]}
+    </Table.tr>
   ));
 
 export interface ItemGridEntry {
@@ -41,28 +54,45 @@ export interface ItemGridProps {
   spreadLastRow?: boolean;
 }
 
-export const ItemGrid = ({ items, icons, columns = 2, stacked = false, spreadLastRow = false }: ItemGridProps) => {
+export const ItemGrid = ({
+  items,
+  icons,
+  columns = 2,
+  stacked = false,
+  spreadLastRow = false,
+}: ItemGridProps) => {
   const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <ItemSlot icon={texture && icons.get(texture)} />
-      {badge && icons.has(badge) ? <img image={icons.get(badge)!} width={16} height={16} margin={{ left: -14, top: 18 }} /> : <></>}
-      {stacked ?
-        (
-          <>
-            <div direction="column" margin={{ left: 8, right: 4 }}>
-              <text align="left" margin={{ top: 0, bottom: 2 }}>{name}</text>
-              <text align="left" margin={{ top: 0, bottom: 0 }}>{value}</text>
-            </div>
-            <div width="remaining" />
-          </>
-        ) :
-        (
-          <>
-            <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
-            <div width="remaining" margin={{ left: 4, right: 4 }} />
-            <text>{value}</text>
-          </>
-        )}
+      {badge && icons.has(badge) ? (
+        <img
+          image={icons.get(badge)!}
+          width={16}
+          height={16}
+          margin={{ left: -14, top: 18 }}
+        />
+      ) : (
+        <></>
+      )}
+      {stacked ? (
+        <>
+          <div direction="column" margin={{ left: 8, right: 4 }}>
+            <text align="left" margin={{ top: 0, bottom: 2 }}>
+              {name}
+            </text>
+            <text align="left" margin={{ top: 0, bottom: 0 }}>
+              {value}
+            </text>
+          </div>
+          <div width="remaining" />
+        </>
+      ) : (
+        <>
+          <text margin={{ left: 8, right: 4, top: 6, bottom: 6 }}>{name}</text>
+          <div width="remaining" margin={{ left: 4, right: 4 }} />
+          <text>{value}</text>
+        </>
+      )}
     </box>
   ));
 

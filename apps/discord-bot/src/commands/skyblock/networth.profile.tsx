@@ -25,13 +25,22 @@ const topItems = ({ categories }: NetworthSection) =>
 export const networthIcons = ({ networth }: MemberView) =>
   topItems(networth!).flatMap(({ texture }) => (texture ? [texture] : []));
 
-export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockNetworthProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const networth = profile.member.networth!;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.networth"), t(Math.floor(networth.total)), "§6"],
     [t("skyblock.unsoulbound"), t(Math.floor(networth.unsoulbound)), "§e"],
-    [t("skyblock.nonCosmetic"), t(Math.floor(networth.nonCosmetic.total)), "§a"],
+    [
+      t("skyblock.nonCosmetic"),
+      t(Math.floor(networth.nonCosmetic.total)),
+      "§a",
+    ],
   ];
 
   const categories = Object.entries(networth.categories)
@@ -40,7 +49,9 @@ export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlock
     .map(([name, { total }]) => (
       // prettify gives "Enderchest"; Hypixel calls it the Ender Chest
       <Table.td
-        title={name === "enderchest" ? t("skyblock.enderChest") : prettify(name)}
+        title={
+          name === "enderchest" ? t("skyblock.enderChest") : prettify(name)
+        }
         value={t(Math.floor(total))}
         color="§6"
         size="inline"
@@ -49,7 +60,12 @@ export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlock
 
   // Laid out two to a row: three long names like Carnival Mask Inventory in one row set the card's width
   const cells = [
-    <Table.td title={t("stats.coins")} value={t(Math.floor(networth.coins))} color="§6" size="inline" />,
+    <Table.td
+      title={t("stats.coins")}
+      value={t(Math.floor(networth.coins))}
+      color="§6"
+      size="inline"
+    />,
     ...categories,
   ];
 
@@ -60,7 +76,9 @@ export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlock
   }));
 
   const unpriced =
-    networth.unpricedCount > 0 ? `${t("skyblock.unpriced", { count: networth.unpricedCount })} • ` : "";
+    networth.unpricedCount > 0
+      ? `${t("skyblock.unpriced", { count: networth.unpricedCount })} • `
+      : "";
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
@@ -69,7 +87,11 @@ export const SkyBlockNetworthProfile = ({ profile, t, icons, ...card }: SkyBlock
           <Table.tr>{row}</Table.tr>
         ))}
       </Table.table>
-      {items.length > 0 ? <ItemGrid items={items} icons={icons} stacked /> : <></>}
+      {items.length > 0 ? (
+        <ItemGrid items={items} icons={icons} stacked />
+      ) : (
+        <></>
+      )}
       <Empty text={`${unpriced}${pricesAsOf(t, networth.pricesAsOf)}`} />
     </Card>
   );

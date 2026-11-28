@@ -24,13 +24,24 @@ export interface LevelBarProps {
   lines?: number; // note lines to make room for, blank past the notes
 }
 
-export const LevelBar = ({ title, level, color, t, notes = [], lines = notes.length }: LevelBarProps) => {
+export const LevelBar = ({
+  title,
+  level,
+  color,
+  t,
+  notes = [],
+  lines = notes.length,
+}: LevelBarProps) => {
   const progression = new Progression(level.xpCurrent, level.xpForNext ?? 0);
 
   return (
     <box direction="column" location="center" width="100%">
-      <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${title}`}</text>
-      <text margin={{ top: 0, bottom: 4, left: 10, right: 10 }}>{`§^4^${color}${t(level.level)}`}</text>
+      <text
+        margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+      >{`${color}${title}`}</text>
+      <text
+        margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
+      >{`§^4^${color}${t(level.level)}`}</text>
       <text margin={{ top: 0, bottom: lines > 0 ? 4 : 8, left: 10, right: 10 }}>
         {formatProgression({
           t,
@@ -43,8 +54,17 @@ export const LevelBar = ({ title, level, color, t, notes = [], lines = notes.len
       </text>
       <>
         {Array.from({ length: lines }, (_, index) => {
-          const margin = { top: 0, bottom: index === lines - 1 ? 8 : 2, left: 10, right: 10 };
-          return index < notes.length ? <text margin={margin}>{notes[index]}</text> : <div height={NOTE_HEIGHT} margin={margin} />;
+          const margin = {
+            top: 0,
+            bottom: index === lines - 1 ? 8 : 2,
+            left: 10,
+            right: 10,
+          };
+          return index < notes.length ? (
+            <text margin={margin}>{notes[index]}</text>
+          ) : (
+            <div height={NOTE_HEIGHT} margin={margin} />
+          );
         })}
       </>
     </box>
@@ -55,5 +75,11 @@ export const LevelBar = ({ title, level, color, t, notes = [], lines = notes.len
 export const levelBarRows = (bars: LevelBarProps[], columns: number) =>
   arrayGroup(bars, columns).map((row) => {
     const lines = Math.max(...row.map(({ notes = [] }) => notes.length));
-    return <Table.tr>{row.map((bar) => <LevelBar {...bar} lines={lines} />)}</Table.tr>;
+    return (
+      <Table.tr>
+        {row.map((bar) => (
+          <LevelBar {...bar} lines={lines} />
+        ))}
+      </Table.tr>
+    );
   });

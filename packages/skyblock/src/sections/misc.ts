@@ -18,21 +18,30 @@ const FAMILIES = BESTIARY.pages.flatMap(({ families }) => families);
 
 // player_stats counts a mob by its kill id without the level, which can span families (unburried_zombie)
 const withoutLevel = (id: string) => id.replace(/_\d+$/, "");
-const BESTIARY_MOBS = new Set(FAMILIES.flatMap(({ ids }) => ids.map(withoutLevel)));
+const BESTIARY_MOBS = new Set(
+  FAMILIES.flatMap(({ ids }) => ids.map(withoutLevel)),
+);
 
 /**
  * The most counted by name: bestiary families from the bestiary's counts, when it has any, and the rest (the void,
  * falls, mobs it doesn't list) from `player_stats`, without its "total" entry. Two families share a name on two pages.
  */
-function topOf(bestiary: Record<string, number> | undefined, counts: Record<string, number> = {}) {
+function topOf(
+  bestiary: Record<string, number> | undefined,
+  counts: Record<string, number> = {},
+) {
   const tracked = bestiary !== undefined && Object.keys(bestiary).length > 0;
   const byName = new Map<string, number>();
-  const count = (name: string, amount: number) => byName.set(name, (byName.get(name) ?? 0) + amount);
+  const count = (name: string, amount: number) =>
+    byName.set(name, (byName.get(name) ?? 0) + amount);
 
-  if (tracked) for (const { name, ids } of FAMILIES) count(name, add(...ids.map((id) => bestiary[id] ?? 0)));
+  if (tracked)
+    for (const { name, ids } of FAMILIES)
+      count(name, add(...ids.map((id) => bestiary[id] ?? 0)));
 
   for (const [id, amount] of Object.entries(counts)) {
-    if (id !== "total" && !(tracked && BESTIARY_MOBS.has(withoutLevel(id)))) count(prettify(id), amount);
+    if (id !== "total" && !(tracked && BESTIARY_MOBS.has(withoutLevel(id))))
+      count(prettify(id), amount);
   }
 
   return [...byName]
@@ -64,8 +73,14 @@ export function getMisc(member: RawMember): MiscSection {
       goldEarned: auctions.gold_earned ?? 0,
       fees: auctions.fees ?? 0,
     },
-    gifts: { given: stats.gifts?.total_given ?? 0, received: stats.gifts?.total_received ?? 0 },
-    mythological: { kills: stats.mythos?.kills ?? 0, chains: stats.mythos?.burrows_chains_complete?.total ?? 0 },
+    gifts: {
+      given: stats.gifts?.total_given ?? 0,
+      received: stats.gifts?.total_received ?? 0,
+    },
+    mythological: {
+      kills: stats.mythos?.kills ?? 0,
+      chains: stats.mythos?.burrows_chains_complete?.total ?? 0,
+    },
     candy: stats.candy_collected?.total ?? 0,
     soulflow: member.item_data?.soulflow ?? 0,
   };
@@ -83,7 +98,13 @@ if (import.meta.vitest) {
       enderman_1: 3,
       enderman_50: 2,
     };
-    const stats = { total: 999, zealot_enderman: 38, unburried_zombie: 5, enderman: 5, void: 7 };
+    const stats = {
+      total: 999,
+      zealot_enderman: 38,
+      unburried_zombie: 5,
+      enderman: 5,
+      void: 7,
+    };
 
     expect(topOf(bestiary, stats)).toEqual([
       { name: "Zealot", count: 40 },

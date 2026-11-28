@@ -14,28 +14,52 @@ import { arrayGroup, prettify } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const crimsonIcons = ({ crimson }: MemberView) => crimson?.kuudra.map(({ texture }) => texture) ?? [];
+export const crimsonIcons = ({ crimson }: MemberView) =>
+  crimson?.kuudra.map(({ texture }) => texture) ?? [];
 
-export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockCrimsonProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
   const crimson = profile.member.crimson;
 
   if (!crimson) {
-    return <EmptyCard {...card} name={profile.displayName} text={t("skyblock.noCrimson")} />;
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noCrimson")}
+      />
+    );
   }
 
   const { faction, reputation } = crimson;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.faction"), faction ? `${FACTION_COLORS[faction]}${prettify(faction)}` : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.faction"),
+      faction
+        ? `${FACTION_COLORS[faction]}${prettify(faction)}`
+        : t("skyblock.none"),
+      "§e",
+    ],
     [t("skyblock.reputation.mages"), t(reputation.mages), FACTION_COLORS.mages],
-    [t("skyblock.reputation.barbarians"), t(reputation.barbarians), FACTION_COLORS.barbarians],
+    [
+      t("skyblock.reputation.barbarians"),
+      t(reputation.barbarians),
+      FACTION_COLORS.barbarians,
+    ],
     [t("skyblock.dojoPoints"), t(crimson.dojoPoints), "§6"],
   ];
 
   const kuudra = crimson.kuudra.map(({ tier, completions, texture }) => (
     <box direction="column" location="center" width="100%">
       <ItemSlot icon={icons.get(texture)} />
-      <text margin={{ top: 4, bottom: 4 }}>{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
+      <text
+        margin={{ top: 4, bottom: 4 }}
+      >{`§c${t(`skyblock.kuudraTiers.${tier}`)}`}</text>
       <text margin={{ top: 0, bottom: 4 }}>{`§^3^§f${t(completions)}`}</text>
     </box>
   ));
@@ -49,7 +73,12 @@ export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockP
         <Table.ts title={`§6${t("skyblock.dojo")}`}>
           <Table.tr>
             {crimson.dojo.map(({ test, points }) => (
-              <Table.td title={t(`skyblock.dojoTests.${test}`)} value={t(points)} color="§6" size="small" />
+              <Table.td
+                title={t(`skyblock.dojoTests.${test}`)}
+                value={t(points)}
+                color="§6"
+                size="small"
+              />
             ))}
           </Table.tr>
         </Table.ts>
@@ -58,7 +87,12 @@ export const SkyBlockCrimsonProfile = ({ profile, t, icons, ...card }: SkyBlockP
           {arrayGroup(crimson.minibosses, 3).map((row) => (
             <Table.tr>
               {row.map(({ boss, kills }) => (
-                <Table.td title={prettify(boss)} value={t(kills)} color="§e" size="small" />
+                <Table.td
+                  title={prettify(boss)}
+                  value={t(kills)}
+                  color="§e"
+                  size="small"
+                />
               ))}
             </Table.tr>
           ))}

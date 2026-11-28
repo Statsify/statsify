@@ -14,18 +14,25 @@ import { ItemGrid, pricesAsOf } from "./components/ItemGrid.js";
 import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
-import type { InactiveAccessory, MemberView, PowerStat } from "@statsify/skyblock";
+import type {
+  InactiveAccessory,
+  MemberView,
+  PowerStat,
+} from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
 const MAX_POWER_STATS_PER_LINE = 3; // more is wider than the card
 
-const topMissing = ({ accessories }: MemberView) => accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
+const topMissing = ({ accessories }: MemberView) =>
+  accessories?.missing.slice(0, MISSING_SHOWN) ?? [];
 const baseName = ({ name, reforge }: InactiveAccessory) => {
   const plain = removeFormatting(name);
   const prefix = reforge ? `${prettify(reforge)} ` : "";
-  return prefix && plain.startsWith(prefix) ? plain.slice(prefix.length) : plain;
+  return prefix && plain.startsWith(prefix)
+    ? plain.slice(prefix.length)
+    : plain;
 };
 
 // One row per accessory, so a stack of duplicates doesn't fill the page. Copies with different names (Abicase colors)
@@ -36,9 +43,9 @@ function topInactive({ accessories }: MemberView) {
   return [...copies].slice(0, INACTIVE_SHOWN).map(([id, [first, ...rest]]) => {
     const bases = new Set([first, ...rest].map(baseName));
     const color = /^(?:§.)*/.exec(first.name)?.[0] ?? "";
-    const name = rest.every((view) => view.name === first.name) ?
-      first.name :
-      `${color}${bases.size === 1 ? baseName(first) : prettify(id)}`;
+    const name = rest.every((view) => view.name === first.name)
+      ? first.name
+      : `${color}${bases.size === 1 ? baseName(first) : prettify(id)}`;
     return { ...first, name, count: rest.length + 1 };
   });
 }
@@ -47,14 +54,28 @@ export interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
   page: "missing" | "inactive";
 }
 
-export const accessoryIcons = (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
-  (page === "missing" ? topMissing(member) : topInactive(member)).map(({ texture }) => texture);
+export const accessoryIcons =
+  (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) =>
+    (page === "missing" ? topMissing(member) : topInactive(member)).map(
+      ({ texture }) => texture,
+    );
 
-const PowerStats = ({ power, stats, t }: { power: string; stats: PowerStat[]; t: LocalizeFunction }) => {
+const PowerStats = ({
+  power,
+  stats,
+  t,
+}: {
+  power: string;
+  stats: PowerStat[];
+  t: LocalizeFunction;
+}) => {
   const lineCount = Math.ceil(stats.length / MAX_POWER_STATS_PER_LINE);
   const lines = arrayGroup(
-    stats.map(({ name, color, value }) => `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`),
-    Math.ceil(stats.length / lineCount)
+    stats.map(
+      ({ name, color, value }) =>
+        `${color}${value < 0 ? "" : "+"}${t(value)} ${name}`,
+    ),
+    Math.ceil(stats.length / lineCount),
   );
 
   return (
@@ -66,20 +87,37 @@ const PowerStats = ({ power, stats, t }: { power: string; stats: PowerStat[]; t:
   );
 };
 
-export const SkyBlockAccessoriesProfile = ({ profile, t, icons, page, ...card }: SkyBlockAccessoriesProfileProps) => {
+export const SkyBlockAccessoriesProfile = ({
+  profile,
+  t,
+  icons,
+  page,
+  ...card
+}: SkyBlockAccessoriesProfileProps) => {
   const { accessories } = profile.member;
 
   if (!accessories) {
     return (
       <Card {...card} name={profile.displayName}>
-        <EmptySection setting="inventory" newProfile={profile.newProfile} empty={t("skyblock.noAccessories")} t={t} />
+        <EmptySection
+          setting="inventory"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noAccessories")}
+          t={t}
+        />
       </Card>
     );
   }
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.accessoryPower"), t(accessories.accessoryPower), "§d"],
-    [t("skyblock.selectedPower"), accessories.selectedPower ? prettify(accessories.selectedPower) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.selectedPower"),
+      accessories.selectedPower
+        ? prettify(accessories.selectedPower)
+        : t("skyblock.none"),
+      "§e",
+    ],
     [t("skyblock.accessories"), t(accessories.active.length), "§a"],
     [t("skyblock.missing"), t(accessories.missing.length), "§c"],
     [t("skyblock.enrichments"), t(accessories.enrichments), "§b"],
@@ -88,58 +126,82 @@ export const SkyBlockAccessoriesProfile = ({ profile, t, icons, page, ...card }:
 
   if (page === "inactive") {
     const inactive = topInactive(profile.member).map((view) => {
-      const reason = view.reason === "duplicate" ? t("skyblock.duplicate") : t("skyblock.replacedBy", { name: view.replacedBy.name });
-      return { texture: view.texture, name: view.name, value: `§7${reason}${view.count > 1 ? ` §8×${t(view.count)}` : ""}` };
+      const reason =
+        view.reason === "duplicate"
+          ? t("skyblock.duplicate")
+          : t("skyblock.replacedBy", { name: view.replacedBy.name });
+      return {
+        texture: view.texture,
+        name: view.name,
+        value: `§7${reason}${view.count > 1 ? ` §8×${t(view.count)}` : ""}`,
+      };
     });
 
     return (
       <Card {...card} name={profile.displayName} sidebar={sidebar}>
-        {inactive.length > 0 ?
-          <ItemGrid items={inactive} icons={icons} columns={1} /> :
-          <Empty text={t("skyblock.noInactiveAccessories")} color="§a" />}
+        {inactive.length > 0 ? (
+          <ItemGrid items={inactive} icons={icons} columns={1} />
+        ) : (
+          <Empty text={t("skyblock.noInactiveAccessories")} color="§a" />
+        )}
       </Card>
     );
   }
 
   const shown = topMissing(profile.member);
   // A price or the outside-bag note beside the name widens the card, so those values go under it
-  const stacked = accessories.market || shown.some(({ outsideBag }) => outsideBag);
+  const stacked =
+    accessories.market || shown.some(({ outsideBag }) => outsideBag);
 
   const missing = shown.map(
-    ({ name, rarity, accessoryPower, outsideBag, cost, coinsPerAccessoryPower, texture }) => {
+    ({
+      name,
+      rarity,
+      accessoryPower,
+      outsideBag,
+      cost,
+      coinsPerAccessoryPower,
+      texture,
+    }) => {
       const ap = t(accessoryPower);
       const price =
-        cost && coinsPerAccessoryPower !== undefined ?
-          `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})` :
-          `§c${t("skyblock.noBinListing")}`;
+        cost && coinsPerAccessoryPower !== undefined
+          ? `§6${t(Math.floor(cost.coins))} §7(${t("skyblock.perAp", { coins: t(Math.floor(coinsPerAccessoryPower)) })})`
+          : `§c${t("skyblock.noBinListing")}`;
 
       let value = `§d${t("skyblock.apGain", { ap })} §8• ${price}`;
       if (outsideBag) value = `§d${t("skyblock.apOnceInBag", { ap })}`;
       else if (!accessories.market) value = `§d${t("skyblock.apGain", { ap })}`;
 
       return { texture, name: `${RARITY_COLORS[rarity]}${name}`, value };
-    }
+    },
   );
 
-  const footnote = accessories.market ?
-    pricesAsOf(t, accessories.pricesAsOf) :
-    t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
+  const footnote = accessories.market
+    ? pricesAsOf(t, accessories.pricesAsOf)
+    : t("skyblock.noMarket", { mode: prettify(profile.gameMode) });
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {accessories.selectedPower && accessories.powerStats ?
-        <PowerStats power={accessories.selectedPower} stats={accessories.powerStats} t={t} /> :
-        <></>}
-      {missing.length > 0 ?
-        (
-          <>
-            <box width="100%">
-              <text>{`§l${t(accessories.market ? "skyblock.cheapestAccessoryPower" : "skyblock.mostAccessoryPower")}`}</text>
-            </box>
-            <ItemGrid items={missing} icons={icons} stacked={stacked} />
-          </>
-        ) :
-        <Empty text={t("skyblock.noMissingAccessories")} color="§a" />}
+      {accessories.selectedPower && accessories.powerStats ? (
+        <PowerStats
+          power={accessories.selectedPower}
+          stats={accessories.powerStats}
+          t={t}
+        />
+      ) : (
+        <></>
+      )}
+      {missing.length > 0 ? (
+        <>
+          <box width="100%">
+            <text>{`§l${t(accessories.market ? "skyblock.cheapestAccessoryPower" : "skyblock.mostAccessoryPower")}`}</text>
+          </box>
+          <ItemGrid items={missing} icons={icons} stacked={stacked} />
+        </>
+      ) : (
+        <Empty text={t("skyblock.noMissingAccessories")} color="§a" />
+      )}
       <Empty text={footnote} />
     </Card>
   );

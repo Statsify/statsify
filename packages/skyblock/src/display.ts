@@ -7,7 +7,18 @@
  */
 
 // Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type { DungeonClass, DungeonGrade, Faction, GameMode, JacobBracket, Powder, Rarity, Skill, SlayerBoss, Whisper } from "#types";
+import type {
+  DungeonClass,
+  DungeonGrade,
+  Faction,
+  GameMode,
+  JacobBracket,
+  Powder,
+  Rarity,
+  Skill,
+  SlayerBoss,
+  Whisper,
+} from "#types";
 
 // The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
 export {
@@ -25,7 +36,15 @@ export {
   TROPHY_TIERS,
   WHISPERS,
 } from "#types";
-export { type EventTime, SKYBLOCK_MONTHS, type SkyBlockDate, type SkyBlockEvent, nextEvents, skyblockDate, termOf } from "./calendar.js";
+export {
+  type EventTime,
+  SKYBLOCK_MONTHS,
+  type SkyBlockDate,
+  type SkyBlockEvent,
+  nextEvents,
+  skyblockDate,
+  termOf,
+} from "./calendar.js";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
@@ -66,11 +85,11 @@ export const CLASS_COLORS: Record<DungeonClass, string> = {
 
 export const GRADE_COLORS: Record<DungeonGrade, string> = {
   "S+": "§6",
-  "S": "§e",
-  "A": "§5",
-  "B": "§a",
-  "C": "§9",
-  "D": "§c",
+  S: "§e",
+  A: "§5",
+  B: "§a",
+  C: "§9",
+  D: "§c",
 };
 
 export const POWDER_COLORS: Record<Powder, string> = {
@@ -79,7 +98,10 @@ export const POWDER_COLORS: Record<Powder, string> = {
   glacite: "§b",
 };
 
-export const FACTION_COLORS: Record<Faction, string> = { mages: "§5", barbarians: "§c" };
+export const FACTION_COLORS: Record<Faction, string> = {
+  mages: "§5",
+  barbarians: "§c",
+};
 
 /** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
 export const MEDAL_COLORS: Record<JacobBracket, string> = {
@@ -90,7 +112,10 @@ export const MEDAL_COLORS: Record<JacobBracket, string> = {
   diamond: "§b",
 };
 
-export const WHISPER_COLORS: Record<Whisper, string> = { forest: "§a", desert: "§e" };
+export const WHISPER_COLORS: Record<Whisper, string> = {
+  forest: "§a",
+  desert: "§e",
+};
 
 export const BOSS_COLORS: Record<SlayerBoss, string> = {
   zombie: "§a",
@@ -109,7 +134,8 @@ export const GAME_MODE_BADGES: Record<GameMode, string> = {
   bingo: "§6Ⓑ",
 };
 
-export const hasMuseum = (gameMode: GameMode) => gameMode !== "bingo" && gameMode !== "stranded";
+export const hasMuseum = (gameMode: GameMode) =>
+  gameMode !== "bingo" && gameMode !== "stranded";
 
 const FORMATTED_PROFILES: Record<string, string | undefined> = {
   Apple: "§cApple",
@@ -136,7 +162,13 @@ const FORMATTED_PROFILES: Record<string, string | undefined> = {
 };
 
 /** A profile's cute name in its fruit's colors, then its mode's badge after a space. */
-export function formatProfileName({ cuteName, gameMode }: { cuteName: string; gameMode: GameMode }) {
+export function formatProfileName({
+  cuteName,
+  gameMode,
+}: {
+  cuteName: string;
+  gameMode: GameMode;
+}) {
   const badge = GAME_MODE_BADGES[gameMode];
   return `${FORMATTED_PROFILES[cuteName] ?? cuteName}${badge && ` ${badge}`}`;
 }

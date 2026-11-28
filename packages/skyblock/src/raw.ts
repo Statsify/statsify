@@ -15,17 +15,32 @@ import { z } from "zod";
 const numbers = z.record(z.string(), z.number());
 
 /** A map keyed by `keys`, each optional, which passes keys Hypixel adds beside them. */
-const keyedBy = <Key extends string, Value extends z.ZodType>(keys: readonly Key[], value: Value) =>
-  z.object(Object.fromEntries(keys.map((key) => [key, value.optional()])) as { [K in Key]: z.ZodOptional<Value> });
+const keyedBy = <Key extends string, Value extends z.ZodType>(
+  keys: readonly Key[],
+  value: Value,
+) =>
+  z.object(
+    Object.fromEntries(keys.map((key) => [key, value.optional()])) as {
+      [K in Key]: z.ZodOptional<Value>;
+    },
+  );
 
 /** A loadout's sets by slot number, beside the slot of the set worn. */
 const setsBySlot = <Pieces extends z.ZodRawShape>(pieces: Pieces) =>
   z
     .object({ equipped_set: z.number().optional() })
-    .and(z.looseRecord(z.templateLiteral([z.number()]), z.object({ id: z.number().optional(), ...pieces })));
+    .and(
+      z.looseRecord(
+        z.templateLiteral([z.number()]),
+        z.object({ id: z.number().optional(), ...pieces }),
+      ),
+    );
 
 /** A base64 gzipped NBT blob. */
-export const RawNbt = z.object({ type: z.number().optional(), data: z.string() });
+export const RawNbt = z.object({
+  type: z.number().optional(),
+  data: z.string(),
+});
 export type RawNbt = z.infer<typeof RawNbt>;
 
 export const RawPet = z.object({
@@ -43,7 +58,16 @@ export type RawPet = z.infer<typeof RawPet>;
 
 export const RawExperiment = z
   .object({ bonus_clicks: z.number().optional() })
-  .and(z.looseRecord(z.templateLiteral([z.enum(["attempts", "claims", "best_score"]), "_", z.number()]), z.number().optional()));
+  .and(
+    z.looseRecord(
+      z.templateLiteral([
+        z.enum(["attempts", "claims", "best_score"]),
+        "_",
+        z.number(),
+      ]),
+      z.number().optional(),
+    ),
+  );
 export type RawExperiment = z.infer<typeof RawExperiment>;
 
 export const RawDungeonType = z
@@ -64,12 +88,22 @@ export const RawDungeonType = z
     milestone_completions: numbers.optional(),
   })
   // Per floor, plus "best"
-  .and(z.looseRecord(z.templateLiteral(["most_damage_", z.string()]), numbers.optional()));
+  .and(
+    z.looseRecord(
+      z.templateLiteral(["most_damage_", z.string()]),
+      numbers.optional(),
+    ),
+  );
 export type RawDungeonType = z.infer<typeof RawDungeonType>;
 
 export const RawSlayerBoss = z
   .object({ xp: z.number().optional() })
-  .and(z.looseRecord(z.templateLiteral(["boss_kills_tier_", z.number()]), z.number().optional()));
+  .and(
+    z.looseRecord(
+      z.templateLiteral(["boss_kills_tier_", z.number()]),
+      z.number().optional(),
+    ),
+  );
 export type RawSlayerBoss = z.infer<typeof RawSlayerBoss>;
 
 export const RawMember = z.object({
@@ -82,16 +116,25 @@ export const RawMember = z.object({
       first_join: z.number().optional(),
     })
     .optional(),
-  leveling: z.object({ experience: z.number().optional(), highest_pet_score: z.number().optional() }).optional(),
+  leveling: z
+    .object({
+      experience: z.number().optional(),
+      highest_pet_score: z.number().optional(),
+    })
+    .optional(),
   currencies: z
     .object({
       coin_purse: z.number().optional(),
       motes_purse: z.number().optional(),
-      essence: z.record(z.string(), z.object({ current: z.number().optional() })).optional(),
+      essence: z
+        .record(z.string(), z.object({ current: z.number().optional() }))
+        .optional(),
     })
     .optional(),
   item_data: z.object({ soulflow: z.number().optional() }).optional(),
-  experimentation: keyedBy(EXPERIMENTS, RawExperiment).extend({ serums_drank: z.number().optional() }).optional(),
+  experimentation: keyedBy(EXPERIMENTS, RawExperiment)
+    .extend({ serums_drank: z.number().optional() })
+    .optional(),
   fairy_soul: z.object({ total_collected: z.number().optional() }).optional(),
   player_stats: z
     .object({
@@ -114,29 +157,49 @@ export const RawMember = z.object({
           fees: z.number().optional(),
         })
         .optional(),
-      gifts: z.object({ total_given: z.number().optional(), total_received: z.number().optional() }).optional(),
+      gifts: z
+        .object({
+          total_given: z.number().optional(),
+          total_received: z.number().optional(),
+        })
+        .optional(),
       mythos: z
         .object({
           kills: z.number().optional(),
-          burrows_chains_complete: z.object({ total: z.number().optional() }).optional(),
+          burrows_chains_complete: z
+            .object({ total: z.number().optional() })
+            .optional(),
         })
         .optional(),
       candy_collected: z.object({ total: z.number().optional() }).optional(),
-      rift: z.object({ visits: z.number().optional(), lifetime_motes_earned: z.number().optional() }).optional(),
+      rift: z
+        .object({
+          visits: z.number().optional(),
+          lifetime_motes_earned: z.number().optional(),
+        })
+        .optional(),
     })
     .optional(),
   bestiary: z
     .object({
-      kills: z.object({ last_killed_mob: z.string().optional() }).catchall(z.number()).optional(),
+      kills: z
+        .object({ last_killed_mob: z.string().optional() })
+        .catchall(z.number())
+        .optional(),
       deaths: numbers.optional(),
-      milestone: z.object({ last_claimed_milestone: z.number().optional() }).optional(),
+      milestone: z
+        .object({ last_claimed_milestone: z.number().optional() })
+        .optional(),
     })
     .optional(),
   trophy_fish: z.record(z.string(), z.unknown()).optional(), // <fish> and <fish>_<tier> counts, plus total_caught, rewards…
   player_data: z
     .object({
       experience: numbers.optional(),
-      perks: z.object({ fairies_refund_processed: z.boolean().optional() }).catchall(z.number()).optional(),
+      perks: z
+        .object({ fairies_refund_processed: z.boolean().optional() })
+        .catchall(z.number())
+        .optional(),
       unlocked_coll_tiers: z.array(z.string()).optional(), // <collection>_<tier>, with -1 for one found at no tier yet
       reaper_peppers_eaten: z.number().optional(),
       crafted_generators: z.array(z.string()).optional(), // "WHEAT_11": each minion tier crafted
@@ -145,7 +208,15 @@ export const RawMember = z.object({
   collection: numbers.optional(),
   attributes: z.object({ stacks: numbers.optional() }).optional(), // Hunting shards syphoned, by attribute
   // Hunting shards held, by shard
-  shards: z.object({ owned: z.array(z.object({ type: z.string(), amount_owned: z.number().optional() })).optional() }).optional(),
+  shards: z
+    .object({
+      owned: z
+        .array(
+          z.object({ type: z.string(), amount_owned: z.number().optional() }),
+        )
+        .optional(),
+    })
+    .optional(),
   inventory: z
     .object({
       inv_contents: RawNbt.optional(),
@@ -196,7 +267,7 @@ export const RawMember = z.object({
             pet: z.string().optional(),
             power_stone: z.string().optional(),
             tuning_points_slot: z.number().optional(),
-          })
+          }),
         )
         .optional(),
     })
@@ -210,7 +281,12 @@ export const RawMember = z.object({
     .optional(),
   jacobs_contest: z
     .object({
-      perks: z.object({ farming_level_cap: z.number().optional(), double_drops: z.number().optional() }).optional(),
+      perks: z
+        .object({
+          farming_level_cap: z.number().optional(),
+          double_drops: z.number().optional(),
+        })
+        .optional(),
       medals_inv: keyedBy(JACOB_MEDALS, z.number()).optional(),
       unique_brackets: z.record(z.string(), z.array(z.string())).optional(), // bracket → the crops it was reached on
       personal_bests: numbers.optional(),
@@ -241,30 +317,51 @@ export const RawMember = z.object({
           .and(
             z.looseRecord(
               z.number(),
-              z.object({ spent: z.number().optional(), spent_non_refundable: z.number().optional() }).optional()
-            )
-          )
+              z
+                .object({
+                  spent: z.number().optional(),
+                  spent_non_refundable: z.number().optional(),
+                })
+                .optional(),
+            ),
+          ),
       ).optional(),
     })
     .optional(),
   pets_data: z
     .object({
       pets: z.array(RawPet).optional(),
-      pet_care: z.object({ pet_types_sacrificed: z.array(z.string()).optional() }).optional(),
+      pet_care: z
+        .object({ pet_types_sacrificed: z.array(z.string()).optional() })
+        .optional(),
     })
     .optional(),
   dungeons: z
     .object({
-      dungeon_types: z.object({ catacombs: RawDungeonType.optional(), master_catacombs: RawDungeonType.optional() }).optional(),
-      player_classes: z.record(z.string(), z.object({ experience: z.number().optional() })).optional(),
+      dungeon_types: z
+        .object({
+          catacombs: RawDungeonType.optional(),
+          master_catacombs: RawDungeonType.optional(),
+        })
+        .optional(),
+      player_classes: z
+        .record(z.string(), z.object({ experience: z.number().optional() }))
+        .optional(),
       selected_dungeon_class: z.string().optional(),
       secrets: z.number().optional(),
     })
     .optional(),
-  slayer: z.object({ slayer_bosses: z.record(z.string(), RawSlayerBoss).optional() }).optional(),
+  slayer: z
+    .object({ slayer_bosses: z.record(z.string(), RawSlayerBoss).optional() })
+    .optional(),
   skill_tree: z
     .object({
-      nodes: z.record(z.string(), z.record(z.string(), z.union([z.number(), z.boolean()]))).optional(),
+      nodes: z
+        .record(
+          z.string(),
+          z.record(z.string(), z.union([z.number(), z.boolean()])),
+        )
+        .optional(),
       tokens_spent: numbers.optional(),
       experience: numbers.optional(),
       selected_ability: z.record(z.string(), z.string()).optional(),
@@ -274,13 +371,34 @@ export const RawMember = z.object({
   mining_core: z
     .object({
       experience: z.number().optional(),
-      nodes: z.record(z.string(), z.union([z.number(), z.boolean()])).optional(),
+      nodes: z
+        .record(z.string(), z.union([z.number(), z.boolean()]))
+        .optional(),
       tokens_spent: z.number().optional(),
       selected_pickaxe_ability: z.string().optional(),
-      crystals: z.record(z.string(), z.object({ total_found: z.number().optional(), total_placed: z.number().optional() })).optional(),
-      biomes: z.object({ goblin: z.object({ king_quests_completed: z.number().optional() }).optional() }).optional(),
+      crystals: z
+        .record(
+          z.string(),
+          z.object({
+            total_found: z.number().optional(),
+            total_placed: z.number().optional(),
+          }),
+        )
+        .optional(),
+      biomes: z
+        .object({
+          goblin: z
+            .object({ king_quests_completed: z.number().optional() })
+            .optional(),
+        })
+        .optional(),
     })
-    .and(z.looseRecord(z.templateLiteral(["powder_", z.string()]), z.number().optional()))
+    .and(
+      z.looseRecord(
+        z.templateLiteral(["powder_", z.string()]),
+        z.number().optional(),
+      ),
+    )
     .optional(),
   glacite_player_data: z
     .object({
@@ -292,7 +410,10 @@ export const RawMember = z.object({
     .optional(),
   accessory_bag_storage: z
     .object({
-      tuning: z.object({ slot_0: numbers.optional() }).catchall(z.unknown()).optional(),
+      tuning: z
+        .object({ slot_0: numbers.optional() })
+        .catchall(z.unknown())
+        .optional(),
       selected_power: z.string().optional(),
       highest_magical_power: z.number().optional(),
     })
@@ -300,14 +421,25 @@ export const RawMember = z.object({
   rift: z
     .object({
       access: z.object({ consumed_prism: z.boolean().optional() }).optional(),
-      dead_cats: z.object({ montezuma: RawPet.optional(), found_cats: z.array(z.string()).optional() }).optional(),
-      enigma: z.object({ found_souls: z.array(z.string()).optional() }).optional(),
-      gallery: z.object({ secured_trophies: z.array(z.unknown()).optional() }).optional(),
+      dead_cats: z
+        .object({
+          montezuma: RawPet.optional(),
+          found_cats: z.array(z.string()).optional(),
+        })
+        .optional(),
+      enigma: z
+        .object({ found_souls: z.array(z.string()).optional() })
+        .optional(),
+      gallery: z
+        .object({ secured_trophies: z.array(z.unknown()).optional() })
+        .optional(),
     })
     .optional(),
   nether_island_player_data: z
     .object({
-      abiphone: z.object({ active_contacts: z.array(z.string()).optional() }).optional(),
+      abiphone: z
+        .object({ active_contacts: z.array(z.string()).optional() })
+        .optional(),
       selected_faction: z.enum(FACTIONS).optional(),
       mages_reputation: z.number().optional(),
       barbarians_reputation: z.number().optional(),
@@ -326,7 +458,11 @@ export const RawProfile = z.object({
   banking: z.object({ balance: z.number().optional() }).optional(),
   // One entry per tier bought
   community_upgrades: z
-    .object({ upgrade_states: z.array(z.object({ upgrade: z.string(), tier: z.number() })).optional() })
+    .object({
+      upgrade_states: z
+        .array(z.object({ upgrade: z.string(), tier: z.number() }))
+        .optional(),
+    })
     .optional(),
   members: z.record(z.string(), RawMember),
 });
@@ -351,14 +487,17 @@ export const RawProfilesResponse = z.object({
             player_data: true,
             player_id: true,
             profile: true,
-          })
+          }),
         ),
-      })
+      }),
     )
     .nullish(),
 });
 
-const RawDonation = z.object({ donated_time: z.number().optional(), items: RawNbt.optional() });
+const RawDonation = z.object({
+  donated_time: z.number().optional(),
+  items: RawNbt.optional(),
+});
 
 export const RawMuseumMember = z.object({
   value: z.number().optional(),
@@ -369,7 +508,9 @@ export const RawMuseumMember = z.object({
 export type RawMuseumMember = z.infer<typeof RawMuseumMember>;
 
 /** /v2/skyblock/museum: one entry per member whose museum API is on. */
-export const RawMuseum = z.object({ members: z.record(z.string(), RawMuseumMember).optional() });
+export const RawMuseum = z.object({
+  members: z.record(z.string(), RawMuseumMember).optional(),
+});
 export type RawMuseum = z.infer<typeof RawMuseum>;
 
 /** /v2/skyblock/garden's `garden`: the profile's, so its members share it. */
@@ -401,7 +542,11 @@ export const RawAuction = z.object({
 });
 export type RawAuction = z.infer<typeof RawAuction>;
 
-export const RawAuctionsPage = z.object({ totalPages: z.number(), lastUpdated: z.number(), auctions: z.array(RawAuction) });
+export const RawAuctionsPage = z.object({
+  totalPages: z.number(),
+  lastUpdated: z.number(),
+  auctions: z.array(RawAuction),
+});
 export type RawAuctionsPage = z.infer<typeof RawAuctionsPage>;
 
 const RawOrders = z.array(z.object({ pricePerUnit: z.number() }));
@@ -414,8 +559,13 @@ export const RawBazaar = z.object({
     z.object({
       sell_summary: RawOrders,
       buy_summary: RawOrders,
-      quick_status: z.object({ sellPrice: z.number(), sellMovingWeek: z.number(), buyPrice: z.number(), buyMovingWeek: z.number() }),
-    })
+      quick_status: z.object({
+        sellPrice: z.number(),
+        sellMovingWeek: z.number(),
+        buyPrice: z.number(),
+        buyMovingWeek: z.number(),
+      }),
+    }),
   ),
 });
 export type RawBazaar = z.infer<typeof RawBazaar>;

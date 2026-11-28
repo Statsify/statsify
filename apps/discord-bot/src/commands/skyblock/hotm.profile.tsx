@@ -14,17 +14,44 @@ import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
-  const { level, coreLevel, loadout, tokens, ability, powder, nodes, crystals, nucleusRuns, glacite } =
-    profile.member.hotm!;
+export const SkyBlockHotmProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
+  const {
+    level,
+    coreLevel,
+    loadout,
+    tokens,
+    ability,
+    powder,
+    nodes,
+    crystals,
+    nucleusRuns,
+    glacite,
+  } = profile.member.hotm!;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), `${t(tokens.spent)}§7/§5${t(tokens.total)}`, "§5"],
+    [
+      t("skyblock.tokensSpent"),
+      `${t(tokens.spent)}§7/§5${t(tokens.total)}`,
+      "§5",
+    ],
     [t("skyblock.coreOfTheMountain"), t(coreLevel), "§6"],
-    [t("skyblock.pickaxeAbility"), ability ? prettify(ability) : t("skyblock.none"), "§e"],
+    [
+      t("skyblock.pickaxeAbility"),
+      ability ? prettify(ability) : t("skyblock.none"),
+      "§e",
+    ],
   ];
 
-  if (loadout.total > 1) sidebar.unshift([t("skyblock.loadout"), t("skyblock.loadoutOf", loadout), "§b"]);
+  if (loadout.total > 1)
+    sidebar.unshift([
+      t("skyblock.loadout"),
+      t("skyblock.loadoutOf", loadout),
+      "§b",
+    ]);
 
   const powders = POWDERS.map((type) => (
     <PerkCurrency
@@ -49,18 +76,32 @@ export const SkyBlockHotmProfile = ({ profile, t, ...card }: SkyBlockProfileProp
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.tr>
-          <LevelBar title={t("skyblock.hotmLevel")} level={level} color="§5" t={t} />
+          <LevelBar
+            title={t("skyblock.hotmLevel")}
+            level={level}
+            color="§5"
+            t={t}
+          />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
         {/* Not a Table.tr: its cells keep their own height, and the stats' box should be as tall as the tree's */}
         <div width="100%">
           <box direction="column" width="1/2" location="center">
-            <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`§5${t("skyblock.perkTree")}`}</text>
+            <text
+              margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+            >{`§5${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-          <box direction="column" width="1/2" height="remaining" location="center">
+          <box
+            direction="column"
+            width="1/2"
+            height="remaining"
+            location="center"
+          >
             {stats.map(([name, value, color]) => (
-              <text margin={{ top: 2, bottom: 2, left: 10, right: 10 }}>{`§7${name}: ${color}${t(value)}`}</text>
+              <text
+                margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
+              >{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
         </div>

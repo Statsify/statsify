@@ -14,30 +14,52 @@ import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSkillsProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockSkillsProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { skills } = profile.member;
 
-  const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
+  const sidebar: SidebarItem[] = skills
+    ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
+    : [];
 
   // Laid out three to a row: four "XP past max" notes in one row set the card's width
-  const bars: LevelBarProps[] = skills ?
-    SKILLS.map((name) => {
-      const level = skills.skills[name];
-      const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 && !level.unverified ?
-        [`§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`] :
-        [];
+  const bars: LevelBarProps[] = skills
+    ? SKILLS.map((name) => {
+        const level = skills.skills[name];
+        const pastMax =
+          level.xpForNext === undefined &&
+          level.xpCurrent > 0 &&
+          !level.unverified
+            ? [
+                `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}`,
+              ]
+            : [];
 
-      return { title: prettify(name), level, color: SKILL_COLORS[name], t, notes: pastMax };
-    }) :
-    [];
+        return {
+          title: prettify(name),
+          level,
+          color: SKILL_COLORS[name],
+          t,
+          notes: pastMax,
+        };
+      })
+    : [];
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {skills ?
-        (
-          <Table.table>{levelBarRows(bars, 3)}</Table.table>
-        ) :
-        <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
+      {skills ? (
+        <Table.table>{levelBarRows(bars, 3)}</Table.table>
+      ) : (
+        <EmptySection
+          setting="skills"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noSkills")}
+          t={t}
+        />
+      )}
     </Card>
   );
 };

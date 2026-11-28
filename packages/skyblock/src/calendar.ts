@@ -40,11 +40,16 @@ export interface SkyBlockDate {
 
 export const skyblockDate = (time: number): SkyBlockDate => {
   const days = Math.floor((time - EPOCH) / DAY);
-  return { year: Math.floor(days / YEAR_DAYS) + 1, month: Math.floor((days % YEAR_DAYS) / MONTH_DAYS), day: (days % MONTH_DAYS) + 1 };
+  return {
+    year: Math.floor(days / YEAR_DAYS) + 1,
+    month: Math.floor((days % YEAR_DAYS) / MONTH_DAYS),
+    day: (days % MONTH_DAYS) + 1,
+  };
 };
 
 /** When a SkyBlock day begins. */
-export const skyblockTime = ({ year, month, day }: SkyBlockDate) => EPOCH + ((year - 1) * YEAR_DAYS + month * MONTH_DAYS + day - 1) * DAY;
+export const skyblockTime = ({ year, month, day }: SkyBlockDate) =>
+  EPOCH + ((year - 1) * YEAR_DAYS + month * MONTH_DAYS + day - 1) * DAY;
 
 const ELECTION_END = { month: 2, day: 27 } as const;
 
@@ -83,14 +88,20 @@ export function termOf(mayor: MayorView | undefined, time: number) {
 export function nextEvents(time: number, mayor?: MayorView): EventTime[] {
   const { year } = skyblockDate(time);
   const term = termOf(mayor, time);
-  const perks = mayor ? [...mayor.mayor.perks, ...(mayor.minister ? [mayor.minister.perk] : [])] : [];
+  const perks = mayor
+    ? [...mayor.mayor.perks, ...(mayor.minister ? [mayor.minister.perk] : [])]
+    : [];
   // With Finnegan's Grand Feast perk in office, the Harvest Feast runs his whole term (the wiki's Harvest Feast page,
   // unverified)
-  const grandFeast = perks.some(({ name }) => name === "Grand Feast") ? term : undefined;
+  const grandFeast = perks.some(({ name }) => name === "Grand Feast")
+    ? term
+    : undefined;
 
   return EVENTS.map(({ key, month, day, days }) => {
     if (key === "harvestFeast" && grandFeast) return { key, ...grandFeast };
-    const start = [year, year + 1].map((at) => skyblockTime({ year: at, month, day })).find((start) => start + days * DAY > time)!;
+    const start = [year, year + 1]
+      .map((at) => skyblockTime({ year: at, month, day }))
+      .find((start) => start + days * DAY > time)!;
     return { key, start, end: start + days * DAY };
   }).toSorted((a, b) => a.start - b.start);
 }
@@ -100,24 +111,57 @@ if (import.meta.vitest) {
 
   test("skyblockDate counts 20-minute days, 31-day months and 12-month years from the epoch", () => {
     expect(skyblockDate(EPOCH)).toEqual({ year: 1, month: 0, day: 1 });
-    expect(skyblockDate(EPOCH + 31 * DAY - 1)).toEqual({ year: 1, month: 0, day: 31 });
-    expect(skyblockDate(EPOCH + YEAR_DAYS * DAY)).toEqual({ year: 2, month: 0, day: 1 });
-    expect(skyblockDate(1_794_105_965_338)).toEqual({ year: 524, month: 9, day: 24 });
+    expect(skyblockDate(EPOCH + 31 * DAY - 1)).toEqual({
+      year: 1,
+      month: 0,
+      day: 31,
+    });
+    expect(skyblockDate(EPOCH + YEAR_DAYS * DAY)).toEqual({
+      year: 2,
+      month: 0,
+      day: 1,
+    });
+    expect(skyblockDate(1_794_105_965_338)).toEqual({
+      year: 524,
+      month: 9,
+      day: 24,
+    });
   });
 
   test("nextEvents puts an event on now first and moves a past one to next year", () => {
     const zoo = skyblockTime({ year: 10, month: 3, day: 2 });
     const [first, second] = nextEvents(zoo);
-    expect(first).toEqual({ key: "travelingZoo", start: skyblockTime({ year: 10, month: 3, day: 1 }), end: skyblockTime({ year: 10, month: 3, day: 4 }) });
+    expect(first).toEqual({
+      key: "travelingZoo",
+      start: skyblockTime({ year: 10, month: 3, day: 1 }),
+      end: skyblockTime({ year: 10, month: 3, day: 4 }),
+    });
     expect(second.key).toBe("electionOpens");
-    expect(nextEvents(zoo).find(({ key }) => key === "newYear")?.start).toBe(skyblockTime({ year: 10, month: 11, day: 29 }));
-    expect(nextEvents(zoo).find(({ key }) => key === "electionOver")?.start).toBe(skyblockTime({ year: 11, month: 2, day: 27 }));
+    expect(nextEvents(zoo).find(({ key }) => key === "newYear")?.start).toBe(
+      skyblockTime({ year: 10, month: 11, day: 29 }),
+    );
+    expect(
+      nextEvents(zoo).find(({ key }) => key === "electionOver")?.start,
+    ).toBe(skyblockTime({ year: 11, month: 2, day: 27 }));
   });
 
   test("nextEvents runs the Harvest Feast through the whole term under Grand Feast, and not past it", () => {
-    const finnegan = { mayor: { name: "Finnegan", perks: [{ name: "Grand Feast", description: "" }] }, term: 9 };
-    const feast = (time: number) => nextEvents(time, finnegan).find(({ key }) => key === "harvestFeast");
-    expect(feast(skyblockTime({ year: 10, month: 0, day: 5 }))).toEqual({ key: "harvestFeast", start: skyblockTime({ year: 9, month: 2, day: 27 }), end: skyblockTime({ year: 10, month: 2, day: 27 }) });
-    expect(feast(skyblockTime({ year: 10, month: 3, day: 1 }))?.start).toBe(skyblockTime({ year: 10, month: 6, day: 1 }));
+    const finnegan = {
+      mayor: {
+        name: "Finnegan",
+        perks: [{ name: "Grand Feast", description: "" }],
+      },
+      term: 9,
+    };
+    const feast = (time: number) =>
+      nextEvents(time, finnegan).find(({ key }) => key === "harvestFeast");
+    expect(feast(skyblockTime({ year: 10, month: 0, day: 5 }))).toEqual({
+      key: "harvestFeast",
+      start: skyblockTime({ year: 9, month: 2, day: 27 }),
+      end: skyblockTime({ year: 10, month: 2, day: 27 }),
+    });
+    expect(feast(skyblockTime({ year: 10, month: 3, day: 1 }))?.start).toBe(
+      skyblockTime({ year: 10, month: 6, day: 1 }),
+    );
   });
 }
