@@ -1,5 +1,5 @@
 [workspace]
-members = ["packages/render-core", "packages/skin-renderer"]
+members = ["packages/minecraft-models", "packages/render-core", "packages/skin-renderer"]
 resolver = "2"
 
 [profile.release]
