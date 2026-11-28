@@ -278,7 +278,14 @@ export async function loadPack(
 ): Promise<Pack> {
   const data = (await readSource(source)) as Uint8Array<ArrayBuffer>;
   const [hash, entries] = await Promise.all([sha256(data), unzipAssets(data)]);
+  return packFromEntries(entries, name, hash);
+}
 
+export function packFromEntries(
+  entries: Record<string, Uint8Array>,
+  name: string,
+  hash: string,
+): Pack {
   // Packs zipped with their folder have pack.mcmeta one level down
   const metaPath = Object.keys(entries)
     .filter((path) => path.endsWith("pack.mcmeta"))

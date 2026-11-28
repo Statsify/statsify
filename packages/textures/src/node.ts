@@ -7,7 +7,11 @@
  */
 
 import { Canvas, loadImage } from "skia-canvas";
+import { basename, join, relative, sep } from "node:path";
 import type { CanvasBackend } from "./core/canvas.js";
+import { createHash } from "node:crypto";
+import { packFromEntries } from "./core/pack.js";
+import { readFile, readdir } from "node:fs/promises";
 
 // skia-canvas has the same 2D API as OffscreenCanvas, but not its DOM types
 const toOffscreenCanvas = (canvas: Canvas) =>
@@ -41,3 +45,27 @@ export const skiaCanvas: CanvasBackend = {
     return toOffscreenCanvas(canvas);
   },
 };
+
+export async function loadPackFolder(folder: string, name = basename(folder)) {
+  const paths = (
+    await readdir(folder, { recursive: true, withFileTypes: true })
+  )
+    .filter((entry) => entry.isFile())
+    .map((entry) => relative(folder, join(entry.parentPath, entry.name)))
+    .toSorted();
+
+  const files = await Promise.all(
+    paths.map((path) => readFile(join(folder, path))),
+  );
+
+  const hash = createHash("sha256");
+  const entries: Record<string, Uint8Array> = {};
+
+  for (const [i, path] of paths.entries()) {
+    const entry = path.split(sep).join("/");
+    hash.update(entry).update(files[i]);
+    entries[entry] = files[i];
+  }
+
+  return packFromEntries(entries, name, hash.digest("hex"));
+}
