@@ -10,55 +10,57 @@ import { PLAYER_STATS, type PlayerStat, type StatValue } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
 
 // The 1.8 font lacks the pack's stat glyphs, so each maps to its old symbol.
-const SYMBOLS: Record<string, string> = {
-  "\uE001": "⚔", // Attack Speed
-  "\uE002": "๑", // Ability Damage
-  "\uE003": "✎", // Intelligence
-  "\uE004": "⚡", // Mana Regen
-  "\uE005": "Ⓟ", // Breaking Power
-  "\uE006": "❄", // Cold Resistance
-  "\uE007": "☠", // Crit Damage
-  "\uE008": "❈", // Defense
-  "\uE009": "⚓", // Double Hook Chance
-  "\uE00B": "⫽", // Ferocity
-  "\uE00C": "☂", // Fishing Speed
-  "\uE00D": "❁", // Strength
-  "\uE00E": "♢", // Fuel
-  "\uE00F": "▚", // Gemstone Spread
-  "\uE010": "❤", // Health
-  "\uE011": "❣", // Health Regen
-  "\uE012": "♨", // Heat Resistance
-  "\uE013": "♣", // Pet Luck
-  "\uE014": "☄", // Mending
-  "\uE015": "⸕", // Mining Speed
-  "\uE016": "▚", // Mining Spread
-  "\uE017": "ʬ", // Overflow
-  "\uE018": "ൠ", // Pests
-  "\uE019": "ൠ", // Bonus Pest Chance
-  "\uE01A": "✯", // Magic Find
-  "\uE01B": "❍", // Pressure Resistance
-  "\uE01C": "✧", // Pristine
-  "\uE01D": "⚶", // Respiration
-  "\uE01E": "❁", // Rift Damage
-  "\uE01F": "❤", // Heart (the Rift)
-  "\uE020": "ф", // Rift Time
-  "\uE021": "α", // Sea Creature Chance
-  "\uE022": "✦", // Speed
-  "\uE023": "∮", // Sweep
-  "\uE024": "Ⓢ", // Swing Range
-  "\uE025": "⛃", // Treasure Chance
-  "\uE027": "❂", // True Defense
-  "\uE028": "♨", // Vitality
-  "\uE02A": "♔", // Trophy Chance
-  "\uE02B": "☀", // Overbloom
-  "\uE02C": "☣", // Crit Chance
-  "\uE050": "❁", // Damage
-  "\uE051": "☘", // Farming Fortune
-  "\uE053": "☘", // Mining Fortune
-  "\uE054": "☘", // Foraging Fortune
-  "\uE068": "⚚", // Fragged items
-  "\uE077": "❃", // Tracking
+const STAT_GLYPHS: Record<string, [glyph: string, symbol: string]> = {
+  attackSpeed: ["\uE001", "⚔"],
+  abilityDamage: ["\uE002", "๑"],
+  intelligence: ["\uE003", "✎"],
+  manaRegen: ["\uE004", "⚡"],
+  breakingPower: ["\uE005", "Ⓟ"],
+  coldResistance: ["\uE006", "❄"],
+  critDamage: ["\uE007", "☠"],
+  defense: ["\uE008", "❈"],
+  doubleHookChance: ["\uE009", "⚓"],
+  ferocity: ["\uE00B", "⫽"],
+  fishingSpeed: ["\uE00C", "☂"],
+  strength: ["\uE00D", "❁"],
+  fuel: ["\uE00E", "♢"],
+  gemstoneSpread: ["\uE00F", "▚"],
+  health: ["\uE010", "❤"],
+  healthRegen: ["\uE011", "❣"],
+  heatResistance: ["\uE012", "♨"],
+  petLuck: ["\uE013", "♣"],
+  mending: ["\uE014", "☄"],
+  miningSpeed: ["\uE015", "⸕"],
+  miningSpread: ["\uE016", "▚"],
+  overflow: ["\uE017", "ʬ"],
+  pests: ["\uE018", "ൠ"],
+  bonusPestChance: ["\uE019", "ൠ"],
+  magicFind: ["\uE01A", "✯"],
+  pressureResistance: ["\uE01B", "❍"],
+  pristine: ["\uE01C", "✧"],
+  respiration: ["\uE01D", "⚶"],
+  riftDamage: ["\uE01E", "❁"],
+  riftHearts: ["\uE01F", "❤"],
+  riftTime: ["\uE020", "ф"],
+  seaCreatureChance: ["\uE021", "α"],
+  speed: ["\uE022", "✦"],
+  sweep: ["\uE023", "∮"],
+  swingRange: ["\uE024", "Ⓢ"],
+  treasureChance: ["\uE025", "⛃"],
+  trueDefense: ["\uE027", "❂"],
+  vitality: ["\uE028", "♨"],
+  trophyChance: ["\uE02A", "♔"],
+  overbloom: ["\uE02B", "☀"],
+  critChance: ["\uE02C", "☣"],
+  damage: ["\uE050", "❁"],
+  farmingFortune: ["\uE051", "☘"],
+  miningFortune: ["\uE053", "☘"],
+  foragingFortune: ["\uE054", "☘"],
+  fragged: ["\uE068", "⚚"],
+  tracking: ["\uE077", "❃"],
 };
+
+const SYMBOLS = new Map(Object.values(STAT_GLYPHS));
 
 // Obfuscated text runs until a color code or §r
 const OBFUSCATED = /§k(?:[^§]|§[k-o])*/gi;
@@ -75,10 +77,11 @@ const NEEDS_NORMALIZING = /§[k-o]|\p{Co}/iu;
 export function normalizeItemText(text: string) {
   if (!NEEDS_NORMALIZING.test(text)) return text;
 
+  // The added §r also clears an inline §^n^ size, so cards use <text size>.
   return text
     .replaceAll(OBFUSCATED, "")
     .replaceAll(FORMATTING_BEFORE_COLOR, "$&§r")
-    .replaceAll(/\p{Co}/gu, (glyph) => SYMBOLS[glyph] ?? glyph)
+    .replaceAll(/\p{Co}/gu, (glyph) => SYMBOLS.get(glyph) ?? glyph)
     .replaceAll(UNMAPPED_GLYPH, "");
 }
 

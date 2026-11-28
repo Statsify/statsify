@@ -139,8 +139,10 @@ export interface RawMember {
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
-    kills?: Record<string, number>; // by mob id, plus "total"
-    deaths?: Record<string, number>; // by cause, plus "total"
+    // Kills are by mob id, plus "total".
+    kills?: Record<string, number>;
+    // Deaths are by cause, plus "total".
+    deaths?: Record<string, number>;
     highest_damage?: number;
     highest_critical_damage?: number;
     auctions?: {
@@ -235,7 +237,8 @@ export interface RawMember {
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
-    unique_brackets?: Record<string, string[]>; // the crops at each bracket
+    // Each bracket maps to the crops that reached it.
+    unique_brackets?: Record<string, string[]>;
     personal_bests?: Record<string, number>;
     // "<year>:<month>_<day>:<crop>", with the year from 0 and the month from 1
     contests?: Record<string, RawContest>;
@@ -366,12 +369,14 @@ export interface RawMuseum {
 // The Garden is the profile's, so every member reads the same one.
 export interface RawGarden {
   garden_experience?: number;
-  resources_collected?: Record<string, number>; // by the crop's item id
+  // Resources are keyed by the crop's item id.
+  resources_collected?: Record<string, number>;
   crop_upgrade_levels?: Record<string, number>;
   unlocked_plots_ids?: string[];
   composter_data?: { upgrades?: Record<string, number> };
   commission_data?: {
-    visits?: Record<string, number>; // by visitor id
+    // Visits are keyed by visitor id.
+    visits?: Record<string, number>;
     completed?: Record<string, number>;
     total_completed?: number;
     unique_npcs_served?: number;

@@ -48,7 +48,8 @@ export interface SectionInput {
   profile: RawProfile;
   member: RawMember;
   museum?: RawMuseumMember;
-  garden?: RawGarden | null; // null when the profile has no Garden
+  // The Garden is null when the profile has none.
+  garden?: RawGarden | null;
   prices?: PriceMap;
   items?: ItemsResource;
   rawItems?: RawItemsResource;
