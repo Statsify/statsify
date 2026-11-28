@@ -20,6 +20,7 @@ export type TintSource =
   | { type: "minecraft:custom_model_data"; index?: number; default: TintColor }
   | { type: "minecraft:grass"; temperature: number; downfall: number };
 
+// 26.3's colors for the effects 1.8 items can carry
 const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:speed": 0x33_eb_ff,
   "minecraft:slowness": 0x8b_af_e0,

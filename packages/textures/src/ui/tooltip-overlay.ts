@@ -55,6 +55,7 @@ class TooltipOverlay {
 
   public move(event: PointerEvent) {
     const { width, height } = this.canvas;
+    // 1.8 draws tooltip text 12 GUI pixels right of and above the cursor
     let left = event.clientX + (12 - TOOLTIP_PADDING) * this.scale;
     let top = event.clientY - (12 + TOOLTIP_PADDING) * this.scale;
 
