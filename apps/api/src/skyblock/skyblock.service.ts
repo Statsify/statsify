@@ -32,15 +32,17 @@ import {
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import {
   FAILURE_BACKOFF_MS,
-  SkyBlockPricesService,
   getFailureKey,
-} from "./skyblock-prices.service.js";
+} from "./skyblock-copies.service.js";
+import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockResourcesService } from "./skyblock-resources.service.js";
 import {
   MEMBER_STATS_SECTIONS,
   findProfile,
   getApiSettings,
   getGameMode,
   isMember,
+  toBingoView,
   toMemberStats,
   toPlayerExtras,
   toProfileSummary,
@@ -50,6 +52,7 @@ import { type SkyBlockStatsRow, skyblockStatsId } from "@statsify/schemas";
 import { gunzipJson, gzipJson } from "./zip.js";
 import { hasMuseum } from "@statsify/skyblock/display";
 import type {
+  BingoView,
   MemberView,
   PlayerExtras,
   PlayerRef,
@@ -70,7 +73,7 @@ export const STORED_FRESH_MS = 300_000;
 const LIVE_REUSE_MS = 60_000;
 const SECTION_CACHE_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves old ones.
-const SECTION_VERSION = 6;
+const SECTION_VERSION = 7;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
 const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 const STORED_COPIES = ["museum", "garden"] as const;
@@ -145,6 +148,7 @@ export class SkyBlockService {
     private readonly playerService: Circular<PlayerService>,
     private readonly hypixelService: HypixelService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly resourcesService: SkyBlockResourcesService,
     private readonly leaderboardService: SkyBlockLeaderboardService,
     @InjectModel(SkyBlockProfiles)
     private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
@@ -282,6 +286,21 @@ export class SkyBlockService {
     };
   }
 
+  // Each lookup asks Hypixel for the player's Bingo, which nothing stores.
+  public async getBingo(tag: string): Promise<PlayerRef & BingoView> {
+    const [resource, { uuid, username, displayName, bingo }] =
+      await Promise.all([
+        this.resourcesService.getBingo(),
+        this.getPlayer(tag).then(async (player) => ({
+          ...player,
+          bingo: await this.getPlayerBingo(player.uuid),
+        })),
+      ]);
+
+    if (!resource) throw new SkyBlockUnavailableException("hypixel");
+    return { uuid, username, displayName, ...toBingoView(resource, bingo) };
+  }
+
   // undefined means a lookup would refetch now.
   public getNextRefetchAt(uuid: string): Promise<number | undefined> {
     return this.getRefetchAt(
@@ -324,6 +343,16 @@ export class SkyBlockService {
     if (!profiles) throw new SkyBlockNotFoundException("skyblock");
 
     return { profiles, fetchedAt, stale };
+  }
+
+  private async getPlayerBingo(uuid: string) {
+    try {
+      return await this.hypixelService.getSkyBlockBingo(uuid);
+    } catch (error) {
+      throw error instanceof HypixelUnavailableError
+        ? toUnavailable(error)
+        : error;
+    }
   }
 
   private async getPlayer(tag: string): Promise<SkyBlockPlayer> {

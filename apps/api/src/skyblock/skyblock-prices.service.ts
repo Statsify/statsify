@@ -17,11 +17,8 @@ import {
   parseItemsResource,
   toPriceView,
 } from "@statsify/skyblock";
-import {
-  HypixelService,
-  HypixelUnavailableError,
-  SKYBLOCK_TIMEOUT_MS,
-} from "#hypixel";
+import { type Copy, SkyBlockCopiesService } from "./skyblock-copies.service.js";
+import { HypixelService, SKYBLOCK_TIMEOUT_MS } from "#hypixel";
 import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
@@ -32,7 +29,7 @@ import {
 } from "@statsify/api-client";
 import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { Worker } from "node:worker_threads";
-import { gunzipJson, gzipJson } from "./zip.js";
+import { gunzipJson } from "./zip.js";
 import type {
   RebuildRequest,
   RebuildResult,
@@ -46,23 +43,11 @@ const ITEMS_KEY = "skyblock:resource:items";
 const PRICES_REFRESH_MS = 15 * 60_000;
 const BAZAAR_REFRESH_MS = 60_000;
 const ITEMS_REFRESH_MS = 12 * 60 * 60_000;
-export const FAILURE_BACKOFF_MS = 60_000;
 // The lock spaces rebuilds out too, for when the feed's lastUpdated stops.
 const LOCK_MS = 300_000;
 
 const binCount = (map: PriceMap) =>
   Object.values(map.entries).filter(({ source }) => source === "bin").length;
-
-interface Copy<T> {
-  value: T;
-  fetchedAt: number;
-}
-
-function isCurrent<T>(copy: Copy<T> | undefined, maxAge: number) {
-  return copy !== undefined && Date.now() - copy.fetchedAt <= maxAge;
-}
-
-export const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 interface LoadedItems {
   raw: RawItemsResource;
@@ -87,6 +72,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   public constructor(
     private readonly hypixelService: HypixelService,
     private readonly searchService: SkyBlockSearchService,
+    private readonly copiesService: SkyBlockCopiesService,
     @InjectRedis() private readonly redis: Redis,
   ) {}
 
@@ -112,7 +98,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async getItems(): Promise<LoadedItems | undefined> {
-    this.items = await this.getCopy(
+    this.items = await this.copiesService.get(
       ITEMS_KEY,
       ITEMS_REFRESH_MS,
       () => this.fetchItems(),
@@ -149,7 +135,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private async getBazaar(): Promise<Bazaar | undefined> {
-    this.bazaar = await this.getCopy(
+    this.bazaar = await this.copiesService.get(
       BAZAAR_KEY,
       BAZAAR_REFRESH_MS,
       () => this.hypixelService.getSkyBlockBazaar().then(parseBazaar),
@@ -231,67 +217,5 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
       worker.postMessage(request);
     });
-  }
-
-  private async readStored<T>(
-    key: string,
-    since = 0,
-  ): Promise<Copy<T> | undefined> {
-    const [data, storedAt] = await this.redis.hmgetBuffer(
-      key,
-      "data",
-      "fetchedAt",
-    );
-    const fetchedAt = Number(storedAt?.toString());
-    if (!data || !(fetchedAt > since)) return;
-
-    return { value: await gunzipJson<T>(data), fetchedAt };
-  }
-
-  private async store<T>(key: string, { value, fetchedAt }: Copy<T>) {
-    await this.redis.hset(key, { data: await gzipJson(value), fetchedAt });
-  }
-
-  private async getCopy<T>(
-    key: string,
-    maxAgeMs: number,
-    fetch: () => Promise<T>,
-    last?: Copy<T>,
-  ): Promise<Copy<T> | undefined> {
-    let copy = last;
-    if (!isCurrent(copy, maxAgeMs)) {
-      copy = (await this.readStored<T>(key, copy?.fetchedAt)) ?? copy;
-    }
-
-    if (isCurrent(copy, maxAgeMs)) return copy;
-    if (await this.redis.exists(getFailureKey(key))) return copy;
-
-    // Only a failed request backs off, not a failed write to Redis.
-    const refetch = fetch().then(
-      async (value) => {
-        const fetched = { value, fetchedAt: Date.now() };
-        await this.store(key, fetched);
-        return fetched;
-      },
-      async (error) => {
-        await this.redis.set(getFailureKey(key), "1", "PX", FAILURE_BACKOFF_MS);
-        throw error;
-      },
-    );
-
-    // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
-    if (copy) {
-      void refetch.catch((error) => this.logger.error(error));
-      return copy;
-    }
-
-    try {
-      return await refetch;
-    } catch (error) {
-      if (!(error instanceof HypixelUnavailableError)) throw error;
-
-      this.logger.error(error);
-      return undefined;
-    }
   }
 }

@@ -8,6 +8,8 @@
 
 export * from "./types.js";
 export * from "./raw.js";
+export { toBingoView, type BingoGoal, type BingoView } from "./bingo.js";
+export { toMayorView, type MayorView, type Perk } from "./election.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export {
   describeKey,

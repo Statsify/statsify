@@ -27,15 +27,19 @@ import {
 } from "@nestjs/common";
 import {
   CachedPlayerDto,
+  PlayerDto,
   SkyBlockIconDto,
   SkyBlockPriceDto,
   SkyBlockProfileDto,
 } from "#dtos";
 import {
   ErrorResponse,
+  GetSkyBlockBingoResponse,
+  GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
   GetSkyBlockProfilesResponse,
+  PlayerNotFoundException,
   SkyBlockNotFoundException,
   SkyBlockUnavailableException,
 } from "@statsify/api-client";
@@ -44,6 +48,7 @@ import {
   SkyBlockIconsService,
 } from "./skyblock-icons.service.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockResourcesService } from "./skyblock-resources.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
 import { parseIconKey } from "@statsify/skyblock/icon-key";
 import type { FastifyReply } from "fastify";
@@ -54,6 +59,7 @@ export class SkyBlockController {
   public constructor(
     private readonly skyblockService: SkyBlockService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly resourcesService: SkyBlockResourcesService,
     private readonly iconsService: SkyBlockIconsService,
   ) {}
 
@@ -105,6 +111,46 @@ export class SkyBlockController {
     return {
       success: true,
       profile,
+    };
+  }
+
+  @ApiOperation({
+    summary: "Get the SkyBlock Mayor",
+    description:
+      "The mayor in office and their perks, from Hypixel's election resource.",
+  })
+  @ApiOkResponse({ type: GetSkyBlockMayorResponse })
+  @ApiServiceUnavailableResponse({
+    type: SkyBlockUnavailableException,
+    description: "hypixel",
+  })
+  @Auth({ role: AuthRole.WORKER, weight: 1 })
+  @Get("/mayor")
+  public async getMayor() {
+    const mayor = await this.resourcesService.getMayor();
+    if (!mayor) throw new SkyBlockUnavailableException("hypixel");
+
+    return {
+      success: true,
+      mayor,
+    };
+  }
+
+  @ApiOperation({
+    summary: "Get a Player's SkyBlock Bingo",
+    description:
+      "This month's Bingo card with the player's points and completed goals. Each request asks Hypixel for the player's Bingo.",
+  })
+  @ApiOkResponse({ type: GetSkyBlockBingoResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  @ApiServiceUnavailableResponse({ type: SkyBlockUnavailableException })
+  @Auth({ role: AuthRole.WORKER, weight: 2 })
+  @Get("/bingo")
+  public async getBingo(@Query() { player }: PlayerDto) {
+    return {
+      success: true,
+      bingo: await this.skyblockService.getBingo(player),
     };
   }
 

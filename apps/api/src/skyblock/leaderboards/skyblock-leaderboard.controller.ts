@@ -17,8 +17,8 @@ import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
   LeaderboardQuery,
-  PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
+  PostSkyBlockRankingsResponse,
 } from "@statsify/api-client";
 import { PlayerDto, SkyBlockLeaderboardDto } from "#dtos";
 import { SkyBlockLeaderboardService } from "./skyblock-leaderboard.service.js";
@@ -70,7 +70,7 @@ export class SkyBlockLeaderboardController {
     description:
       "Every board the player is on, best rank first, each at the player's best profile on it.",
   })
-  @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
+  @ApiOkResponse({ type: [PostSkyBlockRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.WORKER, weight: 5 })
   public getSkyBlockRankings(@Body() { player }: PlayerDto) {

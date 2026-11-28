@@ -17,6 +17,12 @@ export const formatPriceAge = (t: LocalizeFunction, asOf: number) =>
     time: formatTime(Date.now() - asOf, { entries: 1 }),
   });
 
+export const formatProgress = (
+  t: LocalizeFunction,
+  value: number,
+  max: number,
+) => `${value >= max ? "§6" : "§e"}${t(value)}§7/${t(max)}`;
+
 interface GridRowsOptions {
   spreadLastRow?: boolean;
 }

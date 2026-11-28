@@ -11,13 +11,36 @@ import {
   SkyBlockAccessoriesProfile,
   getAccessoryIcons,
 } from "./accessories.profile.js";
+import {
+  STAT_PAGES,
+  SkyBlockAttributesProfile,
+  SkyBlockStatsProfile,
+} from "./stats.profile.js";
+import {
+  SkyBlockBestiaryProfile,
+  SkyBlockCollectionsProfile,
+  SkyBlockMinionsProfile,
+  getCollectionIcons,
+  getMinionIcons,
+} from "./collections.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
 import { SkyBlockCrimsonProfile, getCrimsonIcons } from "./crimson.profile.js";
 import {
   SkyBlockDungeonsProfile,
   SkyBlockEssenceProfile,
 } from "./dungeons.profile.js";
+import {
+  SkyBlockExperimentsProfile,
+  SkyBlockMiscProfile,
+  SkyBlockRiftProfile,
+  getConsumableIcons,
+} from "./misc.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import {
+  SkyBlockGearProfile,
+  SkyBlockMuseumProfile,
+  getGearIcons,
+} from "./gear.profile.js";
 import { SkyBlockGardenProfile, getGardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
@@ -28,10 +51,15 @@ import {
   getNetworthIcons,
 } from "./networth.profile.js";
 import { SkyBlockPetsProfile, getPetIcons } from "./pets.profile.js";
+import { SkyBlockValuesProfile, getMissingPetIcons } from "./values.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
-import { formatProfileName } from "@statsify/skyblock/display";
+import { prettify } from "@statsify/util";
+import {
+  COLLECTION_CATEGORIES,
+  formatProfileName,
+} from "@statsify/skyblock/display";
 import { getBackground } from "@statsify/assets";
 import type {
   ApiSettings,
@@ -183,18 +211,92 @@ export const SKYBLOCK_CARDS = {
     settings: [],
     profile: SkyBlockHotfProfile,
   },
+  collections: {
+    sections: ["collections"],
+    settings: ["collections"],
+    profile: COLLECTION_CATEGORIES.map((category) => ({
+      label: () => prettify(category),
+      profile: (props: SkyBlockProfileProps) => (
+        <SkyBlockCollectionsProfile {...props} category={category} />
+      ),
+      icons: getCollectionIcons(category),
+    })),
+  },
+  minions: {
+    sections: ["minions"],
+    settings: [],
+    icons: getMinionIcons,
+    profile: SkyBlockMinionsProfile,
+  },
+  bestiary: {
+    sections: ["bestiary"],
+    settings: [],
+    profile: SkyBlockBestiaryProfile,
+  },
+  stats: {
+    sections: ["stats"],
+    settings: ["skills", "inventory"],
+    profile: (Object.keys(STAT_PAGES) as (keyof typeof STAT_PAGES)[]).map(
+      (page): SkyBlockSubPage => ({
+        label: (t) => t(`skyblock.statPages.${page}`),
+        profile: (props) => <SkyBlockStatsProfile {...props} page={page} />,
+      }),
+    ),
+  },
+  attributes: {
+    sections: ["attributes"],
+    settings: [],
+    profile: SkyBlockAttributesProfile,
+  },
+  gear: {
+    sections: ["gear"],
+    settings: ["inventory"],
+    icons: getGearIcons,
+    profile: SkyBlockGearProfile,
+  },
+  museum: {
+    sections: ["museum"],
+    settings: [],
+    profile: SkyBlockMuseumProfile,
+  },
+  rift: {
+    sections: ["rift"],
+    settings: [],
+    profile: SkyBlockRiftProfile,
+  },
+  experiments: {
+    sections: ["experiments"],
+    settings: [],
+    profile: SkyBlockExperimentsProfile,
+  },
+  misc: {
+    sections: ["misc"],
+    settings: [],
+    icons: getConsumableIcons,
+    profile: SkyBlockMiscProfile,
+  },
+  values: {
+    sections: ["values"],
+    settings: ["inventory"],
+    icons: getMissingPetIcons,
+    profile: SkyBlockValuesProfile,
+  },
 } satisfies Record<string, SkyBlockCard>;
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
+
+export const getSkyBlockHeading = (
+  t: LocalizeFunction,
+  name: SkyBlockCardName | "bingo" | "calendar" | "ranks",
+) => `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
 
 export function getSkyBlockTitle(
   t: LocalizeFunction,
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,
 ) {
-  const title = t(`skyblock.titles.${name}`);
   // The Header puts the profile on its own line only where that's narrower.
-  return `§l${FormattedGame.SKYBLOCK} §f${title}\n§r(${formatProfileName(profile)}§r)`;
+  return `${getSkyBlockHeading(t, name)}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {

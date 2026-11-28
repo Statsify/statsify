@@ -1,0 +1,131 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Card, EmptyCard } from "./components/Card.js";
+import { type SidebarItem, Table } from "#components";
+import { EmptySection } from "./components/EmptySection.js";
+import { ItemGrid, getGridRows } from "./components/ItemGrid.js";
+import { prettify } from "@statsify/util";
+import type {
+  GearSection,
+  ItemView,
+  MemberView,
+  Slots,
+} from "@statsify/skyblock";
+import type { SkyBlockProfileProps } from "./skyblock.command.js";
+
+const WEAPONS = 4;
+
+const getFilledSlots = (slots: Slots) =>
+  slots.filter((item): item is ItemView => item !== null);
+
+const getGearKinds = (gear: GearSection) => [
+  getFilledSlots(gear.armor),
+  getFilledSlots(gear.equipment),
+  gear.weapons.slice(0, WEAPONS),
+];
+
+export const getGearIcons = ({ gear }: MemberView) =>
+  gear
+    ? getGearKinds(gear)
+        .flat()
+        .map(({ texture }) => texture)
+    : [];
+
+export const SkyBlockGearProfile = ({
+  profile,
+  t,
+  icons,
+  ...card
+}: SkyBlockProfileProps) => {
+  const { gear } = profile.member;
+
+  const sidebar: SidebarItem[] = gear
+    ? [
+        [t("skyblock.wardrobeSets"), t(gear.wardrobe.length), "§b"],
+        [t("skyblock.equipmentSets"), t(gear.equipmentSets.length), "§b"],
+        [t("skyblock.weapons"), t(gear.weapons.length), "§c"],
+      ]
+    : [];
+
+  // Each kind starts a row
+  const items = gear
+    ? getGearKinds(gear).flatMap((kind) =>
+        kind.length % 2 === 0 ? kind : [...kind, undefined],
+      )
+    : [];
+
+  return (
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
+      {gear ? (
+        <ItemGrid
+          items={items.map((item) =>
+            item
+              ? { texture: item.texture, name: item.name, value: "" }
+              : { name: "", value: "" },
+          )}
+          icons={icons}
+          columns={2}
+        />
+      ) : (
+        <EmptySection
+          setting="inventory"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noGear")}
+          t={t}
+        />
+      )}
+    </Card>
+  );
+};
+
+export const SkyBlockMuseumProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
+  const { museum } = profile.member;
+
+  if (!museum) {
+    return (
+      <EmptyCard
+        {...card}
+        name={profile.displayName}
+        text={t("skyblock.noMuseum")}
+      />
+    );
+  }
+
+  const sidebar: SidebarItem[] = [
+    [t("skyblock.museumValue"), t(Math.floor(museum.value)), "§6"],
+    [t("skyblock.itemsDonated"), t(museum.items.length), "§a"],
+    [t("skyblock.specialItems"), t(museum.special.length), "§d"],
+    [
+      t("skyblock.appraised"),
+      t(museum.appraisal ? "skyblock.yes" : "skyblock.no"),
+      museum.appraisal ? "§a" : "§c",
+    ],
+  ];
+
+  const categories = museum.donated.map(({ category, count }) => (
+    <Table.td
+      title={prettify(category)}
+      value={t(count)}
+      color="§a"
+      size="small"
+    />
+  ));
+
+  return (
+    <Card {...card} name={profile.displayName} sidebar={sidebar}>
+      <Table.table>
+        {getGridRows(categories, 3, { spreadLastRow: true })}
+      </Table.table>
+    </Card>
+  );
+};

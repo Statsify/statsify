@@ -23,7 +23,9 @@ import {
   GetPlayerSearchResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
+  GetSkyBlockBingoResponse,
   GetSkyBlockItemsResponse,
+  GetSkyBlockMayorResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
   GetSkyBlockProfilesResponse,
@@ -32,6 +34,7 @@ import {
   GetWatchdogResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
+  PostSkyBlockRankingsResponse,
   PutUserBadgeResponse,
   SuccessResponse,
 } from "#responses";
@@ -152,6 +155,27 @@ export class ApiService {
       "/skyblock/price",
       "price",
       { item }
+    );
+  }
+
+  public getSkyBlockMayor() {
+    return this.requestKey<GetSkyBlockMayorResponse, "mayor">("/skyblock/mayor", "mayor");
+  }
+
+  public getSkyBlockBingo(player: string) {
+    return this.requestKey<GetSkyBlockBingoResponse, "bingo">(
+      "/skyblock/bingo",
+      "bingo",
+      { player }
+    );
+  }
+
+  public getSkyBlockRankings(player: string) {
+    return this.request<PostSkyBlockRankingsResponse[]>(
+      "/skyblock/leaderboards/rankings",
+      {},
+      "POST",
+      { body: { player } }
     );
   }
 

@@ -54,7 +54,8 @@ function getTopCounts(
   }
 
   for (const [id, amount] of Object.entries(counts)) {
-    if (id === "total") continue;
+    // Hypixel counts what it can't name under "unknown".
+    if (id === "total" || id === "unknown") continue;
     if (tracked && BESTIARY_MOBS.has(toMobId(id))) continue;
     addCount(prettify(id), amount);
   }

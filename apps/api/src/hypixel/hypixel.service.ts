@@ -23,9 +23,12 @@ import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from 
 import type { APIData } from "@statsify/util";
 import type {
   RawBazaar,
+  RawBingoResource,
+  RawElection,
   RawGarden,
   RawItemsResource,
   RawMuseum,
+  RawPlayerBingo,
   RawProfile,
 } from "@statsify/skyblock";
 
@@ -68,6 +71,16 @@ function toSkyBlockError(error: Error) {
   const retryAfter = Number.isNaN(reset) ? undefined : reset * 1000;
   return new HypixelThrottledError(retryAfter, response.data?.global === true);
 }
+
+// Hypixel answers a profile with no Garden, or a player with no Bingo, with a 404.
+const catchNotFound = <T>(source: Observable<T>) =>
+  source.pipe(
+    catchError((error: Error) =>
+      getErrorResponse(error)?.status === 404
+        ? of(null)
+        : throwError(() => toSkyBlockError(error))
+    )
+  );
 
 @Injectable()
 export class HypixelService {
@@ -203,7 +216,6 @@ export class HypixelService {
     });
   }
 
-  // Hypixel answers a profile with no Garden with a 404.
   public getSkyBlockGarden(profileId: string) {
     const request = this.request<{ garden: RawGarden }>(
       "/v2/skyblock/garden",
@@ -211,14 +223,20 @@ export class HypixelService {
       { timeout: SKYBLOCK_TIMEOUT_MS }
     );
 
+    return lastValueFrom(request.pipe(map(({ garden }) => garden), catchNotFound));
+  }
+
+  public getSkyBlockBingo(uuid: string) {
+    const request = this.request<RawPlayerBingo>(
+      "/v2/skyblock/bingo",
+      { uuid },
+      { timeout: SKYBLOCK_TIMEOUT_MS }
+    );
+
     return lastValueFrom(
       request.pipe(
-        map(({ garden }) => garden),
-        catchError((error) =>
-          getErrorResponse(error)?.status === 404
-            ? of(null)
-            : throwError(() => toSkyBlockError(error))
-        )
+        map(({ events }): RawPlayerBingo => ({ events })),
+        catchNotFound
       )
     );
   }
@@ -229,6 +247,18 @@ export class HypixelService {
 
   public getSkyBlockItems() {
     return this.getSkyBlock<RawItemsResource>("/v2/resources/skyblock/items", {
+      keyless: true,
+    });
+  }
+
+  public getSkyBlockElection() {
+    return this.getSkyBlock<RawElection>("/v2/resources/skyblock/election", {
+      keyless: true,
+    });
+  }
+
+  public getSkyBlockBingoResource() {
+    return this.getSkyBlock<RawBingoResource>("/v2/resources/skyblock/bingo", {
       keyless: true,
     });
   }

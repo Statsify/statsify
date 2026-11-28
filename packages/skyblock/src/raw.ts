@@ -486,3 +486,41 @@ export interface RawBazaar {
     }
   >;
 }
+
+interface RawPerk {
+  name: string;
+  description: string;
+}
+
+export interface RawElection {
+  mayor: {
+    election: { year: number };
+    name: string;
+    perks: RawPerk[];
+    minister?: { name: string; perk: RawPerk };
+  };
+}
+
+interface RawBingoGoal {
+  id: string;
+  name: string;
+  // Hypixel's docs require only the id and name.
+  lore?: string;
+  // Only community goals have these: the network's progress and tier amounts.
+  tiers?: number[];
+  progress?: number;
+}
+
+// This month's card, from the keyless bingo resource.
+export interface RawBingoResource {
+  id: number;
+  name: string;
+  start: number;
+  end: number;
+  goals: RawBingoGoal[];
+}
+
+// Each event's key is the bingo resource's id for that month.
+export interface RawPlayerBingo {
+  events: { key: number; points: number; completed_goals: string[] }[];
+}

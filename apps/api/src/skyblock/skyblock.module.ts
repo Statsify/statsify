@@ -13,6 +13,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { Player, SkyBlockStats } from "@statsify/schemas";
 import { PlayerModule } from "#player";
 import { SkyBlockController } from "./skyblock.controller.js";
+import { SkyBlockCopiesService } from "./skyblock-copies.service.js";
 import { SkyBlockIconsService } from "./skyblock-icons.service.js";
 import { SkyBlockLeaderboardController } from "./leaderboards/skyblock-leaderboard.controller.js";
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
@@ -22,6 +23,7 @@ import {
   SkyBlockProfiles,
 } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockResourcesService } from "./skyblock-resources.service.js";
 import { SkyBlockSearchController } from "./search/skyblock-search.controller.js";
 import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
@@ -47,7 +49,9 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   ],
   providers: [
     SkyBlockService,
+    SkyBlockCopiesService,
     SkyBlockPricesService,
+    SkyBlockResourcesService,
     SkyBlockSearchService,
     SkyBlockIconsService,
     SkyBlockLeaderboardService,

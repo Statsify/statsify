@@ -9,7 +9,13 @@
 import type { RawMember } from "#raw";
 import type { RiftSection } from "#types";
 
-// Hypixel doesn't send how many souls, timecharms or cats there are to find.
+// The wiki's counts, since Hypixel doesn't send how many there are to find.
+export const RIFT_TOTALS = {
+  enigmaSouls: 52,
+  timecharms: 8,
+  catsFound: 9,
+} as const satisfies Partial<Record<keyof RiftSection, number>>;
+
 export function getRift(member: RawMember): RiftSection | null {
   const stats = member.player_stats?.rift;
   const rift = member.rift;

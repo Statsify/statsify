@@ -19,6 +19,17 @@ import {
 } from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
+export const COLLECTION_CATEGORIES = [
+  "FARMING",
+  "MINING",
+  "COMBAT",
+  "FORAGING",
+  "FISHING",
+  "RIFT",
+] as const;
+
+export type CollectionCategory = (typeof COLLECTION_CATEGORIES)[number];
+
 // Each boss's tiers come from its wiki page's Collection section.
 const SHORT_TIERS = [25, 50, 100, 150, 250, 1000];
 const LONG_TIERS = [50, 100, 150, 250, 500, 750, 1000];

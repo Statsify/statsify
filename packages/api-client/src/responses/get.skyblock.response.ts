@@ -9,7 +9,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { SuccessResponse } from "./success.response.js";
 import type {
+  BingoView,
   ItemMatch,
+  MayorView,
+  PlayerRef,
   PriceView,
   SkyBlockProfileView,
   SkyBlockProfilesView,
@@ -48,4 +51,21 @@ export class GetSkyBlockItemsResponse extends SuccessResponse {
     description: "Up to 25 priced items, books and pets: id, name and rarity",
   })
   public items: ItemMatch[];
+}
+
+export class GetSkyBlockMayorResponse extends SuccessResponse {
+  @ApiProperty({
+    type: Object,
+    description: "The mayor in office, their perks and the minister's",
+  })
+  public mayor: MayorView;
+}
+
+export class GetSkyBlockBingoResponse extends SuccessResponse {
+  @ApiProperty({
+    type: Object,
+    description:
+      "The player, this month's Bingo goals, and their points and completed goals",
+  })
+  public bingo: PlayerRef & BingoView;
 }

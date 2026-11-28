@@ -270,6 +270,27 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  public override async getSkyBlockBingo(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getSkyBlockBingo(input).catch((err) => {
+      throw this.skyBlockError(err, type, tag);
+    });
+  }
+
+  public override getSkyBlockRankings(uuid: string) {
+    return super.getSkyBlockRankings(uuid).catch((err) => {
+      throw this.skyBlockError(err, "uuid", uuid);
+    });
+  }
+
+  public override getSkyBlockMayor() {
+    return super.getSkyBlockMayor().catch((err) => {
+      throw this.skyBlockError(err);
+    });
+  }
+
   public getSkyBlockProfile(
     uuid: string,
     sections: SkyBlockSection[],
