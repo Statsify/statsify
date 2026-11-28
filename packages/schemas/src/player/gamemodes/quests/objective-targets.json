@@ -1,0 +1,422 @@
+{
+  "arcade_gamer": {
+    "objective": "play",
+    "target": 3
+  },
+  "arcade_specialist": {
+    "objective": "play",
+    "target": 20
+  },
+  "arcade_winner": {
+    "objective": "win",
+    "target": 1
+  },
+  "arena_daily_kills": {
+    "objective": "arena_daily_kills",
+    "target": 5
+  },
+  "arena_daily_play": {
+    "objective": "arena_daily_play",
+    "target": 5
+  },
+  "arena_daily_wins": {
+    "objective": "arena_daily_wins",
+    "target": 2
+  },
+  "arena_weekly_play": {
+    "objective": "arena_weekly_play",
+    "target": 35
+  },
+  "bedwars_daily_bed_breaker": {
+    "objective": "bedwars_weekly_final_killer",
+    "target": 3
+  },
+  "bedwars_daily_final_killer": {
+    "objective": "bedwars_daily_final_killer",
+    "target": 15
+  },
+  "bedwars_daily_one_more": {
+    "objective": "bedwars_daily_played",
+    "target": 3
+  },
+  "bedwars_daily_win": {
+    "objective": "bedwars_daily_win",
+    "target": 1
+  },
+  "bedwars_weekly_bed_elims": {
+    "objective": "bedwars_bed_elims",
+    "target": 25
+  },
+  "bedwars_weekly_challenges_win": {
+    "objective": "bedwars_weekly_challenge_wins",
+    "target": 5
+  },
+  "bedwars_weekly_dream_win": {
+    "objective": "bedwars_dream_wins",
+    "target": 10
+  },
+  "bedwars_weekly_final_killer": {
+    "objective": "bedwars_weekly_final_killer",
+    "target": 150
+  },
+  "blitz_kills": {
+    "objective": "killblitz10",
+    "target": 5
+  },
+  "blitz_loot_chest_daily": {
+    "objective": "lootchestblitz",
+    "target": 25
+  },
+  "build_battle_player": {
+    "objective": "play",
+    "target": 3
+  },
+  "build_battle_weekly": {
+    "objective": "play",
+    "target": 30
+  },
+  "build_battle_winner": {
+    "objective": "win",
+    "target": 1
+  },
+  "crazy_walls_daily_kill": {
+    "objective": "crazy_walls_daily_kill",
+    "target": 10
+  },
+  "crazy_walls_daily_play": {
+    "objective": "crazy_walls_daily_play",
+    "target": 2
+  },
+  "crazy_walls_daily_win": {
+    "objective": "crazy_walls_daily_win",
+    "target": 1
+  },
+  "crazy_walls_weekly": {
+    "objective": "crazy_walls_weekly_play",
+    "target": 30
+  },
+  "cvc_kill": {
+    "objective": "cvc_kill_daily_deathmatch",
+    "target": 300
+  },
+  "cvc_kill_daily_normal": {
+    "objective": "cvc_kill_daily_normal",
+    "target": 15
+  },
+  "cvc_play_daily_gungame": {
+    "objective": "cvc_play_daily_gungame",
+    "target": 3
+  },
+  "cvc_win_daily_deathmatch": {
+    "objective": "cvc_play_daily_deathmatch",
+    "target": 1
+  },
+  "cvc_win_daily_normal": {
+    "objective": "cvc_play_daily_normal",
+    "target": 1
+  },
+  "duels_killer": {
+    "objective": "kill",
+    "target": 5
+  },
+  "duels_player": {
+    "objective": "play",
+    "target": 5
+  },
+  "duels_weekly_kills": {
+    "objective": "kill",
+    "target": 100
+  },
+  "duels_weekly_wins": {
+    "objective": "win",
+    "target": 50
+  },
+  "duels_winner": {
+    "objective": "win",
+    "target": 1
+  },
+  "gingerbread_bling_bling": {
+    "objective": "gingerbread_gold_pickedup",
+    "target": 50
+  },
+  "gingerbread_maps": {
+    "objective": "gingerbread_races_completed",
+    "target": 5
+  },
+  "gingerbread_mastery": {
+    "objective": "gingerbread_races_completed",
+    "target": 35
+  },
+  "gingerbread_racer": {
+    "objective": "gingerbread_laps_completed",
+    "target": 5
+  },
+  "mega_walls_aggressor": {
+    "objective": "mega_walls_wither_damage_daily",
+    "target": 500
+  },
+  "mega_walls_defender": {
+    "objective": "mega_walls_kill_daily",
+    "target": 10
+  },
+  "mega_walls_kill": {
+    "objective": "mega_walls_kill_daily",
+    "target": 15
+  },
+  "mega_walls_play": {
+    "objective": "mega_walls_play",
+    "target": 1
+  },
+  "mega_walls_win": {
+    "objective": "mega_walls_win",
+    "target": 1
+  },
+  "mm_daily_infector": {
+    "objective": "mm_infection_kills",
+    "target": 10
+  },
+  "mm_daily_power_play": {
+    "objective": "mm_power_play",
+    "target": 1
+  },
+  "mm_daily_target_kill": {
+    "objective": "mm_target_kills",
+    "target": 2
+  },
+  "mm_daily_win": {
+    "objective": "mm_daily_win",
+    "target": 1
+  },
+  "mm_weekly_murderer_kills": {
+    "objective": "mm_weekly_kills_as_murderer",
+    "target": 40
+  },
+  "mm_weekly_wins": {
+    "objective": "mm_weekly_win",
+    "target": 15
+  },
+  "paintball_killer": {
+    "objective": "kill",
+    "target": 100
+  },
+  "paintballer": {
+    "objective": "win",
+    "target": 1
+  },
+  "pit_daily_contract": {
+    "objective": "pit_daily_contract",
+    "target": 1
+  },
+  "pit_daily_kills": {
+    "objective": "kill",
+    "target": 25
+  },
+  "pit_weekly_gold": {
+    "objective": "pit_weekly_gold",
+    "target": 10000
+  },
+  "quake_daily_kill": {
+    "objective": "quake_daily_kill",
+    "target": 50
+  },
+  "quake_daily_play": {
+    "objective": "quake_daily_play",
+    "target": 3
+  },
+  "quake_daily_win": {
+    "objective": "quake_daily_win",
+    "target": 1
+  },
+  "skyclash_kills": {
+    "objective": "kill",
+    "target": 15
+  },
+  "skyclash_play_games": {
+    "objective": "play",
+    "target": 5
+  },
+  "skyclash_play_points": {
+    "objective": "skyclash_play_points",
+    "target": 24
+  },
+  "skyclash_weekly_kills": {
+    "objective": "kill",
+    "target": 150
+  },
+  "skywars_arcade_win": {
+    "objective": "skywars_arcade_win",
+    "target": 1
+  },
+  "skywars_daily_mega_kills": {
+    "objective": "skywars_mega_daily_kills",
+    "target": 5
+  },
+  "skywars_daily_mini_win": {
+    "objective": "skywars_mini_daily_win",
+    "target": 1
+  },
+  "skywars_monthly_earn_opals": {
+    "objective": "skywars_earn_opals",
+    "target": 1
+  },
+  "skywars_solo_win": {
+    "objective": "skywars_solo_win",
+    "target": 1
+  },
+  "skywars_team_win": {
+    "objective": "skywars_team_win",
+    "target": 1
+  },
+  "skywars_weekly_kills": {
+    "objective": "skywars_weekly_kills",
+    "target": 150
+  },
+  "skywars_weekly_wins": {
+    "objective": "skywars_weekly_wins",
+    "target": 15
+  },
+  "supersmash_solo_kills": {
+    "objective": "supersmash_solo_kills",
+    "target": 15
+  },
+  "supersmash_solo_win": {
+    "objective": "supersmash_solo_win",
+    "target": 1
+  },
+  "supersmash_team_kills": {
+    "objective": "supersmash_team_kills",
+    "target": 15
+  },
+  "supersmash_team_win": {
+    "objective": "supersmash_team_win",
+    "target": 1
+  },
+  "supersmash_weekly_kills": {
+    "objective": "supersmash_weekly_kills",
+    "target": 150
+  },
+  "tnt_bowspleef_daily": {
+    "objective": "tnt_bowspleef_daily",
+    "target": 40
+  },
+  "tnt_bowspleef_weekly": {
+    "objective": "tnt_bowspleef_weekly",
+    "target": 200
+  },
+  "tnt_daily_win": {
+    "objective": "tnt_daily_win",
+    "target": 1
+  },
+  "tnt_pvprun_daily": {
+    "objective": "tnt_pvprun_daily",
+    "target": 3
+  },
+  "tnt_pvprun_weekly": {
+    "objective": "tnt_pvprun_weekly",
+    "target": 25
+  },
+  "tnt_tntrun_daily": {
+    "objective": "tnt_tntrun_daily",
+    "target": 500
+  },
+  "tnt_tntrun_weekly": {
+    "objective": "tnt_tntrun_weekly",
+    "target": 2000
+  },
+  "tnt_tnttag_daily": {
+    "objective": "tnt_tnttag_daily",
+    "target": 7
+  },
+  "tnt_tnttag_weekly": {
+    "objective": "tnt_tnttag_weekly",
+    "target": 50
+  },
+  "tnt_weekly_play": {
+    "objective": "tnt_weekly_play",
+    "target": 20
+  },
+  "tnt_wizards_daily": {
+    "objective": "tnt_wizards_daily_kills",
+    "target": 10
+  },
+  "tnt_wizards_weekly": {
+    "objective": "tnt_wizards_weekly_kills",
+    "target": 150
+  },
+  "uhc_dm": {
+    "objective": "uhc_kills",
+    "target": 2
+  },
+  "uhc_madness": {
+    "objective": "kill",
+    "target": 100
+  },
+  "uhc_solo": {
+    "objective": "uhc_kills",
+    "target": 1
+  },
+  "uhc_team": {
+    "objective": "uhc_kills",
+    "target": 1
+  },
+  "uhc_weekly": {
+    "objective": "uhc_kills",
+    "target": 20
+  },
+  "vampirez_daily_human_kill": {
+    "objective": "vampirez_daily_kill_human",
+    "target": 10
+  },
+  "vampirez_daily_play": {
+    "objective": "vampirez_daily_play",
+    "target": 1
+  },
+  "vampirez_daily_win": {
+    "objective": "vampirez_daily_win",
+    "target": 1
+  },
+  "vampirez_weekly_human_kill": {
+    "objective": "vampirez_weekly_kill_survivor",
+    "target": 100
+  },
+  "vampirez_weekly_win": {
+    "objective": "vampirez_weekly_win_survivor",
+    "target": 12
+  },
+  "walls_daily_kill": {
+    "objective": "walls_daily_kill",
+    "target": 5
+  },
+  "walls_daily_play": {
+    "objective": "walls_daily_play",
+    "target": 1
+  },
+  "walls_daily_win": {
+    "objective": "walls_daily_win",
+    "target": 1
+  },
+  "warlords_dedication": {
+    "objective": "warlords_weekly_dedi",
+    "target": 20
+  },
+  "warlords_objectives": {
+    "objective": "warlords_daily_objectives",
+    "target": 100
+  },
+  "wool_wars_daily_kills": {
+    "objective": "kill",
+    "target": 20
+  },
+  "wool_wars_daily_play": {
+    "objective": "play",
+    "target": 1
+  },
+  "wool_wars_daily_wins": {
+    "objective": "win",
+    "target": 3
+  },
+  "wool_wars_weekly_shears": {
+    "objective": "wool_weekly_shears",
+    "target": 200
+  }
+}
