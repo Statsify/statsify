@@ -1,0 +1,254 @@
+{
+  "normal": {
+    "archaeologist": [
+      {
+        "id": "minecraft:iron_ingot"
+      },
+      {
+        "id": "minecraft:stick",
+        "count": 2
+      },
+      {
+        "id": "minecraft:iron_helmet",
+        "enchanted": true,
+        "tooltip": [
+          "Protection I"
+        ]
+      },
+      {
+        "id": "minecraft:leather_chestplate"
+      },
+      {
+        "id": "minecraft:leather_leggings"
+      },
+      {
+        "id": "minecraft:leather_boots"
+      }
+    ],
+    "archer": [
+      {
+        "id": "minecraft:enchanted_book",
+        "enchanted": true,
+        "tooltip": [
+          "Power I"
+        ]
+      },
+      {
+        "id": "minecraft:stick",
+        "count": 3
+      },
+      {
+        "id": "minecraft:string",
+        "count": 3
+      },
+      {
+        "id": "minecraft:arrow",
+        "count": 10
+      }
+    ],
+    "cowboy": [
+      {
+        "id": "minecraft:enchanted_book",
+        "enchanted": true,
+        "tooltip": [
+          "Sharpness I"
+        ]
+      },
+      {
+        "id": "minecraft:leather_boots",
+        "enchanted": true,
+        "tooltip": [
+          "Feather Falling IV",
+          "Unbreaking III"
+        ]
+      }
+    ],
+    "enchanter": [
+      {
+        "id": "minecraft:book"
+      },
+      {
+        "id": "minecraft:obsidian",
+        "count": 4
+      },
+      {
+        "id": "minecraft:experience_bottle",
+        "count": 8
+      },
+      {
+        "id": "minecraft:anvil"
+      },
+      {
+        "id": "minecraft:enchanted_book",
+        "enchanted": true,
+        "tooltip": [
+          "Sharpness I"
+        ]
+      }
+    ],
+    "farmer": [
+      {
+        "id": "minecraft:apple",
+        "count": 2
+      },
+      {
+        "id": "minecraft:blaze_powder"
+      },
+      null
+    ],
+    "fisherman": [
+      {
+        "id": "minecraft:string",
+        "count": 2
+      },
+      {
+        "id": "minecraft:stick",
+        "count": 3
+      },
+      {
+        "id": "minecraft:diamond"
+      }
+    ],
+    "healer": [
+      {
+        "id": "minecraft:glistering_melon_slice",
+        "count": 2
+      },
+      null,
+      {
+        "id": "minecraft:golden_apple"
+      }
+    ],
+    "knight": [
+      {
+        "id": "minecraft:iron_ingot",
+        "count": 2
+      },
+      {
+        "id": "minecraft:stick"
+      },
+      {
+        "id": "minecraft:golden_helmet",
+        "enchanted": true,
+        "tooltip": [
+          "Protection II",
+          "Unbreaking X"
+        ]
+      }
+    ],
+    "logger": [
+      {
+        "id": "minecraft:crafting_table"
+      },
+      {
+        "id": "minecraft:gold_block",
+        "count": 2
+      },
+      {
+        "id": "minecraft:golden_axe",
+        "enchanted": true,
+        "tooltip": [
+          "Efficiency V"
+        ]
+      }
+    ],
+    "miner": [
+      {
+        "id": "minecraft:cobblestone",
+        "count": 8
+      },
+      {
+        "id": "minecraft:tnt",
+        "count": 2
+      },
+      {
+        "id": "minecraft:water_bucket"
+      },
+      {
+        "id": "minecraft:iron_helmet",
+        "enchanted": true,
+        "tooltip": [
+          "Blast Protection II"
+        ]
+      }
+    ],
+    "netherwalker": [
+      {
+        "id": "minecraft:nether_quartz_ore",
+        "count": 2
+      },
+      {
+        "id": "minecraft:ghast_tear"
+      },
+      null
+    ],
+    "oink": [
+      {
+        "id": "minecraft:carrot_on_a_stick"
+      },
+      null,
+      {
+        "id": "minecraft:iron_leggings"
+      }
+    ],
+    "pyro": [
+      {
+        "id": "minecraft:flint"
+      },
+      {
+        "id": "minecraft:iron_ingot"
+      },
+      {
+        "id": "minecraft:magma_cream",
+        "count": 2
+      },
+      null,
+      {
+        "id": "minecraft:enchanted_book",
+        "enchanted": true,
+        "tooltip": [
+          "Fire Protection II"
+        ]
+      }
+    ],
+    "scout": [
+      {
+        "id": "minecraft:sugar"
+      },
+      null,
+      {
+        "id": "minecraft:iron_boots",
+        "enchanted": true,
+        "tooltip": [
+          "Feather Falling II"
+        ]
+      }
+    ],
+    "summoner": [
+      {
+        "id": "minecraft:spider_eye"
+      },
+      null,
+      null
+    ],
+    "tamer": [
+      null,
+      {
+        "id": "minecraft:iron_leggings"
+      },
+      {
+        "id": "minecraft:cooked_beef",
+        "count": 4
+      }
+    ],
+    "default": [
+      {
+        "id": "minecraft:oak_planks",
+        "count": 6
+      },
+      {
+        "id": "minecraft:iron_chestplate"
+      }
+    ]
+  }
+}

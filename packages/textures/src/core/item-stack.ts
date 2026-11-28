@@ -23,6 +23,7 @@ export interface ItemStack {
   skin?: string;
   name?: TextComponent;
   lore?: TextComponent[];
+  tooltip?: TextComponent[];
   unbreakable?: boolean;
   hideFlags?: number;
 }

@@ -685,6 +685,22 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
 
+  packages/hypixel-data:
+    dependencies:
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.24
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+    devDependencies:
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
+
   packages/logger:
     dependencies:
       '@sentry/node':

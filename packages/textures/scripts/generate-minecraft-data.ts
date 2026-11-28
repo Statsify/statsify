@@ -9,22 +9,16 @@
 import {
   DOWNLOAD_TIMEOUT,
   type LegacyTexture,
+  fetchMinecraftData,
   resolveTextures,
   withoutNamespace,
 } from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
-const MINECRAFT_DATA =
-  "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
-
-const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`, {
-    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
-  });
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-};
+// Hypixel's kit layouts name items by Bukkit's 1.8 Material enum
+const BUKKIT_MATERIALS =
+  "https://raw.githubusercontent.com/Attano/Spigot-1.8/9db48bc15e203179554b8d992ca6b0a528c8d300/org/bukkit/Material.java";
 
 // The pack check misses renames whose old name now means another block
 const RENAMES: Record<string, string | null> = {
@@ -278,12 +272,14 @@ if (!legacyAssets.textures.has("items/diamond_sword"))
 
 const [legacy, items, blocks, entities, effects, modernItems] =
   await Promise.all([
-    fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
-    fetchJson<LegacyItem[]>("1.8/items.json"),
-    fetchJson<LegacyItem[]>("1.8/blocks.json"),
-    fetchJson<LegacyEntity[]>("1.8/entities.json"),
-    fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
-    fetchJson<ModernItem[]>("26.1/items.json"),
+    fetchMinecraftData<{ items: Record<string, string | null> }>(
+      "common/legacy.json",
+    ),
+    fetchMinecraftData<LegacyItem[]>("1.8/items.json"),
+    fetchMinecraftData<LegacyItem[]>("1.8/blocks.json"),
+    fetchMinecraftData<LegacyEntity[]>("1.8/entities.json"),
+    fetchMinecraftData<{ id: number; name: string }[]>("1.8/effects.json"),
+    fetchMinecraftData<ModernItem[]>("26.1/items.json"),
   ]);
 
 const missing: string[] = [];
@@ -300,6 +296,7 @@ const output = {
   items: {} as Record<string, string>,
   durability: {} as Record<string, number>,
   effects: {} as Record<string, string>,
+  materials: {} as Record<string, number>,
   legacyTextures: {} as Record<string, LegacyTexture>,
   legacyModels: {} as Record<string, string>,
   legacyNames: {} as Record<string, string>,
@@ -398,6 +395,23 @@ for (const effect of effects) {
   const name = snakeCase(effect.name);
   if (names.effects.has(name)) output.effects[effect.id] = name;
   else missing.push(`effect ${effect.id} ${name}`);
+}
+
+const materials = await fetch(BUKKIT_MATERIALS, {
+  signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+});
+if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
+
+// Entries look like GOLD_CHESTPLATE(315, 1, 112)
+const drawn = new Set([
+  POTION,
+  ...Object.keys(output.items).map((key) => Number(key.split(":")[0])),
+]);
+
+for (const [, name, id] of (await materials.text()).matchAll(
+  /^\s+([A-Z0-9_]+)\((\d+)/gm,
+)) {
+  if (drawn.has(Number(id))) output.materials[name] = Number(id);
 }
 
 // Where a 1.8 texture has several 26.3 counterparts, the most common wins
@@ -552,5 +566,5 @@ await writeFile(
 );
 
 console.log(
-  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.legacyTextures).length} 1.8.9 textures and ${Object.keys(output.legacyModels).length} models renamed, ${Object.keys(output.legacyNames).length} 1.8.9 names`,
+  `${Object.keys(output.items).length} items, ${Object.keys(output.durability).length} with durability, ${Object.keys(output.effects).length} effects, ${Object.keys(output.materials).length} Bukkit materials, ${Object.keys(output.legacyTextures).length} 1.8.9 textures and ${Object.keys(output.legacyModels).length} models renamed, ${Object.keys(output.legacyNames).length} 1.8.9 names`,
 );
