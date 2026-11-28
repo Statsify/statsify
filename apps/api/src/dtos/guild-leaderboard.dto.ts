@@ -16,6 +16,7 @@ export class GuildLeaderboardDto extends createZodDto(
     field: leaderboardField(Guild),
     page: z.coerce.number().int().min(0).default(0),
     position: z.coerce.number().int().min(1).optional(),
+    value: z.coerce.number().optional(),
     guild: z.string().min(3).max(32).nullish(),
   })
 ) {}

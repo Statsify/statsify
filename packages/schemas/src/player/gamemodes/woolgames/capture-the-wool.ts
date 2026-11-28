@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTime, parseTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
 
@@ -45,6 +45,7 @@ export class CaptureTheWool {
     leaderboard: {
       sort: "ASC",
       formatter: formatTime,
+      parser: parseTime,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
@@ -55,6 +56,7 @@ export class CaptureTheWool {
     leaderboard: {
       sort: "ASC",
       formatter: formatTime,
+      parser: parseTime,
       additionalFields: ["this.woolCaptured"],
     },
     historical: { enabled: false },
@@ -62,7 +64,7 @@ export class CaptureTheWool {
   public fastestWoolCapture: number;
 
   @Field({
-    leaderboard: { formatter: formatTime },
+    leaderboard: { formatter: formatTime, parser: parseTime },
     historical: { enabled: false },
   })
   public longestGame: number;

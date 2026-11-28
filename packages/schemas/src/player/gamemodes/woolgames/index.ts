@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatTime, parseTime } from "@statsify/util";
 import { CaptureTheWool } from "./capture-the-wool.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
@@ -50,6 +50,7 @@ export class WoolGames {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
+      searchBy: getLevel,
       additionalFields: ["this.wins", "this.playtime"],
     },
     historical: {
@@ -73,7 +74,7 @@ export class WoolGames {
   @Field()
   public nextLevelFormatted: string;
 
-  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  @Field({ leaderboard: { formatter: formatTime, parser: parseTime }, historical: { enabled: false } })
   public playtime: number;
 
   @Field()

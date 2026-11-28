@@ -18,5 +18,6 @@ export class PlayerLeaderboardDto extends createZodDto(
     field: leaderboardField(Player),
     page: z.coerce.number().int().min(0).default(0),
     position: z.coerce.number().int().min(1).optional(),
+    value: z.coerce.number().optional(),
   })
 ) {}
