@@ -321,7 +321,7 @@ export class BaseLeaderboardCommand {
       ) :
       leaderboard.data;
 
-    // Hidden boards leave their stat out of `leaderboard.fields`, so the title is translated from the field's metadata
+    // Hidden boards leave their stat out of `leaderboard.fields`
     const metadata = getLeaderboardField(LEADERBOARD_CONSTRUCTORS[type], field);
 
     const canvas = render(
