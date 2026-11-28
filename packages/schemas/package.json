@@ -11,16 +11,14 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
+    "@date-fns/tz": "^1.5.0",
     "@nestjs/swagger": "^11.2.0",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
-    "luxon": "^3.5.0"
-  },
-  "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "date-fns": "^4.1.0"
   },
   "imports": {
     "#metadata": {

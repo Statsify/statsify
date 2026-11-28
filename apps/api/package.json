@@ -30,10 +30,10 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
+    "date-fns": "^4.1.0",
     "fastify": "^5.5.0",
     "handlebars": "^4.7.8",
     "ioredis": "5.7.0",
-    "luxon": "^3.5.0",
     "mongoose": "^8.5.2",
     "nestjs-zod": "^5.6.0",
     "reflect-metadata": "^0.2.2",
@@ -43,8 +43,7 @@
     "zod": "^4.1.5"
   },
   "devDependencies": {
-    "@nestjs/testing": "^11.1.24",
-    "@types/luxon": "^3.4.2"
+    "@nestjs/testing": "^11.1.24"
   },
   "imports": {
     "#auth": {

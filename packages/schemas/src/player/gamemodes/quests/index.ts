@@ -163,4 +163,4 @@ export class Quests {
   }
 }
 
-export { QuestTime } from "./util.js";
+export { HYPIXEL_TIME_ZONE, QuestTime, getWeeklyQuestReset } from "./util.js";
