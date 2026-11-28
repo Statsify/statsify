@@ -36,27 +36,65 @@ const nameLines = (name: string) => {
   if (name.length <= LINE_LENGTH || spaces.length === 0) return [name];
 
   const middle = name.length / 2;
-  const split = spaces.reduce((best, index) => (Math.abs(index - middle) < Math.abs(best - middle) ? index : best));
+  const split = spaces.reduce((best, index) =>
+    Math.abs(index - middle) < Math.abs(best - middle) ? index : best,
+  );
   return [name.slice(0, split), name.slice(split + 1)];
 };
 
 // Table.td's small cell, with the name over several lines
-const GoalCell = ({ lines, value, color }: { lines: string[]; value: string; color: string }) => (
-  <box direction="column" location="center" width="100%" padding={{ left: 5, right: 5 }}>
-    <>{lines.map((line, index) => <text margin={{ top: index === 0 ? 6 : 0, bottom: 2, left: 1, right: 1 }}>{line && `${color}${line}`}</text>)}</>
+const GoalCell = ({
+  lines,
+  value,
+  color,
+}: {
+  lines: string[];
+  value: string;
+  color: string;
+}) => (
+  <box
+    direction="column"
+    location="center"
+    width="100%"
+    padding={{ left: 5, right: 5 }}
+  >
+    <>
+      {lines.map((line, index) => (
+        <text
+          margin={{ top: index === 0 ? 6 : 0, bottom: 2, left: 1, right: 1 }}
+        >
+          {line && `${color}${line}`}
+        </text>
+      ))}
+    </>
     <text margin={{ top: 0, bottom: 6 }}>{`${color}${value}`}</text>
   </box>
 );
 
-export const SkyBlockBingoProfile = ({ bingo, now, t, ...card }: SkyBlockBingoProfileProps) => {
+export const SkyBlockBingoProfile = ({
+  bingo,
+  now,
+  t,
+  ...card
+}: SkyBlockBingoProfileProps) => {
   const { player, goals, end } = bingo;
   const personal = goals.filter(({ community }) => !community).length;
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.bingo.points"), t(player?.points ?? 0), "§6"],
-    [t("skyblock.bingo.goals"), `${t(player?.completed ?? 0)}§7/${t(personal)}`, "§a"],
+    [
+      t("skyblock.bingo.goals"),
+      `${t(player?.completed ?? 0)}§7/${t(personal)}`,
+      "§a",
+    ],
     [t("skyblock.bingo.events"), t(player?.events ?? 0), "§d"],
-    [t("skyblock.bingo.timeLeft"), now < end ? formatTime(end - now, { entries: 2 }) : t("skyblock.bingo.over"), "§e"],
+    [
+      t("skyblock.bingo.timeLeft"),
+      now < end
+        ? formatTime(end - now, { entries: 2 })
+        : t("skyblock.bingo.over"),
+      "§e",
+    ],
   ];
 
   const cells = arrayGroup(goals, COLUMNS).flatMap((row) => {
@@ -66,8 +104,15 @@ export const SkyBlockBingoProfile = ({ bingo, now, t, ...card }: SkyBlockBingoPr
     // A short name sits on its row's last name line, so the values in a row stay level
     return row.map(({ community, completed }, index) => (
       <GoalCell
-        lines={[...Array.from({ length: lineCount - names[index].length }, () => ""), ...names[index]]}
-        value={community ? t("skyblock.bingo.tier", community) : t(completed ? "skyblock.bingo.done" : "skyblock.bingo.open")}
+        lines={[
+          ...Array.from({ length: lineCount - names[index].length }, () => ""),
+          ...names[index],
+        ]}
+        value={
+          community
+            ? t("skyblock.bingo.tier", community)
+            : t(completed ? "skyblock.bingo.done" : "skyblock.bingo.open")
+        }
         color={community ? "§6" : completed ? "§a" : "§7"}
       />
     ));

@@ -29,13 +29,19 @@ import { InjectRedis } from "#redis";
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
-import { SkyBlockNotFoundException, SkyBlockUnavailableException } from "@statsify/api-client";
+import {
+  SkyBlockNotFoundException,
+  SkyBlockUnavailableException,
+} from "@statsify/api-client";
 import { Singleflight } from "./singleflight.js";
 import { Worker } from "node:worker_threads";
 import { arrayGroup, config } from "@statsify/util";
 import { termOf } from "@statsify/skyblock/display";
 import { unzip, zip } from "./zip.js";
-import type { RebuildRequest, RebuildResult } from "./skyblock-prices.worker.js";
+import type {
+  RebuildRequest,
+  RebuildResult,
+} from "./skyblock-prices.worker.js";
 
 const PRICES_KEY = "skyblock:prices";
 const LOCK_KEY = "skyblock:prices:lock";
@@ -47,7 +53,8 @@ const AUTOCOMPLETE_KEY = "skyblock:items:autocomplete";
 // Discord's cap on autocomplete choices
 const MAX_MATCHES = 25;
 
-const PRICES_REFRESH = (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
+const PRICES_REFRESH =
+  (await config("skyblock.pricesRefreshMinutes", { default: 15 })) * 60_000;
 const BAZAAR_REFRESH = 60_000;
 const ITEMS_REFRESH = 12 * 60 * 60_000;
 const ELECTION_REFRESH = 30 * 60_000;
@@ -58,7 +65,9 @@ export const SKYBLOCK_FAILED_FOR = 60_000;
 // stops moving isn't pulled back to back
 const LOCK_MS = 300_000;
 
-const binCount = (map?: PriceMap) => Object.values(map?.entries ?? {}).filter(({ source }) => source === "bin").length;
+const binCount = (map?: PriceMap) =>
+  Object.values(map?.entries ?? {}).filter(({ source }) => source === "bin")
+    .length;
 
 interface Copy<T> {
   value: T;
@@ -76,7 +85,7 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   public constructor(
     private readonly hypixelService: HypixelService,
-    @InjectRedis() private readonly redis: Redis
+    @InjectRedis() private readonly redis: Redis,
   ) {}
 
   public async onModuleDestroy() {
@@ -98,19 +107,27 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
   private getBazaar(): Promise<Bazaar | undefined> {
     return this.getCopy(BAZAAR_KEY, BAZAAR_REFRESH, async () =>
-      parseBazaar(RawBazaar.parse(await this.hypixelService.getSkyBlockKeyless("/v2/skyblock/bazaar")))
+      parseBazaar(
+        RawBazaar.parse(
+          await this.hypixelService.getSkyBlockKeyless("/v2/skyblock/bazaar"),
+        ),
+      ),
     );
   }
 
   public async getItems(): Promise<ItemsResource | undefined> {
     const raw = await this.getCopy(ITEMS_KEY, ITEMS_REFRESH, async () => {
-      const resource = await this.hypixelService.getSkyBlockKeyless<RawItemsResource>("/v2/resources/skyblock/items");
+      const resource =
+        await this.hypixelService.getSkyBlockKeyless<RawItemsResource>(
+          "/v2/resources/skyblock/items",
+        );
       RawItemsResource.parse(resource);
       return resource;
     });
 
     if (!raw) return;
-    if (raw.lastUpdated !== this.items?.lastUpdated) this.items = parseItemsResource(raw);
+    if (raw.lastUpdated !== this.items?.lastUpdated)
+      this.items = parseItemsResource(raw);
     return this.items;
   }
 
@@ -119,35 +136,62 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     return this.getCopy(
       ELECTION_KEY,
       ELECTION_REFRESH,
-      async () => toMayorView(RawElection.parse(await this.hypixelService.getSkyBlockKeyless("/v2/resources/skyblock/election"))),
+      async () =>
+        toMayorView(
+          RawElection.parse(
+            await this.hypixelService.getSkyBlockKeyless(
+              "/v2/resources/skyblock/election",
+            ),
+          ),
+        ),
       // Only a copy fetched inside its term goes out of date when the term ends, so one Hypixel sent after the end (the
       // new mayor not in yet) isn't refetched on every request
-      ({ value, fetchedAt }) => Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now())
+      ({ value, fetchedAt }) =>
+        Boolean(termOf(value, fetchedAt)) && !termOf(value, Date.now()),
     );
   }
 
   /** This month's Bingo card, from the keyless bingo resource. */
   public getBingo(): Promise<RawBingoResource | undefined> {
     return this.getCopy(BINGO_KEY, BINGO_REFRESH, async () => {
-      const bingo = await this.hypixelService.getSkyBlockKeyless<RawBingoResource>("/v2/resources/skyblock/bingo");
+      const bingo =
+        await this.hypixelService.getSkyBlockKeyless<RawBingoResource>(
+          "/v2/resources/skyblock/bingo",
+        );
       RawBingoResource.parse(bingo);
       return bingo;
     });
   }
 
   public async getPrice(id: string): Promise<PriceView> {
-    const [map, bazaar, items] = await Promise.all([this.getPriceMap(), this.getBazaar(), this.getItems()]);
-    if (!map || !bazaar || !items) throw new SkyBlockUnavailableException("market");
+    const [map, bazaar, items] = await Promise.all([
+      this.getPriceMap(),
+      this.getBazaar(),
+      this.getItems(),
+    ]);
+    if (!map || !bazaar || !items)
+      throw new SkyBlockUnavailableException("market");
 
     const price = toPriceView(id, map, bazaar, items);
     if (price) return price;
     const described = describeKey(id, items);
-    throw new SkyBlockNotFoundException(described ? "price" : "item", described?.name);
+    throw new SkyBlockNotFoundException(
+      described ? "price" : "item",
+      described?.name,
+    );
   }
 
   public async searchItems(query: string): Promise<ItemMatch[]> {
     const reply = (await this.redis
-      .call("FT.SUGGET", AUTOCOMPLETE_KEY, query, "FUZZY", "MAX", String(MAX_MATCHES), "WITHPAYLOADS")
+      .call(
+        "FT.SUGGET",
+        AUTOCOMPLETE_KEY,
+        query,
+        "FUZZY",
+        "MAX",
+        String(MAX_MATCHES),
+        "WITHPAYLOADS",
+      )
       .catch((error) => {
         this.logger.error(error);
         throw new SkyBlockUnavailableException("market");
@@ -159,13 +203,22 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private async rebuild() {
-    if ((await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS, "NX")) !== "OK") return;
+    if ((await this.redis.set(LOCK_KEY, "1", "PX", LOCK_MS, "NX")) !== "OK")
+      return;
 
     try {
-      const [bazaar, items] = await Promise.all([this.getBazaar(), this.getItems()]);
-      if (!bazaar || !items) throw new Error("no bazaar or items resource to build prices with");
+      const [bazaar, items] = await Promise.all([
+        this.getBazaar(),
+        this.getItems(),
+      ]);
+      if (!bazaar || !items)
+        throw new Error("no bazaar or items resource to build prices with");
 
-      const result = await this.build({ timeout: SKYBLOCK_TIMEOUT, bazaar, items: { ...items, raw: [] } });
+      const result = await this.build({
+        timeout: SKYBLOCK_TIMEOUT,
+        bazaar,
+        items: { ...items, raw: [] },
+      });
       if ("error" in result) throw new Error(result.error);
 
       const data = Buffer.from(result.data);
@@ -173,7 +226,10 @@ export class SkyBlockPricesService implements OnModuleDestroy {
 
       // Under half the last map's BIN prices means a reshaped or partial pull; bazaar and NPC prices don't come from it
       const [bins, previous] = [binCount(map), binCount(this.map)];
-      if (bins < previous / 2) throw new Error(`a rebuild priced ${bins} BIN keys, the last map ${previous}`);
+      if (bins < previous / 2)
+        throw new Error(
+          `a rebuild priced ${bins} BIN keys, the last map ${previous}`,
+        );
 
       await this.redis.hset(PRICES_KEY, { data, asOf: result.asOf });
       this.map = map;
@@ -186,9 +242,12 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private build(request: RebuildRequest): Promise<RebuildResult> {
-    const worker = (this.worker ??= new Worker(new URL("skyblock-prices.worker.js", import.meta.url), {
-      resourceLimits: { maxOldGenerationSizeMb: 128 },
-    }));
+    const worker = (this.worker ??= new Worker(
+      new URL("skyblock-prices.worker.js", import.meta.url),
+      {
+        resourceLimits: { maxOldGenerationSizeMb: 128 },
+      },
+    ));
 
     return new Promise((resolve, reject) => {
       const fail = (error: Error) => {
@@ -196,7 +255,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
         reject(error);
       };
 
-      const exit = (code: number) => fail(new Error(`the price worker exited with code ${code}`));
+      const exit = (code: number) =>
+        fail(new Error(`the price worker exited with code ${code}`));
 
       worker.once("error", fail);
       worker.once("exit", exit);
@@ -213,11 +273,15 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   private async updateAutocomplete(map: PriceMap, items: ItemsResource) {
     const next = `${AUTOCOMPLETE_KEY}:next`;
     const pipeline = this.redis.pipeline().del(next);
-    const described = Object.keys(map.entries).flatMap((key) => describeKey(key, items) ?? []);
+    const described = Object.keys(map.entries).flatMap(
+      (key) => describeKey(key, items) ?? [],
+    );
 
     // Redis keeps one suggestion per string, so a name's payload lists every key that has it
     for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
-      const payload = JSON.stringify(keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })));
+      const payload = JSON.stringify(
+        keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })),
+      );
       pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
     }
 
@@ -228,14 +292,20 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     key: string,
     maxAge: number,
     fetch: () => Promise<T>,
-    outdated?: (copy: Copy<T>) => boolean
+    outdated?: (copy: Copy<T>) => boolean,
   ): Promise<T | undefined> {
-    const fresh = (candidate: Copy<T>) => Date.now() - candidate.fetchedAt <= maxAge && !outdated?.(candidate);
+    const fresh = (candidate: Copy<T>) =>
+      Date.now() - candidate.fetchedAt <= maxAge && !outdated?.(candidate);
 
     let copy = this.copies.get(key) as Copy<T> | undefined;
     if (copy && fresh(copy)) return copy.value;
 
-    const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(key, "data", "fetchedAt", "failedAt");
+    const [data, storedAt, failedAt] = await this.redis.hmgetBuffer(
+      key,
+      "data",
+      "fetchedAt",
+      "failedAt",
+    );
     const fetchedAt = Number(storedAt?.toString());
     if (data && fetchedAt > (copy?.fetchedAt ?? 0)) {
       copy = { value: await unzip<T>(data), fetchedAt };
@@ -243,7 +313,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     }
 
     if (copy && fresh(copy)) return copy.value;
-    if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR) return copy?.value;
+    if (Date.now() - Number(failedAt?.toString()) < SKYBLOCK_FAILED_FOR)
+      return copy?.value;
 
     const refetch = this.singleflight.run(key, async () => {
       const value = await fetch().catch(async (error) => {

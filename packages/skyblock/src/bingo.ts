@@ -29,7 +29,10 @@ export interface BingoView {
   player: { points: number; completed: number; events: number } | null;
 }
 
-export function toBingoView({ id, name, start, end, goals }: RawBingoResource, player: RawPlayerBingo | null): BingoView {
+export function toBingoView(
+  { id, name, start, end, goals }: RawBingoResource,
+  player: RawPlayerBingo | null,
+): BingoView {
   const event = player?.events.find(({ key }) => key === id);
   const completed = new Set(event?.completed_goals);
 
@@ -41,10 +44,17 @@ export function toBingoView({ id, name, start, end, goals }: RawBingoResource, p
       id,
       name,
       lore: lore && normalizeItemText(lore),
-      community: tiers && { tier: tiers.filter((amount) => progress >= amount).length, tiers: tiers.length },
+      community: tiers && {
+        tier: tiers.filter((amount) => progress >= amount).length,
+        tiers: tiers.length,
+      },
       completed: completed.has(id),
     })),
-    player: player && { points: event?.points ?? 0, completed: completed.size, events: player.events.length },
+    player: player && {
+      points: event?.points ?? 0,
+      completed: completed.size,
+      events: player.events.length,
+    },
   };
 }
 
@@ -71,13 +81,19 @@ if (import.meta.vitest) {
     };
 
     const view = toBingoView(resource, player);
-    expect(view.goals.map(({ completed, community }) => [completed, community])).toEqual([
+    expect(
+      view.goals.map(({ completed, community }) => [completed, community]),
+    ).toEqual([
       [true, undefined],
       [false, { tier: 2, tiers: 3 }],
       [false, { tier: 0, tiers: 2 }],
     ]);
     expect(view.player).toEqual({ points: 7, completed: 1, events: 2 });
-    expect(toBingoView({ ...resource, id: 3 }, player).player).toEqual({ points: 0, completed: 0, events: 2 });
+    expect(toBingoView({ ...resource, id: 3 }, player).player).toEqual({
+      points: 0,
+      completed: 0,
+      events: 2,
+    });
     expect(toBingoView(resource, null).player).toBeNull();
   });
 }
