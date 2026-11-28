@@ -124,8 +124,6 @@ function midasKey(id: string, attributes: Attributes) {
 const skinnedKey = (id: string, attributes: Attributes) =>
   `${id}_SKINNED_${attributes.skin}`;
 
-const shinyKey = (id: string) => `${id}_SHINY`;
-
 function parsePetInfo(attributes: Attributes | undefined) {
   if (typeof attributes?.petInfo !== "string") return;
   return JSON.parse(attributes.petInfo) as RawPet;
@@ -153,7 +151,7 @@ export function listingKey(item: RawItem): string | undefined {
   if (id === "CROWN_OF_AVARICE") return crownKey(attributes);
   if (id in MIDAS_WEAPONS) return midasKey(id, attributes);
   if (attributes.skin) return skinnedKey(id, attributes);
-  if (attributes.is_shiny) return shinyKey(id);
+  if (attributes.is_shiny) return `${id}_SHINY`;
   return hatKey(id, attributes) ?? editionKey(id, attributes) ?? id;
 }
 
