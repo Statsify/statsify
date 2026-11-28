@@ -89,15 +89,20 @@ setCanvasBackend(skiaCanvas);
 ## Atlas
 
 An atlas is a pack stack's icons drawn ahead of time: one image, and a JSON map of where each
-item's icon sits, so a page can show inventories without loading a pack. `atlas/` holds two:
-`vanilla-26.3`, from the 26.3 client, and `vanilla-1.8.9`, with the 1.8.9 client jar over it. Each
-image is named by its content hash, so it can be cached for good. The map keeps its name, so serve it
-`no-cache`: a regeneration deletes the image an old map names.
+item's icon sits, so a page can show inventories without loading a pack. The generator draws two
+into `atlas/`, which git ignores: `vanilla-26.3`, from the private assets' `minecraft-textures/26.3`,
+and `vanilla-1.8.9`, with `minecraft-textures/1.8.9` over it. Each image is named by its content
+hash, so it can be cached for good. The map keeps its name, so serve it `no-cache`: a regeneration
+deletes the image an old map names.
 
 ```sh
 pnpm --filter @statsify/textures build
-pnpm --filter @statsify/textures atlas <name> <pack> [<pack> …] [--scales 2,3]
+pnpm --filter @statsify/textures atlas [<name> …] [--textures <folder>] [--scales 2,3]
 ```
+
+With no names it draws both. `--textures` is the folder holding the version folders,
+`assets/private/minecraft-textures` by default, and it throws if one is missing.
+`loadPackFolder(folder)` from `@statsify/textures/node` loads a folder like those as a pack.
 
 3D icons are drawn once at each of `--scales`, and flat ones at 16 pixels, which any whole scale
 draws exactly. At another scale, a 3D icon is resized from its largest. Rerun it whenever a change
