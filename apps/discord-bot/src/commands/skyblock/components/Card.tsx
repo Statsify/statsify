@@ -7,6 +7,7 @@
  */
 
 import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Empty } from "./Empty.js";
 import type { SkyBlockProfileProps } from "../skyblock.command.js";
 
 export interface CardProps extends Pick<
@@ -41,4 +42,14 @@ export const Card = ({
     <>{children}</>
     <Footer logo={logo} user={user} />
   </Container>
+);
+
+interface EmptyCardProps extends Omit<CardProps, "children"> {
+  text: string;
+}
+
+export const EmptyCard = ({ text, ...card }: EmptyCardProps) => (
+  <Card {...card}>
+    <Empty text={text} />
+  </Card>
 );

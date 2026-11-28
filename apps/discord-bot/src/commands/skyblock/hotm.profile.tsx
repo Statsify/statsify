@@ -7,10 +7,10 @@
  */
 
 import { Card } from "./components/Card.js";
-import { Color } from "@statsify/schemas";
+import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { type HotmSection, POWDERS, type Powder } from "@statsify/skyblock";
+import { POWDERS, type Powder } from "@statsify/skyblock";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
@@ -18,58 +18,6 @@ const POWDER_COLORS: Record<Powder, string> = {
   mithril: "§2",
   gemstone: "§d",
   glacite: "§b",
-};
-
-const TREE_WIDTH = 7;
-const TREE_HEIGHT = 10;
-const PERK_SIZE = 14;
-
-function getPerkColor({
-  level,
-  maxLevel,
-  enabled,
-}: HotmSection["nodes"][number]) {
-  if (level === 0) return new Color("§8").hex;
-  if (!enabled) return new Color("§c").hex;
-  return new Color(level === maxLevel ? "§a" : "§e").hex;
-}
-
-const PerkTree = ({ nodes }: { nodes: HotmSection["nodes"] }) => {
-  const nodesByPosition = new Map(
-    nodes.map((node) => [`${node.x},${node.y}`, node]),
-  );
-
-  return (
-    <div direction="column" margin={{ top: 8, bottom: 8, left: 6, right: 6 }}>
-      {Array.from({ length: TREE_HEIGHT }, (_, y) => (
-        <div>
-          {Array.from({ length: TREE_WIDTH }, (_, x) => {
-            const node = nodesByPosition.get(`${x},${y}`);
-            if (!node) {
-              return <div width={PERK_SIZE} height={PERK_SIZE} margin={1} />;
-            }
-
-            return (
-              <box
-                width={PERK_SIZE}
-                height={PERK_SIZE}
-                color={getPerkColor(node)}
-                padding={0}
-                margin={1}
-                border={{
-                  topLeft: 0,
-                  topRight: 0,
-                  bottomLeft: 0,
-                  bottomRight: 0,
-                }}
-                shadowDistance={0}
-              />
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
 };
 
 export const SkyBlockHotmProfile = ({
@@ -111,24 +59,15 @@ export const SkyBlockHotmProfile = ({
       "§b",
     ]);
 
-  const powders = POWDERS.map((type) => {
-    const color = POWDER_COLORS[type];
-    const { total, spent } = powder[type];
-
-    return (
-      <box direction="column" location="center" width="100%">
-        <text
-          margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
-        >{`${color}${t(`skyblock.powders.${type}`)}`}</text>
-        <text
-          margin={{ top: 0, bottom: 4, left: 10, right: 10 }}
-        >{`§^3^${color}${t(total)}`}</text>
-        <text
-          margin={{ top: 0, bottom: 8, left: 10, right: 10 }}
-        >{`§7${t("skyblock.spent")}: ${color}${t(spent)}`}</text>
-      </box>
-    );
-  });
+  const powders = POWDERS.map((type) => (
+    <PerkCurrency
+      name={t(`skyblock.powders.${type}`)}
+      color={POWDER_COLORS[type]}
+      earned={powder[type].total}
+      spent={powder[type].spent}
+      t={t}
+    />
+  ));
 
   const stats: [string, number, string][] = [
     [t("skyblock.crystalsFound"), crystals.found, "§d"],
@@ -151,18 +90,27 @@ export const SkyBlockHotmProfile = ({
           />
         </Table.tr>
         <Table.tr>{powders}</Table.tr>
-        <Table.tr>
-          <box width="100%" location="center">
+        {/* A Table.tr won't stretch the stats' box to the tree's height. */}
+        <div width="100%">
+          <box direction="column" width="1/2" location="center">
+            <text
+              margin={{ top: 8, bottom: 4, left: 6, right: 6 }}
+            >{`§5${t("skyblock.perkTree")}`}</text>
             <PerkTree nodes={nodes} />
           </box>
-          <box direction="column" location="center" width="100%">
+          <box
+            direction="column"
+            width="1/2"
+            height="remaining"
+            location="center"
+          >
             {stats.map(([name, value, color]) => (
               <text
                 margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
               >{`§7${name}: ${color}${t(value)}`}</text>
             ))}
           </box>
-        </Table.tr>
+        </div>
       </Table.table>
     </Card>
   );

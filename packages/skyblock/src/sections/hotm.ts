@@ -9,12 +9,30 @@
 import { HOTM_LAYOUT, LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
-import type { HotmSection } from "#types";
+import type { HotmSection, TreeLayout, TreeNode } from "#types";
 import type { RawMember } from "#raw";
 
 export const POWDERS = ["mithril", "gemstone", "glacite"] as const;
 
 export type Powder = (typeof POWDERS)[number];
+
+export function getTreeNodes(
+  layout: TreeLayout,
+  nodes: Record<string, number | boolean>,
+): TreeNode[] {
+  return Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
+    const level = Number(nodes[id] ?? 0);
+    return {
+      id,
+      name,
+      level,
+      maxLevel,
+      x,
+      y,
+      enabled: level > 0 && nodes[`toggle_${id}`] !== false,
+    };
+  });
+}
 
 // The API stores only the tokens spent, so the total comes from these.
 const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 3, 2, 2, 2];
@@ -75,17 +93,9 @@ export function getHotm(member: RawMember): HotmSection {
         },
       ]),
     ) as HotmSection["powder"],
-    nodes: Object.entries(HOTM_LAYOUT).map(([id, { name, x, y, maxLevel }]) => {
-      const nodeLevel = Number(nodes[id] ?? 0);
-      return {
-        id,
-        name,
-        level: nodeLevel,
-        maxLevel,
-        x,
-        y,
-        enabled: nodeLevel > 0 && nodes[`toggle_${id}`] !== false,
-      };
+    nodes: getTreeNodes(HOTM_LAYOUT, {
+      ...nodes,
+      core_of_the_mountain: coreLevel,
     }),
     crystals: {
       found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),

@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Faction } from "./sections/crimson.js";
+import type { JacobMedal } from "./sections/jacob.js";
+import type { Whisper } from "./sections/hotf.js";
+
 // Hypixel leaves out what a player never touched or an API setting hides.
 
 export interface RawNbt {
@@ -57,7 +61,18 @@ export interface RawMember {
     essence?: Record<string, { current?: number }>;
   };
   fairy_soul?: { total_collected?: number };
-  player_stats?: { pets?: { total_exp_gained?: number } };
+  player_stats?: {
+    pets?: { total_exp_gained?: number };
+    items_fished?: Record<string, number>;
+  };
+  bestiary?: {
+    kills?: {
+      last_killed_mob?: string;
+      [mob: string]: number | string | undefined;
+    };
+  };
+  // Each fish's count by tier, beside total_caught and lists like rewards
+  trophy_fish?: Record<string, unknown>;
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number | boolean>;
@@ -81,7 +96,37 @@ export interface RawMember {
     };
     sacks_counts?: Record<string, number>;
   };
-  jacobs_contest?: { perks?: { farming_level_cap?: number } };
+  jacobs_contest?: {
+    perks?: { farming_level_cap?: number; double_drops?: number };
+    medals_inv?: Partial<Record<JacobMedal, number>>;
+    // Each bracket maps to the crops that reached it.
+    unique_brackets?: Record<string, string[]>;
+    personal_bests?: Record<string, number>;
+    contests?: Record<string, unknown>;
+  };
+  events?: {
+    easter?: {
+      chocolate?: number;
+      total_chocolate?: number;
+      chocolate_since_prestige?: number;
+      chocolate_level?: number;
+      // Each rabbit's times found, beside objects like collected_eggs
+      rabbits?: Record<string, unknown>;
+      employees?: Record<string, number>;
+      time_tower?: { level?: number };
+    };
+  };
+  foraging_core?: {
+    whispers?: Partial<
+      Record<
+        Whisper,
+        {
+          total?: number;
+          [slot: number]: { spent?: number; spent_non_refundable?: number };
+        }
+      >
+    >;
+  };
   pets_data?: {
     pets?: RawPet[];
     pet_care?: { pet_types_sacrificed?: string[] };
@@ -125,7 +170,14 @@ export interface RawMember {
     access?: { consumed_prism?: boolean };
     dead_cats?: { montezuma?: RawPet };
   };
-  nether_island_player_data?: { abiphone?: { active_contacts?: string[] } };
+  nether_island_player_data?: {
+    abiphone?: { active_contacts?: string[] };
+    selected_faction?: Faction;
+    mages_reputation?: number;
+    barbarians_reputation?: number;
+    kuudra_completed_tiers?: Record<string, number>;
+    dojo?: Record<string, number>;
+  };
 }
 
 export interface RawProfile {

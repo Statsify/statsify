@@ -25,12 +25,27 @@ export {
   type SkyBlockSection,
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
+export { getChocolate } from "./sections/chocolate.js";
+export { getCrimson, type Faction } from "./sections/crimson.js";
 export {
   DUNGEON_CLASSES,
   getDungeons,
   type DungeonClass,
 } from "./sections/dungeons.js";
+export {
+  TROPHY_TIERS,
+  getFishing,
+  type TrophyTier,
+} from "./sections/fishing.js";
+export { WHISPERS, getHotf, type Whisper } from "./sections/hotf.js";
 export { POWDERS, getHotm, type Powder } from "./sections/hotm.js";
+export {
+  JACOB_BRACKETS,
+  JACOB_MEDALS,
+  getJacob,
+  type JacobBracket,
+  type JacobMedal,
+} from "./sections/jacob.js";
 export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
 export { SKILLS, getSkills, type Skill } from "./sections/skills.js";

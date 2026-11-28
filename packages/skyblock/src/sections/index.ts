@@ -7,8 +7,13 @@
  */
 
 import { getAccessories } from "./accessories.js";
+import { getChocolate } from "./chocolate.js";
+import { getCrimson } from "./crimson.js";
 import { getDungeons } from "./dungeons.js";
+import { getFishing } from "./fishing.js";
+import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
+import { getJacob } from "./jacob.js";
 import { getSkyBlockLevel } from "./level.js";
 import { getPets } from "./pets.js";
 import { getSkills } from "./skills.js";
@@ -60,8 +65,19 @@ export const SECTIONS: {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  chocolate: {
+    needs: [],
+    compute: async ({ member }) => getChocolate(member),
+  },
+  crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
+  fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
+  hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  jacob: {
+    needs: ["items"],
+    compute: async ({ member, items }) => getJacob(member, items),
+  },
   level: {
     needs: ["prices", "items"],
     compute: async ({ profile, member, items, prices }) => {

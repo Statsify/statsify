@@ -9,18 +9,24 @@
 // scripts/sync-data.ts generates these from the sources in NOTICE.md.
 import accessories from "./generated/accessories.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
+import hoppity from "./generated/hoppity.json" with { type: "json" };
+import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
+import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
+import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import textures from "./generated/textures-1.8.json" with { type: "json" };
+import trophyFish from "./generated/trophyfish.json" with { type: "json" };
 import { prettify } from "@statsify/util";
-import type { PowerStat, Rarity } from "#types";
+import type { PowerStat, Rarity, TreeLayout } from "#types";
 
 export const LEVELING = leveling as {
   catacombs: number[];
+  HOTF: number[];
   HOTM: number[];
   leveling_caps: Record<string, number>;
   leveling_xp: number[];
@@ -74,10 +80,9 @@ export const ACCESSORY_UPGRADES = accessories.upgrades as Record<
 
 export const IGNORED_ACCESSORIES = new Set<string>(accessories.ignored);
 
-export const HOTM_LAYOUT = hotmLayout as Record<
-  string,
-  { name: string; x: number; y: number; maxLevel: number }
->;
+export const HOTM_LAYOUT = hotmLayout as TreeLayout;
+
+export const HOTF_LAYOUT = hotfLayout as TreeLayout;
 
 // Each essence shop's perk ids, with each perk's max level.
 export const ESSENCE_SHOPS = essenceShops as Record<
@@ -90,3 +95,14 @@ export const POWERS = powers as Record<
   string,
   { accessoryPower: number; stats: PowerStat[]; bonus: PowerStat[] }
 >;
+
+// Hoppity's rabbits by lowercase rarity.
+export const RABBITS = hoppity as Record<string, string[]>;
+
+export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
+
+// Trophy fish names by the API's id, uppercased.
+export const TROPHY_FISH = trophyFish as Record<string, string>;
+
+// Each bestiary id is one level the sea creature spawns at.
+export const SEA_CREATURES = seaCreatures as { name: string; ids: string[] }[];

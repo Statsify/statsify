@@ -11,11 +11,16 @@ import {
   SkyBlockAccessoriesProfile,
   getAccessoryIcons,
 } from "./accessories.profile.js";
+import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
+import { SkyBlockCrimsonProfile, getCrimsonIcons } from "./crimson.profile.js";
 import {
   SkyBlockDungeonsProfile,
   SkyBlockEssenceProfile,
 } from "./dungeons.profile.js";
+import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
+import { SkyBlockJacobProfile, getJacobIcons } from "./jacob.profile.js";
 import { SkyBlockLevelProfile, getLevelIcons } from "./level.profile.js";
 import {
   SkyBlockNetworthProfile,
@@ -164,6 +169,46 @@ export const SKYBLOCK_CARDS = {
     settings: ["inventory"],
     icons: getLevelIcons,
     profile: SkyBlockLevelProfile,
+  },
+  crimson: {
+    sections: ["crimson"],
+    settings: [],
+    icons: getCrimsonIcons,
+    profile: SkyBlockCrimsonProfile,
+  },
+  fishing: {
+    sections: ["fishing"],
+    settings: [],
+    profile: [
+      {
+        label: (t) => t("skyblock.trophyFish"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="trophyFish" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.seaCreatures"),
+        profile: (props) => (
+          <SkyBlockFishingProfile {...props} page="seaCreatures" />
+        ),
+      },
+    ],
+  },
+  jacob: {
+    sections: ["jacob"],
+    settings: [],
+    icons: getJacobIcons,
+    profile: SkyBlockJacobProfile,
+  },
+  chocolate: {
+    sections: ["chocolate"],
+    settings: [],
+    profile: SkyBlockChocolateProfile,
+  },
+  hotf: {
+    sections: ["hotf"],
+    settings: [],
+    profile: SkyBlockHotfProfile,
   },
 } satisfies Record<string, SkyBlockCard>;
 

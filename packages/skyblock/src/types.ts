@@ -7,7 +7,11 @@
  */
 
 import type { DungeonClass } from "./sections/dungeons.js";
+import type { Faction } from "./sections/crimson.js";
+import type { JacobBracket, JacobMedal } from "./sections/jacob.js";
 import type { Powder } from "./sections/hotm.js";
+import type { TrophyTier } from "./sections/fishing.js";
+import type { Whisper } from "./sections/hotf.js";
 import type { Skill } from "./sections/skills.js";
 import type { SlayerBoss } from "./sections/slayers.js";
 
@@ -79,6 +83,11 @@ export interface MemberView {
   slayers?: SlayersSection;
   networth?: NetworthSection;
   level?: SkyBlockLevelSection;
+  crimson?: CrimsonSection | null;
+  fishing?: FishingSection | null;
+  jacob?: JacobSection | null;
+  chocolate?: ChocolateSection | null;
+  hotf?: HotfSection | null;
 }
 
 export interface ApiSettings {
@@ -156,18 +165,112 @@ export interface HotmSection {
   tokens: { spent: number; total: number };
   ability?: string;
   powder: Record<Powder, { total: number; spent: number }>;
-  nodes: {
-    id: string;
-    name: string;
-    level: number;
-    maxLevel: number;
-    x: number;
-    y: number;
-    enabled: boolean;
-  }[];
+  nodes: TreeNode[];
   crystals: { found: number; placed: number };
   nucleusRuns: number;
   glacite: { corpses: number; fossils: number; mineshafts: number };
+}
+
+export interface TreeNode {
+  id: string;
+  name: string;
+  level: number;
+  maxLevel: number;
+  x: number;
+  y: number;
+  enabled: boolean;
+}
+
+export type TreeLayout = Record<
+  string,
+  { name: string; x: number; y: number; maxLevel: number }
+>;
+
+export interface HotfSection {
+  level: Level;
+  centerLevel: number;
+  loadout: { selected: number; total: number };
+  tokens: { spent: number };
+  ability?: string;
+  // Spent counts the selected loadout's only.
+  whispers: Record<Whisper, { total: number; spent: number }>;
+  nodes: TreeNode[];
+}
+
+export interface CrimsonSection {
+  faction?: Faction;
+  reputation: Record<Faction, number>;
+  kuudra: KuudraTier[];
+  dojo: { test: string; points: number }[];
+  dojoPoints: number;
+  minibosses: { boss: string; kills: number }[];
+}
+
+// The API calls the basic tier "none".
+export const KUUDRA_TIERS = [
+  "none",
+  "hot",
+  "burning",
+  "fiery",
+  "infernal",
+] as const;
+
+export interface KuudraTier {
+  tier: string;
+  completions: number;
+  // The texture is the tier's key.
+  texture: ItemTexture;
+}
+
+export interface FishingSection {
+  trophyFish: TrophyFish[];
+  trophyFishCaught: number;
+  itemsFished: Record<
+    "total" | "normal" | "treasure" | "largeTreasure" | "outstanding",
+    number
+  >;
+  seaCreatureKills: number;
+  // Sea creatures sort by the most kills first.
+  seaCreatures: { name: string; kills: number }[];
+}
+
+export interface TrophyFish {
+  id: string;
+  name: string;
+  tiers: Record<TrophyTier, number>;
+}
+
+export interface JacobSection {
+  // Medals count only the unspent ones.
+  medals: Record<JacobMedal, number>;
+  contests: number;
+  crops: JacobCrop[];
+  // These perks are the ones bought from Anita.
+  perks: { farmingFortune: number; farmingLevelCap: number };
+}
+
+export interface JacobCrop {
+  // The id is the API's item id, like INK_SACK:3.
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  // The bracket is the best one reached.
+  bracket?: JacobBracket;
+  personalBest?: number;
+}
+
+export interface ChocolateSection {
+  // The level goes up by one for each prestige.
+  level: number;
+  chocolate: number;
+  // The total counts all-time chocolate.
+  total: number;
+  sincePrestige: number;
+  // Prestige VI is the last, so it has no next prestige.
+  nextPrestige?: number;
+  rabbits: { rarity: Rarity; found: number; total: number }[];
+  employees: { employee: string; level: number }[];
+  timeTower: number;
 }
 
 export interface PetsSection {

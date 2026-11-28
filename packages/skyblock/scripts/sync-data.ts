@@ -11,7 +11,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { RARITIES, type PowerStat } from "#types";
+import { KUUDRA_TIERS, RARITIES, type PowerStat } from "#types";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
 import { tmpdir } from "node:os";
@@ -521,6 +521,14 @@ const skullHash = (nbt: string) => {
   return value && skinHash(value);
 };
 
+const toTreeLayout = (perks: Record<string, Record<string, unknown>>) =>
+  Object.fromEntries(
+    Object.entries(perks).map(([id, { name, x, y, maxLevel }]) => [
+      id,
+      { name, x, y, maxLevel },
+    ]),
+  );
+
 // A power stone's lore lists its Power's stats at a set accessory power.
 function readPowerStone(lore: string[]) {
   const text = lore.map(removeFormatting);
@@ -583,6 +591,7 @@ try {
   }>("constants/sblevels.json");
   await write("leveling.json", {
     catacombs: leveling.catacombs,
+    HOTF: leveling.HOTF,
     HOTM: leveling.HOTM,
     leveling_caps: leveling.leveling_caps,
     leveling_xp: xpTable("COMBAT"),
@@ -607,17 +616,38 @@ try {
     },
   });
 
-  const hotm = await readJson<{
-    hotm: { perks: Record<string, Record<string, unknown>> };
-  }>("constants/hotmlayout.json");
+  const [{ hotm }, { hotf }] = await Promise.all([
+    readJson<{ hotm: { perks: Record<string, Record<string, unknown>> } }>(
+      "constants/hotmlayout.json",
+    ),
+    readJson<{ hotf: { perks: Record<string, Record<string, unknown>> } }>(
+      "constants/hotflayout.json",
+    ),
+  ]);
+  await write("hotmlayout.json", toTreeLayout(hotm.perks));
+  await write("hotflayout.json", toTreeLayout(hotf.perks));
+
+  const { hoppity } = await readJson<{
+    hoppity: { rarities: Record<string, { rabbits: string[] }> };
+  }>("constants/hoppity.json");
   await write(
-    "hotmlayout.json",
+    "hoppity.json",
     Object.fromEntries(
-      Object.entries(hotm.hotm.perks).map(([id, { name, x, y, maxLevel }]) => [
-        id,
-        { name, x, y, maxLevel },
+      Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [
+        rarity,
+        rabbits,
       ]),
     ),
+  );
+
+  const bestiary = await readJson<{
+    fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }>;
+  }>("constants/bestiary.json");
+  await write(
+    "sea-creatures.json",
+    Object.values(bestiary.fishing)
+      .flatMap((page) => page.mobs ?? [])
+      .map(({ name, mobs }) => ({ name: removeFormatting(name), ids: mobs })),
   );
 
   // player_data.perks spells NEU's eagle_advantage as eagles_advantage.
@@ -649,6 +679,13 @@ try {
   const petTextures: Record<string, Record<string, string>> = {};
   const petNames: Record<string, string> = {};
   const skinTextures: Record<string, string> = {};
+  const kuudraKeys: Record<string, string> = {};
+  const trophyFish = new Set(
+    Object.keys(
+      await readJson<Record<string, number[]>>("constants/trophyfish.json"),
+    ),
+  );
+  const trophyNames: Record<string, string> = {};
   const files = (await readdir(join(dir, "items"))).filter((file) =>
     file.endsWith(".json"),
   );
@@ -673,6 +710,22 @@ try {
       );
       // Keep only the names prettify gets wrong, like Montezuma's.
       if (name !== prettify(pet[1])) petNames[pet[1]] ??= name;
+    }
+
+    // The basic tier's key is KUUDRA_TIER_KEY, and the API calls it "none".
+    const kuudraKey = /^KUUDRA_(?:(\w+)_)?TIER_KEY$/.exec(item.internalname);
+    const keyHash = kuudraKey && skullHash(item.nbttag);
+    if (kuudraKey && keyHash) {
+      kuudraKeys[kuudraKey[1]?.toLowerCase() ?? "none"] = keyHash;
+    }
+
+    // For example "§fSulphur Skitter §8§lBRONZE" for SULPHUR_SKITTER_BRONZE.
+    const trophy = /^(\w+)_BRONZE$/.exec(item.internalname);
+    if (trophy && trophyFish.has(trophy[1])) {
+      trophyNames[trophy[1]] = removeFormatting(item.displayname).replace(
+        / BRONZE$/,
+        "",
+      );
     }
 
     const skin =
@@ -706,6 +759,13 @@ try {
     .map((item) => readPowerStone(item.lore ?? []))
     .filter((stone) => stone !== undefined);
   await write("powers.json", Object.fromEntries(stones));
+
+  const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
+  if (keyless.length > 0) {
+    throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
+  }
+  await write("kuudra-keys.json", kuudraKeys);
+  await write("trophyfish.json", trophyNames);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;

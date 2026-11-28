@@ -9,7 +9,7 @@
 import { type ItemIcons, ItemSlot } from "./ItemSlot.js";
 import { Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
-import type { ItemTexture, Rarity } from "@statsify/skyblock";
+import type { ItemTexture, JacobBracket, Rarity } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
@@ -26,16 +26,37 @@ export const RARITY_COLORS: Record<Rarity, string> = {
   ADMIN: "§4",
 };
 
+export const MEDAL_COLORS: Record<JacobBracket, string> = {
+  bronze: "§c",
+  silver: "§f",
+  gold: "§6",
+  platinum: "§3",
+  diamond: "§b",
+};
+
 export const formatPriceAge = (t: LocalizeFunction, asOf: number) =>
   t("skyblock.pricesAsOf", {
     time: formatTime(Date.now() - asOf, { entries: 1 }),
   });
 
+interface GridRowsOptions {
+  spreadLastRow?: boolean;
+}
+
 // Table.tr splits its width by cell, so a short last row gets padding.
-export const getGridRows = (cells: JSX.Element[], columns: number) =>
+export const getGridRows = (
+  cells: JSX.Element[],
+  columns: number,
+  { spreadLastRow = false }: GridRowsOptions = {},
+) =>
   arrayGroup(cells, columns).map((row) => (
     <Table.tr>
-      {[...row, ...Array.from({ length: columns - row.length }, () => <div />)]}
+      {spreadLastRow
+        ? row
+        : [
+            ...row,
+            ...Array.from({ length: columns - row.length }, () => <div />),
+          ]}
     </Table.tr>
   ));
 
@@ -52,6 +73,7 @@ export interface ItemGridProps {
   columns?: number;
   // A long value goes under the name, so it doesn't widen the card.
   stacked?: boolean;
+  spreadLastRow?: boolean;
 }
 
 export const ItemGrid = ({
@@ -59,6 +81,7 @@ export const ItemGrid = ({
   icons,
   columns = 2,
   stacked = false,
+  spreadLastRow = false,
 }: ItemGridProps) => {
   const cells = items.map(({ texture, badge, name, value }) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
@@ -96,5 +119,7 @@ export const ItemGrid = ({
     </box>
   ));
 
-  return <Table.table>{getGridRows(cells, columns)}</Table.table>;
+  return (
+    <Table.table>{getGridRows(cells, columns, { spreadLastRow })}</Table.table>
+  );
 };

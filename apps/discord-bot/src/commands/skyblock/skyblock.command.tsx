@@ -163,6 +163,46 @@ export class SkyBlockCommand {
   }
 
   @SubCommand({
+    description: (t) => t("commands.skyblock-crimson"),
+    args: [PlayerArgument],
+  })
+  public crimson(context: CommandContext) {
+    return this.run(context, "crimson");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-fishing"),
+    args: [PlayerArgument],
+  })
+  public fishing(context: CommandContext) {
+    return this.run(context, "fishing");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-jacob"),
+    args: [PlayerArgument],
+  })
+  public jacob(context: CommandContext) {
+    return this.run(context, "jacob");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-chocolate"),
+    args: [PlayerArgument],
+  })
+  public chocolate(context: CommandContext) {
+    return this.run(context, "chocolate");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-hotf"),
+    args: [PlayerArgument],
+  })
+  public hotf(context: CommandContext) {
+    return this.run(context, "hotf");
+  }
+
+  @SubCommand({
     description: (t) => t("commands.skyblock-price"),
     args: [new ItemArgument()],
   })
