@@ -699,6 +699,10 @@ importers:
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
+    devDependencies:
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../util
 
   packages/logger:
     dependencies:
