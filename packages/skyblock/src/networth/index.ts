@@ -116,18 +116,24 @@ function getUnpriced(
   return { unpriced, unpricedCount };
 }
 
+let networthItemsUpdated: number | undefined;
+
 // Our patch stops the library fetching the items resource itself.
-export function setNetworthItems(resource: RawItemsResource) {
+function setNetworthItems(resource: RawItemsResource) {
+  if (networthItemsUpdated === resource.lastUpdated) return;
   setItems(resource.items);
+  networthItemsUpdated = resource.lastUpdated;
 }
 
 // The price worker can't afford this library, so it stays out of SECTIONS.
 const NETWORTH: Section<"networth"> = {
   needs: ["museum", "prices", "items"],
-  async compute({ profile, member, museum, prices, items }) {
-    if (!prices || !items) {
+  async compute({ profile, member, museum, prices, items, rawItems }) {
+    if (!prices || !items || !rawItems) {
       throw new TypeError("networth needs prices and items");
     }
+
+    setNetworthItems(rawItems);
 
     const parsed = (await parseItems(member, museum ?? {})) as Items;
     const calculator = ProfileNetworthCalculator.fromPreParsed(
