@@ -6,8 +6,7 @@ on:
   pull_request:
 
 permissions:
-  checks: write
-  contents: write
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
@@ -28,6 +27,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
@@ -64,6 +64,10 @@ jobs:
         id: build
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: pnpm build
+
+      - name: Check generated files
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: git diff --exit-code -- packages/skin-renderer/index.d.ts packages/skin-renderer/index.cjs Cargo.lock
 
       - name: Test
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
