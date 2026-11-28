@@ -269,12 +269,14 @@ export interface RawMuseum {
 // The Garden is the profile's, so every member reads the same one.
 export interface RawGarden {
   garden_experience?: number;
-  resources_collected?: Record<string, number>; // by the crop's item id
+  // Resources are keyed by the crop's item id.
+  resources_collected?: Record<string, number>;
   crop_upgrade_levels?: Record<string, number>;
   unlocked_plots_ids?: string[];
   composter_data?: { upgrades?: Record<string, number> };
   commission_data?: {
-    visits?: Record<string, number>; // by visitor id
+    // Visits are keyed by visitor id.
+    visits?: Record<string, number>;
     completed?: Record<string, number>;
     total_completed?: number;
     unique_npcs_served?: number;

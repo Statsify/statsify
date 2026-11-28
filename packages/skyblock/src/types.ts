@@ -347,8 +347,10 @@ export interface JacobCrop {
 
 export interface GardenSection {
   copper: number;
-  greenhouse: GreenhouseCrop[]; // the discovered ones, by name
-  garden: GardenView | null; // gardenFetchedAt says whether it was fetched
+  // The greenhouse lists the discovered crops, by name.
+  greenhouse: GreenhouseCrop[];
+  // gardenFetchedAt says whether a null Garden was fetched.
+  garden: GardenView | null;
 }
 
 interface GreenhouseCrop {
@@ -360,7 +362,8 @@ interface GreenhouseCrop {
 export interface GardenView {
   level: Level;
   plots: { unlocked: number; total: number };
-  crops: GardenCrop[]; // every crop with milestones, by name
+  // Crops lists every crop with milestones, by name.
+  crops: GardenCrop[];
   composter: { id: string; name: string; level: number; maxLevel: number }[];
   visitors: { unique: number; served: number; list: GardenVisitor[] };
   barnSkins: { selected?: string; unlocked: string[] };
@@ -368,7 +371,8 @@ export interface GardenView {
 }
 
 interface GardenCrop {
-  id: string; // the API's item id, as in JacobCrop
+  // The id is the API's item id, as in JacobCrop.
+  id: string;
   name: string;
   texture?: ItemTexture;
   collected: number;
@@ -379,7 +383,8 @@ interface GardenCrop {
 interface GardenVisitor {
   id: string;
   name: string;
-  rarity?: Rarity; // missing for a visitor NEU-REPO doesn't list
+  // A visitor NEU-REPO doesn't list has no rarity.
+  rarity?: Rarity;
   visits: number;
   completed: number;
 }
