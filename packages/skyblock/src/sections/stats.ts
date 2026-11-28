@@ -49,7 +49,7 @@ import { toSkyBlockLevel } from "#leveling";
 import type { RawMember, RawProfile } from "#raw";
 
 // Vampire's level stats are Rift Time, a Rift-only stat.
-export const STAT_SLAYERS = SLAYER_BOSSES.filter(
+const STAT_SLAYERS = SLAYER_BOSSES.filter(
   (boss): boss is Exclude<SlayerBoss, "vampire"> => boss !== "vampire",
 );
 
@@ -225,7 +225,6 @@ function getSelectedPowerStats(
   return learned && scaleStats(learned, getPowerScale(accessoryPower));
 }
 
-// What one tuning point gives, keyed by the API's tuning keys.
 const TUNING: Record<string, [PlayerStat, number]> = {
   health: ["health", 5],
   defense: ["defense", 1],

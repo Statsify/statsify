@@ -83,15 +83,14 @@ export function normalizeItemText(text: string) {
 }
 
 // Lore names a stat by its prettified id or by one of its older aliases.
-const STAT_NAMES = new Map<string, PlayerStat>(
-  PLAYER_STATS.flatMap((stat) => {
-    const names = [
-      prettify(stat.id),
-      ...("aliases" in stat ? stat.aliases : []),
-    ];
-    return names.map((name) => [name, stat.id] as const);
-  }),
-);
+const STAT_NAMES = new Map<string, PlayerStat>();
+
+for (const stat of PLAYER_STATS) {
+  STAT_NAMES.set(prettify(stat.id), stat.id);
+  if (!("aliases" in stat)) continue;
+
+  for (const alias of stat.aliases) STAT_NAMES.set(alias, stat.id);
+}
 
 export const parseStatName = (name: string) => STAT_NAMES.get(name);
 
