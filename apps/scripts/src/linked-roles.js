@@ -23,11 +23,14 @@ const response = await client.put(
     name,
     description,
     type,
-  }))
+  })),
 );
 
 if (response.status !== 200) {
-  console.error(`Registering failed with ${response.status}:`, response.body.text);
+  console.error(
+    `Registering failed with ${response.status}:`,
+    response.body.text,
+  );
   process.exit(1);
 }
 

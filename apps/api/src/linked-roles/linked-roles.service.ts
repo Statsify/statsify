@@ -46,21 +46,36 @@ const roleConnectionPath = `/users/@me/applications/${applicationId}/role-connec
 export class LinkedRolesService {
   private readonly logger = new Logger("LinkedRolesService");
 
-  public readonly enabled = !!(applicationId && clientSecret && redirectUri && key);
+  public readonly enabled = !!(
+    applicationId &&
+    clientSecret &&
+    redirectUri &&
+    key
+  );
 
   public constructor(
     @InjectModel(RoleConnection)
-    private readonly roleConnectionModel: ReturnModelType<typeof RoleConnection>,
+    private readonly roleConnectionModel: ReturnModelType<
+      typeof RoleConnection
+    >,
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
     @Inject(forwardRef(() => PlayerService))
-    private readonly playerService: Circular<PlayerService>
+    private readonly playerService: Circular<PlayerService>,
   ) {}
 
   /** @returns null when the Discord user hasn't verified a Minecraft account */
   public async connect(tokens: DiscordTokens): Promise<RoleConnection | null> {
-    const response = await discordRequest("GET", "/users/@me", tokens.access_token);
+    const response = await discordRequest(
+      "GET",
+      "/users/@me",
+      tokens.access_token,
+    );
     const { id }: { id: string } = await response.json();
-    const user = await this.userModel.findOne({ id }).select({ uuid: true }).lean().exec();
+    const user = await this.userModel
+      .findOne({ id })
+      .select({ uuid: true })
+      .lean()
+      .exec();
 
     if (!user?.uuid) {
       await revokeToken(tokens.access_token);
@@ -70,8 +85,14 @@ export class LinkedRolesService {
     return this.roleConnectionModel
       .findOneAndUpdate(
         { id },
-        { id, uuid: user.uuid, pushedAt: Date.now(), pushedBody: "", ...encryptTokens(tokens) },
-        { upsert: true, returnDocument: "after" }
+        {
+          id,
+          uuid: user.uuid,
+          pushedAt: Date.now(),
+          pushedBody: "",
+          ...encryptTokens(tokens),
+        },
+        { upsert: true, returnDocument: "after" },
       )
       .lean()
       .exec();
@@ -80,9 +101,13 @@ export class LinkedRolesService {
   /** @returns false when nothing was pushed, so the next save retries */
   public async pushLatest(connection: RoleConnection) {
     try {
-      const player = await this.playerService.get(connection.uuid, CacheLevel.CACHE);
+      const player = await this.playerService.get(
+        connection.uuid,
+        CacheLevel.CACHE,
+      );
 
-      if (player && (await this.push(connection, getPushBody(player)))) return true;
+      if (player && (await this.push(connection, getPushBody(player))))
+        return true;
     } catch (error) {
       this.logger.error(error);
     }
@@ -109,7 +134,7 @@ export class LinkedRolesService {
             pushedAt: { $lte: now - PUSH_INTERVAL },
             pushedBody: { $ne: body },
           },
-          { $set: { pushedAt: now } }
+          { $set: { pushedAt: now } },
         )
         .lean()
         .exec();
@@ -129,13 +154,15 @@ export class LinkedRolesService {
         .lean()
         .exec();
 
-      await Promise.all(others.map((connection) => this.disconnect(connection)));
+      await Promise.all(
+        others.map((connection) => this.disconnect(connection)),
+      );
 
       const connection = await this.roleConnectionModel
         .findOneAndUpdate(
           { id },
           { $set: { uuid, pushedAt: Date.now() } },
-          { returnDocument: "after" }
+          { returnDocument: "after" },
         )
         .lean()
         .exec();
@@ -150,7 +177,10 @@ export class LinkedRolesService {
     if (!this.enabled) return;
 
     try {
-      const connection = await this.roleConnectionModel.findOne({ id }).lean().exec();
+      const connection = await this.roleConnectionModel
+        .findOne({ id })
+        .lean()
+        .exec();
       if (connection) await this.disconnect(connection);
     } catch (error) {
       this.logger.error(error);
@@ -186,8 +216,8 @@ export class LinkedRolesService {
 
       // Revoking invalidates the token, so it has to come after the delete
       if (accessToken) {
-        await discordRequest("DELETE", roleConnectionPath, accessToken).finally(() =>
-          revokeToken(accessToken)
+        await discordRequest("DELETE", roleConnectionPath, accessToken).finally(
+          () => revokeToken(accessToken),
         );
       }
     } catch (error) {
@@ -234,13 +264,19 @@ const encrypt = (text: string) => {
   const cipher = createCipheriv("aes-256-gcm", key!, iv);
   const data = Buffer.concat([cipher.update(text, "utf8"), cipher.final()]);
 
-  return [iv, cipher.getAuthTag(), data].map((part) => part.toString("base64url")).join(".");
+  return [iv, cipher.getAuthTag(), data]
+    .map((part) => part.toString("base64url"))
+    .join(".");
 };
 
 const decrypt = (payload: string) => {
-  const [iv, tag, data] = payload.split(".").map((part) => Buffer.from(part, "base64url"));
+  const [iv, tag, data] = payload
+    .split(".")
+    .map((part) => Buffer.from(part, "base64url"));
   const decipher = createDecipheriv("aes-256-gcm", key!, iv);
   decipher.setAuthTag(tag);
 
-  return Buffer.concat([decipher.update(data), decipher.final()]).toString("utf8");
+  return Buffer.concat([decipher.update(data), decipher.final()]).toString(
+    "utf8",
+  );
 };

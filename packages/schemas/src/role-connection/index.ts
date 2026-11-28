@@ -27,7 +27,9 @@ const RANK_TIERS = [
 ] as const;
 
 const RANK_TO_TIER = new Map<string, number>(
-  RANK_TIERS.flatMap(([, ranks], tier) => ranks.map((rank) => [rank, tier] as const))
+  RANK_TIERS.flatMap(([, ranks], tier) =>
+    ranks.map((rank) => [rank, tier] as const),
+  ),
 );
 
 // Discord allows 5 records per app, shared by every server
@@ -66,7 +68,7 @@ export const getRoleConnectionMetadata = (player: Player) =>
     ROLE_CONNECTION_METADATA.flatMap(({ key, value }) => {
       const result = value(player);
       return result === undefined ? [] : [[key, `${result}`]];
-    })
+    }),
   );
 
 export class RoleConnection {

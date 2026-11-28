@@ -11,9 +11,15 @@ import { config } from "@statsify/util";
 const DISCORD_API = "https://discord.com/api/v10";
 const DISCORD_TIMEOUT_MS = 10_000;
 
-export const applicationId = await config("discordBot.applicationId", { required: false });
-export const clientSecret = await config("linkedRoles.clientSecret", { required: false });
-export const redirectUri = await config("linkedRoles.redirectUri", { required: false });
+export const applicationId = await config("discordBot.applicationId", {
+  required: false,
+});
+export const clientSecret = await config("linkedRoles.clientSecret", {
+  required: false,
+});
+export const redirectUri = await config("linkedRoles.redirectUri", {
+  required: false,
+});
 
 export interface DiscordTokens {
   access_token: string;
@@ -34,7 +40,11 @@ export const getAuthorizeUrl = (state: string) => {
 };
 
 export const exchangeCode = (code: string) =>
-  requestTokens({ grant_type: "authorization_code", code, redirect_uri: redirectUri! });
+  requestTokens({
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: redirectUri!,
+  });
 
 export const refreshTokens = (refreshToken: string) =>
   requestTokens({ grant_type: "refresh_token", refresh_token: refreshToken });
@@ -43,14 +53,15 @@ export const refreshTokens = (refreshToken: string) =>
 export const revokeToken = async (token: string) => {
   const response = await oauthRequest("/oauth2/token/revoke", { token });
 
-  if (!response.ok) throw new Error(`Discord token revoke failed with ${response.status}`);
+  if (!response.ok)
+    throw new Error(`Discord token revoke failed with ${response.status}`);
 };
 
 export const discordRequest = async (
   method: "GET" | "PUT" | "DELETE",
   path: string,
   accessToken: string,
-  body?: string
+  body?: string,
 ) => {
   const response = await fetch(`${DISCORD_API}${path}`, {
     method,
@@ -62,23 +73,31 @@ export const discordRequest = async (
     signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
   });
 
-  if (!response.ok) throw new DiscordRequestError(method, path, response.status);
+  if (!response.ok)
+    throw new DiscordRequestError(method, path, response.status);
 
   return response;
 };
 
 export class DiscordRequestError extends Error {
-  public constructor(method: string, path: string, public readonly status: number) {
+  public constructor(
+    method: string,
+    path: string,
+    public readonly status: number,
+  ) {
     super(`Discord ${method} ${path} failed with ${status}`);
   }
 }
 
-const requestTokens = async (grant: Record<string, string>): Promise<DiscordTokens | undefined> => {
+const requestTokens = async (
+  grant: Record<string, string>,
+): Promise<DiscordTokens | undefined> => {
   const response = await oauthRequest("/oauth2/token", grant);
 
   // Discord answers invalid_grant for a used or expired code and a revoked refresh token
   if (response.status === 400) return;
-  if (!response.ok) throw new Error(`Discord token request failed with ${response.status}`);
+  if (!response.ok)
+    throw new Error(`Discord token request failed with ${response.status}`);
 
   return response.json();
 };
@@ -88,6 +107,10 @@ const oauthRequest = (path: string, params: Record<string, string>) =>
   fetch(`${DISCORD_API}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ client_id: applicationId!, client_secret: clientSecret!, ...params }),
+    body: new URLSearchParams({
+      client_id: applicationId!,
+      client_secret: clientSecret!,
+      ...params,
+    }),
     signal: AbortSignal.timeout(DISCORD_TIMEOUT_MS),
   });

@@ -27,7 +27,8 @@ const STATE_COOKIE = "linked_roles_state";
 
 const MESSAGES = {
   linked: "Your Hypixel stats are linked. You can go back to Discord now.",
-  unverified: "Link your Minecraft account with /verify in Discord first, then connect again.",
+  unverified:
+    "Link your Minecraft account with /verify in Discord first, then connect again.",
   failed: "Linking didn't work. Go back to Discord and try connecting again.",
 };
 
@@ -56,14 +57,15 @@ export class LinkedRolesController {
     @Req() request: FastifyRequest,
     @Res({ passthrough: true }) reply: FastifyReply,
     @Query("code") code?: string,
-    @Query("state") state?: string
+    @Query("state") state?: string,
   ) {
     if (!this.linkedRolesService.enabled) throw new NotFoundException();
 
     const expectedState = readCookie(request, STATE_COOKIE);
     reply.header("set-cookie", stateCookie("", 0));
 
-    if (!code || !state || state !== expectedState) return { message: MESSAGES.failed };
+    if (!code || !state || state !== expectedState)
+      return { message: MESSAGES.failed };
 
     try {
       const tokens = await exchangeCode(code);
