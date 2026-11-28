@@ -10,7 +10,13 @@ import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException,
+} from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
@@ -331,8 +337,8 @@ const resourcePack = (name: string, folder: string): ResourcePack => ({
 export const KART_PACK = resourcePack("Turbo Kart Racers", "turbo-kart-racers");
 export const WARLORDS_PACK = resourcePack("Warlords", "warlords");
 
-// The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
-// less the player's riding offset (0.35), in pixels
+// The kart is worn by an armor stand the rider sits on: the stand's mounted offset
+// (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
 const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
 
 async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: string, read: (path: string) => Promise<T>) {
@@ -363,7 +369,13 @@ export interface KartScene {
 }
 
 export function resolveKart(
-  { kart, helmet, jacket, pants, shoes }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
+  {
+    kart,
+    helmet,
+    jacket,
+    pants,
+    shoes,
+  }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
   seated: boolean
 ): KartScene {
   const models: ModelInstance[] = [
