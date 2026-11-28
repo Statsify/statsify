@@ -191,22 +191,31 @@ export class ApiService {
     });
   }
 
-  // The class, selections, weapon material and mount are the player's stored Warlords values; without a uuid, only the weapon or mount is drawn
+  // The cosmetics are the player's stored Warlords values
   public getWarlordsRender(
     uuid: string | undefined,
     user: User | null,
-    cosmetics: { class?: string; helmet?: number; armor?: number; team?: "blue" | "red"; weapon?: string; mount?: string }
+    cosmetics: {
+      class?: string;
+      helmet?: number;
+      armor?: number;
+      team?: "blue" | "red";
+      weapon?: string;
+      mount?: string;
+    }
   ) {
-    return this.requestImage(isProduction ? "https://api.statsify.net/skin/warlords" : "/skin/warlords", {
-      uuid,
-      ...cosmetics,
-      extruded: User.hasExtrudedSkins(user),
-    });
+    return this.requestImage(
+      isProduction ? "https://api.statsify.net/skin/warlords" : "/skin/warlords",
+      { uuid, ...cosmetics, extruded: User.hasExtrudedSkins(user) }
+    );
   }
 
-  // The hero is the player's stored Smash Heroes active_class, and master their stored masterArmor_<hero>
+  // The hero and master are the player's stored active_class and masterArmor_<hero>
   public getSmashRender(hero: string, { master }: { master?: boolean } = {}) {
-    return this.requestImage(isProduction ? "https://api.statsify.net/skin/smash" : "/skin/smash", { hero, master });
+    return this.requestImage(
+      isProduction ? "https://api.statsify.net/skin/smash" : "/skin/smash",
+      { hero, master }
+    );
   }
 
   public getPlayerSkinTextures(tag: string) {

@@ -10,7 +10,13 @@ import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, ServiceUnavailableException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException,
+} from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
@@ -53,6 +59,7 @@ import { access, readFile, readdir } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
+  // A library holds native GPU resources, so each process loads its own
   private readonly libraries = new Map<ResourcePack, Promise<ModelLibrary>>();
 
   public constructor(
@@ -115,21 +122,32 @@ export class SkinService {
       resolvePackArmor(KART_PACK, kart.suit),
     ]);
 
-    return renderKart(library, kart, { ...options, player: player && { ...player, armor } });
+    return renderKart(library, kart, {
+      ...options,
+      player: player && { ...player, armor },
+    });
   }
 
-  public async getWarlordsRender({ uuid, ...options }: WarlordsRenderDto): Promise<Buffer> {
+  public async getWarlordsRender({
+    uuid,
+    ...options
+  }: WarlordsRenderDto): Promise<Buffer> {
     const warlords = resolveWarlords(options, uuid !== undefined);
     const { armor: piece } = warlords;
+    const suit = { chestplate: piece, leggings: piece, boots: piece };
 
     const [library, player, armor, mount] = await Promise.all([
       this.getLibrary(WARLORDS_PACK),
       uuid ? this.getScenePlayer(uuid) : undefined,
-      resolvePackArmor(WARLORDS_PACK, { chestplate: piece, leggings: piece, boots: piece }),
+      resolvePackArmor(WARLORDS_PACK, suit),
       warlords.mount && loadMount(warlords.mount),
     ]);
 
-    return renderWarlords(library, warlords, { ...options, player: player && { ...player, armor }, mount });
+    return renderWarlords(library, warlords, {
+      ...options,
+      player: player && { ...player, armor },
+      mount,
+    });
   }
 
   public async getSmashRender({ hero, master, ...options }: SmashRenderDto): Promise<Buffer> {
@@ -341,7 +359,6 @@ async function resolveArmorPiece(
 
 interface ResourcePack {
   name: string;
-  /** The pack's assets/minecraft folder */
   path: string;
 }
 
@@ -357,20 +374,32 @@ export const SMASH_PACK = resourcePack("Smash Heroes", "smash");
 // The 1.8.9 client's own textures for what no game pack draws, such as mounts
 export const VANILLA_PACK = resourcePack("Minecraft 1.8.9", "vanilla-1.8.9");
 
-// The kart is worn by an armor stand the rider sits on: the stand's mounted offset (1.975 × 0.75 blocks)
-// less the player's riding offset (0.35), in pixels
+// The kart is worn by an armor stand the rider sits on: the stand's mounted offset
+// (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
 const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
 
-async function readPackFiles<T>(pack: ResourcePack, folder: string, extension: string, read: (path: string) => Promise<T>) {
-  const files = (await readdir(join(pack.path, folder), { recursive: true })).filter((file) => file.endsWith(extension));
+async function readPackFiles<T>(
+  pack: ResourcePack,
+  folder: string,
+  extension: string,
+  read: (path: string) => Promise<T>
+) {
+  const entries = await readdir(join(pack.path, folder), { recursive: true });
+  const files = entries.filter((file) => file.endsWith(extension));
   const contents = await Promise.all(files.map((file) => read(join(pack.path, folder, file))));
-  return Object.fromEntries(files.map((file, index) => [file.slice(0, -extension.length), contents[index]]));
+
+  return Object.fromEntries(
+    files.map((file, index) => [file.slice(0, -extension.length), contents[index]])
+  );
 }
 
-// Only a missing pack is a 503. Anything else is broken state, and Sentry skips 503s.
+// Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
 async function assertInstalled(pack: ResourcePack) {
   await access(pack.path).catch((error: NodeJS.ErrnoException) => {
-    if (error.code === "ENOENT") throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
+    if (error.code === "ENOENT") {
+      throw new ServiceUnavailableException(`The ${pack.name} pack isn't installed`);
+    }
+
     throw error;
   });
 }
@@ -393,7 +422,13 @@ export interface KartScene {
 }
 
 export function resolveKart(
-  { kart, helmet, jacket, pants, shoes }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
+  {
+    kart,
+    helmet,
+    jacket,
+    pants,
+    shoes,
+  }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
   seated: boolean
 ): KartScene {
   const models: ModelInstance[] = [
@@ -425,11 +460,15 @@ interface ArmoredPlayer extends PlayerSkin {
   armor: Armor;
 }
 
-export interface KartRenderOptions extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+export interface KartRenderOptions
+  extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
 }
 
-async function resolvePackArmor(pack: ResourcePack, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+async function resolvePackArmor(
+  pack: ResourcePack,
+  pieces: Omit<ArmorDto, "helmet">
+): Promise<Armor> {
   const textures = join(pack.path, "textures");
   const [chestplate, leggings, boots] = await Promise.all([
     pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
@@ -475,15 +514,26 @@ export function resolveWarlords(
 
   if (!withPlayer) {
     const worn = [cosmetics.class, cosmetics.helmet, cosmetics.armor, cosmetics.team];
-    if (worn.some((value) => value !== undefined)) throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
-    if (weaponModel && mount) throw new BadRequestException("A weapon needs a uuid to hold it on a mount");
+    if (worn.some((value) => value !== undefined)) {
+      throw new BadRequestException("A class, helmet, armor or team needs a uuid to wear it");
+    }
+
+    if (weaponModel && mount) {
+      throw new BadRequestException("A weapon needs a uuid to hold it on a mount");
+    }
+
     if (mount) return { models: [], mount };
-    if (!weaponModel) throw new BadRequestException("A render without a uuid needs a weapon or a mount");
+
+    if (!weaponModel) {
+      throw new BadRequestException("A render without a uuid needs a weapon or a mount");
+    }
 
     return { models: [{ model: weaponModel, bone: "root" }] };
   }
 
-  if (playerClass === undefined) throw new BadRequestException("A player render needs the player's class");
+  if (playerClass === undefined) {
+    throw new BadRequestException("A player render needs the player's class");
+  }
 
   const models: ModelInstance[] = [
     { model: getWarlordsHelmetModel(playerClass, helmet, team), bone: "head", display: "head" },
@@ -494,7 +544,8 @@ export function resolveWarlords(
   return { models, armor: getWarlordsArmor(armor, team), mount };
 }
 
-export interface WarlordsRenderOptions extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+export interface WarlordsRenderOptions
+  extends Pick<WarlordsRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
   player?: ArmoredPlayer;
   mount?: SceneMount;
 }
@@ -530,7 +581,8 @@ export function renderWarlords(
   return renderScene(library, { ...scene, player: { ...player, extruded } }, output);
 }
 
-export interface SmashScene extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
+export interface SmashScene
+  extends Pick<SmashHero, "skinColor" | "chestplate" | "leggings" | "boots"> {
   models: ModelInstance[];
 }
 
@@ -554,7 +606,8 @@ function drawHeroSkin(color: number) {
   return canvas.toBuffer("png");
 }
 
-type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> & Pick<ArmoredPlayer, "skin" | "armor">;
+type SmashRenderOptions = Pick<SmashRenderDto, "width" | "height" | "yaw" | "pitch"> &
+  Pick<ArmoredPlayer, "skin" | "armor">;
 
 export function renderSmash(
   library: ModelLibrary,
