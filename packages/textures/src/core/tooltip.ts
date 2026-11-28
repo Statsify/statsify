@@ -29,6 +29,11 @@ export function loadNames(stack: PackStack) {
   ) as Record<string, string>;
 }
 
+export function nameKeys(id: string) {
+  const path = withoutNamespace(id);
+  return [`item.minecraft.${path}`, `block.minecraft.${path}`] as const;
+}
+
 const prefixed = (
   text: TextComponent,
   codes: string,
@@ -47,9 +52,8 @@ function plainName(item: ItemStack, names: Record<string, string>) {
       ? `§b${legacy.slice(2)}`
       : legacy;
 
-  const path = withoutNamespace(item.id);
-  const name =
-    names[`item.minecraft.${path}`] ?? names[`block.minecraft.${path}`];
+  const [itemKey, blockKey] = nameKeys(item.id);
+  const name = names[itemKey] ?? names[blockKey];
   if (name === undefined)
     throw new Error(`The pack has no English name for ${item.id}`);
   return `${item.enchanted ? "§b" : ""}${name}`;

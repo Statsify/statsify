@@ -81,6 +81,12 @@ export interface ItemLayer {
   special?: SpecialModel;
 }
 
+export interface ComponentBranches {
+  component: string;
+  on_true: ItemLayer[];
+  on_false: ItemLayer[];
+}
+
 type ItemModel =
   | { type: "minecraft:model"; model: string; tints?: TintSource[] }
   | { type: "minecraft:composite"; models: ItemModel[] }
@@ -114,13 +120,16 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
+export const hasComponent = (item: ItemStack, component: string | undefined) =>
+  component === "minecraft:dyed_color" && item.color !== undefined;
+
 // Every condition without a case is false for an item sitting in a slot
 function condition(
   model: Extract<ItemModel, { type: "minecraft:condition" }>,
   item: ItemStack,
 ) {
   if (model.property !== "minecraft:has_component") return false;
-  return model.component === "minecraft:dyed_color" && item.color !== undefined;
+  return hasComponent(item, model.component);
 }
 
 // Hypixel's items have none of these, so their selects take the fallback
@@ -142,6 +151,24 @@ export class ModelResolver {
 
   public resolve(item: ItemStack): ItemLayer[] {
     return this.layers(this.definition(item.id), item);
+  }
+
+  public branches(id: string): ComponentBranches | undefined {
+    const model = this.definition(id);
+    if (
+      model.type !== "minecraft:condition" ||
+      model.property !== "minecraft:has_component" ||
+      !model.component
+    )
+      return;
+
+    const item = { id };
+
+    return {
+      component: model.component,
+      on_true: this.layers(model.on_true, item, model.transformation),
+      on_false: this.layers(model.on_false, item, model.transformation),
+    };
   }
 
   private definition(id: string) {

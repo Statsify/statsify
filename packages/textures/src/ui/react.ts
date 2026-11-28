@@ -11,11 +11,12 @@
 import { createElement, useEffect, useRef } from "react";
 import type { InventoryLayout } from "../core/inventory.js";
 import type { ItemStack } from "../core/item-stack.js";
-import type { McInventory } from "./mc-inventory.js";
+import type { McInventory, TooltipChange } from "./mc-inventory.js";
+import type { Atlas } from "../core/atlas.js";
 import type { PackStack } from "../core/pack.js";
 
 export interface InventoryProps {
-  pack: PackStack;
+  pack: PackStack | Atlas;
   slots: (ItemStack | undefined)[];
   rows?: number;
   cols?: number;
@@ -23,10 +24,16 @@ export interface InventoryProps {
   label?: string;
   layout?: InventoryLayout;
   freeze?: boolean;
+  onTooltipChange?: (change: TooltipChange | null) => void;
 }
 
 // React would set `pack` and `slots` as attributes before the element loads
-export function Inventory({ pack, slots, ...attributes }: InventoryProps) {
+export function Inventory({
+  pack,
+  slots,
+  onTooltipChange,
+  ...attributes
+}: InventoryProps) {
   const ref = useRef<McInventory>(null);
 
   useEffect(() => {
@@ -39,6 +46,16 @@ export function Inventory({ pack, slots, ...attributes }: InventoryProps) {
 
     void fill();
   }, [pack, slots]);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || !onTooltipChange) return;
+
+    const listener = (event: Event) =>
+      onTooltipChange((event as CustomEvent<TooltipChange | null>).detail);
+    element.addEventListener("mc-tooltip-change", listener);
+    return () => element.removeEventListener("mc-tooltip-change", listener);
+  }, [onTooltipChange]);
 
   return createElement("mc-inventory", { ref, ...attributes });
 }

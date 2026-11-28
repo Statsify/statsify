@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type PackStack, assetPath } from "./pack.js";
 import { context, createCanvas, decodePng } from "./canvas.js";
 import { drawTooltip, loadNames, tooltipLines } from "./tooltip.js";
 import { ItemRenderer } from "./item-renderer.js";
 import type { ItemStack } from "./item-stack.js";
-import type { PackStack } from "./pack.js";
 import { TextRenderer } from "./text.js";
 import { maxDamage } from "./legacy-items.js";
 
@@ -44,7 +44,7 @@ const SLOT = 18;
 const EDGE = 7;
 const TITLE_HEIGHT = 17;
 
-const CHEST_SCREEN = "assets/minecraft/textures/gui/container/generic_54.png";
+export const CHEST_SCREEN = "minecraft:gui/container/generic_54";
 
 // GUI pixels across the chest screen texture, which HD packs draw larger
 const CHEST_SCREEN_SIZE = 256;
@@ -59,6 +59,13 @@ export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
     EDGE + (slot % cols) * SLOT,
     slotsTop(title) + Math.floor(slot / cols) * SLOT,
   ] as const;
+
+export const TITLE_ORIGIN = [8, 6] as const;
+
+export function countOrigin(size: InventorySize, slot: number) {
+  const [x, y] = slotOrigin(size, slot);
+  return [x + 18, y + 10] as const;
+}
 
 export function slotAt(
   { rows, cols, title }: InventorySize,
@@ -86,9 +93,9 @@ function fill(
 }
 
 export class InventoryRenderer {
-  private constructor(
+  public constructor(
     private icons: IconSource,
-    private text: TextRenderer,
+    private text: TextRenderer | undefined,
     private names: Record<string, string>,
     private chestScreen?: OffscreenCanvas,
   ) {}
@@ -97,7 +104,7 @@ export class InventoryRenderer {
     pack: PackStack,
     icons: IconSource = new ItemRenderer(pack),
   ) {
-    const chestScreen = pack.get(CHEST_SCREEN);
+    const chestScreen = pack.get(assetPath(CHEST_SCREEN, "textures", ".png"));
 
     const [text, panel] = await Promise.all([
       TextRenderer.load(pack),
@@ -126,7 +133,15 @@ export class InventoryRenderer {
   }
 
   public tooltip(item: ItemStack, scale: number, tick: number) {
-    return drawTooltip(this.text, tooltipLines(item, this.names), scale, tick);
+    if (!this.text)
+      throw new Error(
+        "An atlas has no font, so the page draws its tooltips from lines()",
+      );
+    return drawTooltip(this.text, this.lines(item), scale, tick);
+  }
+
+  public lines(item: ItemStack) {
+    return tooltipLines(item, this.names);
   }
 
   public animates(item: ItemStack) {
@@ -149,13 +164,14 @@ export class InventoryRenderer {
 
     if (icon) ctx.drawImage(icon, (x + 1) * scale, (y + 1) * scale);
 
-    if (item?.count !== undefined && item.count > 1) {
+    if (this.text && item?.count !== undefined && item.count > 1) {
       const count = `${item.count}`;
+      const [right, top] = countOrigin(size, slot);
       this.text.draw(
         ctx,
         count,
-        (x + 1 + 17 - this.text.width(count)) * scale,
-        (y + 1 + 9) * scale,
+        (right - this.text.width(count)) * scale,
+        top * scale,
         { scale },
       );
     }
@@ -231,12 +247,14 @@ export class InventoryRenderer {
       }
     }
 
-    if (title)
-      this.text.draw(ctx, title, 8 * scale, 6 * scale, {
+    if (title && this.text) {
+      const [x, y] = TITLE_ORIGIN;
+      this.text.draw(ctx, title, x * scale, y * scale, {
         scale,
         shadow: false,
         color: 0x40_40_40,
       });
+    }
 
     return canvas;
   }

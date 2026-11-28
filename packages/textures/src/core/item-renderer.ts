@@ -30,7 +30,7 @@ import {
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { BannerLayer, ItemStack } from "./item-stack.js";
-import { type PackStack, assetPath, namespaced } from "./pack.js";
+import { PackStack, assetPath, namespaced } from "./pack.js";
 import { dyeColor, tintColor } from "./tints.js";
 
 const SIZE = 16;
@@ -48,7 +48,7 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
   zombie: { texture: "entity/zombie/zombie", hat: true },
 };
 
-const DEFAULT_SKIN = "entity/player/wide/steve";
+export const DEFAULT_SKIN = "entity/player/wide/steve";
 
 // A banner in a slot has its flag at the start of its wave
 const FLAG_TILT = (-0.0125 + 0.01) * Math.PI;
@@ -69,8 +69,8 @@ const entityTexture = (folder: string, id: string) => {
   return `${namespace}:entity/${folder}/${name}`;
 };
 
-const GLINT = "misc/enchanted_glint_item";
-const LEGACY_GLINT = "misc/enchanted_item_glint";
+export const GLINT = "misc/enchanted_glint_item";
+export const LEGACY_GLINT = "misc/enchanted_item_glint";
 
 function tinted(pixels: ImageData, color: number) {
   const red = (color >> 16) & 0xff;
@@ -276,25 +276,46 @@ function textureIds({ model, special }: ItemLayer) {
 // The renderer never fetches skins, so the caller picks where they come from
 export type SkinLoader = (url: string) => Promise<Uint8Array>;
 
+export interface ItemSource {
+  readonly hash: string;
+  readonly legacyGlint: boolean;
+  readonly models: Pick<ModelResolver, "resolve">;
+  readonly textures: Pick<TextureLoader, "get" | "frame">;
+  drawsFromModels(id: string): boolean;
+  icon(id: string, scale: number): OffscreenCanvas;
+}
+
 export class ItemRenderer {
-  private models: ModelResolver;
-  private textures: TextureLoader;
+  public readonly legacyGlint: boolean;
+  private hash: string;
+  private source?: ItemSource;
+  private models: Pick<ModelResolver, "resolve">;
+  private textures: Pick<TextureLoader, "get" | "frame">;
   private icons = new Map<string, Promise<OffscreenCanvas>>();
-  private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
 
   public constructor(
-    private stack: PackStack,
+    source: PackStack | ItemSource,
     private cache?: IconCache,
     private loadSkin?: SkinLoader,
   ) {
-    this.models = new ModelResolver(stack);
-    this.textures = new TextureLoader(stack);
+    this.hash = source.hash;
+
+    if (!(source instanceof PackStack)) {
+      this.source = source;
+      this.models = source.models;
+      this.textures = source.textures;
+      this.legacyGlint = source.legacyGlint;
+      return;
+    }
+
+    this.models = new ModelResolver(source);
+    this.textures = new TextureLoader(source);
 
     const legacy = assetPath(LEGACY_GLINT, "textures", ".png");
     this.legacyGlint =
-      stack.packs
+      source.packs
         .findLast(
           ({ files }) =>
             files.has(legacy) ||
@@ -347,6 +368,9 @@ export class ItemRenderer {
     scale: number,
     tick: number,
   ): Promise<OffscreenCanvas> {
+    if (this.source && !this.source.drawsFromModels(item.id))
+      return this.source.icon(item.id, scale);
+
     const resolved = this.models.resolve(item);
 
     const animated = resolved
@@ -390,7 +414,7 @@ export class ItemRenderer {
     const frames = animated.map(({ index }) => index);
 
     const key = [
-      this.stack.hash,
+      this.hash,
       ...layers.map(({ model, colors, special }) =>
         [
           model.id,
@@ -438,11 +462,11 @@ export class ItemRenderer {
     scale: number,
     tick: number,
   ) {
-    const cached = await this.cache?.get(this.stack.hash, key);
+    const cached = await this.cache?.get(this.hash, key);
     if (cached) return cached;
 
     const icon = await this.draw(layers, item, scale, tick);
-    void this.cache?.set(this.stack.hash, key, icon).catch(console.error);
+    void this.cache?.set(this.hash, key, icon).catch(console.error);
 
     return icon;
   }

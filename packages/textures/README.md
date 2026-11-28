@@ -1,8 +1,8 @@
 # @statsify/textures
 
 Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
-Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack and every icon
-is drawn from it, then cached.
+Node. Drop in a 26.3 pack and every icon is drawn from it, then cached, or draw from an
+[atlas](#atlas) of icons drawn ahead of time.
 
 ## Packs
 
@@ -86,6 +86,39 @@ import { skiaCanvas } from "@statsify/textures/node";
 setCanvasBackend(skiaCanvas);
 ```
 
+## Atlas
+
+An atlas is a pack stack's icons drawn ahead of time: one image, and a JSON map of where each
+item's icon sits, so a page can show inventories without loading a pack. The generator draws two
+into `atlas/`, which git ignores: `vanilla-26.3`, from the private assets' `minecraft-textures/26.3`,
+and `vanilla-1.8.9`, with `minecraft-textures/1.8.9` over it. Each image is named by its content
+hash, so it can be cached for good. The map keeps its name, so serve it `no-cache`: a regeneration
+deletes the image an old map names.
+
+```sh
+pnpm --filter @statsify/textures build
+pnpm --filter @statsify/textures atlas [<name> …] [--textures <folder>] [--scales 2,3]
+```
+
+With no names it draws both. `--textures` is the folder holding the version folders,
+`assets/private/minecraft-textures` by default, and it throws if one is missing.
+`loadPackFolder(folder)` from `@statsify/textures/node` loads a folder like those as a pack.
+
+3D icons are drawn once at each of `--scales`, and flat ones at 16 pixels, which any whole scale
+draws exactly. At another scale, a 3D icon is resized from its largest. Rerun it whenever a change
+draws icons differently, as with the icon cache's `VERSION`. It lists the items it can't draw.
+
+Items whose look depends on their stack are still drawn in the browser, from models and textures
+the atlas carries: dyed leather and wolf armor, potions, banners, shields and player heads with skins,
+and the glint on anything. Atlas icons don't animate.
+
+`loadAtlas(url)` loads one. It goes where a `PackStack` does in `ItemRenderer` and `<mc-inventory>`'s
+`pack`, and `atlas.inventoryRenderer()` gives its `InventoryRenderer`. An atlas has no font, so `<mc-inventory>`
+puts its title and counts in HTML, in the page's `Minecraft` font (or `--mc-inventory-font`;
+`::part(title)` and `::part(count)` restyle them). It draws no tooltips: it sends
+`mc-tooltip-change` events with the hovered `item`, its tooltip `lines` and the pointer, and `null`
+once the tooltip should close. `InventoryRenderer.lines(item)` gives the same lines.
+
 ## `<mc-inventory>`
 
 ```ts
@@ -116,6 +149,6 @@ import { Inventory } from "@statsify/textures/react";
 <Inventory pack={stack} slots={slots} layout="shop" label="Quick Buy" scale={3} />;
 ```
 
-`Inventory` takes the element's properties and attributes as props. It's a client component that
-loads `<mc-inventory>` in the browser, so it's safe to server render. React is an optional peer
-dependency.
+`Inventory` takes the element's properties and attributes as props, and `onTooltipChange` for an
+atlas's tooltip events. It's a client component that loads `<mc-inventory>` in the browser, so it's
+safe to server render. React is an optional peer dependency.
