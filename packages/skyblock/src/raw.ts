@@ -429,6 +429,7 @@ export interface RawItem {
     display?: { Name?: string; Lore?: string[]; color?: number };
     ExtraAttributes?: RawItemAttributes;
     SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
+    ItemModel?: string;
     ench?: unknown[];
   };
 }
@@ -442,6 +443,7 @@ export interface RawResourceItem {
   category?: string;
   color?: string;
   skin?: { value: string };
+  item_model?: string;
   origin?: string;
   rift_transferrable?: boolean;
   npc_sell_price?: number;

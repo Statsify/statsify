@@ -17,10 +17,12 @@ import {
 import { normalizeItemText, parseStatName, parseStatRewards } from "#lore";
 import { prettify, removeFormatting } from "@statsify/util";
 import { readNeuStats, sumStatValues } from "./stats.ts";
+import { fetchMinecraftData } from "./textures.ts";
 import { fetchOk } from "./fetch.ts";
 import { roundTo } from "@statsify/math";
 import { getBestiaryBoards } from "@statsify/skyblock";
 import { join } from "node:path";
+import { legacyItem } from "@statsify/textures";
 import { readdir } from "node:fs/promises";
 import { skinHash } from "#textures";
 import type { SyncContext } from "../sync-data.ts";
@@ -180,6 +182,9 @@ function readPetItem(lore: string[]) {
 
 interface NeuItem {
   internalname: string;
+  // itemid is the 1.8 material, like minecraft:skull, or a newer id.
+  itemid: string;
+  damage: number;
   displayname: string;
   lore?: string[];
   nbttag: string;
@@ -625,14 +630,29 @@ export const NEU_UNITS = {
     > = {};
     const essenceTextures: Record<string, string> = {};
     const headlessEssence: string[] = [];
-    const files = (await readdir(join(neu, "items"))).filter((file) =>
-      file.endsWith(".json"),
+    const itemModels: Record<string, string> = {};
+    const [minecraftItems, names] = await Promise.all([
+      fetchMinecraftData("items"),
+      readdir(join(neu, "items")),
+    ]);
+    const materials = new Map(
+      minecraftItems.map(({ id, name }) => [`minecraft:${name}`, id]),
     );
+    const files = names.filter((file) => file.endsWith(".json"));
     const items = await Promise.all(
       files.map((file) => readJson<NeuItem>(join("items", file))),
     );
 
     for (const item of items) {
+      // Keep a model only where it isn't what its 1.8 material already draws.
+      const model = /ItemModel:"([^"]+)"/.exec(item.nbttag)?.[1];
+      const material = materials.get(item.itemid);
+      const vanilla =
+        material === undefined
+          ? undefined
+          : legacyItem(material, item.damage)?.id;
+      if (model && model !== vanilla) itemModels[item.internalname] = model;
+
       // A pet's internal name is "<TYPE>;<index in RARITIES>".
       const pet = item.nbttag.includes("petInfo")
         ? /^(.+);(\d)$/.exec(item.internalname)
@@ -736,6 +756,7 @@ export const NEU_UNITS = {
     write("kuudra-keys.json", kuudraKeys);
     write("trophyfish.json", trophyNames);
     write("pet-items.json", petItems);
+    write("item-models.json", itemModels);
     write("essence-textures.json", essenceTextures);
 
     const pets = await readJson<Record<string, unknown>>("constants/pets.json");

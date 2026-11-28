@@ -222,6 +222,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           category,
           color,
           skin,
+          item_model,
           origin,
           rift_transferrable,
           npc_sell_price,
@@ -241,6 +242,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
             category,
             color,
             skin: skin && skinHash(skin.value),
+            model: item_model,
             riftOnly:
               origin === "RIFT" && !rift_transferrable ? true : undefined,
             npcPrice: npc_sell_price,

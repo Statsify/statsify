@@ -1,0 +1,368 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import {
+  DOWNLOAD_TIMEOUT,
+  ItemRenderer,
+  PackStack,
+  loadPack,
+  setCanvasBackend,
+} from "@statsify/textures";
+import { createHash } from "node:crypto";
+import { dirname, join } from "node:path";
+import { existsSync } from "node:fs";
+import { getAssetPath } from "./index.js";
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
+import { skiaCanvas } from "@statsify/textures/node";
+import { unzipSync } from "fflate";
+import lockfile from "proper-lockfile";
+
+const ROOT = getAssetPath("resource-packs", "public");
+
+const HYPIXEL_PACKS = "https://api.hypixel.net/v2/resources/packs";
+const VERSION_MANIFEST =
+  "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+
+// The client and pack format @statsify/textures draws
+const MINECRAFT_VERSION = "26.3";
+const PACK_FORMAT = 97;
+
+const HYPIXEL_PACK = "SkyBlock";
+
+// A pack under any license but Hypixel's v1.0 (2026-07-07) waits for a review
+const REVIEWED_LICENSE =
+  "22d27db6dc242dbdfdb0bac60ee16a488a8791d724be1734eedc23d85ad8068c";
+
+const ACTIVE = "active.json";
+const PREVIOUS = "previous.json";
+const HELD = "held.json";
+const LOCK = "update.lock";
+const STAGING = ".staging-";
+
+// The holder touches the lock every minute, so one idle for five is stale
+const HEARTBEAT = 60 * 1000;
+const STALE_LOCK = 5 * HEARTBEAT;
+
+interface HypixelPacks {
+  packs: {
+    id: string;
+    deployId: string;
+    lastUpdated: number;
+    versions: { packFormat: number; hash: string; url: string }[];
+  }[];
+}
+
+interface VersionManifest {
+  versions: { id: string; url: string; sha1: string }[];
+}
+
+interface VersionMetadata {
+  downloads: { client: { url: string; sha1: string } };
+}
+
+// Packs go lowest priority first, so the client jar is packs[0]
+interface Generation {
+  packs: string[];
+}
+
+export type PackUpdate =
+  | { status: "activated"; failedItems: string[] }
+  | { status: "unchanged" | "running" }
+  | { status: "held"; license: string };
+
+const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) =>
+  createHash(algorithm).update(data).digest("hex");
+
+const generationId = ({ packs }: Generation) => packs.join(" ");
+
+// Promise.all would throw while other writes or deletes outlive the lock
+async function settle<T>(promises: Promise<T>[]) {
+  const results = await Promise.allSettled(promises);
+
+  return results.map((result) => {
+    if (result.status === "rejected") throw result.reason;
+    return result.value;
+  });
+}
+
+async function get(url: string) {
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+  });
+  if (!response.ok)
+    throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  return new Uint8Array(await response.arrayBuffer());
+}
+
+const parseJson = <T>(data: Uint8Array) =>
+  JSON.parse(Buffer.from(data).toString()) as T;
+
+const getJson = async <T>(url: string) => parseJson<T>(await get(url));
+
+async function download(url: string, sha1: string) {
+  const data = await get(url);
+
+  if (hash("sha1", data) !== sha1) {
+    throw new Error(`${url} doesn't match the sha1 it's listed with, ${sha1}`);
+  }
+
+  return data;
+}
+
+// A pack folder that exists is complete, since it's renamed into place
+async function store(
+  folder: string,
+  files: Record<string, Uint8Array | string>,
+) {
+  const staging = await mkdtemp(join(ROOT, STAGING));
+
+  try {
+    await settle(
+      Object.entries(files).map(([name, data]) =>
+        writeFile(join(staging, name), data),
+      ),
+    );
+    await mkdir(dirname(join(ROOT, folder)), { recursive: true });
+    await rename(staging, join(ROOT, folder));
+  } catch (error) {
+    await rm(staging, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+async function minecraftClient(version: string) {
+  const cached = existsSync(join(ROOT, "minecraft"))
+    ? (await readdir(join(ROOT, "minecraft"))).find((folder) =>
+        folder.startsWith(`${version}-`),
+      )
+    : undefined;
+
+  if (cached) return `minecraft/${cached}/client.jar`;
+
+  const manifest = await getJson<VersionManifest>(VERSION_MANIFEST);
+  const listed = manifest.versions.find(({ id }) => id === version);
+  if (!listed)
+    throw new Error(`${version} isn't in Minecraft's version manifest`);
+
+  const metadata = await download(listed.url, listed.sha1);
+  const { client } = parseJson<VersionMetadata>(metadata).downloads;
+  const jar = await download(client.url, client.sha1);
+
+  const folder = `minecraft/${version}-${client.sha1}`;
+  await store(folder, { "client.jar": jar, "version.json": metadata });
+
+  return `${folder}/client.jar`;
+}
+
+async function hypixelPack() {
+  const { packs } = await getJson<HypixelPacks>(HYPIXEL_PACKS);
+  const pack = packs.find(({ id }) => id === HYPIXEL_PACK);
+  const version = pack?.versions.find(
+    ({ packFormat }) => packFormat === PACK_FORMAT,
+  );
+  if (!pack || !version)
+    throw new Error(
+      `Hypixel lists no ${HYPIXEL_PACK} pack in format ${PACK_FORMAT}`,
+    );
+
+  const folder = `hypixel/${pack.id.toLowerCase()}-${pack.deployId}-${PACK_FORMAT}-${version.hash}`;
+
+  if (!existsSync(join(ROOT, folder))) {
+    const zip = await download(version.url, version.hash);
+    const { LICENSE: license } = unzipSync(zip, {
+      filter: ({ name }) => name === "LICENSE",
+    });
+    if (!license) throw new Error(`${version.url} has no LICENSE`);
+
+    const listing = JSON.stringify({
+      ...pack,
+      fetchedAt: new Date().toISOString(),
+    });
+    await store(folder, {
+      "pack.zip": zip,
+      LICENSE: license,
+      "listing.json": listing,
+    });
+  }
+
+  return `${folder}/pack.zip`;
+}
+
+async function readGeneration(name: string): Promise<Generation | undefined> {
+  const path = join(ROOT, name);
+  return existsSync(path)
+    ? JSON.parse(await readFile(path, "utf8"))
+    : undefined;
+}
+
+async function writeGeneration(name: string, generation: Generation) {
+  const temporary = join(ROOT, `.${name}`);
+  await writeFile(temporary, JSON.stringify(generation));
+  await rename(temporary, join(ROOT, name));
+}
+
+const loadStack = async ({ packs }: Generation) =>
+  new PackStack(
+    await Promise.all(
+      packs.map(async (path) =>
+        loadPack(await readFile(join(ROOT, path)), path),
+      ),
+    ),
+  );
+
+async function probe(stack: PackStack) {
+  setCanvasBackend(skiaCanvas);
+  const renderer = new ItemRenderer(stack);
+
+  // The client jar has definitions the renderer can't draw yet, like banners
+  const ids: string[] = [];
+
+  for (const { files } of stack.packs.slice(1)) {
+    for (const path of files.keys()) {
+      const definition = /^assets\/([^/]+)\/items\/(.+)\.json$/.exec(path);
+      if (definition) ids.push(`${definition[1]}:${definition[2]}`);
+    }
+  }
+
+  const draws = await Promise.allSettled(
+    ids.map((id) =>
+      renderer.render({ id: "minecraft:paper", itemModel: id }, 1),
+    ),
+  );
+  const failed = ids.filter((_, index) => draws[index].status === "rejected");
+
+  if (failed.length === ids.length)
+    throw new Error(`${stack.hash} can't draw any of its ${ids.length} items`);
+  return failed;
+}
+
+async function prune(kept: Generation[]) {
+  const folders = new Set(
+    kept.flatMap(({ packs }) => packs.map((path) => dirname(path))),
+  );
+
+  await settle(
+    ["minecraft", "hypixel"].map(async (source) => {
+      if (!existsSync(join(ROOT, source))) return;
+
+      const unused = (await readdir(join(ROOT, source))).filter(
+        (folder) => !folders.has(`${source}/${folder}`),
+      );
+      await settle(
+        unused.map((folder) =>
+          rm(join(ROOT, source, folder), { recursive: true, force: true }),
+        ),
+      );
+    }),
+  );
+
+  const staging = (await readdir(ROOT)).filter((folder) =>
+    folder.startsWith(STAGING),
+  );
+  await settle(
+    staging.map((folder) =>
+      rm(join(ROOT, folder), { recursive: true, force: true }),
+    ),
+  );
+}
+
+async function lock() {
+  let lost = false;
+
+  try {
+    const release = await lockfile.lock(ROOT, {
+      lockfilePath: join(ROOT, LOCK),
+      realpath: false,
+      stale: STALE_LOCK,
+      update: HEARTBEAT,
+      // The default throws from a timer and would crash the process
+      onCompromised: () => (lost = true),
+    });
+
+    return {
+      owned: () => !lost,
+      release: () => (lost ? undefined : release()),
+    };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ELOCKED") return;
+    throw error;
+  }
+}
+
+export async function activeResourcePacks() {
+  const active = await readGeneration(ACTIVE);
+  return active && generationId(active);
+}
+
+export async function loadResourcePacks(): Promise<
+  { id: string; stack: PackStack } | undefined
+> {
+  const active = await readGeneration(ACTIVE);
+  if (!active) return;
+
+  try {
+    return { id: generationId(active), stack: await loadStack(active) };
+  } catch (error) {
+    // An update can prune these while they load, once newer packs are active
+    const replaced = (await activeResourcePacks()) !== generationId(active);
+    if ((error as NodeJS.ErrnoException).code === "ENOENT" && replaced)
+      return loadResourcePacks();
+    throw error;
+  }
+}
+
+export async function updateResourcePacks(): Promise<PackUpdate> {
+  await mkdir(ROOT, { recursive: true });
+
+  const lease = await lock();
+  if (!lease) return { status: "running" };
+
+  try {
+    const generation = {
+      packs: await settle([minecraftClient(MINECRAFT_VERSION), hypixelPack()]),
+    };
+    const active = await readGeneration(ACTIVE);
+    if (active && generationId(active) === generationId(generation)) {
+      await rm(join(ROOT, HELD), { force: true });
+      return { status: "unchanged" };
+    }
+
+    const license = join(ROOT, dirname(generation.packs[1]), "LICENSE");
+
+    if (hash("sha256", await readFile(license)) !== REVIEWED_LICENSE) {
+      await writeGeneration(HELD, generation);
+      return { status: "held", license };
+    }
+
+    // Items that fail to draw fall back to their 1.8 icons
+    const failedItems = await probe(await loadStack(generation));
+
+    if (!lease.owned()) throw new Error("Another update took over the lock");
+    await prune(active ? [generation, active] : [generation]);
+    await rm(join(ROOT, HELD), { force: true });
+    if (active) await writeGeneration(PREVIOUS, active);
+
+    // A newer update may have taken the lease while this one pruned
+    if (!lease.owned()) throw new Error("Another update took over the lock");
+
+    // Writing active.json activates the packs, so it comes last
+    await writeGeneration(ACTIVE, generation);
+
+    return { status: "activated", failedItems };
+  } finally {
+    await lease.release();
+  }
+}

@@ -14,13 +14,17 @@ import {
   MEDAL_COLORS,
   TROPHY_TIERS,
 } from "@statsify/skyblock/display";
-import { getGridRows } from "./components/ItemGrid.js";
+import { ItemCell, getGridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
-import type { FishingSection } from "@statsify/skyblock";
+import type { FishingSection, MemberView } from "@statsify/skyblock";
+import type { ItemIcons } from "./components/ItemSlot.js";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const SEA_CREATURES_SHOWN = 24;
+
+export const getTrophyFishIcons = ({ fishing }: MemberView) =>
+  fishing?.trophyFish.map(({ texture }) => texture) ?? [];
 
 interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
   page: keyof typeof TABLES;
@@ -29,6 +33,7 @@ interface SkyBlockFishingProfileProps extends SkyBlockProfileProps {
 export const SkyBlockFishingProfile = ({
   profile,
   t,
+  icons,
   page,
   ...card
 }: SkyBlockFishingProfileProps) => {
@@ -61,7 +66,7 @@ export const SkyBlockFishingProfile = ({
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      <PageTable fishing={fishing} t={t} />
+      <PageTable fishing={fishing} t={t} icons={icons} />
     </Card>
   );
 };
@@ -69,6 +74,7 @@ export const SkyBlockFishingProfile = ({
 interface FishingTableProps {
   fishing: FishingSection;
   t: LocalizeFunction;
+  icons: ItemIcons;
 }
 
 const Cell = ({ name, value }: { name: string; value: string }) => (
@@ -94,13 +100,16 @@ const StackedCell = ({ name, value }: { name: string; value: string }) => (
   </box>
 );
 
-const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
-  const fish = fishing.trophyFish.map(({ name, tiers }) => (
-    <StackedCell
+const TrophyFishTable = ({ fishing, t, icons }: FishingTableProps) => {
+  const fish = fishing.trophyFish.map(({ name, tiers, texture }) => (
+    <ItemCell
+      texture={texture}
       name={`${TROPHY_TIERS.some((tier) => tiers[tier] > 0) ? "§f" : "§8"}${name}`}
       value={TROPHY_TIERS.map(
         (tier) => `${MEDAL_COLORS[tier]}${t(tiers[tier])}`,
       ).join(" §8• ")}
+      icons={icons}
+      stacked
     />
   ));
 

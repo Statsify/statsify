@@ -35,7 +35,10 @@ import {
   SkyBlockRiftProfile,
   getConsumableIcons,
 } from "./misc.profile.js";
-import { SkyBlockFishingProfile } from "./fishing.profile.js";
+import {
+  SkyBlockFishingProfile,
+  getTrophyFishIcons,
+} from "./fishing.profile.js";
 import {
   SkyBlockGearProfile,
   SkyBlockMuseumProfile,
@@ -180,6 +183,7 @@ export const SKYBLOCK_CARDS = {
         profile: (props) => (
           <SkyBlockFishingProfile {...props} page="trophyFish" />
         ),
+        icons: getTrophyFishIcons,
       },
       {
         label: (t) => t("skyblock.trophyFrogs"),

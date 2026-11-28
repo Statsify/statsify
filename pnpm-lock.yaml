@@ -635,15 +635,28 @@ importers:
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@swc/helpers':
         specifier: ^0.5.23
         version: 0.5.24
       axios:
         specifier: 1.11.0
         version: 1.11.0(debug@4.4.3(supports-color@7.2.0))
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+      proper-lockfile:
+        specifier: ^4.1.2
+        version: 4.1.2
       skia-canvas:
         specifier: 4.0.0
         version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+    devDependencies:
+      '@types/proper-lockfile':
+        specifier: ^4.1.4
+        version: 4.1.4
 
   packages/discord:
     dependencies:
@@ -796,6 +809,9 @@ importers:
       '@statsify/rendering':
         specifier: workspace:^
         version: link:../rendering
+      '@statsify/textures':
+        specifier: workspace:^
+        version: link:../textures
       '@statsify/util':
         specifier: workspace:^
         version: link:../util
@@ -814,6 +830,28 @@ importers:
       skyhelper-networth:
         specifier: 2.11.1
         version: 2.11.1(patch_hash=dc25262c9ccc8304dbc9e7a01451acff1fd15e6f1465cb576298167ae5274698)(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+
+  packages/textures:
+    dependencies:
+      '@swc/helpers':
+        specifier: ^0.5.23
+        version: 0.5.24
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+      idb:
+        specifier: ^8.0.4
+        version: 8.0.4
+      lru-cache:
+        specifier: ^11.5.3
+        version: 11.5.3
+      mojangson:
+        specifier: ^2.1.0
+        version: 2.1.0
+    devDependencies:
+      skia-canvas:
+        specifier: 4.0.0
+        version: 4.0.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
   packages/util:
     dependencies:
@@ -3006,6 +3044,9 @@ packages:
   '@types/node@26.6.11':
     resolution: {integrity: sha512-uUyQ2XLEz+EXh34lmS3GhKrkqn/8FU7KUiKRpk347At2bmnMVWss45yz8b4FG/tUtmV1tV/+TVkITItPROyeeQ==}
 
+  '@types/proper-lockfile@4.1.4':
+    resolution: {integrity: sha512-uo2ABllncSqg9F1D4nugVl9v93RmjxF6LJzQLMLDdPaXCUIDPeOJ21Gbqi43xNKzBi/WQ0Q0dICqufzQbMjipQ==}
+
   '@types/react-dom@19.3.0':
     resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==}
     peerDependencies:
@@ -3016,6 +3057,9 @@ packages:
 
   '@types/readable-stream@4.0.25':
     resolution: {integrity: sha512-7GsxL8Wd5X3jh73/qgW7WCnbBvGSdD8U3E4Jiuus3/8I+PN20DtlkJtwFhr/sImXfDDQ2Z03i/9wNiIF3TVSsw==}
+
+  '@types/retry@0.12.5':
+    resolution: {integrity: sha512-3xSjTp3v03X/lSQLkczaN9UIEwJMoMCA1+Nb5HfbJEQWogdeQIyVtTvxPXDQjZ5zws8rFQfVfRdz03ARihPJgw==}
 
   '@types/webidl-conversions@7.0.3':
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
@@ -4154,6 +4198,9 @@ packages:
     resolution: {integrity: sha512-IKXpvIzjnC9XTAUbVBcMfGS0EPaIXtW6v+zr+RRp+hqULEpo0owZax6wyRwPOJbWbzjYspQwusTsfVr0ifh4uQ==}
     engines: {node: '>=0.10.0'}
 
+  idb@8.0.4:
+    resolution: {integrity: sha512-jd0ITCrN+Zah4J7R/Z2jnR3W7A4BXDAjmo62MwWuSjxCiueUAf7X5rbodEdidWzeknwXHmLpdZkoiiCppNi30Q==}
+
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -5004,6 +5051,9 @@ packages:
   promptly@2.2.0:
     resolution: {integrity: sha512-aC9j+BZsRSSzEsXBNBwDnAxujdx19HycZoKgRgzWnS8eOHg1asuf9heuLprfbe739zY3IdUQx+Egv6Jn135WHA==}
 
+  proper-lockfile@4.1.2:
+    resolution: {integrity: sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==}
+
   protodef-validator@1.5.0:
     resolution: {integrity: sha512-GrPKsNpcd7/4bIAZN3Ojgk5ILsRX9s1IItzU+o29D1o0AKbIaLuBCmaSGbZE90Gn8zxF2/Vj8aPUHjo0AbgFdw==}
     hasBin: true
@@ -5150,6 +5200,10 @@ packages:
   ret@0.5.1:
     resolution: {integrity: sha512-Z/nyvABwcRnRD2mMP7Kz6G1dFZZqX1mNErOnxF42OCQKE07b9k9hK9SQxHL3LFEZUdzQaLM4dId1E/E6Vm4WhA==}
     engines: {node: '>=10'}
+
+  retry@0.12.0:
+    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
+    engines: {node: '>= 4'}
 
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
@@ -7482,6 +7536,10 @@ snapshots:
     dependencies:
       undici-types: 8.9.0
 
+  '@types/proper-lockfile@4.1.4':
+    dependencies:
+      '@types/retry': 0.12.5
+
   '@types/react-dom@19.3.0(@types/react@19.3.3)':
     dependencies:
       '@types/react': 19.3.3
@@ -7493,6 +7551,8 @@ snapshots:
   '@types/readable-stream@4.0.25':
     dependencies:
       '@types/node': 26.6.11
+
+  '@types/retry@0.12.5': {}
 
   '@types/webidl-conversions@7.0.3': {}
 
@@ -8590,6 +8650,8 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  idb@8.0.4: {}
+
   ieee754@1.2.1: {}
 
   ignore@5.3.2: {}
@@ -9462,6 +9524,12 @@ snapshots:
     dependencies:
       read: 1.0.7
 
+  proper-lockfile@4.1.2:
+    dependencies:
+      graceful-fs: 4.2.12
+      retry: 0.12.0
+      signal-exit: 3.0.7
+
   protodef-validator@1.5.0:
     dependencies:
       ajv: 6.15.0
@@ -9596,6 +9664,8 @@ snapshots:
   ret@0.1.15: {}
 
   ret@0.5.1: {}
+
+  retry@0.12.0: {}
 
   reusify@1.1.0: {}
 

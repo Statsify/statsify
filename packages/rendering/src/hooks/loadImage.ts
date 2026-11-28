@@ -19,15 +19,19 @@ const bufferToImage = (buffer: Buffer): Image => {
   return image;
 };
 
+export const downloadImage = async (url: string): Promise<Buffer> => {
+  const data = await axios
+    .get(url, { responseType: "arraybuffer", timeout: IMAGE_DOWNLOAD_TIMEOUT })
+    .then((res) => res.data);
+
+  return Buffer.from(data);
+};
+
 export const loadImage = async (url: string | Buffer): Promise<Image> => {
   if (Buffer.isBuffer(url)) return bufferToImage(url);
 
   if (url.startsWith("http")) {
-    const data = await axios
-      .get(url, { responseType: "arraybuffer", timeout: IMAGE_DOWNLOAD_TIMEOUT })
-      .then((res) => res.data);
-
-    const buffer = Buffer.from(data);
+    const buffer = await downloadImage(url);
     return bufferToImage(buffer);
   }
 

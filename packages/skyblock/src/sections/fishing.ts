@@ -8,6 +8,7 @@
 
 import { SEA_CREATURES, TROPHY_FISH } from "#data";
 import { add } from "@statsify/math";
+import { getTrophyFishTexture } from "#textures";
 import { prettify } from "@statsify/util";
 import type { FishingSection, TrophyFish, TrophyFrog } from "#types";
 import type { RawMember } from "#raw";
@@ -74,16 +75,18 @@ export function getFishing(member: RawMember): FishingSection | null {
     .toSorted((a, b) => b.kills - a.kills);
 
   return {
-    trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => ({
-      id,
-      name,
-      tiers: Object.fromEntries(
+    trophyFish: Object.entries(TROPHY_FISH).map(([id, name]) => {
+      const tiers = Object.fromEntries(
         TROPHY_TIERS.map((tier) => [
           tier,
           caught(`${id.toLowerCase()}_${tier}`),
         ]),
-      ) as TrophyFish["tiers"],
-    })),
+      ) as TrophyFish["tiers"];
+      const best =
+        TROPHY_TIERS.findLast((tier) => tiers[tier] > 0) ?? TROPHY_TIERS[0];
+
+      return { id, name, tiers, texture: getTrophyFishTexture(id, best) };
+    }),
     trophyFishCaught: caught("total_caught"),
     trophyFrogs: TROPHY_FROGS.map((id) => ({
       id,

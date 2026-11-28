@@ -7,20 +7,33 @@
  */
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
+import {
+  ItemRenderer,
+  type ItemStack,
+  type PackStack,
+  legacyItem,
+  setCanvasBackend,
+} from "@statsify/textures";
+import { createCanvas, downloadImage, loadImage } from "@statsify/rendering";
+import { Canvas } from "skia-canvas";
 import { LRUCache } from "lru-cache";
 import { TEXTURE_PATHS } from "#data";
-import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
+import { skiaCanvas } from "@statsify/textures/node";
+import type { CanvasRenderingContext2D, Image } from "skia-canvas";
 import type { ItemTexture } from "#types";
 
+setCanvasBackend(skiaCanvas);
+
 interface IconOptions {
+  // A multiple of 16, the game's own size.
   size?: number;
   // The glint is drawn at its first frame, as a still inventory shows it.
   glint?: boolean;
 }
 
-type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
+// The pack renderer decodes the PNG itself, so a source returns its bytes.
+type HeadSource = (hash: string) => Promise<Buffer | undefined>;
 
 export const SKIN_URL = "https://textures.minecraft.net/texture/";
 
@@ -249,7 +262,7 @@ const hasHat = (skin: Image) => {
     .data.some((value, index) => index % 4 === 3 && value < 128);
 };
 
-let headSource: HeadSource = (hash) => loadImage(`${SKIN_URL}${hash}`);
+let headSource: HeadSource = (hash) => downloadImage(`${SKIN_URL}${hash}`);
 
 export function setHeadSource(source: HeadSource) {
   headSource = source;
@@ -270,7 +283,7 @@ async function drawBase(plan: Plan, key: string) {
 
     case "head": {
       const skin = await headSource(plan.skin)
-        .then((data) => (Buffer.isBuffer(data) ? loadImage(data) : data))
+        .then((data) => data && loadImage(data))
         .catch(() => undefined);
       // A skin that fails draws Steve, as the game does, and isn't cached.
       if (!skin) icons.delete(key);
@@ -393,10 +406,7 @@ async function drawIcon(
   return canvas;
 }
 
-export function getItemIcon(
-  texture: ItemTexture,
-  { size = BASE_SIZE, glint = false }: IconOptions = {},
-): Promise<Canvas | undefined> {
+function getLegacyIcon(texture: ItemTexture, size: number, glint: boolean) {
   const key = getCacheKey(texture, size, glint);
   let icon = icons.get(key);
 
@@ -407,4 +417,61 @@ export function getItemIcon(
   }
 
   return icon;
+}
+
+let packs: ItemRenderer | undefined;
+
+const loadSkin = async (url: string) => {
+  const skin = await headSource(url.slice(SKIN_URL.length));
+  if (!skin) throw new Error(`${url} has no skin`);
+  return skin;
+};
+
+// Undefined draws every icon from the 1.8 textures again.
+export function setResourcePacks(stack: PackStack | undefined) {
+  packs = stack && new ItemRenderer(stack, undefined, loadSkin);
+}
+
+function toItemStack(texture: ItemTexture, glint: boolean) {
+  const { model: itemModel, customData } = texture;
+  if (texture.kind === "head") {
+    const skin = `${SKIN_URL}${texture.skin}`;
+    const head: ItemStack = {
+      id: "minecraft:player_head",
+      itemModel,
+      skin,
+      enchanted: glint,
+    };
+    return head;
+  }
+
+  const item = legacyItem(texture.id, texture.damage);
+  if (!item) return undefined;
+
+  const stack: ItemStack = {
+    ...item,
+    itemModel,
+    customData,
+    color: texture.color,
+    enchanted: glint,
+  };
+  return stack;
+}
+
+export function getItemIcon(
+  texture: ItemTexture,
+  { size = BASE_SIZE, glint = false }: IconOptions = {},
+): Promise<Canvas | undefined> {
+  const renderer = packs;
+  const item = toItemStack(texture, glint);
+  if (!renderer || !item) return getLegacyIcon(texture, size, glint);
+
+  // The 1.8 icon stands in for an item the packs can't draw yet, like a banner.
+  return renderer.render(item, size / BASE_SIZE).then(
+    (icon) => {
+      if (icon instanceof Canvas) return icon;
+      throw new TypeError("The pack renderer didn't draw a skia-canvas Canvas");
+    },
+    () => getLegacyIcon(texture, size, glint),
+  );
 }

@@ -40,5 +40,8 @@
 "@statsify/skyblock":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/skyblock"
 
+"@statsify/textures":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/textures"
+
 "@statsify/util":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/util"

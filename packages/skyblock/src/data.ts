@@ -17,6 +17,7 @@ import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
 import hotfLayout from "./generated/hotflayout.json" with { type: "json" };
 import hotmLayout from "./generated/hotmlayout.json" with { type: "json" };
+import itemModels from "./generated/item-models.json" with { type: "json" };
 import kuudraKeys from "./generated/kuudra-keys.json" with { type: "json" };
 import leveling from "./generated/leveling.json" with { type: "json" };
 import petItems from "./generated/pet-items.json" with { type: "json" };
@@ -83,6 +84,9 @@ export const MATERIAL_IDS: Record<string, number | undefined> =
 // 1.8 pack texture paths by "<id>:<damage>", and by "<id>" for damage 0.
 export const TEXTURE_PATHS: Record<string, string | undefined> =
   textures.textures;
+
+// The item_model of each item a modern client draws unlike its 1.8 material.
+export const ITEM_MODELS: Record<string, string | undefined> = itemModels;
 
 // An accessory's higher tiers, or a variant like Dante's Talisman and Ring.
 export const ACCESSORY_UPGRADES = accessories.upgrades as Record<

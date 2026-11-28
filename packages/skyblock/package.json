@@ -37,6 +37,7 @@
     "@statsify/assets": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/rendering": "workspace:^",
+    "@statsify/textures": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "lru-cache": "^11.5.3",
