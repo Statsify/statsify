@@ -8,18 +8,17 @@
 
 export * from "./types.js";
 export * from "./raw.js";
-export { getApiSettings } from "./api-settings.js";
 export { buildPriceMap, type SeenIndex } from "./auctions.js";
 export { describeKey, parseBazaar, toPriceView } from "./prices.js";
 export { decodeInventory } from "./nbt.js";
 export { getLevel } from "./leveling.js";
 export { findProfile, toProfileSummary, toProfilesView } from "./profiles.js";
-export { RawItemsResource, parseItemsResource, toItemView } from "./items.js";
-export { resourceTexture, textureOf } from "./textures.js";
+export { parseItemsResource, toItemView } from "./items.js";
+export { getItemTexture, resourceTexture } from "./textures.js";
 export {
   SECTIONS,
   SKYBLOCK_SECTIONS,
-  toMemberView,
+  getApiSettings,
   type SectionInput,
   type SectionKey,
   type SectionNeed,
@@ -27,8 +26,12 @@ export {
 } from "./sections/index.js";
 export { getAccessories } from "./sections/accessories.js";
 export { DUNGEON_CLASSES, getDungeons } from "./sections/dungeons.js";
-export { getHotm } from "./sections/hotm.js";
+export { POWDERS, getHotm, type Powder } from "./sections/hotm.js";
 export { getSkyBlockLevel } from "./sections/level.js";
 export { getPets } from "./sections/pets.js";
-export { getSkills } from "./sections/skills.js";
-export { getSlayers } from "./sections/slayers.js";
+export { SKILLS, getSkills, type Skill } from "./sections/skills.js";
+export {
+  SLAYER_BOSSES,
+  getSlayers,
+  type SlayerBoss,
+} from "./sections/slayers.js";

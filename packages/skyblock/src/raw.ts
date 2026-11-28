@@ -6,271 +6,206 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { z } from "zod";
+// Hypixel leaves out what a player never touched or an API setting hides.
 
-// The parts of Hypixel's /v2/skyblock responses this package reads, all optional since Hypixel leaves out what a player
-// never touched or an API setting hides. Keys we don't read pass, and callers keep Hypixel's object, not the parsed copy.
+export interface RawNbt {
+  type?: number;
+  data: string;
+}
 
-const numbers = z.record(z.string(), z.number());
+export interface RawPet {
+  uuid?: string | null;
+  uniqueId?: string | null;
+  type: string;
+  exp: number;
+  active: boolean;
+  tier: string;
+  heldItem?: string | null;
+  candyUsed?: number;
+  skin?: string | null;
+}
 
-/** A base64 gzipped NBT blob. */
-export const RawNbt = z.object({
-  type: z.number().optional(),
-  data: z.string(),
-});
-export type RawNbt = z.infer<typeof RawNbt>;
+export interface RawDungeonType {
+  experience?: number;
+  times_played?: Record<string, number>;
+  tier_completions?: Record<string, number>;
+  highest_tier_completed?: number;
+  best_score?: Record<string, number>;
+  fastest_time?: Record<string, number>;
+  fastest_time_s?: Record<string, number>;
+  fastest_time_s_plus?: Record<string, number>;
+}
 
-export const RawPet = z.object({
-  uuid: z.string().nullish(),
-  uniqueId: z.string().nullish(),
-  type: z.string(),
-  exp: z.number(),
-  active: z.boolean(),
-  tier: z.string(),
-  heldItem: z.string().nullish(),
-  candyUsed: z.number().optional(),
-  skin: z.string().nullish(),
-});
-export type RawPet = z.infer<typeof RawPet>;
+export interface RawSlayerBoss {
+  xp?: number;
+  [kills: `boss_kills_tier_${number}`]: number | undefined;
+}
 
-export const RawDungeonType = z.object({
-  experience: z.number().optional(),
-  times_played: numbers.optional(),
-  tier_completions: numbers.optional(),
-  highest_tier_completed: z.number().optional(),
-  best_score: numbers.optional(),
-  fastest_time: numbers.optional(),
-  fastest_time_s: numbers.optional(),
-  fastest_time_s_plus: numbers.optional(),
-});
-export type RawDungeonType = z.infer<typeof RawDungeonType>;
+export interface RawMember {
+  player_id?: string;
+  profile?: {
+    deletion_notice?: { timestamp: number };
+    coop_invitation?: { confirmed: boolean };
+    bank_account?: number;
+    first_join?: number;
+  };
+  leveling?: { experience?: number; highest_pet_score?: number };
+  currencies?: { coin_purse?: number };
+  fairy_soul?: { total_collected?: number };
+  player_data?: { experience?: Record<string, number> };
+  collection?: Record<string, number>;
+  inventory?: {
+    inv_contents?: RawNbt;
+    inv_armor?: RawNbt;
+    equipment_contents?: RawNbt;
+    ender_chest_contents?: RawNbt;
+    personal_vault_contents?: RawNbt;
+    wardrobe_contents?: RawNbt;
+    wardrobe_equipped_slot?: number;
+    backpack_contents?: Record<string, RawNbt>;
+    bag_contents?: {
+      talisman_bag?: RawNbt;
+      potion_bag?: RawNbt;
+      fishing_bag?: RawNbt;
+      quiver?: RawNbt;
+      sacks_bag?: RawNbt;
+    };
+    sacks_counts?: Record<string, number>;
+  };
+  jacobs_contest?: { perks?: { farming_level_cap?: number } };
+  pets_data?: {
+    pets?: RawPet[];
+    pet_care?: { pet_types_sacrificed?: string[] };
+  };
+  dungeons?: {
+    dungeon_types?: {
+      catacombs?: RawDungeonType;
+      master_catacombs?: RawDungeonType;
+    };
+    player_classes?: Record<string, { experience?: number }>;
+    selected_dungeon_class?: string;
+    secrets?: number;
+  };
+  slayer?: { slayer_bosses?: Record<string, RawSlayerBoss> };
+  skill_tree?: {
+    nodes?: Record<string, Record<string, number | boolean>>;
+    tokens_spent?: Record<string, number>;
+    experience?: Record<string, number>;
+    selected_ability?: Record<string, string>;
+    selected_skill_tree_slot?: Record<string, number>;
+  };
+  mining_core?: {
+    experience?: number;
+    nodes?: Record<string, number | boolean>;
+    tokens_spent?: number;
+    selected_pickaxe_ability?: string;
+    [powder: `powder_${string}`]: number | undefined;
+  };
+  accessory_bag_storage?: {
+    tuning?: { slot_0?: Record<string, number>; [slot: string]: unknown };
+    selected_power?: string;
+    highest_magical_power?: number;
+  };
+  rift?: { access?: { consumed_prism?: boolean } };
+  nether_island_player_data?: { abiphone?: { active_contacts?: string[] } };
+}
 
-export const RawSlayerBoss = z
-  .object({ xp: z.number().optional() })
-  .and(
-    z.looseRecord(
-      z.templateLiteral(["boss_kills_tier_", z.number()]),
-      z.number().optional(),
-    ),
-  );
-export type RawSlayerBoss = z.infer<typeof RawSlayerBoss>;
+export interface RawProfile {
+  profile_id: string;
+  cute_name: string;
+  selected?: boolean;
+  game_mode?: string;
+  banking?: { balance?: number };
+  members: Record<string, RawMember>;
+}
 
-export const RawMember = z.object({
-  player_id: z.string().optional(),
-  profile: z
-    .object({
-      deletion_notice: z.object({ timestamp: z.number() }).optional(),
-      coop_invitation: z.object({ confirmed: z.boolean() }).optional(),
-      bank_account: z.number().optional(),
-      first_join: z.number().optional(),
-    })
-    .optional(),
-  leveling: z
-    .object({
-      experience: z.number().optional(),
-      highest_pet_score: z.number().optional(),
-    })
-    .optional(),
-  currencies: z.object({ coin_purse: z.number().optional() }).optional(),
-  fairy_soul: z.object({ total_collected: z.number().optional() }).optional(),
-  player_data: z.object({ experience: numbers.optional() }).optional(),
-  collection: numbers.optional(),
-  inventory: z
-    .object({
-      inv_contents: RawNbt.optional(),
-      inv_armor: RawNbt.optional(),
-      equipment_contents: RawNbt.optional(),
-      ender_chest_contents: RawNbt.optional(),
-      personal_vault_contents: RawNbt.optional(),
-      wardrobe_contents: RawNbt.optional(),
-      wardrobe_equipped_slot: z.number().optional(),
-      backpack_contents: z.record(z.string(), RawNbt).optional(),
-      bag_contents: z
-        .object({
-          talisman_bag: RawNbt.optional(),
-          potion_bag: RawNbt.optional(),
-          fishing_bag: RawNbt.optional(),
-          quiver: RawNbt.optional(),
-          sacks_bag: RawNbt.optional(),
-        })
-        .optional(),
-      sacks_counts: numbers.optional(),
-    })
-    .optional(),
-  jacobs_contest: z
-    .object({
-      perks: z.object({ farming_level_cap: z.number().optional() }).optional(),
-    })
-    .optional(),
-  pets_data: z
-    .object({
-      pets: z.array(RawPet).optional(),
-      pet_care: z
-        .object({ pet_types_sacrificed: z.array(z.string()).optional() })
-        .optional(),
-    })
-    .optional(),
-  dungeons: z
-    .object({
-      dungeon_types: z
-        .object({
-          catacombs: RawDungeonType.optional(),
-          master_catacombs: RawDungeonType.optional(),
-        })
-        .optional(),
-      player_classes: z
-        .record(z.string(), z.object({ experience: z.number().optional() }))
-        .optional(),
-      selected_dungeon_class: z.string().optional(),
-      secrets: z.number().optional(),
-    })
-    .optional(),
-  slayer: z
-    .object({ slayer_bosses: z.record(z.string(), RawSlayerBoss).optional() })
-    .optional(),
-  skill_tree: z
-    .object({
-      nodes: z
-        .record(
-          z.string(),
-          z.record(z.string(), z.union([z.number(), z.boolean()])),
-        )
-        .optional(),
-      tokens_spent: numbers.optional(),
-      experience: numbers.optional(),
-      selected_ability: z.record(z.string(), z.string()).optional(),
-      selected_skill_tree_slot: numbers.optional(),
-    })
-    .optional(),
-  mining_core: z
-    .object({
-      experience: z.number().optional(),
-      nodes: z
-        .record(z.string(), z.union([z.number(), z.boolean()]))
-        .optional(),
-      tokens_spent: z.number().optional(),
-      selected_pickaxe_ability: z.string().optional(),
-    })
-    .and(
-      z.looseRecord(
-        z.templateLiteral(["powder_", z.string()]),
-        z.number().optional(),
-      ),
-    )
-    .optional(),
-  accessory_bag_storage: z
-    .object({
-      tuning: z
-        .object({ slot_0: numbers.optional() })
-        .catchall(z.unknown())
-        .optional(),
-      selected_power: z.string().optional(),
-      highest_magical_power: z.number().optional(),
-    })
-    .optional(),
-  rift: z
-    .object({
-      access: z.object({ consumed_prism: z.boolean().optional() }).optional(),
-    })
-    .optional(),
-  nether_island_player_data: z
-    .object({
-      abiphone: z
-        .object({ active_contacts: z.array(z.string()).optional() })
-        .optional(),
-    })
-    .optional(),
-});
-export type RawMember = z.infer<typeof RawMember>;
+interface RawDonation {
+  donated_time?: number;
+  items?: RawNbt;
+}
 
-export const RawProfile = z.object({
-  profile_id: z.string(),
-  cute_name: z.string(),
-  selected: z.boolean().optional(),
-  game_mode: z.string().optional(),
-  banking: z.object({ balance: z.number().optional() }).optional(),
-  members: z.record(z.string(), RawMember),
-});
-export type RawProfile = z.infer<typeof RawProfile>;
+export interface RawMuseumMember {
+  value?: number;
+  appraisal?: boolean;
+  items?: Record<string, RawDonation>;
+  special?: RawDonation[];
+}
 
-/**
- * /v2/skyblock/profiles, checked on arrival for what every lookup reads: each profile's own fields, and what finding a
- * profile, its summary and the API settings read of its members. Each section checks the rest as it reads it.
- */
-export const RawProfilesResponse = z.object({
-  profiles: z
-    .array(
-      RawProfile.extend({
-        members: z.record(
-          z.string(),
-          RawMember.pick({
-            collection: true,
-            currencies: true,
-            fairy_soul: true,
-            inventory: true,
-            leveling: true,
-            player_data: true,
-            player_id: true,
-            profile: true,
-          }),
-        ),
-      }),
-    )
-    .nullish(),
-});
+// The museum lists only the members whose museum API is on.
+export interface RawMuseum {
+  members?: Record<string, RawMuseumMember>;
+}
 
-const RawDonation = z.object({
-  donated_time: z.number().optional(),
-  items: RawNbt.optional(),
-});
+// One inventory slot, as prismarine-nbt's simplify() returns it.
+export interface RawItem {
+  id: number;
+  Count: number;
+  Damage: number;
+  tag?: {
+    display?: { Name?: string; Lore?: string[]; color?: number };
+    ExtraAttributes?: {
+      id?: string;
+      uuid?: string;
+      modifier?: string;
+      upgrade_level?: number;
+      // A few items store it as a long, which the decode leaves as [high, low].
+      dungeon_item_level?: number | [number, number];
+      rarity_upgrades?: number;
+      enchantments?: Record<string, number>;
+      [key: string]: unknown;
+    };
+    SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
+    ench?: unknown[];
+  };
+}
 
-export const RawMuseumMember = z.object({
-  value: z.number().optional(),
-  appraisal: z.boolean().optional(),
-  items: z.record(z.string(), RawDonation).optional(),
-  special: z.array(RawDonation).optional(),
-});
-export type RawMuseumMember = z.infer<typeof RawMuseumMember>;
+export interface RawResourceItem {
+  id: string;
+  name: string;
+  material: string;
+  durability?: number;
+  tier?: string;
+  category?: string;
+  color?: string;
+  skin?: { value: string };
+  origin?: string;
+  rift_transferrable?: boolean;
+  npc_sell_price?: number;
+}
 
-/** /v2/skyblock/museum: one entry per member whose museum API is on. */
-export const RawMuseum = z.object({
-  members: z.record(z.string(), RawMuseumMember).optional(),
-});
-export type RawMuseum = z.infer<typeof RawMuseum>;
+export interface RawItemsResource {
+  lastUpdated: number;
+  items: RawResourceItem[];
+}
 
-/** One /v2/skyblock/auctions entry, with only the fields the price builder reads. `bin` isn't in docs.json. */
-export const RawAuction = z.object({
-  uuid: z.string(),
-  starting_bid: z.number(),
-  item_bytes: z.union([z.string(), RawNbt]), // a string in practice; docs.json says an object
-  bin: z.boolean().optional(),
-});
-export type RawAuction = z.infer<typeof RawAuction>;
+// The auction fields the price builder reads, where bin isn't in docs.json.
+export interface RawAuction {
+  uuid: string;
+  starting_bid: number;
+  // docs.json says an object, but Hypixel sends a string.
+  item_bytes: string | RawNbt;
+  bin?: boolean;
+}
 
-export const RawAuctionsPage = z.object({
-  totalPages: z.number(),
-  lastUpdated: z.number(),
-  auctions: z.array(RawAuction),
-});
-export type RawAuctionsPage = z.infer<typeof RawAuctionsPage>;
+export interface RawAuctionsPage {
+  totalPages: number;
+  lastUpdated: number;
+  auctions: RawAuction[];
+}
 
-const RawOrders = z.array(z.object({ pricePerUnit: z.number() }));
-
-/** /v2/skyblock/bazaar */
-export const RawBazaar = z.object({
-  lastUpdated: z.number(),
-  products: z.record(
-    z.string(),
-    z.object({
-      sell_summary: RawOrders,
-      buy_summary: RawOrders,
-      quick_status: z.object({
-        sellPrice: z.number(),
-        sellMovingWeek: z.number(),
-        buyPrice: z.number(),
-        buyMovingWeek: z.number(),
-      }),
-    }),
-  ),
-});
-export type RawBazaar = z.infer<typeof RawBazaar>;
+export interface RawBazaar {
+  lastUpdated: number;
+  products: Record<
+    string,
+    {
+      sell_summary: { pricePerUnit: number }[];
+      buy_summary: { pricePerUnit: number }[];
+      quick_status: {
+        sellPrice: number;
+        sellMovingWeek: number;
+        buyPrice: number;
+        buyMovingWeek: number;
+      };
+    }
+  >;
+}
