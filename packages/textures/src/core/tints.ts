@@ -46,7 +46,7 @@ const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:saturation": 0xf8_24_23,
 };
 
-/** In the order of 1.8 wool's Damage values */
+// In the order of 1.8 wool's Damage values
 export const DYES = {
   white: 0xf9_ff_fe,
   orange: 0xf9_80_1d,

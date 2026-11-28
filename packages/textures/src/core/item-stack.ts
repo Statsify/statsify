@@ -15,7 +15,6 @@ export interface PotionEffect {
 }
 
 export interface BannerLayer {
-  /** A banner_pattern id, like "minecraft:stripe_top" */
   pattern: string;
   color: DyeColor;
 }
@@ -28,9 +27,9 @@ export interface ItemStack {
   effects?: PotionEffect[];
   enchanted?: boolean;
   skin?: string;
-  /** Bottom layer first */
+  // Bottom layer first
   patterns?: BannerLayer[];
-  /** A shield's base color. Banners take theirs from their id */
+  // Banners take their base color from their id
   baseColor?: DyeColor;
   name?: TextComponent;
   lore?: TextComponent[];

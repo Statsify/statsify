@@ -57,7 +57,6 @@ const FLAG_POSE: Transformation = {
   translation: [0, -44 / 16, 0],
 };
 
-/** The entity texture folder each patterned special model draws its patterns from */
 export const PATTERN_FOLDERS = {
   "minecraft:banner": "banner",
   "minecraft:shield": "shield",
@@ -513,7 +512,6 @@ export class ItemRenderer {
     );
   }
 
-  /** A special model's quads, in passes drawn one over the other */
   private async specialPasses(
     special: SpecialModel,
     item: ItemStack,
@@ -629,7 +627,7 @@ export class ItemRenderer {
     return [place(quads)];
   }
 
-  // Each pattern is its own pass, since at its part's exact depth it would lose depth ties and stripe
+  // Each pattern gets its own pass, or it would lose depth ties and stripe
   private async patternPasses(
     part: (texture: ImageData) => Quad[],
     folder: (typeof PATTERN_FOLDERS)[keyof typeof PATTERN_FOLDERS],
