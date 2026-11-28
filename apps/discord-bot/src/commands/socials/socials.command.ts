@@ -12,6 +12,7 @@ import {
   CommandContext,
   EmbedBuilder,
   IMessage,
+  type LocalizeFunction,
   PlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
@@ -73,7 +74,7 @@ export class SocialsCommand {
     if (url) return `[\`Here\`](${url})`;
 
     const text = social?.replaceAll("`", "").trim();
-    return `\`${text || "N/A"}\``;
+    return (t: LocalizeFunction) => `\`${text || t("stats.notAvailable")}\``;
   }
 }
 

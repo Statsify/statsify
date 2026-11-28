@@ -8,7 +8,8 @@
 
 import { type ArcadeModes, type Dropper, DropperMaps, type SubModeForMode, scanMetadata } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
-import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
+import { arrayGroup, formatTime } from "@statsify/util";
+import { formatBestTime } from "#lib/format-best-time";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
@@ -91,7 +92,7 @@ const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (
 
         switch (stat) {
           case "bestTimes":
-            value = map.bestTime === 0 ? "§7N/A" : formatRaceTime(map.bestTime);
+            value = formatBestTime(t, map.bestTime);
             break;
           case "completions":
             value = t(map.completions);

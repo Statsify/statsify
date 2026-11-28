@@ -124,11 +124,11 @@ const RecentGamesTable = ({ recentGames, t, gameIcons }: RecentGamesTableProps) 
                 </text>
                 <Multiline align="left" margin={2}>
                   {[
-                    `§7${t("stats.mode")}: §f${mode ? mapGame(game.id, mode) : "N/A"}`,
-                    `§7${t("stats.map")}: §f${map ?? "N/A"}`,
+                    `§7${t("stats.mode")}: §f${mode ? mapGame(game.id, mode) : t("stats.notAvailable")}`,
+                    `§7${t("stats.map")}: §f${map ?? t("stats.notAvailable")}`,
                     `§7${t("stats.started")}: §f${relativeTime(startedAt)}`,
                     `§7${t("stats.ended")}: §f${
-                      endedAt ? relativeTime(endedAt) : "N/A"
+                      endedAt ? relativeTime(endedAt) : t("stats.notAvailable")
                     }`,
                   ].join("\n")}
                 </Multiline>

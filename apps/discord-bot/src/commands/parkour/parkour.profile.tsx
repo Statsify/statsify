@@ -23,13 +23,14 @@ export const ParkourProfile = ({
   logo,
   user,
   background,
+  t,
   gameIcons,
 }: ParkourProfileProps) => {
   const { parkour } = player.stats;
 
   const times: [GameId, any][] = Object.entries(parkour)
     .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => [field as GameId, formatRecordTime(time)]);
+    .map(([field, time]) => [field as GameId, formatRecordTime(time, t("stats.notAvailable"))]);
 
   return (
     <Container background={background}>

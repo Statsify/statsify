@@ -183,8 +183,8 @@ export const relativeTime = (time: number) =>
 export const formatRaceTime = (timeMs: number) =>
   `${(timeMs / 1000).toFixed(3)}s`;
 
-export const formatRecordTime = (timeMs: number) =>
-  timeMs ? formatTime(timeMs) : "N/A";
+export const formatRecordTime = (timeMs: number, notAvailable: string) =>
+  timeMs ? formatTime(timeMs) : notAvailable;
 
 export const abbreviationNumber = (
   num: number,

@@ -18,7 +18,7 @@ import {
   FormattedGame,
   type GameMode,
 } from "@statsify/schemas";
-import { formatRaceTime } from "@statsify/util";
+import { formatBestTime } from "#lib/format-best-time";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 const PRACTICE_MODES = [
@@ -102,11 +102,7 @@ export const BedWarsPracticeProfile = ({
               {row.map((record) => (
                 <Table.td
                   title={t(`stats.${record}`)}
-                  value={
-                    practice.bridgingRecords[record] === 0
-                      ? `§7${t("stats.notAvailable")}`
-                      : formatRaceTime(practice.bridgingRecords[record])
-                  }
+                  value={formatBestTime(t, practice.bridgingRecords[record])}
                   color={record.startsWith("straight") ? "§e" : "§d"}
                   size="small"
                 />
