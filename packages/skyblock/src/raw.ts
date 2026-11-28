@@ -197,10 +197,12 @@ export interface RawMember {
     reaper_peppers_eaten?: number;
     bee_saliva_eaten?: number;
     isopod_husks_eaten?: number;
-    crafted_generators?: string[]; // "WHEAT_11"
+    // Each entry is a minion and tier, like "WHEAT_11".
+    crafted_generators?: string[];
   };
   collection?: Record<string, number>;
-  attributes?: { stacks?: Record<string, number> }; // shards syphoned
+  // Each attribute counts the shards syphoned into it.
+  attributes?: { stacks?: Record<string, number> };
   shards?: { owned?: { type: string; amount_owned?: number }[] };
   inventory?: {
     inv_contents?: RawNbt;

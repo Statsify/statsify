@@ -177,9 +177,11 @@ export interface GearSection {
 export interface Loadout {
   id: number;
   name: string;
-  armorSet?: number; // a wardrobe slot
+  // The armor set is a wardrobe slot.
+  armorSet?: number;
   equipmentSet?: number;
-  pet?: string; // the pet's uniqueId
+  // The pet is named by its uniqueId.
+  pet?: string;
   power?: string;
   tuning?: Record<string, number>;
 }
@@ -491,8 +493,10 @@ export interface CollectionView {
   amount: number;
   tier: number;
   maxTier: number;
-  next?: number; // the amount the next tier needs
-  members: { uuid: string; amount: number }[]; // most first
+  // next is the amount the next tier needs.
+  next?: number;
+  // Members are sorted most first.
+  members: { uuid: string; amount: number }[];
 }
 
 export interface MinionsSection {
@@ -503,11 +507,14 @@ export interface MinionsSection {
     tiers: number[];
     maxTier: number;
   }[];
-  unique: number; // tiers crafted, each once
-  total: number; // every tier of every minion
+  // unique counts each tier crafted once.
+  unique: number;
+  // total counts every tier of every minion.
+  total: number;
   // next is the unique crafts the next slot needs.
   slots: { total: number; crafts: number; community: number; next?: number };
-  members: { uuid: string; amount: number }[]; // unique crafts, most first
+  // Members are sorted by unique crafts, most first.
+  members: { uuid: string; amount: number }[];
 }
 
 export interface BestiarySection {
@@ -524,7 +531,8 @@ export interface BestiaryFamilyView {
   kills: number;
   tier: number;
   maxTier: number;
-  next?: number; // the kills the next tier needs
+  // next is the kills the next tier needs.
+  next?: number;
 }
 
 export interface AttributesSection {
@@ -535,13 +543,16 @@ export interface AttributesSection {
     rarity: Rarity;
     families: string[];
     level: number;
-    maxLevel: number; // 0 for a shard that can't be syphoned
+    // A shard that can't be syphoned has a maxLevel of 0.
+    maxLevel: number;
     owned: number;
   }[];
   unlocked: number;
   maxed: number;
-  total: number; // attributes with levels
-  owned: number; // shards held
+  // total counts the attributes with levels.
+  total: number;
+  // owned counts the shards held.
+  owned: number;
 }
 
 export interface GardenSection {
@@ -806,7 +817,8 @@ export interface StatTotal {
   stat: PlayerStat;
   total: number;
   bySource: Partial<Record<StatSource, number>>;
-  byAttribute?: Record<string, number>; // by the Hunting attribute's name
+  // byAttribute is keyed by the Hunting attribute's name.
+  byAttribute?: Record<string, number>;
 }
 
 export interface StatsSection {
@@ -819,7 +831,8 @@ export interface StatsSection {
 export interface MiscSection {
   kills: number;
   deaths: number;
-  topKills: { name: string; count: number }[]; // the 20 most
+  // topKills holds the 20 mobs with the most kills.
+  topKills: { name: string; count: number }[];
   topDeaths: { name: string; count: number }[];
   highestDamage?: number;
   highestCriticalDamage?: number;
@@ -1069,7 +1082,8 @@ export interface ItemsResource {
       riftOnly?: boolean;
       npcPrice?: number;
       glowing?: boolean;
-      generator?: string; // a minion's type, on each of its tiers
+      // Each of a minion's tiers carries the minion's type.
+      generator?: string;
       generatorTier?: number;
     }
   >;
