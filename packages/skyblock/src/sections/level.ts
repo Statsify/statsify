@@ -6,11 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PET_RARITIES, getPetMaxLevel, toSkyBlockLevel } from "#leveling";
+import {
+  PET_RARITIES,
+  getPetMaxLevel,
+  getPetScore,
+  getPetScorePoints,
+  toSkyBlockLevel,
+} from "#leveling";
 import { PET_TEXTURES, SKYBLOCK_XP, getPetName } from "#data";
 import { getAccessorySteps, keepBestPerChain } from "./accessories.js";
 import { getItemCost, getPetKeyName, parsePetKey } from "#prices";
-import { getPetScore, getPetScorePoints } from "./pets.js";
 import { getPetTexture } from "#textures";
 import { prettify } from "@statsify/util";
 import type { ItemsResource, PriceMap, SkyBlockLevelSection } from "#types";

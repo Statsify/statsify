@@ -8,7 +8,8 @@
 
 import { PETS } from "#data";
 import { type Level, RARITIES, type Rarity } from "#types";
-import type { RawPet } from "#raw";
+import { add } from "@statsify/math";
+import type { RawMember, RawPet } from "#raw";
 
 const SKYBLOCK_XP_PER_LEVEL = 100;
 
@@ -109,6 +110,36 @@ export function getPetLevel(pet: RawPet, rarity = boostedRarity(pet)): Level {
   ];
   const level = getLevel(pet.exp, table, maxLevel - 1);
   return { ...level, level: level.level + 1, maxLevel };
+}
+
+// Common scores 1 up to Mythic's 6, and every other tier 0.
+export const getPetScorePoints = (tier: string) =>
+  PET_RARITIES.indexOf(tier as Rarity) + 1;
+
+export function getPetScore(member: RawMember) {
+  // The score ranks each type's pets by the API's tier, without Tier Boost.
+  const best = new Map<
+    string,
+    { points: number; level: number; maxed: boolean }
+  >();
+  for (const pet of member.pets_data?.pets ?? []) {
+    const points = getPetScorePoints(pet.tier);
+    if (points === 0) continue;
+
+    const { level, maxLevel } = getPetLevel(pet);
+    const seen = best.get(pet.type);
+    if (
+      !seen ||
+      points > seen.points ||
+      (points === seen.points && level > seen.level)
+    ) {
+      best.set(pet.type, { points, level, maxed: level === maxLevel });
+    }
+  }
+
+  return add(
+    ...Array.from(best.values(), ({ points, maxed }) => points + Number(maxed)),
+  );
 }
 
 if (import.meta.vitest) {
