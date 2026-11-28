@@ -14,8 +14,8 @@ import {
 import {
   AbstractArgument,
   ApiService,
-  CommandContext,
-  LocalizationString,
+  type CommandContext,
+  type LocalizationString,
   autocompleteNames,
 } from "@statsify/discord";
 import {
@@ -82,7 +82,7 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   }
 }
 
-export class PlayerLeaderboardGuildArgument extends AbstractArgument {
+class PlayerLeaderboardGuildArgument extends AbstractArgument {
   public name = "guild";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
