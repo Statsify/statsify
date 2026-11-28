@@ -264,7 +264,6 @@ const editKey = async () => {
     }
   }
 
-  // @ts-expect-error the default is the stored string
   const newValue = await inquirer.prompt([
     {
       type: "number",
