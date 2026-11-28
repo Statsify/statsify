@@ -12,16 +12,51 @@ import { queryBoolean } from "./skin-render.dto.js";
 import { sceneCamera } from "./scene-camera.dto.js";
 import { z } from "zod";
 
-export const KART_CAMERA = { width: 600, height: 450, yaw: -Math.PI / 6, pitch: Math.PI / 10 };
+export const KART_CAMERA = {
+  width: 600,
+  height: 450,
+  yaw: -Math.PI / 6,
+  pitch: Math.PI / 10,
+};
 
 export class KartRenderDto extends createZodDto(
   sceneCamera(KART_CAMERA).extend({
-    kart: z.string().describe("The player's stored skin_active, such as YELLOW_KART;DRAGON_TAMER"),
-    uuid: UuidDto.schema.shape.uuid.optional().describe("The player seated in the kart. Without one, the kart is drawn empty"),
-    helmet: z.string().optional().describe("The player's stored helmet_active, such as HELMET_5_5 or NO_HELMET"),
-    jacket: z.string().optional().describe("The player's stored jacket_active, such as GOLD_JACKET, LEATHER_JACKET:RED or NO_JACKET"),
-    pants: z.string().optional().describe("The player's stored pants_active, such as GOLD_PANTS or NO_PANTS"),
-    shoes: z.string().optional().describe("The player's stored shoes_active, such as GOLD_SHOES or NO_SHOES"),
-    extruded: queryBoolean("false").optional().describe("Draw the skin's outer layer in 3D"),
-  })
+    kart: z
+      .string()
+      .describe(
+        "The player's stored skin_active, such as YELLOW_KART;DRAGON_TAMER",
+      ),
+    uuid: UuidDto.schema.shape.uuid
+      .optional()
+      .describe(
+        "The player seated in the kart. Without one, the kart is drawn empty",
+      ),
+    helmet: z
+      .string()
+      .optional()
+      .describe(
+        "The player's stored helmet_active, such as HELMET_5_5 or NO_HELMET",
+      ),
+    jacket: z
+      .string()
+      .optional()
+      .describe(
+        "The player's stored jacket_active, such as GOLD_JACKET, LEATHER_JACKET:RED or NO_JACKET",
+      ),
+    pants: z
+      .string()
+      .optional()
+      .describe(
+        "The player's stored pants_active, such as GOLD_PANTS or NO_PANTS",
+      ),
+    shoes: z
+      .string()
+      .optional()
+      .describe(
+        "The player's stored shoes_active, such as GOLD_SHOES or NO_SHOES",
+      ),
+    extruded: queryBoolean("false")
+      .optional()
+      .describe("Draw the skin's outer layer in 3D"),
+  }),
 ) {}

@@ -16,7 +16,13 @@ export const SMASH_CAMERA = WARLORDS_CAMERA.player;
 
 export class SmashRenderDto extends createZodDto(
   sceneCamera(SMASH_CAMERA).extend({
-    hero: z.string().describe("The player's stored active_class, such as GENERAL_CLUCK"),
-    master: queryBoolean("false").optional().describe("Draw the hero's Master Skin, the player's stored masterArmor_<hero>"),
-  })
+    hero: z
+      .string()
+      .describe("The player's stored active_class, such as GENERAL_CLUCK"),
+    master: queryBoolean("false")
+      .optional()
+      .describe(
+        "Draw the hero's Master Skin, the player's stored masterArmor_<hero>",
+      ),
+  }),
 ) {}
