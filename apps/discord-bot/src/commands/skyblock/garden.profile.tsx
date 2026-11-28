@@ -14,7 +14,7 @@ import { arrayGroup } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const gardenIcons = ({ garden }: MemberView) =>
+export const getGardenIcons = ({ garden }: MemberView) =>
   garden?.garden?.crops
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined) ?? [];

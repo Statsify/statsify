@@ -18,7 +18,7 @@ import {
   SkyBlockEssenceProfile,
 } from "./dungeons.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
-import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
+import { SkyBlockGardenProfile, getGardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockJacobProfile, getJacobIcons } from "./jacob.profile.js";
@@ -170,7 +170,7 @@ export const SKYBLOCK_CARDS = {
   garden: {
     sections: ["garden"],
     settings: [],
-    icons: gardenIcons,
+    icons: getGardenIcons,
     profile: SkyBlockGardenProfile,
   },
   chocolate: {

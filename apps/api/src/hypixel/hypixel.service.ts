@@ -208,7 +208,7 @@ export class HypixelService {
     const request = this.request<{ garden: RawGarden }>(
       "/v2/skyblock/garden",
       { profile: profileId },
-      { timeout: SKYBLOCK_TIMEOUT }
+      { timeout: SKYBLOCK_TIMEOUT_MS }
     );
 
     return lastValueFrom(
