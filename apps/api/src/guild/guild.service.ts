@@ -10,6 +10,7 @@ import {
   CacheLevel,
   GuildNotFoundException,
   GuildQuery,
+  HypixelUnavailableException,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
@@ -17,7 +18,7 @@ import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.servic
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { Injectable, ServiceUnavailableException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import type { Redis } from "ioredis";
@@ -44,7 +45,7 @@ export class GuildService {
     inputtedTag: string,
     type: GuildQuery,
     cache: CacheLevel
-  ): Promise<Guild | null> {
+  ): Promise<{ guild: Guild; hypixelUnavailable: boolean }> {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     // A player's saved guild id isn't cleared when they leave
@@ -52,7 +53,7 @@ export class GuildService {
       type !== GuildQuery.PLAYER || cachedGuild?.members.some((member) => member.uuid === tag);
 
     if (cachedGuild && listsPlayer && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return this.fromCache(cachedGuild);
+      return { guild: this.fromCache(cachedGuild), hypixelUnavailable: false };
     }
 
     if (
@@ -71,9 +72,9 @@ export class GuildService {
         tag,
         type.toLowerCase() as Lowercase<GuildQuery>
       );
-    } catch {
-      if (cachedGuild && listsPlayer) return this.fromCache(cachedGuild);
-      throw new ServiceUnavailableException();
+    } catch (error) {
+      if (!cachedGuild || !listsPlayer || !(error instanceof HypixelUnavailableException)) throw error;
+      return { guild: this.fromCache(cachedGuild), hypixelUnavailable: true };
     }
 
     if (!guild) {
@@ -173,7 +174,7 @@ export class GuildService {
 
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
-    return deserialize(Guild, flatGuild);
+    return { guild: deserialize(Guild, flatGuild), hypixelUnavailable: false };
   }
 
   private fromCache(cachedGuild: Guild): Guild {

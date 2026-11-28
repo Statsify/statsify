@@ -8,6 +8,7 @@
 
 import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
+import { MojangModule } from "#mojang";
 import { Player } from "@statsify/schemas";
 import { PlayerController } from "./player.controller.js";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
@@ -21,6 +22,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     HypixelModule,
     TypegooseModule.forFeature([Player]),
+    MojangModule,
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],

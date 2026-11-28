@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
+import { CacheLevel, HypixelUnavailableException } from "@statsify/api-client";
 import {
   GameCounts,
   Guild,
@@ -36,22 +36,19 @@ export class HypixelService {
     );
   }
 
-  public getPlayer(tag: string) {
+  // Not by name: Hypixel answers a name looked up again soon after with a 429
+  public getPlayer(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
+      this.request<APIData>("/player", { uuid }).pipe(
         map((data) => {
           if (data.player) return new Player(data.player);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
 
-  /** Resolves to null for no guild or rejected input; other failures reject. */
   public getGuild(tag: string, type: "name" | "id" | "player") {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
@@ -59,14 +56,7 @@ export class HypixelService {
           if (data.guild) return new Guild(data.guild);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-
-          const status = err.cause?.response?.status;
-          if (status === 400 || status === 422) return of(null);
-
-          return throwError(() => err);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
@@ -78,10 +68,7 @@ export class HypixelService {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of([]);
-        })
+        catchError((err) => this.handleFailure(err, []))
       )
     );
   }
@@ -93,10 +80,7 @@ export class HypixelService {
           if (data.session) return new Status(data.session);
           return null;
         }),
-        catchError((err) => {
-          this.logger.error(err);
-          return of(null);
-        })
+        catchError((err) => this.handleFailure(err, null))
       )
     );
   }
@@ -144,6 +128,18 @@ export class HypixelService {
     if (resourceData) this.resources.set(resource, resourceData);
 
     return this.resources.get(resource);
+  }
+
+  private handleFailure<T>(err: any, notFound: T): Observable<T> {
+    if (!err.cause?.isAxiosError) return throwError(() => err);
+
+    this.logger.error(err);
+
+    // Hypixel rejecting the input means there is nothing to find
+    const status = err.cause?.response?.status;
+    if (status === 400 || status === 422) return of(notFound);
+
+    return throwError(() => new HypixelUnavailableException());
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {

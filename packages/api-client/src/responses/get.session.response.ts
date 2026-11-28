@@ -7,10 +7,14 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
+import { HYPIXEL_UNAVAILABLE_PROPERTY } from "./get.player.response.js";
 import { Player } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetSessionResponse extends SuccessResponse {
   @ApiProperty()
   public player: Player;
+
+  @ApiProperty(HYPIXEL_UNAVAILABLE_PROPERTY)
+  public hypixelUnavailable?: boolean;
 }

@@ -8,9 +8,13 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Guild } from "@statsify/schemas";
+import { HYPIXEL_UNAVAILABLE_PROPERTY } from "./get.player.response.js";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetGuildResponse extends SuccessResponse {
   @ApiProperty()
   public guild: Guild;
+
+  @ApiProperty(HYPIXEL_UNAVAILABLE_PROPERTY)
+  public hypixelUnavailable?: boolean;
 }

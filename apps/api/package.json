@@ -63,6 +63,10 @@
       "types": "./src/guild/index.ts",
       "default": "./dist/guild/index.js"
     },
+    "#mojang": {
+      "types": "./src/mojang/index.ts",
+      "default": "./dist/mojang/index.js"
+    },
     "#player": {
       "types": "./src/player/index.ts",
       "default": "./dist/player/index.js"

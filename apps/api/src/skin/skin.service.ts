@@ -11,6 +11,7 @@ import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
+import { PlayerService } from "#player";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
@@ -22,6 +23,7 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 export class SkinService {
   public constructor(
     private readonly httpService: HttpService,
+    private readonly playerService: PlayerService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
   ) {}
 
@@ -66,7 +68,7 @@ export class SkinService {
       return cachedSkin;
     }
 
-    const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const uuid = isUsername ? await this.playerService.getUuid(tag) : tag;
 
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;
@@ -100,23 +102,6 @@ export class SkinService {
     };
   }
 
-  private getUuid(username: string): Promise<string> {
-    return lastValueFrom(
-      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
-        map((response) => response.data as MojangProfile),
-        map((data) => data.id),
-        catchError((error) => {
-          if (error.response.status === 404) throw new PlayerNotFoundException();
-          // Ratelimited
-          if (error.response.status === 429) throw new InternalServerErrorException();
-
-          // Unknown
-          throw new InternalServerErrorException();
-        })
-      )
-    );
-  }
-
   private requestSkin(uuid: string) {
     return lastValueFrom(
       this.httpService.get(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).pipe(
@@ -133,11 +118,4 @@ export class SkinService {
       )
     );
   }
-}
-
-interface MojangProfile {
-  id: string;
-  name: string;
-  legacy?: true;
-  demo?: true;
 }

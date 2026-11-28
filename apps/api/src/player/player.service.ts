@@ -12,7 +12,13 @@ import {
   type Flatten,
   flatten,
 } from "@statsify/util";
-import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
+import {
+  CacheLevel,
+  HypixelUnavailableException,
+  PlayerNotFoundException,
+  StatusNotFoundException,
+} from "@statsify/api-client";
+import { HttpService } from "@nestjs/axios";
 import { HypixelService } from "#hypixel";
 import {
   Inject,
@@ -27,9 +33,16 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { catchError, lastValueFrom, map } from "rxjs";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
+
+export interface PlayerLookup {
+  player: Player | null;
+  /** Set when Hypixel failed and `player` is the cached copy */
+  hypixelError?: HypixelUnavailableException;
+}
 
 @Injectable()
 export class PlayerService {
@@ -38,7 +51,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    private readonly httpService: HttpService
   ) {}
 
   /**
@@ -52,6 +66,18 @@ export class PlayerService {
     cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
+    const { player } = await this.getWithFallback(tag, cacheLevel, selector);
+    return player;
+  }
+
+  /**
+   * Throws a HypixelUnavailableException when Hypixel failed and there is no cached player.
+   */
+  public async getWithFallback(
+    tag: string,
+    cacheLevel: CacheLevel,
+    selector?: Record<string, boolean>
+  ): Promise<PlayerLookup> {
     // ensure we have all the necessary data to replace the player document if we don't do a cache only request
     if (selector && Object.keys(selector).length > 0) {
       selector.uuid = true;
@@ -67,12 +93,24 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer) };
     }
 
-    const player = await this.hypixelService.getPlayer(
-      mongoPlayer?.uuid ?? tag
-    );
+    const uuid = mongoPlayer?.uuid ?? (await this.resolveUuid(tag));
+    if (!uuid) return { player: null };
+
+    let player: Player | null;
+
+    try {
+      player = await this.hypixelService.getPlayer(uuid);
+    } catch (error) {
+      if (!mongoPlayer || !(error instanceof HypixelUnavailableException)) throw error;
+
+      return {
+        player: deserialize(Player, mongoPlayer),
+        hypixelError: error,
+      };
+    }
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
@@ -86,12 +124,12 @@ export class PlayerService {
 
       flatPlayer.isNew = !mongoPlayer;
 
-      return deserialize(Player, flatPlayer);
+      return { player: deserialize(Player, flatPlayer) };
     } else if (mongoPlayer) {
-      return deserialize(Player, mongoPlayer);
+      return { player: deserialize(Player, mongoPlayer) };
     }
 
-    return null;
+    return { player: null };
   }
 
   public async update(data: APIData) {
@@ -132,7 +170,10 @@ export class PlayerService {
 
     const [status, games] = await Promise.all([
       this.hypixelService.getStatus(player.uuid),
-      this.hypixelService.getRecentGames(player.uuid),
+      this.hypixelService.getRecentGames(player.uuid).catch((error) => {
+        if (error instanceof HypixelUnavailableException) return [];
+        throw error;
+      }),
     ]);
 
     if (!status) throw new StatusNotFoundException(player);
@@ -194,6 +235,32 @@ export class PlayerService {
     return flatPlayer;
   }
 
+  public getUuid(username: string): Promise<string> {
+    return lastValueFrom(
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(username)}`).pipe(
+        map((response) => response.data as AccountProfile),
+        map((data) => data.id),
+        catchError((error) => {
+          // A name with characters Minecraft doesn't allow answers 400
+          if ([400, 404].includes(error.response?.status)) throw new PlayerNotFoundException();
+          throw error;
+        })
+      )
+    );
+  }
+
+  /** Null when no Minecraft account has the name */
+  private async resolveUuid(tag: string): Promise<string | null> {
+    if (tag.length > 16) return tag;
+
+    try {
+      return await this.getUuid(tag);
+    } catch (error) {
+      if (error instanceof PlayerNotFoundException) return null;
+      throw error;
+    }
+  }
+
   private async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
@@ -214,4 +281,11 @@ export class PlayerService {
 
     return flatten(mongoPlayer);
   }
+}
+
+interface AccountProfile {
+  id: string;
+  name: string;
+  legacy?: true;
+  demo?: true;
 }
