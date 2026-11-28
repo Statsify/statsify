@@ -26,9 +26,9 @@ const getText = (node: JSX.Element): string[] => {
   return node.children?.flatMap(getText) ?? [];
 };
 
-const join = (texts: string[]) => texts.filter(Boolean).join(" ");
+const joinWords = (texts: string[]) => texts.filter(Boolean).join(" ");
 
-// Call before render(), which copies each component's name onto its unnamed children
+// render() copies component names onto unnamed children, so call this first
 const getAltText = (card: JSX.Element): string => {
   const header: string[] = [];
   const cells: string[] = [];
@@ -42,13 +42,13 @@ const getAltText = (card: JSX.Element): string => {
     if (node.component === HeaderBody.name) {
       header.push(getText(node).at(-1)!);
     } else if (node.component === List.name) {
-      // List lays its items out column by column, so read each row across the columns
+      // List lays out its items by column, so read rows across columns
       const columns = node.children!.map((column) =>
-        column.children!.map((cell) => join(getText(cell))),
+        column.children!.map((cell) => joinWords(getText(cell))),
       );
       cells.push(
         ...columns[0].map((_, row) =>
-          join(columns.map((column) => column[row])),
+          joinWords(columns.map((column) => column[row])),
         ),
       );
     } else if (isHeader && node.type === "text") {
@@ -57,7 +57,7 @@ const getAltText = (card: JSX.Element): string => {
       !isHeader &&
       node.children?.some((child) => child.type === "text")
     ) {
-      cells.push(join(getText(node)));
+      cells.push(joinWords(getText(node)));
     } else {
       for (const child of node.children ?? []) walk(child, isHeader);
     }

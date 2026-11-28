@@ -233,7 +233,9 @@ export class RatiosCommand {
         };
 
         return {
-          files: [await renderAttachment(<RatiosProfile {...props} />, "ratios.png", getTheme(user))],
+          files: [
+            await renderAttachment(<RatiosProfile {...props} />, "ratios.png", getTheme(user)),
+          ],
           attachments: [],
         };
       },
