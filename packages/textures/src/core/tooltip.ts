@@ -18,7 +18,6 @@ const NAMES = "assets/minecraft/lang/en_us.json";
 
 const decoder = new TextDecoder();
 
-/** The stack's English names, for items without a custom name, merged across its packs as the game merges them */
 export function loadNames(stack: PackStack) {
   const files = stack.packs
     .map(({ files }) => files.get(NAMES))
@@ -30,7 +29,6 @@ export function loadNames(stack: PackStack) {
   ) as Record<string, string>;
 }
 
-// Legacy text takes the default style as § codes; a component gets it as a parent to inherit
 const prefixed = (
   text: TextComponent,
   codes: string,
@@ -40,7 +38,7 @@ const prefixed = (
     ? `${codes}${text}`
     : { text: "", ...style, extra: [text] };
 
-/** 1.8 names take priority because those are the names Hypixel players see */
+// 1.8 names come first because those are the names Hypixel players see
 function plainName(item: ItemStack, names: Record<string, string>) {
   const legacy = legacyName(item.id);
   // 1.8 makes only common items aqua when enchanted
@@ -57,7 +55,7 @@ function plainName(item: ItemStack, names: Record<string, string>) {
   return `${item.enchanted ? "§b" : ""}${name}`;
 }
 
-/** An item's tooltip lines in 1.8's order. Renamed items start italic, which a color code at the start of the name clears */
+// Renamed items start italic until a color code clears it
 export function tooltipLines(
   item: ItemStack,
   names: Record<string, string>,
@@ -87,10 +85,8 @@ const BACKGROUND = "rgba(16, 0, 16, 0.941)";
 const BORDER_TOP = "rgba(80, 0, 255, 0.314)";
 const BORDER_BOTTOM = "rgba(40, 0, 127, 0.314)";
 
-/** How far the tooltip box reaches past its text on each side, in GUI pixels */
 const TOOLTIP_PADDING = 4;
 
-/** Draws a tooltip the way 1.8 does */
 export function drawTooltip(
   text: TextRenderer,
   lines: TextComponent[],
@@ -106,7 +102,6 @@ export function drawTooltip(
   );
   const ctx = context(canvas);
 
-  // Rectangles from x1, y1 to x2, y2 around the text's top left, in GUI pixels
   const x = TOOLTIP_PADDING;
   const y = TOOLTIP_PADDING;
 

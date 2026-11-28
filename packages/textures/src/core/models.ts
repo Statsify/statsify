@@ -58,10 +58,8 @@ interface ModelFile {
   gui_light?: "front" | "side";
 }
 
-/** A model with its parents merged in and its #texture references resolved */
 export interface Model {
   id: string;
-  /** builtin/generated items are drawn flat from layer0, layer1, … */
   generated: boolean;
   textures: Record<string, string>;
   elements: ModelElement[];
@@ -69,7 +67,6 @@ export interface Model {
   guiLight: "front" | "side";
 }
 
-/** Geometry drawn in code, like heads and chests, placed by its base model's display */
 export interface SpecialModel {
   type: string;
   kind?: string;
@@ -83,7 +80,6 @@ export interface ItemLayer {
   special?: SpecialModel;
 }
 
-// https://minecraft.wiki/w/Items_model_definition
 type ItemModel =
   | { type: "minecraft:model"; model: string; tints?: TintSource[] }
   | { type: "minecraft:composite"; models: ItemModel[] }
@@ -116,8 +112,7 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-// Properties are read as they are for an item sitting in an inventory: not in use, not
-// selected, not cast, so every condition without a case here is false
+// Every condition without a case is false for an item sitting in a slot
 function condition(
   model: Extract<ItemModel, { type: "minecraft:condition" }>,
   item: ItemStack,
@@ -126,8 +121,7 @@ function condition(
   return model.component === "minecraft:dyed_color" && item.color !== undefined;
 }
 
-// Trims, block states, charge types and clock times aren't on Hypixel's items, so those
-// selects take their fallback
+// Hypixel's items have none of these, so their selects take the fallback
 const select = (model: Extract<ItemModel, { type: "minecraft:select" }>) =>
   model.property === "minecraft:display_context" ? "gui" : undefined;
 
@@ -144,7 +138,6 @@ export class ModelResolver {
 
   public constructor(private stack: PackStack) {}
 
-  /** The models an item draws in an inventory slot, bottom layer first */
   public resolve(item: ItemStack): ItemLayer[] {
     return this.layers(this.definition(item.id), item);
   }
@@ -194,8 +187,7 @@ export class ModelResolver {
       next = file.parent;
     }
 
-    // Children override their parents' textures and display transforms key by key, and
-    // replace their elements whole
+    // Children override textures and display key by key but replace elements
     const root = chain.toReversed();
 
     const model: Model = {
@@ -209,8 +201,7 @@ export class ModelResolver {
       guiLight: chain.find((file) => file.gui_light)?.gui_light ?? "side",
     };
 
-    // 1.8.9 turned every 3D item like a block in code before the gui transform its model inherits,
-    // so a model gets both when that transform comes from a 1.8.9 file, or it has none and any 1.8.9 file
+    // 1.8.9 turned every 3D item like a block before its gui transform
     const gui = chain.findIndex((file) => file.display?.gui);
     if (!generated && (gui === -1 ? legacy.includes(true) : legacy[gui])) {
       model.display.gui = composeTransforms(
@@ -223,8 +214,7 @@ export class ModelResolver {
     return model;
   }
 
-  // 1.8.9 drew block items through an item model of their own, with its own gui transform,
-  // where 26.3's definitions select the block's model
+  // 1.8.9 drew block items through their own item model and gui transform
   private itemModel(item: ItemStack, selected: string) {
     if (!namespaced(selected).split(":")[1].startsWith("block/"))
       return selected;
@@ -277,7 +267,6 @@ export class ModelResolver {
         return this.layers(next, item);
       }
 
-      // Compasses, clocks and bows sit at their first frame
       case "minecraft:range_dispatch": {
         const next =
           model.entries.findLast(({ threshold }) => threshold <= 0)?.model ??
@@ -304,7 +293,6 @@ export class ModelResolver {
   }
 }
 
-/** Follows #references until each texture is a sprite id, and drops any that never get one */
 export function resolveTextures(textures: Record<string, TextureValue>) {
   const resolved: Record<string, string> = {};
 
@@ -332,7 +320,7 @@ if (import.meta.vitest) {
 
   const encoder = new TextEncoder();
 
-  const packOf = (files: Record<string, unknown>) =>
+  const createStack = (files: Record<string, unknown>) =>
     new PackStack([
       {
         name: "test",
@@ -350,7 +338,7 @@ if (import.meta.vitest) {
   describe("ModelResolver", () => {
     it("merges parents and resolves texture references", () => {
       const resolver = new ModelResolver(
-        packOf({
+        createStack({
           "assets/minecraft/items/leather_boots.json": {
             model: {
               type: "condition",
