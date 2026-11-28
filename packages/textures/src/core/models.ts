@@ -114,7 +114,6 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-/** An SNBT compound, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
 function parseSnbt(snbt: string) {
   const tag = mojangson.parse(snbt);
   if (tag.type !== "compound")
@@ -128,8 +127,7 @@ function parseSnbt(snbt: string) {
   );
 }
 
-// Properties are read as they are for an item sitting in an inventory: not in use, selected
-// or cast, with no key held down, so every condition without a case here is false
+// Every condition without a case is false for an item sitting in a slot
 function condition(
   model: Extract<ItemModel, { type: "minecraft:condition" }>,
   item: ItemStack,

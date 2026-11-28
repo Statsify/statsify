@@ -15,9 +15,8 @@ export interface PotionEffect {
 
 export interface ItemStack {
   id: string;
-  /** The item_model component, an item model definition to draw instead of the id's */
   itemModel?: string;
-  /** The custom_data component, which Hypixel's 1.8.9 items carry as ExtraAttributes */
+  // Hypixel's 1.8.9 items carry this as ExtraAttributes
   customData?: Record<string, unknown>;
   count?: number;
   damage?: number;
