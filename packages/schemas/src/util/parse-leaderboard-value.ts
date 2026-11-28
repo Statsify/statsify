@@ -29,7 +29,10 @@ function getLowestScore(searchBy: (score: number) => number, value: number) {
 
 function normalizeNumber(input: string) {
   const number = input.replaceAll(/[\s'’]/g, "");
-  const lastSeparatorIndex = Math.max(number.lastIndexOf("."), number.lastIndexOf(","));
+  const lastSeparatorIndex = Math.max(
+    number.lastIndexOf("."),
+    number.lastIndexOf(","),
+  );
   if (lastSeparatorIndex === -1) return number;
 
   const separator = number[lastSeparatorIndex];
@@ -39,7 +42,8 @@ function normalizeNumber(input: string) {
   // A lone separator before exactly three digits groups thousands, since no leaderboard shows three decimals
   const isThousands = /^\d{3}(?!\d)/.test(number.slice(lastSeparatorIndex + 1));
 
-  if (isOnlySeparatorKind && (isRepeated || isThousands)) return number.replaceAll(separator, "");
+  if (isOnlySeparatorKind && (isRepeated || isThousands))
+    return number.replaceAll(separator, "");
 
   const integer = number.slice(0, lastSeparatorIndex).replaceAll(/[.,]/g, "");
   return `${integer}.${number.slice(lastSeparatorIndex + 1)}`;
@@ -73,13 +77,27 @@ if (import.meta.vitest) {
   const { Player } = await import("#player");
 
   it("parses numbers, times and levels", () => {
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "1.5k")).toBe(1500);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "10 k")).toBe(10_000);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "wins")).toBeNaN();
-    expect(parseLeaderboardValue(Player, "stats.parkour.BEDWARS", "1:23.45")).toBe(83_450);
-    expect(parseLeaderboardValue(Player, "stats.pit.playtime", "5d, 3h")).toBe(442_800_000);
-    expect(parseLeaderboardValue(Player, "stats.bedwars.exp", "500✫")).toBe(2_435_000);
-    expect(parseLeaderboardValue(Player, "stats.skywars.exp", "20000")).toBeNaN();
+    expect(
+      parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "1.5k"),
+    ).toBe(1500);
+    expect(
+      parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "10 k"),
+    ).toBe(10_000);
+    expect(
+      parseLeaderboardValue(Player, "stats.bedwars.overall.wins", "wins"),
+    ).toBeNaN();
+    expect(
+      parseLeaderboardValue(Player, "stats.parkour.BEDWARS", "1:23.45"),
+    ).toBe(83_450);
+    expect(parseLeaderboardValue(Player, "stats.pit.playtime", "5d, 3h")).toBe(
+      442_800_000,
+    );
+    expect(parseLeaderboardValue(Player, "stats.bedwars.exp", "500✫")).toBe(
+      2_435_000,
+    );
+    expect(
+      parseLeaderboardValue(Player, "stats.skywars.exp", "20000"),
+    ).toBeNaN();
   });
 
   it("reads numbers the way every locale prints them", () => {
