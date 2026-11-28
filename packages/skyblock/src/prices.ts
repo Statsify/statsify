@@ -418,6 +418,9 @@ export function getItemCost(entry?: PriceEntry): ItemCost | undefined {
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
+  const getNames = (name: string, keys: Omit<ItemMatch, "name">[]) =>
+    labelVariants(name, keys).map((match) => match.name);
+
   const skull = { id: 397, Count: 1, Damage: 3 };
   const item = (id: string, attributes: Record<string, unknown> = {}) => ({
     ...skull,
@@ -649,9 +652,6 @@ if (import.meta.vitest) {
   });
 
   suite("labelVariants", () => {
-    const getNames = (name: string, keys: Omit<ItemMatch, "name">[]) =>
-      labelVariants(name, keys).map((match) => match.name);
-
     it("should keep a name only one key has", () => {
       expect(getNames("Apple", [{ id: "APPLE", rarity: "COMMON" }])).toEqual([
         "Apple",

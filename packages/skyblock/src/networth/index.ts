@@ -221,28 +221,22 @@ if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
 
   suite("getModifiers", () => {
-    const toCalculation = (entries: [string, number][]) =>
-      entries.map(([type, price]) => ({ id: type, type, price, count: 1 }));
+    it("should sum each kind, keeping negatives but not base prices", () => {
+      const calculation = (
+        [
+          ["ENCHANT", 5_000_000],
+          ["MIDAS_SWORD_50M", 50_000_000],
+          ["ENCHANTMENT", 2],
+          ["PET_CANDY", -4],
+          ["ENCHANTMENT", 3],
+          ["REFORGE", 0],
+        ] as const
+      ).map(([type, price]) => ({ id: type, type, price, count: 1 }));
 
-    it("should sum each kind and keep one that takes value off", () => {
-      const calculation = toCalculation([
-        ["ENCHANTMENT", 2],
-        ["PET_CANDY", -4],
-        ["ENCHANTMENT", 3],
-        ["REFORGE", 0],
-      ]);
       expect(getModifiers(calculation)).toEqual([
         { type: "ENCHANTMENT", price: 5 },
         { type: "PET_CANDY", price: -4 },
       ]);
-    });
-
-    it("should leave out what replaces the base price", () => {
-      const calculation = toCalculation([
-        ["ENCHANT", 5_000_000],
-        ["MIDAS_SWORD_50M", 50_000_000],
-      ]);
-      expect(getModifiers(calculation)).toEqual([]);
     });
   });
 }
