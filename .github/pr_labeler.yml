@@ -54,6 +54,10 @@
   - changed-files:
     - any-glob-to-any-file: packages/skin-renderer/**/*
 
+"@statsify/skyblock":
+  - changed-files:
+    - any-glob-to-any-file: packages/skyblock/**/*
+
 "@statsify/util":
   - changed-files:
     - any-glob-to-any-file: packages/util/**/*

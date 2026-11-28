@@ -1,0 +1,278 @@
+{
+  "anomalous_desire": {
+    "maxLevel": 1,
+    "name": "Tunnel Vision",
+    "x": 0,
+    "y": 4
+  },
+  "blockhead": {
+    "maxLevel": 20,
+    "name": "Blockhead",
+    "x": 1,
+    "y": 4
+  },
+  "core_of_the_mountain": {
+    "maxLevel": 10,
+    "name": "Core of the Mountain",
+    "x": 3,
+    "y": 5
+  },
+  "crystalline": {
+    "maxLevel": 50,
+    "name": "Crystalline",
+    "x": 1,
+    "y": 0
+  },
+  "daily_grind": {
+    "maxLevel": 1,
+    "name": "Daily Grind",
+    "x": 1,
+    "y": 5
+  },
+  "daily_powder": {
+    "maxLevel": 1,
+    "name": "Daily Powder",
+    "x": 5,
+    "y": 5
+  },
+  "dead_mans_chest": {
+    "maxLevel": 50,
+    "name": "Dead Man's Chest",
+    "x": 4,
+    "y": 0
+  },
+  "eager_adventurer": {
+    "maxLevel": 100,
+    "name": "Eager Adventurer",
+    "x": 5,
+    "y": 1
+  },
+  "efficient_miner": {
+    "maxLevel": 100,
+    "name": "Efficient Miner",
+    "x": 3,
+    "y": 7
+  },
+  "fortunate_mineman": {
+    "maxLevel": 50,
+    "name": "Fortunate Mineman",
+    "x": 5,
+    "y": 3
+  },
+  "front_loaded": {
+    "maxLevel": 1,
+    "name": "Front Loaded",
+    "x": 6,
+    "y": 6
+  },
+  "gem_lover": {
+    "maxLevel": 20,
+    "name": "Gem Lover",
+    "x": 4,
+    "y": 6
+  },
+  "gemstone_infusion": {
+    "maxLevel": 1,
+    "name": "Gemstone Infusion",
+    "x": 0,
+    "y": 0
+  },
+  "gifts_from_the_departed": {
+    "maxLevel": 100,
+    "name": "Gifts from the Departed",
+    "x": 2,
+    "y": 0
+  },
+  "great_explorer": {
+    "maxLevel": 20,
+    "name": "Great Explorer",
+    "x": 5,
+    "y": 4
+  },
+  "keep_it_cool": {
+    "maxLevel": 50,
+    "name": "Keep It Cool",
+    "x": 3,
+    "y": 4
+  },
+  "lonesome_miner": {
+    "maxLevel": 45,
+    "name": "Lonesome Miner",
+    "x": 4,
+    "y": 4
+  },
+  "luck_of_the_cave": {
+    "maxLevel": 45,
+    "name": "Luck of the Cave",
+    "x": 1,
+    "y": 7
+  },
+  "maniac_miner": {
+    "maxLevel": 1,
+    "name": "Maniac Miner",
+    "x": 6,
+    "y": 4
+  },
+  "metal_head": {
+    "maxLevel": 20,
+    "name": "Metal Head",
+    "x": 1,
+    "y": 1
+  },
+  "miners_blessing": {
+    "maxLevel": 1,
+    "name": "Miner's Blessing",
+    "x": 0,
+    "y": 2
+  },
+  "mineshaft_mayhem": {
+    "maxLevel": 1,
+    "name": "Mineshaft Mayhem",
+    "x": 6,
+    "y": 2
+  },
+  "mining_fortune": {
+    "maxLevel": 50,
+    "name": "Mining Fortune",
+    "x": 3,
+    "y": 8
+  },
+  "mining_master": {
+    "maxLevel": 10,
+    "name": "Mining Master",
+    "x": 3,
+    "y": 0
+  },
+  "mining_speed": {
+    "maxLevel": 50,
+    "name": "Mining Speed",
+    "x": 3,
+    "y": 9
+  },
+  "mining_speed_boost": {
+    "maxLevel": 1,
+    "name": "Mining Speed Boost",
+    "x": 1,
+    "y": 8
+  },
+  "mole": {
+    "maxLevel": 200,
+    "name": "Mole",
+    "x": 3,
+    "y": 6
+  },
+  "no_stone_unturned": {
+    "maxLevel": 50,
+    "name": "No Stone Unturned",
+    "x": 1,
+    "y": 2
+  },
+  "old_school": {
+    "maxLevel": 20,
+    "name": "Old-School",
+    "x": 1,
+    "y": 6
+  },
+  "pickobulus": {
+    "maxLevel": 1,
+    "name": "Pickobulus",
+    "x": 5,
+    "y": 8
+  },
+  "powder_buff": {
+    "maxLevel": 50,
+    "name": "Powder Buff",
+    "x": 3,
+    "y": 3
+  },
+  "precision_mining": {
+    "maxLevel": 1,
+    "name": "Precision Mining",
+    "x": 2,
+    "y": 8
+  },
+  "professional": {
+    "maxLevel": 140,
+    "name": "Professional",
+    "x": 2,
+    "y": 6
+  },
+  "quick_forge": {
+    "maxLevel": 20,
+    "name": "Quick Forge",
+    "x": 5,
+    "y": 7
+  },
+  "rags_to_riches": {
+    "maxLevel": 50,
+    "name": "Rags to Riches",
+    "x": 3,
+    "y": 1
+  },
+  "seasoned_mineman": {
+    "maxLevel": 100,
+    "name": "Seasoned Mineman",
+    "x": 5,
+    "y": 6
+  },
+  "sheer_force": {
+    "maxLevel": 1,
+    "name": "Sheer Force",
+    "x": 6,
+    "y": 0
+  },
+  "sky_mall": {
+    "maxLevel": 1,
+    "name": "Sky Mall",
+    "x": 0,
+    "y": 6
+  },
+  "speedy_mineman": {
+    "maxLevel": 50,
+    "name": "Speedy Mineman",
+    "x": 1,
+    "y": 3
+  },
+  "steady_hand": {
+    "maxLevel": 100,
+    "name": "Steady Hand",
+    "x": 3,
+    "y": 2
+  },
+  "strong_arm": {
+    "maxLevel": 100,
+    "name": "Strong Arm",
+    "x": 2,
+    "y": 2
+  },
+  "subterranean_fisher": {
+    "maxLevel": 40,
+    "name": "Subterranean Fisher",
+    "x": 2,
+    "y": 4
+  },
+  "surveyor": {
+    "maxLevel": 20,
+    "name": "Surveyor",
+    "x": 5,
+    "y": 2
+  },
+  "titanium_insanium": {
+    "maxLevel": 50,
+    "name": "Titanium Insanium",
+    "x": 4,
+    "y": 8
+  },
+  "vanguard_seeker": {
+    "maxLevel": 50,
+    "name": "Vanguard Seeker",
+    "x": 5,
+    "y": 0
+  },
+  "warm_heart": {
+    "maxLevel": 50,
+    "name": "Warm Heart",
+    "x": 4,
+    "y": 2
+  }
+}
