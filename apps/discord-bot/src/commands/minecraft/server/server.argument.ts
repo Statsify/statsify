@@ -35,7 +35,8 @@ export class ServerArgument extends AbstractArgument {
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
     // Discord drops autocomplete answers after 3 seconds
-    const servers = await Promise.race([getServerMappings(), setTimeout(250)]).catch(() => undefined);
+    const servers = await Promise.race([getServerMappings(), setTimeout(250)])
+      .catch(() => undefined);
     if (!servers) return [];
 
     const currentValue = context.option<string>(this.name, "").toLowerCase();
