@@ -146,10 +146,12 @@ export interface RawMember {
     // A collection found at no tier yet is listed at tier -1.
     unlocked_coll_tiers?: string[];
     reaper_peppers_eaten?: number;
-    crafted_generators?: string[]; // "WHEAT_11"
+    // Each entry is a minion and tier, like "WHEAT_11".
+    crafted_generators?: string[];
   };
   collection?: Record<string, number>;
-  attributes?: { stacks?: Record<string, number> }; // shards syphoned
+  // Each attribute counts the shards syphoned into it.
+  attributes?: { stacks?: Record<string, number> };
   shards?: { owned?: { type: string; amount_owned?: number }[] };
   inventory?: {
     inv_contents?: RawNbt;
