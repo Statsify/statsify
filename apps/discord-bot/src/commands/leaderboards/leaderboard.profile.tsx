@@ -10,10 +10,15 @@ import { Container, Footer, If, List } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
 import { formatPosition } from "#lib/format-position";
-import { prettify } from "@statsify/util";
+import { translateStat } from "./leaderboard-names.js";
 import type { Image } from "skia-canvas";
 
 export type LeaderboardType = "player" | "guild";
+
+const TYPE_TITLES = {
+  player: "stats.player",
+  guild: "stats.guild.guild",
+} satisfies Record<LeaderboardType, string>;
 
 export interface LeaderboardData {
   fields: (number | string)[];
@@ -44,7 +49,11 @@ export const LeaderboardProfile = ({
   t,
   type,
 }: LeaderboardProfileProps) => {
-  const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
+  const titles = [
+    t("stats.pos"),
+    t(TYPE_TITLES[type]),
+    ...fields.map((field) => translateStat(t, field)),
+  ].map((field, index) => (
     <box
       width={index === 1 ? "remaining" : "100%"}
       border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}
