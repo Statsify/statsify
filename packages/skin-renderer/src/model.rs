@@ -1,17 +1,20 @@
-use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation as _, Vector3};
+use cgmath::{Deg, Quaternion, Rotation as _, Vector3};
 use image::DynamicImage;
+use statsify_render_core::material::Material;
+use statsify_render_core::mesh::Mesh;
+use statsify_render_core::renderer::{Backend, DrawItem, Pipeline, Renderer};
 
 use crate::armor::Armor;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::geometry::coordinate::Coordinate;
 use crate::geometry::{
   axis_angle, BoxGeometry, Geometry, OuterLayerGeometry, Rotation, TextureRegion,
 };
-use crate::instance::InstanceRaw;
-use crate::material::Material;
-use crate::mesh::{DrawMesh, Mesh};
 use crate::pose::{PartPose, Pose};
-use crate::skin_loader::{load_skull_from_memory, load_texture_from_memory, CAPE_SIZE};
+use crate::skin_loader::{
+  load_cape_from_memory, load_skin_from_memory, load_skull_from_memory, load_texture_from_memory,
+  CAPE_SIZE,
+};
 
 pub enum ModelKind {
   Classic,
@@ -274,6 +277,7 @@ pub struct Model {
   attachments: Vec<Attachment>,
   glint: Option<Material>,
   pose: Pose,
+  #[cfg(not(target_arch = "wasm32"))]
   wears_armor: bool,
   points: Vec<Vector3<f32>>,
 }
@@ -294,6 +298,54 @@ fn mesh_with_points(
 }
 
 impl Model {
+  // The wasm renderer has no RenderOptions, so each option is its own argument
+  #[allow(clippy::too_many_arguments)]
+  pub fn load<T: Backend>(
+    renderer: &Renderer<T>,
+    skin: &[u8],
+    model_kind: ModelKind,
+    model_outer_layer: ModelOuterLayer,
+    armor: &Armor,
+    glint: Option<&[u8]>,
+    cape: Option<&[u8]>,
+    pose: Pose,
+  ) -> Result<Self> {
+    let device = renderer.device();
+    let queue = renderer.queue();
+    let layout = renderer.texture_bind_group_layout();
+    let sampler = renderer.sampler();
+
+    let mut model = Self::new(
+      device,
+      queue,
+      layout,
+      sampler,
+      load_skin_from_memory(skin)?,
+      model_kind,
+      model_outer_layer,
+      pose,
+      armor,
+    )?;
+
+    if armor.pieces().any(|(piece, ..)| piece.enchanted) {
+      let glint = load_texture_from_memory(glint.ok_or(Error::MissingGlint)?)?;
+      model.attach_glint(device, queue, layout, renderer.glint_sampler(), &glint)?;
+    }
+
+    if let Some(cape) = cape {
+      model.attach_cape(
+        device,
+        queue,
+        layout,
+        sampler,
+        &load_cape_from_memory(cape)?,
+        armor.chestplate.is_some(),
+      )?;
+    }
+
+    Ok(model)
+  }
+
   // Armor and the pose shape the body's own meshes, so neither can be attached later
   #[allow(clippy::too_many_arguments)]
   pub fn new(
@@ -345,6 +397,7 @@ impl Model {
       attachments: vec![],
       glint: None,
       pose,
+      #[cfg(not(target_arch = "wasm32"))]
       wears_armor: armor.pieces().next().is_some(),
       points,
     };
@@ -355,6 +408,7 @@ impl Model {
 
   // Boots and a player head reach past the frame that fits a bare player, and every
   // armored render pulls back with them so they share one scale
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn camera_radius(&self) -> f32 {
     let radius = self.pose.camera_radius();
 
@@ -365,6 +419,7 @@ impl Model {
     }
   }
 
+  #[cfg(not(target_arch = "wasm32"))]
   pub fn points(&self) -> &[Vector3<f32>] {
     &self.points
   }
@@ -452,10 +507,6 @@ impl Model {
     Ok(())
   }
 
-  pub fn glint(&self) -> Option<&Material> {
-    self.glint.as_ref()
-  }
-
   pub fn attach_cape(
     &mut self,
     device: &wgpu::Device,
@@ -524,64 +575,36 @@ impl Model {
     });
   }
 
-  pub fn to_raw() -> InstanceRaw {
-    let position = Vector3::new(0.0, 0.0, 0.0);
-    let rotation = axis_angle(Vector3::unit_y(), Deg(0.0));
-
-    InstanceRaw {
-      model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
-      normal: Matrix3::from(rotation).into(),
-    }
-  }
-}
-
-pub trait DrawModel<'a> {
-  fn draw_model(
-    &mut self,
-    model: &'a Model,
-    camera_bind_group: &'a wgpu::BindGroup,
-    light_bind_group: &'a wgpu::BindGroup,
-  );
-
-  fn draw_attachments(
-    &mut self,
-    model: &'a Model,
-    enchanted: bool,
-    camera_bind_group: &'a wgpu::BindGroup,
-    light_bind_group: &'a wgpu::BindGroup,
-  );
-}
-
-impl<'a> DrawModel<'a> for wgpu::RenderPass<'a> {
-  fn draw_model(
-    &mut self,
-    model: &'a Model,
-    camera_bind_group: &'a wgpu::BindGroup,
-    light_bind_group: &'a wgpu::BindGroup,
-  ) {
-    model.meshes.iter().for_each(|mesh| {
-      self.draw_mesh(mesh, &model.material, camera_bind_group, light_bind_group);
+  // Every pipeline blends and writes depth, so this order shows in the render
+  pub fn draw_items(&self) -> Vec<DrawItem<'_>> {
+    let skin = self.meshes.iter().map(|mesh| DrawItem {
+      mesh,
+      material: &self.material,
+      pipeline: Pipeline::Main,
     });
-  }
 
-  fn draw_attachments(
-    &mut self,
-    model: &'a Model,
-    enchanted: bool,
-    camera_bind_group: &'a wgpu::BindGroup,
-    light_bind_group: &'a wgpu::BindGroup,
-  ) {
-    model
+    let attachments = self
       .attachments
       .iter()
-      .filter(|attachment| attachment.enchanted == enchanted)
-      .for_each(|attachment| {
-        self.draw_mesh(
-          &attachment.mesh,
-          &attachment.material,
-          camera_bind_group,
-          light_bind_group,
-        );
+      .filter(|attachment| !attachment.enchanted)
+      .map(|attachment| DrawItem {
+        mesh: &attachment.mesh,
+        material: &attachment.material,
+        pipeline: Pipeline::Attachment,
       });
+
+    let enchanted = self.glint.iter().flat_map(|glint| {
+      self
+        .attachments
+        .iter()
+        .filter(|attachment| attachment.enchanted)
+        .map(move |attachment| DrawItem {
+          mesh: &attachment.mesh,
+          material: &attachment.material,
+          pipeline: Pipeline::Enchanted(glint),
+        })
+    });
+
+    skin.chain(attachments).chain(enchanted).collect()
   }
 }

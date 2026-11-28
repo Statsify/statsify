@@ -2,7 +2,7 @@ use crate::error::Result;
 use crate::texture::Texture;
 
 pub struct Material {
-  pub bind_group: wgpu::BindGroup,
+  pub(crate) bind_group: wgpu::BindGroup,
 }
 
 impl Material {

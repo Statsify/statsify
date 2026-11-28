@@ -2,12 +2,10 @@ use std::sync::mpsc;
 
 use image::codecs::png::PngEncoder;
 use image::{ExtendedColorType, ImageEncoder};
-use napi::bindgen_prelude::spawn_blocking;
 
 use super::backend::{Backend, OutputTexture};
-use super::PngBytes;
 use crate::buffer_dimensions::BufferDimensions;
-use crate::error::{Error, Result as SkinRendererResult};
+use crate::error::{Error, Result as RenderResult};
 
 pub struct NativeBackend {
   device: wgpu::Device,
@@ -20,7 +18,7 @@ pub struct NativeBackend {
 }
 
 impl NativeBackend {
-  pub async fn new(width: u32, height: u32) -> SkinRendererResult<Self> {
+  pub async fn new(width: u32, height: u32) -> RenderResult<Self> {
     let instance = Self::create_instance();
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
@@ -98,15 +96,13 @@ impl Backend for NativeBackend {
     output_texture.create_view(&wgpu::TextureViewDescriptor::default())
   }
 
-  async fn handle_encoder_after_render(
+  fn handle_encoder_after_render(
     &self,
     mut encoder: wgpu::CommandEncoder,
-  ) -> SkinRendererResult<PngBytes> {
-    let dimensions = self.dimensions;
-
+  ) -> RenderResult<Vec<u8>> {
     let output_buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
       label: None,
-      size: (dimensions.padded_bytes_per_row * dimensions.height) as u64,
+      size: (self.dimensions.padded_bytes_per_row * self.dimensions.height) as u64,
       usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
@@ -117,55 +113,47 @@ impl Backend for NativeBackend {
         buffer: &output_buffer,
         layout: wgpu::TexelCopyBufferLayout {
           offset: 0,
-          bytes_per_row: Some(dimensions.padded_bytes_per_row),
-          rows_per_image: Some(dimensions.height),
+          bytes_per_row: Some(self.dimensions.padded_bytes_per_row),
+          rows_per_image: Some(self.dimensions.height),
         },
       },
       self.texture_extent,
     );
 
-    // Waiting on the GPU blocks the thread, so it runs off napi's async workers. submit goes
-    // with it: it waits on the device lock a running poll holds until its GPU work finishes
-    let device = self.device.clone();
-    let queue = self.queue.clone();
-    let command_buffer = encoder.finish();
+    let index = self.queue.submit(Some(encoder.finish()));
 
-    spawn_blocking(move || {
-      let index = queue.submit(Some(command_buffer));
+    let buffer_slice = output_buffer.slice(..);
+    let (sender, receiver) = mpsc::channel();
+    buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
+      let _ = sender.send(v);
+    });
 
-      let buffer_slice = output_buffer.slice(..);
-      let (sender, receiver) = mpsc::channel();
-      buffer_slice.map_async(wgpu::MapMode::Read, move |v| {
-        let _ = sender.send(v);
-      });
+    self
+      .device
+      .poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
 
-      device.poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
+    let Ok(Ok(())) = receiver.recv() else {
+      return Err(Error::RenderFailure);
+    };
 
-      let Ok(Ok(())) = receiver.recv() else {
-        return Err(Error::RenderFailure);
-      };
+    let padded_buffer = buffer_slice.get_mapped_range();
 
-      let padded_buffer = buffer_slice.get_mapped_range();
+    let buffer = padded_buffer
+      .chunks(self.dimensions.padded_bytes_per_row as usize)
+      .take(self.dimensions.height as usize)
+      .flat_map(|row| &row[..self.dimensions.unpadded_bytes_per_row as usize])
+      .copied()
+      .collect::<Vec<u8>>();
 
-      let buffer = padded_buffer
-        .chunks(dimensions.padded_bytes_per_row as usize)
-        .take(dimensions.height as usize)
-        .flat_map(|row| &row[..dimensions.unpadded_bytes_per_row as usize])
-        .copied()
-        .collect::<Vec<u8>>();
+    let mut png = Vec::new();
 
-      let mut png = Vec::new();
+    PngEncoder::new(&mut png).write_image(
+      &buffer,
+      self.dimensions.width,
+      self.dimensions.height,
+      ExtendedColorType::Rgba8,
+    )?;
 
-      PngEncoder::new(&mut png).write_image(
-        &buffer,
-        dimensions.width,
-        dimensions.height,
-        ExtendedColorType::Rgba8,
-      )?;
-
-      Ok(png)
-    })
-    .await
-    .map_err(|_| Error::RenderFailure)?
+    Ok(png)
   }
 }

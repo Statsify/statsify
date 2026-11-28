@@ -5,7 +5,7 @@ use cgmath::{Rotation as _, Vector3};
 
 use super::Rotation;
 
-pub trait VertexDescriptor: Sized {
+pub(crate) trait VertexDescriptor: Sized {
   const ATTRIBUTES: &'static [wgpu::VertexAttribute];
   const STEP_MODE: wgpu::VertexStepMode;
 

@@ -1,5 +1,7 @@
 use bytemuck::{Pod, Zeroable};
+use cgmath::{Deg, Matrix3, Matrix4, Vector3};
 
+use crate::geometry::axis_angle;
 use crate::geometry::vertex::VertexDescriptor;
 
 #[repr(C)]
@@ -7,6 +9,18 @@ use crate::geometry::vertex::VertexDescriptor;
 pub struct InstanceRaw {
   pub model: [[f32; 4]; 4],
   pub normal: [[f32; 3]; 3],
+}
+
+impl InstanceRaw {
+  pub fn identity() -> Self {
+    let position = Vector3::new(0.0, 0.0, 0.0);
+    let rotation = axis_angle(Vector3::unit_y(), Deg(0.0));
+
+    Self {
+      model: (Matrix4::from_translation(position) * Matrix4::from(rotation)).into(),
+      normal: Matrix3::from(rotation).into(),
+    }
+  }
 }
 
 impl VertexDescriptor for InstanceRaw {

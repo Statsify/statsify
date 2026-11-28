@@ -1,14 +1,23 @@
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
+use statsify_render_core::camera::Camera;
+use statsify_render_core::renderer::native::NativeBackend;
+use statsify_render_core::renderer::Renderer;
 use tokio::sync::OnceCell;
 
 use crate::armor::Armor;
-use crate::model::{ModelKind, ModelOuterLayer};
+use crate::model::{Model, ModelKind, ModelOuterLayer};
 use crate::pose::Pose;
-use crate::renderer::native::NativeBackend;
-use crate::renderer::SkinRenderer;
 
-static SKIN_RENDERER: OnceCell<SkinRenderer<NativeBackend>> = OnceCell::const_new();
+static SKIN_RENDERER: OnceCell<Renderer<NativeBackend>> = OnceCell::const_new();
+
+pub(crate) async fn renderer() -> crate::error::Result<&'static Renderer<NativeBackend>> {
+  Ok(
+    SKIN_RENDERER
+      .get_or_try_init(|| Renderer::new(460, 800))
+      .await?,
+  )
+}
 
 #[napi(object)]
 #[derive(Default)]
@@ -27,15 +36,29 @@ pub struct RenderOptions {
 
 #[napi]
 pub async fn render_skin(
-  skin: &[u8],
+  skin: Uint8Array,
   slim: bool,
   extruded: bool,
   options: Option<RenderOptions>,
 ) -> Result<Buffer> {
-  let renderer = SKIN_RENDERER
-    .get_or_try_init(|| SkinRenderer::new(460, 800))
-    .await?;
+  let renderer = renderer().await?;
+  let options = options.unwrap_or_default();
 
+  // Loading and rendering block the thread, so they run off napi's async workers
+  let buffer = spawn_blocking(move || draw_skin(renderer, &skin, slim, extruded, options))
+    .await
+    .map_err(|error| crate::error::Error::RenderPanicked(error.to_string()))??;
+
+  Ok(buffer.into())
+}
+
+fn draw_skin(
+  renderer: &Renderer<NativeBackend>,
+  skin: &[u8],
+  slim: bool,
+  extruded: bool,
+  options: RenderOptions,
+) -> Result<Vec<u8>> {
   let model_kind = if slim {
     ModelKind::Slim
   } else {
@@ -48,7 +71,6 @@ pub async fn render_skin(
     ModelOuterLayer::D2
   };
 
-  let options = options.unwrap_or_default();
   let armor = options.armor.unwrap_or_default();
 
   let yaw = options
@@ -56,7 +78,8 @@ pub async fn render_skin(
     .map(|yaw| narrow(yaw).ok_or(crate::error::Error::InvalidYaw))
     .transpose()?;
 
-  let model = renderer.load_skin(
+  let model = Model::load(
+    renderer,
     skin,
     model_kind,
     model_outer_layer,
@@ -65,9 +88,19 @@ pub async fn render_skin(
     options.cape.as_deref(),
     options.pose.unwrap_or_default(),
   )?;
-  let png = renderer.render(&model, yaw).await?;
 
-  Ok(png.into())
+  let camera = match yaw {
+    Some(yaw) => renderer.camera().with_theta(yaw),
+    None => renderer.camera(),
+  };
+
+  let camera = Camera::Orbital(camera.fitted(model.points(), model.camera_radius()));
+
+  let buffer = renderer
+    .render(&model.draw_items(), &camera)
+    .map_err(crate::error::Error::from)?;
+
+  Ok(buffer)
 }
 
 // Checked after narrowing, since a huge f64 becomes an f32 infinity
