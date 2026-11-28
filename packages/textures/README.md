@@ -1,0 +1,83 @@
+# @statsify/textures
+
+Draws Minecraft items, text, tooltips and inventories from a resource pack, in the browser or in
+Node. Nothing is pre-rendered and no game assets ship with it: drop in a 26.3 pack and every icon
+is drawn from it, then cached.
+
+## Packs
+
+`loadPack` takes a zip or jar as a `Blob`, bytes or a URL. A `PackStack` layers packs the way the
+game does, lowest priority first, so a texture-only pack can sit on top of a vanilla one.
+Swapping a stack swaps every icon, since cache keys start with the stack's hash.
+
+```ts
+import { ItemRenderer, IconCache, PackStack, loadPack } from "@statsify/textures";
+
+const stack = new PackStack([await loadPack(vanillaZip), await loadPack(userPack)]);
+const renderer = new ItemRenderer(stack, new IconCache());
+
+const icon = await renderer.render({ id: "minecraft:red_wool" }, 4); // a 64 × 64 canvas
+```
+
+Older packs load as 26.3's layout, so they stack over a 26.3 pack the same way. A 1.8.9 pack (or
+the 1.8.9 client jar) gives its textures and models under their 26.3 names, and block items draw
+from its item models, as 1.8.9 drew them. Its 3D models get the
+turn 1.8.9 gave every 3D item in code, its compass and clock strips show the frame a slot shows,
+and its glint is tinted and moved the way 1.8 did it. Chests and heads use 26.3's models, which
+are drawn in code. Banners aren't supported yet. A stack needs at least one 26.3 pack, which
+has the item model definitions.
+
+## Items
+
+- Flat items with tints: leather dye, potion colors, spawn eggs.
+- Block items in 3D, through the model's gui transform with the GUI's lighting. A small software
+  rasterizer draws them, so they match the game pixel for pixel and need no WebGL.
+- Player heads (the default skin, or `item.skin`, a textures.minecraft.net URL), mob heads, chests.
+  The renderer never fetches a skin: `new ItemRenderer(stack, cache, loadSkin)` takes a function
+  that gives a skin URL's PNG, so the caller picks where skins come from and how long they're kept,
+  and a skin that fails to load throws.
+- The enchantment glint, and animated textures by game tick: `render(item, scale, tick)`.
+
+`legacyItem(id, damage)` turns a 1.8 id and Damage value into a 26.3 item. Its table comes from
+`pnpm generate <26.3 jar or pack zip> <1.8.9 jar> <names export>`, which maps minecraft-data's 1.8
+ids to 26.3 names and checks them against the 26.3 pack. The same run pairs 1.8.9's texture names
+with 26.3's through the two versions' models, and reads 1.8.9's English item names, which tooltips
+use for unnamed items, from StatsifyDump's `/sdump names`.
+
+Icons are cached in IndexedDB, for one pack stack at a time: the first stack to use the cache after a
+page load drops the others' icons. Bump `VERSION` in `src/core/icon-cache.ts` whenever a change draws
+icons differently, so browsers drop the old ones.
+
+## Text and tooltips
+
+`TextRenderer.load(stack)` reads the pack's default font: ascii.png plus 26.3's accented and
+non-Latin sheets, and unifont for everything else. It draws § codes and JSON text components.
+26.3 ships unifont (GNU Unifont) with the launcher's assets, not the jar, so a pack only has it
+when it carries `font/include/unifont.json` and `font/unifont.zip`. Without them, a CSS font is the
+fallback for those characters. `drawTooltip` draws 1.8's tooltip box, and
+`tooltipLines` gives an item's name, lore and Unbreakable line, minding HideFlags.
+
+## Inventories
+
+`InventoryRenderer` draws a whole container: the pack's chest screen (or a plain panel for other
+sizes), the title, and each slot's icon, count and 1.8.9 durability bar. An item the pack can't
+draw makes `draw` throw, rather than leave its slot empty. Icons come from an `ItemRenderer` over the
+same stack, or from the `IconSource` given as `load`'s second argument, like an `ItemRenderer` with
+an `IconCache`.
+
+```ts
+const renderer = await InventoryRenderer.load(stack);
+const canvas = await renderer.draw(slots, { rows: 6, cols: 9, scale: 3, title: "Quick Buy" });
+const tooltip = renderer.tooltip(slots[0], 3, 0);
+```
+
+It draws on `OffscreenCanvas` in the browser. In Node, like the Discord bot, set the skia-canvas
+backend first, and `draw` returns a skia-canvas `Canvas` (typed as `OffscreenCanvas`).
+skia-canvas is an optional peer dependency.
+
+```ts
+import { setCanvasBackend } from "@statsify/textures";
+import { skiaCanvas } from "@statsify/textures/node";
+
+setCanvasBackend(skiaCanvas);
+```
