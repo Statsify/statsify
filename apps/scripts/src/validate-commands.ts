@@ -37,7 +37,9 @@ const optionSchema = z.object({
   get options() {
     return z.optional(z.array(optionSchema));
   },
-  channel_types: z.optional(z.array(toEnum(0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15))),
+  channel_types: z.optional(
+    z.array(toEnum(0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15)),
+  ),
   min_value: z.optional(z.number()),
   max_value: z.optional(z.number()),
   min_length: z.optional(z.number().min(0).max(6000)),
@@ -62,7 +64,10 @@ type CountedOption = Pick<
 
 // The bot writes this file at runtime, so typecheck can't import it
 const commands: { commands: Record<string, Command> } = JSON.parse(
-  await readFile(new URL(import.meta.resolve("discord-bot/commands.json")), "utf8")
+  await readFile(
+    new URL(import.meta.resolve("discord-bot/commands.json")),
+    "utf8",
+  ),
 );
 
 for (const [commandName, command] of Object.entries(commands.commands)) {
@@ -83,8 +88,9 @@ for (const [commandName, command] of Object.entries(commands.commands)) {
 
 const commandChars: Record<string, number> = {};
 
-const findLongestLocalizationLength = (localizations: Record<string, string> = {}) =>
-  Math.max(0, ...Object.values(localizations).map((l) => l.length));
+const findLongestLocalizationLength = (
+  localizations: Record<string, string> = {},
+) => Math.max(0, ...Object.values(localizations).map((l) => l.length));
 
 const findOptionsLength = (options: CountedOption[] = []) =>
   options
@@ -93,16 +99,20 @@ const findOptionsLength = (options: CountedOption[] = []) =>
         option.name.length +
         findLongestLocalizationLength(option.description_localizations) +
         (
-          option?.choices?.map((choice) => `${choice.value}`.length + choice.name.length) ?? []
-        ).reduce((a, b) => a + b, 0)
+          option?.choices?.map(
+            (choice) => `${choice.value}`.length + choice.name.length,
+          ) ?? []
+        ).reduce((a, b) => a + b, 0),
     )
     .reduce((a, b) => a + b, 0);
 
 const findTotalCommandChars = (command: Command[]) => {
   const topCommandOptions = command.flatMap((option) => option.options!);
-  const subCommandOptions = topCommandOptions.flatMap((option) => option.options ?? []);
+  const subCommandOptions = topCommandOptions.flatMap(
+    (option) => option.options ?? [],
+  );
   const subsubCommandOptions = subCommandOptions.flatMap(
-    (option) => option.options ?? []
+    (option) => option.options ?? [],
   );
 
   return (
@@ -118,7 +128,7 @@ for (const command of Object.values(commands.commands)) {
 }
 
 for (const [commandName, charCount] of Object.entries(commandChars).sort(
-  (a, b) => a[1] - b[1]
+  (a, b) => a[1] - b[1],
 )) {
   console.log(`${commandName}: ${charCount}`);
 }

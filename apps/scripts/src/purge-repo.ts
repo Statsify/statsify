@@ -7,7 +7,12 @@
  */
 
 import inquirer from "inquirer";
-import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.ts";
+import {
+  ROOT,
+  fetchWorkspaces,
+  inquirerConfirmation,
+  inquirerLogger,
+} from "./utils.ts";
 import { join, resolve } from "node:path";
 import { once } from "node:events";
 import { rm } from "node:fs/promises";
@@ -34,8 +39,8 @@ const workspaces = [
 function deleteFromWorkspaces(path: string, _workspaces = workspaces) {
   return Promise.all(
     _workspaces.map((workspace) =>
-      rm(join(workspace, path), { recursive: true, force: true })
-    )
+      rm(join(workspace, path), { recursive: true, force: true }),
+    ),
   );
 }
 

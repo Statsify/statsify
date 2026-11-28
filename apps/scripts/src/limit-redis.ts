@@ -16,7 +16,10 @@ import { SimpleIntervalJob, Task } from "toad-scheduler";
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL!);
 
-const runLimit = async (constructors: Constructor[], prefixes?: CurrentHistoricalType[]) => {
+const runLimit = async (
+  constructors: Constructor[],
+  prefixes?: CurrentHistoricalType[],
+) => {
   for (const [i, constructor] of constructors.entries()) {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
@@ -25,17 +28,22 @@ const runLimit = async (constructors: Constructor[], prefixes?: CurrentHistorica
     const fields = scanMetadata(constructor);
 
     for (const [key, value] of fields) {
-      const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
-      if (!value.leaderboard.enabled || (prefixes ? !value.historical.enabled : false))
+      const path = prefixes
+        ? `${prefixes[i]}:${name}.${key}`
+        : `${name}.${key}`;
+      if (
+        !value.leaderboard.enabled ||
+        (prefixes ? !value.historical.enabled : false)
+      )
         oldLeaderboardPipeline.del(path);
     }
 
     // oxlint-disable-next-line no-await-in-loop
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = prefixes ?
-      fields.filter(([, value]) => value.historical.enabled) :
-      fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = prefixes
+      ? fields.filter(([, value]) => value.historical.enabled)
+      : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
@@ -66,10 +74,10 @@ const runLimit = async (constructors: Constructor[], prefixes?: CurrentHistorica
     logger.log(
       `There are ${memberCount.toLocaleString()} possible members in the ${
         prefixes ? prefixes[i].toLowerCase() : "lifetime"
-      } ${name} leaderboards`
+      } ${name} leaderboards`,
     );
   }
-}
+};
 
 const limit = async () => {
   await Promise.all([
@@ -80,7 +88,7 @@ const limit = async () => {
         CurrentHistoricalType.DAILY,
         CurrentHistoricalType.WEEKLY,
         CurrentHistoricalType.MONTHLY,
-      ]
+      ],
     ),
   ]);
 };

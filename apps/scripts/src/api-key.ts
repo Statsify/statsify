@@ -46,7 +46,7 @@ const createKey = async ({ name, key, role, limit }: NewKey) => {
     "requests",
     0,
     "createdAt",
-    Date.now()
+    Date.now(),
   );
 
   return true;
@@ -65,11 +65,14 @@ const getKeys = async (): Promise<Record<string, Record<string, string>>> => {
 
   return Object.assign(
     {},
-    ...keyValues!.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] }))
+    ...keyValues!.map((key, index) => ({
+      [keys[index].replace("key:", "")]: key[1],
+    })),
   );
 };
 
-const getKeyNames = async () => Object.values(await getKeys()).map((key) => key.name);
+const getKeyNames = async () =>
+  Object.values(await getKeys()).map((key) => key.name);
 
 const defaultKey = () =>
   (
@@ -103,7 +106,7 @@ const keyManager = async () => {
 
     inquirerLogger(
       "New Key!",
-      "testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively."
+      "testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively.",
     );
 
     process.exit(0);
@@ -111,7 +114,8 @@ const keyManager = async () => {
 
   const availableMethods = ["create"];
 
-  if ((await getKeyNames()).length > 0) availableMethods.push("delete", "edit", "list");
+  if ((await getKeyNames()).length > 0)
+    availableMethods.push("delete", "edit", "list");
 
   const { method } = await inquirer.prompt([
     {
@@ -179,7 +183,7 @@ const createNewKey = async () => {
   if (keyCreated)
     inquirerLogger(
       "New Key!",
-      `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`
+      `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`,
     );
 };
 
@@ -206,7 +210,7 @@ const deleteKey = async () => {
       await redis.del(`key:${key}`);
       inquirerLogger(
         "Deleted Key!",
-        `Key with ID of ${deletedKey} has been deleted (${key})`
+        `Key with ID of ${deletedKey} has been deleted (${key})`,
       );
       return;
     }
@@ -217,7 +221,7 @@ const listKeys = async () => {
   const activeKeys = await getKeys();
 
   const idToRole = Object.fromEntries(
-    Object.entries(roles).map(([key, value]) => [value, key])
+    Object.entries(roles).map(([key, value]) => [value, key]),
   );
 
   for (const key in activeKeys) {
@@ -226,7 +230,7 @@ const listKeys = async () => {
       `${currentKey.name}`,
       `with ${idToRole[currentKey.role]} role and weighted limit of ${
         currentKey.limit
-      } and ${currentKey.requests} lifetime requests.`
+      } and ${currentKey.requests} lifetime requests.`,
     );
   }
 };

@@ -16,7 +16,9 @@ import { writeFileSync } from "node:fs";
 
 const COLOR_CHANGERS = ["MVP+", "MVP++", "bMVP++"];
 const SIZE = 20;
-const RANKS = Object.keys(rankMap).filter((rank) => !["DEFAULT"].includes(rank));
+const RANKS = Object.keys(rankMap).filter(
+  (rank) => !["DEFAULT"].includes(rank),
+);
 const EMOJI_LIMIT = 50;
 
 export const ALPHABET = [
@@ -54,7 +56,7 @@ const token = await config("rankEmojis.botToken", { required: false });
 
 if (!token) {
   logger.error(
-    "Add a discord bot token to create the emoji servers in the RANK_EMOJI_DISCORD_BOT_TOKEN field in the .env"
+    "Add a discord bot token to create the emoji servers in the RANK_EMOJI_DISCORD_BOT_TOKEN field in the .env",
   );
 
   process.exit(1);
@@ -82,12 +84,14 @@ const drawRank = async (formatted: string) => {
   renderer.fillText(textCtx, nodes, 0, 0);
 
   const imageCount = Math.ceil(width / SIZE);
-  const images = await Promise.all(Array.from({ length: imageCount }).map((_, x) => {
-    const canvas = createCanvas(SIZE, SIZE);
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(textCanvas, SIZE * x, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
-    return canvas.toDataURL("png");
-  }));
+  const images = await Promise.all(
+    Array.from({ length: imageCount }).map((_, x) => {
+      const canvas = createCanvas(SIZE, SIZE);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(textCanvas, SIZE * x, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
+      return canvas.toDataURL("png");
+    }),
+  );
 
   return images;
 };
@@ -102,13 +106,16 @@ const drawColorChanger = async (rank: string, emojiPrefix: string) => {
     if (img === color1[i]) sharedImages[i] = img;
   }
 
-  const remainingColors = [...minecraftColors].splice(2, minecraftColors.length);
+  const remainingColors = [...minecraftColors].splice(
+    2,
+    minecraftColors.length,
+  );
 
   const coloredEmojis = [
     color0,
     color1,
     ...(await Promise.all(
-      remainingColors.map((color) => drawRank(rankMap[rank](color.code)))
+      remainingColors.map((color) => drawRank(rankMap[rank](color.code))),
     )),
   ];
 
@@ -155,9 +162,10 @@ await Promise.all(
   RANKS.map(async (rank, index) => {
     const emojiPrefix = ALPHABET[index];
 
-    if (COLOR_CHANGERS.includes(rank)) return drawColorChanger(rank, emojiPrefix);
+    if (COLOR_CHANGERS.includes(rank))
+      return drawColorChanger(rank, emojiPrefix);
     return drawNonColorChanger(rank, emojiPrefix);
-  })
+  }),
 );
 
 const serverCount = Math.ceil(emojis.length / EMOJI_LIMIT);
@@ -166,7 +174,10 @@ logger.debug(`Creating ${serverCount} servers`);
 logger.debug(`Creating ${emojis.length} emojis`);
 
 const rankEmotes: Record<string, string[]> = {};
-const colorChangerEmotes: Record<string, Record<string, Record<number, string>>> = {};
+const colorChangerEmotes: Record<
+  string,
+  Record<string, Record<number, string>>
+> = {};
 
 const client = new RestClient({ token });
 
@@ -184,7 +195,9 @@ for (let i = 0; i < serverCount; i++) {
     .post(`/channels/${channel}/invites`, { type: 1 })
     .then((res) => res.body.json);
 
-  logger.log(`Created guild ${guild.id} with invite: discord.gg/${invite.code}`);
+  logger.log(
+    `Created guild ${guild.id} with invite: discord.gg/${invite.code}`,
+  );
 
   for (let j = 0; j < EMOJI_LIMIT; j++) {
     const index = i * EMOJI_LIMIT + j;
