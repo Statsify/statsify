@@ -31,7 +31,8 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
 
   public getArmor(player: Player, api: ApiModeFromGameModes<BlitzSGModes>) {
     const { blitzsg } = player.stats;
-    const kit = (api === "overall" ? kitKey(blitzsg.kit) : api) as ApiModeFromGameModes<BlitzSGModes>;
+    const mode = api === "overall" ? kitKey(blitzsg.kit) : api;
+    const kit = mode as ApiModeFromGameModes<BlitzSGModes>;
     const level = (blitzsg[kit] as BlitzSGKit | undefined)?.level;
     return level ? blitzKitArmor(kit, level) : undefined;
   }

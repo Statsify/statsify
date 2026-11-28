@@ -31,7 +31,8 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
 
   public getArmor(player: Player, api: ApiModeFromGameModes<MegaWallsModes>) {
     const { megawalls } = player.stats;
-    const kit = (api === "overall" ? kitKey(megawalls.class) : api) as ApiModeFromGameModes<MegaWallsModes>;
+    const mode = api === "overall" ? kitKey(megawalls.class) : api;
+    const kit = mode as ApiModeFromGameModes<MegaWallsModes>;
     const level = (megawalls[kit] as MegaWallsKit | undefined)?.kitLevel;
     return level ? megaWallsKitArmor(kit, level) : undefined;
   }

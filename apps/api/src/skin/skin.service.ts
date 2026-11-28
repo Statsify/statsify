@@ -66,7 +66,9 @@ export class SkinService {
       yaw,
       pose,
       armor: resolvedArmor,
-      glint: enchanted ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png")) : undefined,
+      glint: enchanted
+        ? await readFile(getMinecraftTexturePath("textures/misc/enchanted_item_glint.png"))
+        : undefined,
       cape: capeImage && imageData(capeImage),
     });
   }
@@ -214,12 +216,18 @@ const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
 
 const UNDYED_LEATHER = 0xA0_65_40;
 
-async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto, layer: 1 | 2): Promise<ArmorPiece> {
+async function resolveArmorPiece(
+  { material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto,
+  layer: 1 | 2
+): Promise<ArmorPiece> {
   const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
   if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
 
   // The dye tints the base, then the overlay adds the undyed details
-  const [base, overlay] = await Promise.all([loadImage(`${path}.png`), loadImage(`${path}_overlay.png`)]);
+  const [base, overlay] = await Promise.all([
+    loadImage(`${path}.png`),
+    loadImage(`${path}_overlay.png`),
+  ]);
   const canvas = createCanvas(base.width, base.height);
   const ctx = canvas.getContext("2d");
 
