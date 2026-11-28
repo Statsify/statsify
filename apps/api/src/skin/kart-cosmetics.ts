@@ -152,7 +152,7 @@ const SUIT_MATERIALS = {
 
 type SuitPiece = "JACKET" | "PANTS" | "SHOES";
 
-// Object.hasOwn, since an index would also find keys like "constructor" on the prototype
+// An index would also find prototype keys like "constructor"
 function lookup<T extends object>(
   registry: T,
   key: string,
@@ -170,7 +170,6 @@ export const getHelmetModel = (helmet?: string) =>
     ? undefined
     : lookup(HELMETS, helmet, `Unknown helmet ${helmet}`);
 
-/** Reads a stored suit piece such as `GOLD_JACKET`, `LEATHER_JACKET` (undyed) or `LEATHER_JACKET:RED` */
 export function parseSuitPiece(
   value: string | undefined,
   piece: SuitPiece,
