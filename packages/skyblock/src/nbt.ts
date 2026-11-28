@@ -8,19 +8,22 @@
 
 import nbt from "prismarine-nbt";
 import { gunzipSync } from "node:zlib";
-import type { RawItem } from "#raw";
+import type { RawItem, RawItemAttributes } from "#raw";
 
-export function decodeInventory(
-  data: string | { data: string },
-): (RawItem | null)[] {
+function decodeCompound(data: string | { data: string }) {
   const buffer = Buffer.from(
     typeof data === "string" ? data : data.data,
     "base64",
   );
 
   // The async gunzip opens a zlib stream per blob, which tripled peak memory.
-  const parsed = nbt.parseUncompressed(gunzipSync(buffer), "big");
-  const { i } = nbt.simplify(parsed) as {
+  return nbt.simplify(nbt.parseUncompressed(gunzipSync(buffer), "big"));
+}
+
+export function decodeInventory(
+  data: string | { data: string },
+): (RawItem | null)[] {
+  const { i } = decodeCompound(data) as {
     i?: (RawItem | Record<string, never>)[];
   };
 
@@ -31,6 +34,10 @@ export function decodeInventory(
   // An empty slot simplifies to {}.
   return i.map((slot) => ("id" in slot ? (slot as RawItem) : null));
 }
+
+// A toolkit's tool is its bare ExtraAttributes, with no slot around it.
+export const decodeAttributes = (data: string | { data: string }) =>
+  decodeCompound(data) as RawItemAttributes;
 
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;

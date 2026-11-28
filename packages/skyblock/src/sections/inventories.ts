@@ -7,15 +7,16 @@
  */
 
 import { arrayGroup } from "@statsify/util";
-import { decodeSlots } from "#items";
+import { decodeSlots, toToolkitItemView } from "#items";
 import { resourceItem } from "#textures";
 import type {
   InventoriesSection,
   InventoryId,
+  ItemView,
   ItemsResource,
   Slots,
 } from "#types";
-import type { RawMember, RawNbt } from "#raw";
+import type { RawMember, RawNbt, RawToolkit } from "#raw";
 
 // The bags are paged at the size of an ender chest page.
 const PAGE_SIZE = 45;
@@ -31,10 +32,30 @@ const BAGS = {
 const toPages = (slots: Slots) =>
   slots.length > 0 ? arrayGroup(slots, PAGE_SIZE) : [[]];
 
-const sortByKey = (blobs: Record<string, RawNbt> = {}) =>
+export const sortByKey = (blobs: Record<string, RawNbt> = {}) =>
   Object.entries(blobs)
     .toSorted(([a], [b]) => Number(a) - Number(b))
     .map(([, blob]) => blob);
+
+// The hotbar comes first in the blob and last on screen.
+const moveHotbarLast = (slots: Slots) => [
+  ...slots.slice(9),
+  ...slots.slice(0, 9),
+];
+
+// The used-up Hunting Toolkit item sits beside the tools, so it's skipped.
+function getToolkitSlots(toolkit: RawToolkit, items: ItemsResource) {
+  const slots: ItemView[] = [];
+  for (const [kind, tools] of Object.entries(toolkit)) {
+    if (!Array.isArray(tools) || kind === "HUNTING_TOOLKIT") continue;
+
+    for (const blob of tools as (RawNbt | null)[]) {
+      const view = blob && toToolkitItemView(blob, items);
+      if (view) slots.push(view);
+    }
+  }
+  return slots;
+}
 
 export function getInventories(
   member: RawMember,
@@ -43,10 +64,8 @@ export function getInventories(
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // The hotbar comes first in the blob and last on screen.
-  const main = decodeSlots(inventory.inv_contents);
   const pages: InventoriesSection["pages"] = {
-    inventory: [[...main.slice(9), ...main.slice(0, 9)]],
+    inventory: [moveHotbarLast(decodeSlots(inventory.inv_contents))],
   };
 
   if (inventory.ender_chest_contents)
@@ -59,6 +78,17 @@ export function getInventories(
     const blob = inventory.bag_contents?.[BAGS[id]];
     if (blob) pages[id] = toPages(decodeSlots(blob));
   }
+
+  const farming = member.garden_player_data?.farming_toolkit;
+  if (farming) pages.farmingToolkit = [getToolkitSlots(farming, items)];
+  const hunting = member.foraging?.hunting_toolkit;
+  if (hunting) pages.huntingToolkit = [getToolkitSlots(hunting, items)];
+
+  const rift = member.rift?.inventory;
+  if (rift?.inv_contents)
+    pages.riftInventory = [moveHotbarLast(decodeSlots(rift.inv_contents))];
+  if (rift?.ender_chest_contents)
+    pages.riftEnderChest = toPages(decodeSlots(rift.ender_chest_contents));
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
     .filter(([, count]) => count > 0)

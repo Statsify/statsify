@@ -35,7 +35,11 @@ export const SkyBlockHotfProfile = ({
     hotf;
 
   const sidebar: SidebarItem[] = [
-    [t("skyblock.tokensSpent"), t(tokens.spent), "§a"],
+    [
+      t("skyblock.tokensSpent"),
+      `${t(tokens.spent)}§7/§a${t(tokens.total)}`,
+      "§a",
+    ],
     [t("skyblock.centerOfTheForest"), t(centerLevel), "§6"],
     [
       t("skyblock.ability"),

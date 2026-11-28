@@ -8,15 +8,19 @@
 
 import { LEVELING } from "#data";
 import { toSkyBlockLevel } from "#leveling";
-import { minecraftColors } from "@statsify/util";
-import type {
-  Freshness,
-  GameMode,
-  PlayerRef,
-  ProfileSummary,
-  SkyBlockProfilesView,
+import {
+  type Freshness,
+  type GameMode,
+  PLAYER_CLAIMS,
+  type PlayerExtras,
+  type PlayerRef,
+  type ProfileSummary,
+  type SkyBlockProfilesView,
+  type StoredPlayerSkyBlock,
 } from "#types";
+import { minecraftColors } from "@statsify/util";
 import type { RawMember, RawProfile } from "#raw";
+import type { Skill } from "./sections/skills.js";
 
 const GAME_MODES: Record<string, GameMode> = {
   normal: "normal",
@@ -83,15 +87,18 @@ export function toProfileSummary(
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
   const { level } = toSkyBlockLevel(xp);
+  const gameMode = getGameMode(profile);
 
   return {
     id: profile.profile_id,
     cuteName: profile.cute_name,
-    gameMode: getGameMode(profile),
+    gameMode,
     selected: profile.selected ?? false,
-    members: getCoopMembers(profile).map(([id, other]) => ({
+    members: Object.entries(profile.members).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
+      invited: isPending(other),
+      firstJoin: other.profile?.first_join,
     })),
     level,
     levelColor: getLevelColor(level),
@@ -102,6 +109,44 @@ export function toProfileSummary(
     personalBank: member.profile?.bank_account,
     firstJoin: member.profile?.first_join,
     fairySouls: member.fairy_soul?.total_collected ?? 0,
+    // Stranded and Bingo islands hold fewer souls, and nothing says how many.
+    maxFairySouls:
+      gameMode === "normal" || gameMode === "ironman"
+        ? LEVELING.fairy_souls
+        : undefined,
+  };
+}
+
+// The achievement for each skill's level, where Carpentry has none
+const SKILL_ACHIEVEMENTS = {
+  farming: "harvester",
+  mining: "excavator",
+  combat: "combat",
+  foraging: "gatherer",
+  fishing: "angler",
+  enchanting: "augmentation",
+  alchemy: "concoctor",
+  taming: "domesticator",
+  hunting: "predator",
+} as const satisfies Partial<Record<Skill, keyof StoredPlayerSkyBlock>>;
+
+export function toPlayerExtras(stored: StoredPlayerSkyBlock): PlayerExtras {
+  const highestSkills: PlayerExtras["highestSkills"] = {};
+  for (const [skill, key] of Object.entries(SKILL_ACHIEVEMENTS)) {
+    const level = stored[key];
+    if (level) highestSkills[skill as Skill] = level;
+  }
+
+  const claimed: PlayerExtras["claimed"] = {};
+  for (const claim of PLAYER_CLAIMS) {
+    const at = stored[claim];
+    if (at) claimed[claim] = at;
+  }
+
+  return {
+    highestSkills,
+    commissions: stored.hardWorkingMiner ?? 0,
+    claimed,
   };
 }
 

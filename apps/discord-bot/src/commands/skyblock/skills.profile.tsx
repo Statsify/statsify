@@ -11,7 +11,7 @@ import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { type LevelBarProps, getLevelBarRows } from "./components/LevelBar.js";
 import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
-import { prettify } from "@statsify/util";
+import { arrayGroup, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSkillsProfile = ({
@@ -44,11 +44,38 @@ export const SkyBlockSkillsProfile = ({
       })
     : [];
 
+  // A new profile has no skills of its own yet.
+  const highestSkills = profile.newProfile
+    ? undefined
+    : profile.player?.highestSkills;
+  const highest: JSX.Element[] = [];
+  for (const name of SKILLS) {
+    const level = highestSkills?.[name];
+    if (level === undefined) continue;
+
+    highest.push(
+      <Table.td
+        title={prettify(name)}
+        value={t(level)}
+        color={SKILL_COLORS[name]}
+        size="small"
+      />,
+    );
+  }
+
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {skills ? (
         // Four "XP past max" notes in one row set the card's width.
         <Table.table>{getLevelBarRows(bars, 3)}</Table.table>
+      ) : highest.length > 0 ? (
+        <Table.table>
+          <Table.ts title={`§7${t("skyblock.highestOnAnyProfile")}`}>
+            {arrayGroup(highest, 3).map((row) => (
+              <Table.tr>{row}</Table.tr>
+            ))}
+          </Table.ts>
+        </Table.table>
       ) : (
         <EmptySection
           setting="skills"

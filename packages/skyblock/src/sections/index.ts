@@ -53,6 +53,8 @@ export interface SectionInput {
   prices?: PriceMap;
   items?: ItemsResource;
   rawItems?: RawItemsResource;
+  // ranked is false only for a player known to have no rank.
+  ranked?: boolean;
 }
 
 export interface Section<K extends keyof MemberView> {
@@ -137,7 +139,13 @@ export const SECTIONS: {
       return getMinions(profile, items);
     },
   },
-  misc: { needs: [], compute: async ({ member }) => getMisc(member) },
+  misc: {
+    needs: ["items"],
+    compute: async ({ profile, member, items }) => {
+      if (!items) throw new TypeError("misc needs items");
+      return getMisc(profile, member, items);
+    },
+  },
   museum: {
     needs: ["items", "museum"],
     compute: async ({ items, museum }) => {
@@ -152,7 +160,8 @@ export const SECTIONS: {
   rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: {
     needs: [],
-    compute: async ({ profile, member }) => getSkills(profile, member),
+    compute: async ({ profile, member, ranked }) =>
+      getSkills(profile, member, ranked),
   },
   slayers: { needs: [], compute: async ({ member }) => getSlayers(member) },
   stats: {

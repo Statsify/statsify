@@ -1031,8 +1031,12 @@ try {
     core_task: Record<string, unknown>;
     sblevel_colours: Record<string, string>;
   }>("constants/sblevels.json");
+  const fairySouls = await readJson<{ "Max Souls": number }>(
+    "constants/fairy_souls.json",
+  );
   await write("leveling.json", {
     catacombs: leveling.catacombs,
+    fairy_souls: fairySouls["Max Souls"],
     HOTF: leveling.HOTF,
     HOTM: leveling.HOTM,
     leveling_caps: leveling.leveling_caps,

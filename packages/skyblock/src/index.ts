@@ -21,6 +21,7 @@ export {
   findProfile,
   getGameMode,
   isMember,
+  toPlayerExtras,
   toProfileSummary,
   toProfilesView,
 } from "./profiles.js";

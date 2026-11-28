@@ -6,9 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ACCESSORY_UPGRADES, IGNORED_ACCESSORIES, POWERS } from "#data";
+import {
+  ACCESSORY_UPGRADES,
+  ATTRIBUTE_SHARDS,
+  IGNORED_ACCESSORIES,
+  POWERS,
+} from "#data";
 import { add } from "@statsify/math";
 import { decodeInventory } from "#nbt";
+import { getAttributeLevel } from "./attributes.js";
 import { getItemCost } from "#prices";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
@@ -321,6 +327,26 @@ export function keepBestPerChain<T extends { id: string }>(sorted: T[]) {
   return best;
 }
 
+const TUNING_BOX = ATTRIBUTE_SHARDS.shards.find(
+  ({ attribute }) => attribute === "tuning_box",
+)!;
+
+// Nothing lists what Tuning Box I to IX give, so only 0 and X have a total.
+function getTuningTotal(
+  member: RawMember,
+  accessoryPower: number,
+  enrichments: number,
+  spent: number,
+) {
+  const box = getAttributeLevel(TUNING_BOX, member);
+  const maxBox = ATTRIBUTE_SHARDS.levels[TUNING_BOX.rarity].length;
+  if (box > 0 && box < maxBox) return;
+
+  const total =
+    Math.floor(accessoryPower / 10) + enrichments + (box === 0 ? 0 : 13);
+  return total < spent ? undefined : total;
+}
+
 // Without a market, nothing has a cost.
 export function getAccessorySteps(
   member: RawMember,
@@ -364,6 +390,8 @@ export function getAccessories(
 
   const storage = member.accessory_bag_storage;
   const tuning = storage?.tuning?.slot_0 ?? {};
+  const tuningPoints = add(...Object.values(tuning));
+  const enrichments = bag.active.filter((view) => view.enrichment).length;
   const stone = storage?.selected_power
     ? POWERS[storage.selected_power]
     : undefined;
@@ -374,8 +402,14 @@ export function getAccessories(
     selectedPower: storage?.selected_power,
     powerStats: stone && getPowerStats(stone, bag.accessoryPower),
     tuning,
-    tuningPoints: add(...Object.values(tuning)),
-    enrichments: bag.active.filter((view) => view.enrichment).length,
+    tuningPoints,
+    tuningTotal: getTuningTotal(
+      member,
+      bag.accessoryPower,
+      enrichments,
+      tuningPoints,
+    ),
+    enrichments,
     unenriched: bag.active.filter(
       (view) =>
         !view.enrichment &&

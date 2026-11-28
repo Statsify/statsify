@@ -38,6 +38,8 @@ export const AVERAGED = SKILLS.filter(
 // Past 50 and the three log unlocks, the cap rests on the shop perks.
 const FORAGING_VERIFIED = 53;
 
+const UNRANKED_RUNECRAFTING_CAP = 3;
+
 export const getSkillXp = (member: RawMember, skill: Skill) =>
   member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
 
@@ -47,7 +49,9 @@ function getXpTable(skill: Skill) {
   return LEVELING.leveling_xp;
 }
 
-function getLevelCap(skill: Skill, member: RawMember) {
+function getLevelCap(skill: Skill, member: RawMember, ranked: boolean) {
+  if (skill === "runecrafting" && !ranked) return UNRANKED_RUNECRAFTING_CAP;
+
   const cap = LEVELING.leveling_caps[skill];
   const max = LEVELING.max_levels[skill];
 
@@ -78,6 +82,7 @@ function getLevelCap(skill: Skill, member: RawMember) {
 export function getSkills(
   profile: RawProfile,
   member: RawMember,
+  ranked = true,
 ): SkillsSection | null {
   if (!member.player_data?.experience) return null;
 
@@ -90,7 +95,8 @@ export function getSkills(
         skill === "social"
           ? add(...accepted.map(([, other]) => getSkillXp(other, skill)))
           : getSkillXp(member, skill);
-      const level = getLevel(xp, getXpTable(skill), getLevelCap(skill, member));
+      const cap = getLevelCap(skill, member, ranked);
+      const level = getLevel(xp, getXpTable(skill), cap);
       return [
         skill,
         {

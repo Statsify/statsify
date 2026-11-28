@@ -12,10 +12,11 @@ import { fractionalLevel, getLevel } from "#leveling";
 import type {
   DungeonFloor,
   DungeonGrade,
+  DungeonRun,
   DungeonsSection,
   Essence,
 } from "#types";
-import type { RawDungeonType, RawMember } from "#raw";
+import type { RawDungeonRun, RawDungeonType, RawMember } from "#raw";
 
 export const DUNGEON_CLASSES = [
   "healer",
@@ -45,6 +46,35 @@ function getGrade(score: number) {
   return GRADES.find(([, lowest]) => score >= lowest)![0];
 }
 
+// Of two runs with the same score, the faster one is best.
+function getBestRun(runs: RawDungeonRun[] = []): DungeonRun | undefined {
+  const scored = runs.map((run) => ({
+    run,
+    score: add(
+      run.score_exploration,
+      run.score_speed,
+      run.score_skill,
+      run.score_bonus,
+    ),
+  }));
+  const best = scored.toSorted(
+    (a, b) => b.score - a.score || a.run.elapsed_time - b.run.elapsed_time,
+  )[0];
+  if (!best) return;
+
+  const { run, score } = best;
+  return {
+    score,
+    grade: getGrade(score),
+    time: run.elapsed_time,
+    dungeonClass: run.dungeon_class,
+    secrets: run.secrets_found,
+    deaths: run.deaths,
+    damage: run.damage_dealt,
+    at: run.timestamp,
+  };
+}
+
 function getFloors(
   type: RawDungeonType | undefined,
   first: number,
@@ -66,6 +96,7 @@ function getFloors(
       mostMobsKilled: type?.most_mobs_killed?.[key],
       mostHealing: type?.most_healing?.[key],
       milestoneCompletions: type?.milestone_completions?.[key] ?? 0,
+      bestRun: getBestRun(type?.best_runs?.[key]),
     };
   });
 }

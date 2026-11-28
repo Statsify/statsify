@@ -24,6 +24,21 @@ export const CATCHES = [
 
 export type Catch = (typeof CATCHES)[number];
 
+export const TROPHY_HUNTER_RANKS = [
+  "novice",
+  "adept",
+  "expert",
+  "master",
+] as const;
+
+export type TrophyHunterRank = (typeof TROPHY_HUNTER_RANKS)[number];
+
+// Odger's rewards list the ranks claimed from 1, and a stray 99 isn't one.
+function getTrophyHunter(rewards: number[] = []) {
+  const ranks = rewards.filter((rank) => rank <= TROPHY_HUNTER_RANKS.length);
+  return TROPHY_HUNTER_RANKS[Math.max(0, ...ranks) - 1];
+}
+
 export function getFishing(member: RawMember): FishingSection | null {
   const trophy = member.trophy_fish ?? {};
   const caught = (key: string) => Number(trophy[key] ?? 0);
@@ -62,5 +77,23 @@ export function getFishing(member: RawMember): FishingSection | null {
     // Hypixel's sea_creature_kills neither matches nor bounds the bestiary.
     seaCreatureKills: add(...seaCreatures.map(({ kills }) => kills)),
     seaCreatures,
+    trophyHunter: getTrophyHunter(member.trophy_fish?.rewards),
   };
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getTrophyHunter", () => {
+    it("should take the highest rank claimed", () => {
+      expect(getTrophyHunter([1])).toBe("novice");
+      expect(getTrophyHunter([2, 1])).toBe("adept");
+      expect(getTrophyHunter([1, 2, 3, 99, 4])).toBe("master");
+    });
+
+    it("should skip a member with no rank claimed", () => {
+      expect(getTrophyHunter()).toBeUndefined();
+      expect(getTrophyHunter([])).toBeUndefined();
+    });
+  });
 }

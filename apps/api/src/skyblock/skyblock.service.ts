@@ -42,6 +42,7 @@ import {
   getGameMode,
   isMember,
   toMemberStats,
+  toPlayerExtras,
   toProfileSummary,
   toProfilesView,
 } from "@statsify/skyblock";
@@ -50,6 +51,7 @@ import { gunzipJson, gzipJson } from "./zip.js";
 import { hasMuseum } from "@statsify/skyblock/display";
 import type {
   MemberView,
+  PlayerExtras,
   PlayerRef,
   PriceMap,
   RawGarden,
@@ -68,10 +70,19 @@ export const STORED_FRESH_MS = 300_000;
 const LIVE_REUSE_MS = 60_000;
 const SECTION_CACHE_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves old ones.
-const SECTION_VERSION = 5;
+const SECTION_VERSION = 6;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
 const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 const STORED_COPIES = ["museum", "garden"] as const;
+
+// Mongo leaves out the default rank, so a stored player without one has none.
+const isRanked = (rank: string | undefined) =>
+  rank !== undefined && rank !== "DEFAULT";
+
+interface SkyBlockPlayer extends PlayerRef {
+  ranked?: boolean;
+  extras?: PlayerExtras;
+}
 
 const isFresh = (fetchedAt: number, cache: CacheLevel) =>
   cache === CacheLevel.CACHE_ONLY ||
@@ -156,7 +167,8 @@ export class SkyBlockService {
     tag: string,
     cache: CacheLevel,
   ): Promise<SkyBlockProfilesView> {
-    return this.getProfilesFor(await this.getPlayer(tag), cache);
+    const { uuid, username, displayName } = await this.getPlayer(tag);
+    return this.getProfilesFor({ uuid, username, displayName }, cache);
   }
 
   // A caller that already has the player skips the player lookup.
@@ -184,7 +196,7 @@ export class SkyBlockService {
 
   // With requireGarden, a Garden Hypixel can't send throws like the profiles.
   public async getProfileFor(
-    player: PlayerRef,
+    { ranked, extras, ...player }: SkyBlockPlayer,
     sections: SkyBlockSection[],
     cache: CacheLevel,
     profileName?: string,
@@ -240,6 +252,7 @@ export class SkyBlockService {
       prices,
       items: items?.parsed,
       rawItems: items?.raw,
+      ranked,
     };
 
     const computed = await Promise.all(
@@ -258,6 +271,7 @@ export class SkyBlockService {
       fetchedAt,
       stale,
       ...toProfileSummary(profile, player.uuid),
+      player: extras,
       member: {
         apiSettings: getApiSettings(profile, member, museum?.museum),
         ...Object.fromEntries(computed),
@@ -312,16 +326,25 @@ export class SkyBlockService {
     return { profiles, fetchedAt, stale };
   }
 
-  private async getPlayer(tag: string): Promise<PlayerRef> {
+  private async getPlayer(tag: string): Promise<SkyBlockPlayer> {
     const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
       uuid: true,
       username: true,
       displayName: true,
+      rank: true,
+      skyblock: true,
     });
     if (!player) throw new PlayerNotFoundException();
 
-    const { uuid, username, displayName } = player;
-    return { uuid, username, displayName };
+    const { uuid, username, displayName, rank, skyblock } = player;
+    return {
+      uuid,
+      username,
+      displayName,
+      ranked: isRanked(rank),
+      // A player stored before skyblock existed has none until the next fetch.
+      extras: skyblock && toPlayerExtras(skyblock),
+    };
   }
 
   private async getStoredProfiles(uuid: string, cache: CacheLevel) {
@@ -417,6 +440,7 @@ export class SkyBlockService {
               prices,
               items: loaded?.parsed,
               rawItems: loaded?.raw,
+              ranked: isRanked(players.get(member)),
             };
 
             const computed = await Promise.all(

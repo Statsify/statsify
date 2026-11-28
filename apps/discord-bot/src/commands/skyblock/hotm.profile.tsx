@@ -53,6 +53,13 @@ export const SkyBlockHotmProfile = ({
       "§b",
     ]);
 
+  if (profile.player)
+    sidebar.push([
+      t("skyblock.lifetimeCommissions"),
+      t(profile.player.commissions),
+      "§2",
+    ]);
+
   const powders = POWDERS.map((type) => (
     <PerkCurrency
       name={t(`skyblock.powders.${type}`)}
@@ -63,13 +70,17 @@ export const SkyBlockHotmProfile = ({
     />
   ));
 
-  const stats: [string, number, string][] = [
-    [t("skyblock.crystalsFound"), crystals.found, "§d"],
-    [t("skyblock.crystalsPlaced"), crystals.placed, "§d"],
-    [t("skyblock.nucleusRuns"), nucleusRuns, "§5"],
-    [t("skyblock.corpsesLooted"), glacite.corpses, "§b"],
-    [t("skyblock.fossilsDonated"), glacite.fossils, "§6"],
-    [t("skyblock.mineshafts"), glacite.mineshafts, "§3"],
+  const stats: [string, string, string][] = [
+    [t("skyblock.crystalsFound"), t(crystals.found), "§d"],
+    [t("skyblock.crystalsPlaced"), t(crystals.placed), "§d"],
+    [t("skyblock.nucleusRuns"), t(nucleusRuns), "§5"],
+    [t("skyblock.corpsesLooted"), t(glacite.corpses), "§b"],
+    [
+      t("skyblock.fossilsDonated"),
+      `${t(glacite.fossils)}§7/§6${t(glacite.maxFossils)}`,
+      "§6",
+    ],
+    [t("skyblock.mineshafts"), t(glacite.mineshafts), "§3"],
   ];
 
   return (
@@ -101,7 +112,7 @@ export const SkyBlockHotmProfile = ({
             {stats.map(([name, value, color]) => (
               <text
                 margin={{ top: 2, bottom: 2, left: 10, right: 10 }}
-              >{`§7${name}: ${color}${t(value)}`}</text>
+              >{`§7${name}: ${color}${value}`}</text>
             ))}
           </box>
         </div>

@@ -193,7 +193,8 @@ export function getSkyBlockTitle(
   name: SkyBlockCardName,
 ) {
   const title = t(`skyblock.titles.${name}`);
-  return `§l${FormattedGame.SKYBLOCK} §f${title} §r(${formatProfileName(profile)}§r)`;
+  // The Header puts the profile on its own line only where that's narrower.
+  return `§l${FormattedGame.SKYBLOCK} §f${title}\n§r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {

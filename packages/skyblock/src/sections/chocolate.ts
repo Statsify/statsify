@@ -8,6 +8,7 @@
 
 import { type ChocolateSection, RARITIES } from "#types";
 import { RABBITS } from "#data";
+import { add } from "@statsify/math";
 import type { RawMember } from "#raw";
 
 // In the factory's order
@@ -26,13 +27,17 @@ const PRESTIGE_CHOCOLATE = [
   150_000_000, 1_000_000_000, 4_000_000_000, 10_000_000_000, 30_000_000_000,
 ];
 
+// The rabbits record also holds counts like faction_level.
+const ALL_RABBITS = new Set(Object.values(RABBITS).flat());
+
 export function getChocolate(member: RawMember): ChocolateSection | null {
   const easter = member.events?.easter;
-  const found = new Set(
-    Object.entries(easter?.rabbits ?? {})
-      .filter(([, count]) => typeof count === "number")
-      .map(([rabbit]) => rabbit),
-  );
+  const counts = new Map<string, number>();
+  for (const [rabbit, count] of Object.entries(easter?.rabbits ?? {})) {
+    if (typeof count === "number" && ALL_RABBITS.has(rabbit))
+      counts.set(rabbit, count);
+  }
+  const found = new Set(counts.keys());
 
   // Hypixel sends the record with only its egg objects before any chocolate.
   if (!easter || (!easter.total_chocolate && found.size === 0)) return null;
@@ -61,5 +66,13 @@ export function getChocolate(member: RawMember): ChocolateSection | null {
       level: easter.employees?.[employee] ?? 0,
     })),
     timeTower: easter.time_tower?.level ?? 0,
+    duplicates: add(
+      ...[...counts.values()].map((count) => Math.max(0, count - 1)),
+    ),
+    eggLocations: add(
+      ...Object.values(easter.rabbits?.collected_locations ?? {}).map(
+        (spots) => spots.length,
+      ),
+    ),
   };
 }

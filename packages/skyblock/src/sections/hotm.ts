@@ -34,6 +34,9 @@ export function getTreeNodes(
   });
 }
 
+// The wiki's Fossils page lists eight fossils.
+const FOSSILS = 8;
+
 // The API stores only the tokens spent, so the total comes from these.
 const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 3, 2, 2, 2];
 const CORE_TOKENS = [0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 5];
@@ -122,6 +125,7 @@ export function getHotm(member: RawMember): HotmSection {
         .map(([type, count]) => ({ type, count }))
         .toSorted((a, b) => b.count - a.count),
       fossils: glacite?.fossils_donated?.length ?? 0,
+      maxFossils: FOSSILS,
       fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },

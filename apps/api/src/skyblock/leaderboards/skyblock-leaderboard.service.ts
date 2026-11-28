@@ -64,13 +64,15 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
   }
 
   // Only a member with a player record has a name to show on a row.
-  public async getKnownPlayers(uuids: string[]): Promise<Set<string>> {
+  public async getKnownPlayers(
+    uuids: string[],
+  ): Promise<Map<string, string | undefined>> {
     const players = await this.playerModel
       .find({ uuid: { $in: uuids } })
-      .select({ uuid: true })
+      .select({ uuid: true, rank: true })
       .lean()
       .exec();
-    return new Set(players.map(({ uuid }) => uuid));
+    return new Map(players.map(({ uuid, rank }) => [uuid, rank]));
   }
 
   // The player's rows on profiles missing from profileIds are dropped too.

@@ -8,6 +8,7 @@
 
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
+import { DateTime } from "luxon";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 export const SkyBlockSummaryProfile = ({
@@ -45,6 +46,24 @@ export const SkyBlockSummaryProfile = ({
       t(Math.floor(profile.personalBank)),
       "§6",
     ]);
+
+  const firstJoin = profile.firstJoin
+    ? DateTime.fromMillis(profile.firstJoin).toFormat("LL/dd/yy", {
+        locale: t.locale,
+      })
+    : t("skyblock.none");
+
+  const { members } = profile;
+  const current = members.filter(
+    ({ removed, invited }) => !removed && !invited,
+  ).length;
+  const left = members.filter(({ removed }) => removed).length;
+  const invited = members.filter(({ invited }) => invited).length;
+
+  const coop = [t(current)];
+  if (left > 0) coop.push(`§7${t("skyblock.membersLeft", { count: left })}`);
+  if (invited > 0)
+    coop.push(`§7${t("skyblock.membersInvited", { count: invited })}`);
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
@@ -96,8 +115,24 @@ export const SkyBlockSummaryProfile = ({
           />
           <Table.td
             title={t("skyblock.fairySouls")}
-            value={t(profile.fairySouls)}
+            value={
+              profile.maxFairySouls
+                ? `${t(profile.fairySouls)}§7/${t(profile.maxFairySouls)}`
+                : t(profile.fairySouls)
+            }
             color="§d"
+          />
+        </Table.tr>
+        <Table.tr>
+          <Table.td
+            title={t("skyblock.firstJoin")}
+            value={firstJoin}
+            color="§b"
+          />
+          <Table.td
+            title={t("skyblock.coopMembers")}
+            value={coop.join(" §8• ")}
+            color="§e"
           />
         </Table.tr>
       </Table.table>

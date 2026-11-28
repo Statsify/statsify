@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { DungeonClass } from "./sections/dungeons.js";
 import type { Experiment } from "./sections/experiments.js";
 import type { Faction } from "./sections/crimson.js";
 import type { JacobMedal } from "./sections/jacob.js";
@@ -30,12 +31,27 @@ export interface RawPet {
   skin?: string | null;
 }
 
+export interface RawDungeonRun {
+  timestamp: number;
+  score_exploration: number;
+  score_speed: number;
+  score_skill: number;
+  score_bonus: number;
+  dungeon_class: DungeonClass;
+  elapsed_time: number;
+  damage_dealt: number;
+  deaths: number;
+  secrets_found: number;
+}
+
 export interface RawDungeonType {
   experience?: number;
   times_played?: Record<string, number>;
   tier_completions?: Record<string, number>;
   highest_tier_completed?: number;
   best_score?: Record<string, number>;
+  // Hypixel keeps a few of the best runs per floor.
+  best_runs?: Record<string, RawDungeonRun[]>;
   fastest_time?: Record<string, number>;
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
@@ -84,14 +100,30 @@ interface RawLoadout {
 
 export interface RawSlayerBoss {
   xp?: number;
-  [kills: `boss_kills_tier_${number}`]: number | undefined;
+  // A level past a boss's usual ones is level_<n>_special.
+  claimed_levels?: Record<string, boolean>;
+  [kills: `boss_${"kills" | "attempts"}_tier_${number}`]: number | undefined;
 }
+
+// A song's counts are keyed song_<song>_<count>.
+export type RawHarp = Record<string, number | string | boolean>;
+
+export interface RawContest {
+  collected: number;
+  // The claimed position counts from 0.
+  claimed_position?: number;
+  claimed_participants?: number;
+  claimed_medal?: string;
+}
+
+// Each kind lists bare ExtraAttributes blobs, beside flags like IN_USE.
+export type RawToolkit = Record<string, unknown>;
 
 export interface RawMember {
   player_id?: string;
   profile?: {
     deletion_notice?: { timestamp: number };
-    coop_invitation?: { confirmed: boolean };
+    coop_invitation?: { confirmed: boolean; timestamp?: number };
     bank_account?: number;
     first_join?: number;
   };
@@ -129,6 +161,25 @@ export interface RawMember {
     mythos?: { kills?: number; burrows_chains_complete?: { total?: number } };
     candy_collected?: { total?: number };
     rift?: { visits?: number; lifetime_motes_earned?: number };
+    winter?: {
+      most_damage_dealt?: number;
+      most_snowballs_hit?: number;
+      most_magma_damage_dealt?: number;
+      most_cannonballs_hit?: number;
+    };
+    end_island?: {
+      // Each is by dragon type, plus "best", or "total" for the counts.
+      dragon_fight?: {
+        fastest_kill?: Record<string, number>;
+        most_damage?: Record<string, number>;
+        highest_rank?: Record<string, number>;
+        amount_summoned?: Record<string, number>;
+        summoning_eyes_contributed?: Record<string, number>;
+        ender_crystals_destroyed?: number;
+      };
+      special_zealot_loot_collected?: number;
+      summoning_eyes_collected?: number;
+    };
   };
   bestiary?: {
     kills?: {
@@ -139,13 +190,15 @@ export interface RawMember {
     milestone?: { last_claimed_milestone?: number };
   };
   // Each fish's count by tier, beside total_caught and lists like rewards
-  trophy_fish?: Record<string, unknown>;
+  trophy_fish?: { rewards?: number[]; [key: string]: unknown };
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number | boolean>;
     // A collection found at no tier yet is listed at tier -1.
     unlocked_coll_tiers?: string[];
     reaper_peppers_eaten?: number;
+    bee_saliva_eaten?: number;
+    isopod_husks_eaten?: number;
     // Each entry is a minion and tier, like "WHEAT_11".
     crafted_generators?: string[];
   };
@@ -182,6 +235,8 @@ export interface RawMember {
     copper?: number;
     discovered_greenhouse_crops?: string[];
     analyzed_greenhouse_crops?: string[];
+    larva_consumed?: number;
+    farming_toolkit?: RawToolkit;
   };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
@@ -189,7 +244,8 @@ export interface RawMember {
     // Each bracket maps to the crops that reached it.
     unique_brackets?: Record<string, string[]>;
     personal_bests?: Record<string, number>;
-    contests?: Record<string, unknown>;
+    // "<year>:<month>_<day>:<crop>", with the year from 0 and the month from 1
+    contests?: Record<string, RawContest>;
   };
   events?: {
     easter?: {
@@ -198,11 +254,27 @@ export interface RawMember {
       chocolate_since_prestige?: number;
       chocolate_level?: number;
       // Each rabbit's times found, beside objects like collected_eggs
-      rabbits?: Record<string, unknown>;
+      rabbits?: {
+        collected_locations?: Record<string, string[]>;
+        [rabbit: string]: unknown;
+      };
+      refined_dark_cacao_truffles?: number;
       employees?: Record<string, number>;
       time_tower?: { level?: number };
     };
   };
+  foraging?: {
+    songs?: { harp?: RawHarp };
+    fish_family?: string[];
+    hina?: { tasks?: { completed_tasks?: string[] } };
+    // The gifts are keyed by tree, beside milestone_tier_claimed.
+    tree_gifts?: Record<string, unknown>;
+    starlyn?: { personal_bests?: Record<string, number> };
+    hunting_toolkit?: RawToolkit;
+  };
+  // The harp lived here before foraging.songs.
+  quests?: { harp_quest?: RawHarp };
+  winter_player_data?: { refined_jyrre_uses?: number };
   foraging_core?: {
     whispers?: Partial<
       Record<
@@ -260,6 +332,7 @@ export interface RawMember {
     dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
     enigma?: { found_souls?: string[] };
     gallery?: { secured_trophies?: unknown[] };
+    inventory?: { inv_contents?: RawNbt; ender_chest_contents?: RawNbt };
   };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
@@ -318,6 +391,22 @@ export interface RawGarden {
   unlocked_barn_skins?: string[];
 }
 
+export interface RawItemAttributes {
+  id?: string;
+  modifier?: string;
+  upgrade_level?: number;
+  // A few items store it as a long, which the decode leaves as [high, low].
+  dungeon_item_level?: number | [number, number];
+  rarity_upgrades?: number;
+  enchantments?: Record<string, number>;
+  talisman_enrichment?: string;
+  runes?: Record<string, number>;
+  dye_item?: string;
+  skin?: string;
+  originTag?: string;
+  [key: string]: unknown;
+}
+
 // One inventory slot, as prismarine-nbt's simplify() returns it.
 export interface RawItem {
   id: number;
@@ -325,17 +414,7 @@ export interface RawItem {
   Damage: number;
   tag?: {
     display?: { Name?: string; Lore?: string[]; color?: number };
-    ExtraAttributes?: {
-      id?: string;
-      modifier?: string;
-      upgrade_level?: number;
-      // A few items store it as a long, which the decode leaves as [high, low].
-      dungeon_item_level?: number | [number, number];
-      rarity_upgrades?: number;
-      enchantments?: Record<string, number>;
-      talisman_enrichment?: string;
-      [key: string]: unknown;
-    };
+    ExtraAttributes?: RawItemAttributes;
     SkullOwner?: { Properties?: { textures?: { Value: string }[] } };
     ench?: unknown[];
   };

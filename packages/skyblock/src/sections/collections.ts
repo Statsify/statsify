@@ -11,8 +11,57 @@ import { add } from "@statsify/math";
 import { countTiersReached } from "#leveling";
 import { getCoopMembers } from "../profiles.js";
 import { resourceTexture } from "#textures";
-import type { CollectionsSection, ItemsResource } from "#types";
+import {
+  type BossCollection,
+  type CollectionsSection,
+  type ItemsResource,
+  KUUDRA_TIERS,
+} from "#types";
 import type { RawMember, RawProfile } from "#raw";
+
+// Each boss's tiers come from its wiki page's Collection section.
+const SHORT_TIERS = [25, 50, 100, 150, 250, 1000];
+const LONG_TIERS = [50, 100, 150, 250, 500, 750, 1000];
+
+// In floor order, from floor 1
+const FLOOR_BOSSES = [
+  { boss: "bonzo", tiers: SHORT_TIERS },
+  { boss: "scarf", tiers: SHORT_TIERS },
+  { boss: "the_professor", tiers: SHORT_TIERS },
+  { boss: "thorn", tiers: [50, 100, 150, 250, 400, 1000] },
+  { boss: "livid", tiers: LONG_TIERS },
+  { boss: "sadan", tiers: LONG_TIERS },
+  { boss: "necron", tiers: LONG_TIERS },
+];
+
+const KUUDRA_COLLECTION = [10, 100, 500, 2000, 5000];
+
+function toBossCollection(
+  boss: string,
+  amount: number,
+  tiers: number[],
+): BossCollection {
+  const tier = countTiersReached(amount, tiers);
+  return { boss, amount, tier, maxTier: tiers.length, next: tiers[tier] };
+}
+
+// A Master Mode completion counts twice, and a Kuudra tier counts its place.
+function getBossCollections(member: RawMember) {
+  const types = member.dungeons?.dungeon_types;
+  const kuudra = member.nether_island_player_data?.kuudra_completed_tiers ?? {};
+
+  const floors = FLOOR_BOSSES.map(({ boss, tiers }, index) => {
+    const floor = String(index + 1);
+    const normal = types?.catacombs?.tier_completions?.[floor] ?? 0;
+    const master = types?.master_catacombs?.tier_completions?.[floor] ?? 0;
+    return toBossCollection(boss, normal + 2 * master, tiers);
+  });
+
+  const kuudraRuns = add(
+    ...KUUDRA_TIERS.map((tier, index) => (index + 1) * (kuudra[tier] ?? 0)),
+  );
+  return [...floors, toBossCollection("kuudra", kuudraRuns, KUUDRA_COLLECTION)];
+}
 
 // Each entry is "<collection>_<tier>", and one found at no tier yet is -1.
 function getUnlockedTiers(unlocked: string[]) {
@@ -75,6 +124,7 @@ export function getCollections(
     hidden: members
       .filter(([, other]) => !other.collection)
       .map(([uuid]) => uuid),
+    bosses: getBossCollections(member),
   };
 }
 

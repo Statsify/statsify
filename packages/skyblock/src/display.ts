@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { DojoBelt, DojoGrade, Faction } from "./sections/crimson.js";
 import type { DungeonClass } from "./sections/dungeons.js";
 import type { DungeonGrade, GameMode, Rarity } from "#types";
-import type { Faction } from "./sections/crimson.js";
 import type { JacobBracket } from "./sections/jacob.js";
 import type { Powder } from "./sections/hotm.js";
 import type { Skill } from "./sections/skills.js";
@@ -17,7 +17,12 @@ import type { Whisper } from "./sections/hotf.js";
 
 // Pages take registries from here, since the root pulls NBT decoding along.
 export { AUCTION_STATS } from "./sections/misc.js";
-export { CATCHES, TROPHY_TIERS } from "./sections/fishing.js";
+export {
+  CATCHES,
+  TROPHY_HUNTER_RANKS,
+  TROPHY_TIERS,
+} from "./sections/fishing.js";
+export { REPUTATION_RANKS } from "./sections/crimson.js";
 export { DUNGEON_CLASSES } from "./sections/dungeons.js";
 export { JACOB_MEDALS } from "./sections/jacob.js";
 export { POWDERS } from "./sections/hotm.js";
@@ -83,6 +88,24 @@ export const FACTION_COLORS: Record<Faction, string> = {
   barbarians: "§c",
 };
 
+export const DOJO_GRADE_COLORS: Record<DojoGrade, string> = {
+  S: "§6",
+  A: "§5",
+  B: "§a",
+  C: "§9",
+  D: "§e",
+  F: "§c",
+};
+
+// Black is dark gray, which reads on the cards' dark backgrounds.
+export const DOJO_BELT_COLORS: Record<DojoBelt, string> = {
+  white: "§f",
+  yellow: "§e",
+  green: "§a",
+  blue: "§9",
+  brown: "§6",
+  black: "§8",
+};
 // Trophy fish tiers share four of these colors.
 export const MEDAL_COLORS: Record<JacobBracket, string> = {
   bronze: "§c",

@@ -9,8 +9,9 @@
 import { BESTIARY } from "#data";
 import { add } from "@statsify/math";
 import { prettify } from "@statsify/util";
-import type { MiscSection } from "#types";
-import type { RawMember } from "#raw";
+import { resourceTexture } from "#textures";
+import type { Consumable, Dragons, ItemsResource, MiscSection } from "#types";
+import type { RawHarp, RawMember, RawProfile } from "#raw";
 
 export const AUCTION_STATS = [
   "created",
@@ -65,9 +66,137 @@ function getTopCounts(
     .map(([name, count]) => ({ name, count }));
 }
 
-export function getMisc(member: RawMember): MiscSection {
+// The wiki gives how many of each the game takes.
+const CONSUMABLES: {
+  id: string;
+  max: number;
+  getUsed: (member: RawMember) => number | undefined;
+}[] = [
+  {
+    id: "METAPHYSICAL_SERUM",
+    max: 3,
+    getUsed: (member) => member.experimentation?.serums_drank,
+  },
+  {
+    id: "REAPER_PEPPER",
+    max: 5,
+    getUsed: (member) => member.player_data?.reaper_peppers_eaten,
+  },
+  {
+    id: "WRIGGLING_LARVA",
+    max: 5,
+    getUsed: (member) => member.garden_player_data?.larva_consumed,
+  },
+  {
+    id: "REFINED_DARK_CACAO_TRUFFLE",
+    max: 5,
+    getUsed: (member) => member.events?.easter?.refined_dark_cacao_truffles,
+  },
+  {
+    id: "REFINED_BOTTLE_OF_JYRRE",
+    max: 5,
+    getUsed: (member) => member.winter_player_data?.refined_jyrre_uses,
+  },
+  {
+    id: "BEE_SALIVA",
+    max: 5,
+    getUsed: (member) => member.player_data?.bee_saliva_eaten,
+  },
+  {
+    id: "ISOPOD_HUSK",
+    max: 5,
+    getUsed: (member) => member.player_data?.isopod_husks_eaten,
+  },
+];
+
+export type JerryStat =
+  | "mostDamage"
+  | "mostSnowballsHit"
+  | "mostMagmaDamage"
+  | "mostCannonballsHit";
+
+// Every song played has a best, while a completions key can be a perfect one.
+const HARP_SONG = /^song_(.+)_best_completion$/;
+
+function getHarpSongs(harp: RawHarp = {}): MiscSection["harp"] {
+  const count = (key: string) => {
+    const value = harp[key];
+    return typeof value === "number" ? value : 0;
+  };
+
+  const songs: MiscSection["harp"] = [];
+  for (const key of Object.keys(harp)) {
+    const song = HARP_SONG.exec(key)?.[1];
+    if (song === undefined) continue;
+
+    songs.push({
+      song,
+      completions: count(`song_${song}_completions`),
+      perfect: count(`song_${song}_perfect_completions`),
+      best: count(`song_${song}_best_completion`),
+    });
+  }
+  return songs.toSorted((a, b) => a.song.localeCompare(b.song));
+}
+
+function getDragons(member: RawMember): Dragons {
+  const end = member.player_stats?.end_island;
+  const fight = end?.dragon_fight;
+  return {
+    summoned: fight?.amount_summoned?.total ?? 0,
+    eyesPlaced: fight?.summoning_eyes_contributed?.total ?? 0,
+    crystalsDestroyed: fight?.ender_crystals_destroyed ?? 0,
+    fastestKill: fight?.fastest_kill?.best,
+    mostDamage: fight?.most_damage?.best,
+    bestRank: fight?.highest_rank?.best,
+    specialZealotLoot: end?.special_zealot_loot_collected ?? 0,
+    summoningEyes: end?.summoning_eyes_collected ?? 0,
+  };
+}
+
+function getConsumables(member: RawMember, items: ItemsResource): Consumable[] {
+  return CONSUMABLES.map(({ id, max, getUsed }) => {
+    const resource = items.items[id];
+    return {
+      id,
+      name: resource?.name ?? prettify(id),
+      texture: resource && resourceTexture(resource),
+      used: getUsed(member) ?? 0,
+      max,
+    };
+  });
+}
+
+// The profile keeps an entry for each tier bought.
+function getCommunityUpgrades(profile: RawProfile): MiscSection["upgrades"] {
+  const states = profile.community_upgrades?.upgrade_states ?? [];
+  const tiers = new Map<string, number>();
+  for (const { upgrade, tier } of states) {
+    tiers.set(upgrade, Math.max(tier, tiers.get(upgrade) ?? 0));
+  }
+
+  return [...tiers]
+    .map(([upgrade, tier]) => ({ upgrade, tier }))
+    .toSorted((a, b) => a.upgrade.localeCompare(b.upgrade));
+}
+
+// tree_gifts keeps milestone_tier_claimed beside the trees' counts.
+const getTreeGifts = (gifts: Record<string, unknown> = {}) =>
+  Object.fromEntries(
+    Object.entries(gifts).filter(
+      (entry): entry is [string, number] => typeof entry[1] === "number",
+    ),
+  );
+
+export function getMisc(
+  profile: RawProfile,
+  member: RawMember,
+  items: ItemsResource,
+): MiscSection {
   const stats = member.player_stats ?? {};
   const auctions = stats.auctions ?? {};
+  const winter = stats.winter ?? {};
+  const foraging = member.foraging;
 
   return {
     kills: stats.kills?.total ?? 0,
@@ -96,6 +225,23 @@ export function getMisc(member: RawMember): MiscSection {
     },
     candy: stats.candy_collected?.total ?? 0,
     soulflow: member.item_data?.soulflow ?? 0,
+    jerry: {
+      mostDamage: winter.most_damage_dealt,
+      mostSnowballsHit: winter.most_snowballs_hit,
+      mostMagmaDamage: winter.most_magma_damage_dealt,
+      mostCannonballsHit: winter.most_cannonballs_hit,
+    },
+    dragons: getDragons(member),
+    // The harp's songs were under quests before foraging.songs.
+    harp: getHarpSongs(foraging?.songs?.harp ?? member.quests?.harp_quest),
+    galatea: {
+      fishFamily: foraging?.fish_family?.length ?? 0,
+      hinaTasks: foraging?.hina?.tasks?.completed_tasks?.length ?? 0,
+      treeGifts: getTreeGifts(foraging?.tree_gifts),
+      starlyn: foraging?.starlyn?.personal_bests ?? {},
+    },
+    consumables: getConsumables(member, items),
+    upgrades: getCommunityUpgrades(profile),
   };
 }
 

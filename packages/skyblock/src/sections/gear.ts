@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { decodeSlots, toItemView } from "#items";
 import { TUNING } from "./accessories.js";
-import { decodeSlots } from "#items";
+import { decodeInventory } from "#nbt";
+import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
+import { sortByKey } from "./inventories.js";
 import type { GearSection, ItemView, Loadout, Slots } from "#types";
 import type { RawMember, RawNbt } from "#raw";
 
@@ -24,8 +27,32 @@ const EQUIPMENT_PIECES = [
 // The rarity line ends with the item type, as in "EPIC BOW".
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
+const isWeaponLine = (line: string) =>
+  WEAPON_LINE.test(removeFormatting(line).trim());
+
 export const isWeapon = (item: ItemView) =>
-  WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim());
+  isWeaponLine(item.lore.at(-1) ?? "");
+
+// A weapon's lore is read before its view is built, since most items aren't.
+function getWeapons({ inventory }: RawMember) {
+  const blobs = [
+    inventory?.inv_contents,
+    inventory?.ender_chest_contents,
+    ...sortByKey(inventory?.backpack_contents),
+    inventory?.personal_vault_contents,
+  ];
+
+  const weapons: ItemView[] = [];
+  for (const blob of blobs) {
+    if (!blob) continue;
+
+    for (const item of decodeInventory(blob)) {
+      const line = normalizeItemText(item?.tag?.display?.Lore?.at(-1) ?? "");
+      if (item && isWeaponLine(line)) weapons.push(toItemView(item));
+    }
+  }
+  return weapons;
+}
 
 interface SavedSets<Piece extends string> {
   equipped_set?: number;
@@ -157,9 +184,7 @@ export function getGear(member: RawMember): GearSection | null {
     equipment,
     ...getWardrobe(member, armor),
     ...getEquipmentSets(member, equipment),
-    weapons: decodeSlots(inventory.inv_contents).filter(
-      (item): item is ItemView => item !== null && isWeapon(item),
-    ),
+    weapons: getWeapons(member),
     loadouts: getLoadouts(member),
   };
 }

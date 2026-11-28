@@ -6,11 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { AuctionStat } from "./sections/misc.js";
-import type { Catch, TrophyTier } from "./sections/fishing.js";
+import type { AuctionStat, JerryStat } from "./sections/misc.js";
+import type {
+  Catch,
+  TrophyHunterRank,
+  TrophyTier,
+} from "./sections/fishing.js";
+import type {
+  DojoBelt,
+  DojoGrade,
+  Faction,
+  ReputationRank,
+} from "./sections/crimson.js";
 import type { DungeonClass } from "./sections/dungeons.js";
 import type { Experiment } from "./sections/experiments.js";
-import type { Faction } from "./sections/crimson.js";
 import type { JacobBracket, JacobMedal } from "./sections/jacob.js";
 import type { Powder } from "./sections/hotm.js";
 import type { Whisper } from "./sections/hotf.js";
@@ -47,6 +56,41 @@ export interface PlayerRef {
   displayName: string;
 }
 
+// The stored player's PlayerSkyBlock, where Mongo leaves out a 0.
+export interface StoredPlayerSkyBlock {
+  angler?: number;
+  augmentation?: number;
+  combat?: number;
+  concoctor?: number;
+  domesticator?: number;
+  excavator?: number;
+  gatherer?: number;
+  harvester?: number;
+  predator?: number;
+  hardWorkingMiner?: number;
+  centuryCake?: number;
+  centuryCake200?: number;
+  potatoTalisman?: number;
+  freeCookie?: number;
+}
+
+export const PLAYER_CLAIMS = [
+  "centuryCake",
+  "centuryCake200",
+  "potatoTalisman",
+  "freeCookie",
+] as const;
+
+type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
+
+export interface PlayerExtras {
+  highestSkills: Partial<Record<Skill, number>>;
+  // Commissions count over every profile.
+  commissions: number;
+  // Each claim maps to when it was claimed.
+  claimed: Partial<Record<PlayerClaim, number>>;
+}
+
 export interface SkyBlockProfilesView extends PlayerRef, Freshness {
   profiles: ProfileSummary[];
 }
@@ -56,7 +100,12 @@ export interface ProfileSummary {
   cuteName: string;
   gameMode: GameMode;
   selected: boolean;
-  members: { uuid: string; removed: boolean }[];
+  members: {
+    uuid: string;
+    removed: boolean;
+    invited: boolean;
+    firstJoin?: number;
+  }[];
   level: number;
   levelColor: string;
   xp: number;
@@ -67,11 +116,15 @@ export interface ProfileSummary {
   personalBank?: number;
   firstJoin?: number;
   fairySouls: number;
+  // Stranded and Bingo profiles have no fairy soul cap.
+  maxFairySouls?: number;
 }
 
 export interface SkyBlockProfileView
   extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
+  // The player is missing until their /player is stored.
+  player?: PlayerExtras;
   museumFetchedAt?: number;
   gardenFetchedAt?: number;
   // Sections asked for but left out until the price map and items are built.
@@ -121,6 +174,7 @@ export interface GearSection {
   wardrobeSlot?: number;
   equipmentSets: { slot: number; equipment: Slots }[];
   equipmentSlot?: number;
+  // Weapons list the inventory's first, then the other storage's.
   weapons: ItemView[];
   loadouts: Loadout[];
 }
@@ -148,6 +202,10 @@ export const INVENTORIES = [
   "fishingBag",
   "quiver",
   "sacksBag",
+  "farmingToolkit",
+  "huntingToolkit",
+  "riftInventory",
+  "riftEnderChest",
 ] as const;
 
 export type InventoryId = (typeof INVENTORIES)[number];
@@ -209,8 +267,17 @@ export interface SkillsSection {
 
 export interface SlayersSection {
   xp: number;
-  // Each boss's kills start at tier 1, so tier 1 is index 0.
-  bosses: Record<SlayerBoss, { level: Level; kills: number[] }>;
+  bosses: Record<SlayerBoss, SlayerBossView>;
+}
+
+interface SlayerBossView {
+  level: Level;
+  // kills[tier - 1] is the kills at that tier.
+  kills: number[];
+  // Attempts are indexed like kills.
+  attempts: number[];
+  // An unclaimed level is reached with its reward not claimed.
+  unclaimedLevels: number;
 }
 
 export type DungeonGrade = "S+" | "S" | "A" | "B" | "C" | "D";
@@ -228,6 +295,20 @@ export interface DungeonFloor {
   mostMobsKilled?: number;
   mostHealing?: number;
   milestoneCompletions: number;
+  // The best run is the best scoring of the runs Hypixel keeps.
+  bestRun?: DungeonRun;
+}
+
+export interface DungeonRun {
+  score: number;
+  grade: DungeonGrade;
+  // The time is in milliseconds.
+  time: number;
+  dungeonClass: DungeonClass;
+  secrets: number;
+  deaths: number;
+  damage: number;
+  at: number;
 }
 
 export interface DungeonsSection {
@@ -269,6 +350,7 @@ export interface HotmSection {
     corpses: number;
     corpsesByType: { type: string; count: number }[];
     fossils: number;
+    maxFossils: number;
     fossilDust: number;
     mineshafts: number;
   };
@@ -306,7 +388,7 @@ export interface HotfSection {
   level: Level;
   centerLevel: number;
   loadout: { selected: number; total: number };
-  tokens: { spent: number };
+  tokens: { spent: number; total: number };
   ability?: string;
   // Spent counts the selected loadout's only.
   whispers: Record<Whisper, { total: number; spent: number }>;
@@ -316,10 +398,22 @@ export interface HotfSection {
 export interface CrimsonSection {
   faction?: Faction;
   reputation: Record<Faction, number>;
+  reputationRanks: Record<Faction, ReputationRank>;
   kuudra: KuudraTier[];
-  dojo: { test: string; points: number }[];
+  dojo: DojoTest[];
   dojoPoints: number;
+  dojoBelt: DojoBelt;
   minibosses: { boss: string; kills: number }[];
+}
+
+// Hypixel keeps a test's best points and best time apart.
+interface DojoTest {
+  test: string;
+  points: number;
+  // The grade is missing before the test is taken.
+  grade?: DojoGrade;
+  // The time is in milliseconds.
+  time?: number;
 }
 
 // The API calls the basic tier "none".
@@ -334,6 +428,7 @@ export const KUUDRA_TIERS = [
 export interface KuudraTier {
   tier: string;
   completions: number;
+  highestWave?: number;
   // The texture is the tier's key.
   texture: ItemTexture;
 }
@@ -345,6 +440,8 @@ export interface FishingSection {
   seaCreatureKills: number;
   // Sea creatures sort by the most kills first.
   seaCreatures: { name: string; kills: number }[];
+  // trophyHunter is the highest of Odger's ranks claimed.
+  trophyHunter?: TrophyHunterRank;
 }
 
 export interface TrophyFish {
@@ -356,10 +453,28 @@ export interface TrophyFish {
 export interface JacobSection {
   // Medals count only the unspent ones.
   medals: Record<JacobMedal, number>;
+  // Medals earned count over every contest claimed.
+  medalsEarned: Record<JacobBracket, number>;
   contests: number;
+  // uniqueGolds counts the crops with a gold bracket or better.
+  uniqueGolds: number;
   crops: JacobCrop[];
   // These perks are the ones bought from Anita.
   perks: { farmingFortune: number; farmingLevelCap: number };
+  // The history holds the latest contests, newest first.
+  history: JacobContest[];
+}
+
+export interface JacobContest {
+  // at is when the contest's SkyBlock day began.
+  at: number;
+  // The crop is a JacobCrop id.
+  crop: string;
+  collected: number;
+  // The place counts from 1, once the rewards are claimed.
+  place?: number;
+  participants?: number;
+  medal?: JacobBracket;
 }
 
 export interface JacobCrop {
@@ -378,6 +493,17 @@ export interface CollectionsSection {
   total: number;
   // Members Hypixel sends no collection for, so their part isn't counted.
   hidden: string[];
+  // The bosses are the member's own.
+  bosses: BossCollection[];
+}
+
+export interface BossCollection {
+  boss: string;
+  amount: number;
+  tier: number;
+  maxTier: number;
+  // next is the amount the next tier needs.
+  next?: number;
 }
 
 // A collection's amount is the co-op's, ex-members included.
@@ -506,6 +632,10 @@ export interface ChocolateSection {
   rabbits: { rarity: Rarity; found: number; total: number }[];
   employees: { employee: string; level: number }[];
   timeTower: number;
+  // Duplicates are rabbits found again.
+  duplicates: number;
+  // Egg locations are the hidden egg spots found across the islands.
+  eggLocations: number;
 }
 
 export interface ExperimentsSection {
@@ -735,6 +865,42 @@ export interface MiscSection {
   mythological: { kills: number; chains: number };
   candy: number;
   soulflow: number;
+  // Each Jerry stat is per Season of Jerry.
+  jerry: Partial<Record<JerryStat, number>>;
+  dragons: Dragons;
+  // best is the share of notes hit, from 0 to 1.
+  harp: { song: string; completions: number; perfect: number; best: number }[];
+  galatea: {
+    fishFamily: number;
+    hinaTasks: number;
+    treeGifts: Record<string, number>;
+    starlyn: Record<string, number>;
+  };
+  consumables: Consumable[];
+  // The upgrades are the profile's community upgrades.
+  upgrades: { upgrade: string; tier: number }[];
+}
+
+export interface Dragons {
+  summoned: number;
+  eyesPlaced: number;
+  crystalsDestroyed: number;
+  // The fastest kill is in milliseconds.
+  fastestKill?: number;
+  mostDamage?: number;
+  // The best rank is the best place on a fight's damage list.
+  bestRank?: number;
+  specialZealotLoot: number;
+  // Summoning eyes are the ones collected from Zealots.
+  summoningEyes: number;
+}
+
+export interface Consumable {
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  used: number;
+  max: number;
 }
 
 export interface PetsSection {
@@ -815,6 +981,8 @@ export interface AccessoriesSection {
   powerStats?: PowerStat[];
   tuning: Record<string, number>;
   tuningPoints: number;
+  // The total is missing when no Tuning Box tier explains the points.
+  tuningTotal?: number;
   enrichments: number;
   // Only Legendary and higher accessories can take an enrichment.
   unenriched: number;
@@ -910,6 +1078,18 @@ export interface ItemView {
   enrichment?: string;
   hotPotato?: number;
   obtainedAt?: number;
+  // slot is the slot's type (RUBY, COMBAT), and gem what's in it.
+  gems?: { slot: string; gem: string; quality: string }[];
+  // Counters are keyed by API key, like champion_combat_xp.
+  counters?: Record<string, number>;
+  // The dye is an item id.
+  dye?: string;
+  rune?: { id: string; level: number };
+  skin?: string;
+  // The origin is how it was made or bought, like CRAFTING_GRID.
+  origin?: string;
+  // Drill parts are item ids.
+  drillParts?: string[];
 }
 
 // An item's id is its 1.8 numeric id, and a head's skin is a texture hash.

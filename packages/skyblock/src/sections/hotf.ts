@@ -17,6 +17,10 @@ export const WHISPERS = ["forest", "desert"] as const;
 
 export type Whisper = (typeof WHISPERS)[number];
 
+// The API stores only the tokens spent, so the total comes from these.
+const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 2, 2];
+const CENTER_TOKENS = [0, 1, 1, 1, 1, 2];
+
 export function getHotf(member: RawMember): HotfSection | null {
   const tree = member.skill_tree;
   const xp = tree?.experience?.foraging;
@@ -41,11 +45,20 @@ export function getHotf(member: RawMember): HotfSection | null {
     };
   };
 
+  const level = getLevel(xp, LEVELING.HOTF, LEVELING.leveling_caps.HOTF);
+  const centerLevel = Number(nodes.center_of_the_forest ?? 0);
+
   return {
-    level: getLevel(xp, LEVELING.HOTF, LEVELING.leveling_caps.HOTF),
-    centerLevel: Number(nodes.center_of_the_forest ?? 0),
+    level,
+    centerLevel,
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
-    tokens: { spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0 },
+    tokens: {
+      spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0,
+      total: add(
+        CENTER_TOKENS[centerLevel],
+        ...TIER_TOKENS.slice(0, level.level),
+      ),
+    },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
     whispers: Object.fromEntries(
       WHISPERS.map((type) => [type, getWhispers(type)]),

@@ -40,6 +40,7 @@ export const SkyBlockJacobProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("skyblock.contests"), t(jacob.contests), "§e"],
+    [t("skyblock.uniqueGolds"), t(jacob.uniqueGolds), MEDAL_COLORS.gold],
     ...JACOB_MEDALS.map(
       (medal): SidebarItem => [
         t(`skyblock.medals.${medal}`),
