@@ -9,7 +9,7 @@
 import type { RawMember } from "#raw";
 import type { RiftSection } from "#types";
 
-/** null before the member's first visit. Counts only: the totals to find are game rules the data doesn't give. */
+// Hypixel doesn't send how many souls, timecharms or cats there are to find.
 export function getRift(member: RawMember): RiftSection | null {
   const stats = member.player_stats?.rift;
   const rift = member.rift;
