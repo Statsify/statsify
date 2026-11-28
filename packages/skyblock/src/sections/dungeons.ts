@@ -12,17 +12,26 @@ import { fractionalLevel, getLevel } from "#leveling";
 import type { DungeonFloor, DungeonsSection } from "#types";
 import type { RawDungeonType, RawMember } from "#raw";
 
-export const DUNGEON_CLASSES = ["healer", "mage", "berserk", "archer", "tank"] as const;
+export const DUNGEON_CLASSES = [
+  "healer",
+  "mage",
+  "berserk",
+  "archer",
+  "tank",
+] as const;
 
 const MAX_LEVEL = LEVELING.leveling_caps.catacombs;
 
-function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor[] {
+function getFloors(
+  type: RawDungeonType | undefined,
+  first: number,
+): DungeonFloor[] {
   return Array.from({ length: 8 - first }, (_, i) => {
     const key = String(first + i);
     const completions = type?.tier_completions?.[key] ?? 0;
     return {
       floor: first + i,
-      // Master Mode often has no times_played, though every completion was a run
+      // Master Mode often has no times_played, though each clear was a run.
       played: Math.max(type?.times_played?.[key] ?? 0, completions),
       completions,
       bestScore: type?.best_score?.[key],
@@ -33,7 +42,6 @@ function floorsOf(type: RawDungeonType | undefined, first: number): DungeonFloor
   });
 }
 
-/** Catacombs and classes keep leveling past 50. Floor 0 is the Entrance. */
 export function getDungeons(member: RawMember): DungeonsSection {
   const dungeons = member.dungeons;
   const types = dungeons?.dungeon_types;
@@ -41,17 +49,33 @@ export function getDungeons(member: RawMember): DungeonsSection {
   const classes = Object.fromEntries(
     DUNGEON_CLASSES.map((name) => [
       name,
-      getLevel(dungeons?.player_classes?.[name]?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
-    ])
+      getLevel(
+        dungeons?.player_classes?.[name]?.experience ?? 0,
+        LEVELING.catacombs,
+        MAX_LEVEL,
+        { overflow: true },
+      ),
+    ]),
   );
 
   return {
-    catacombs: getLevel(types?.catacombs?.experience ?? 0, LEVELING.catacombs, MAX_LEVEL, true),
+    catacombs: getLevel(
+      types?.catacombs?.experience ?? 0,
+      LEVELING.catacombs,
+      MAX_LEVEL,
+      { overflow: true },
+    ),
     classes,
-    classAverage: add(...Object.values(classes).map(fractionalLevel)) / DUNGEON_CLASSES.length,
+    classAverage:
+      add(...Object.values(classes).map(fractionalLevel)) /
+      DUNGEON_CLASSES.length,
     selectedClass: dungeons?.selected_dungeon_class,
     secrets: dungeons?.secrets ?? 0,
-    floors: { normal: floorsOf(types?.catacombs, 0), master: floorsOf(types?.master_catacombs, 1) },
+    floors: {
+      // Floor 0 is the Entrance.
+      normal: getFloors(types?.catacombs, 0),
+      master: getFloors(types?.master_catacombs, 1),
+    },
     highestFloor: {
       normal: types?.catacombs?.highest_tier_completed,
       master: types?.master_catacombs?.highest_tier_completed,

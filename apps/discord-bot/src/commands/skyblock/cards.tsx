@@ -7,7 +7,10 @@
  */
 
 import { FormattedGame } from "@statsify/schemas";
-import { SkyBlockAccessoriesProfile, accessoryIcons } from "./accessories.profile.js";
+import {
+  SkyBlockAccessoriesProfile,
+  accessoryIcons,
+} from "./accessories.profile.js";
 import { SkyBlockDungeonsProfile } from "./dungeons.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
 import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
@@ -28,7 +31,10 @@ import type {
 import type { LocalizationString, LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const GAME_MODES: Record<GameMode, { emoji: string | false; badge: string }> = {
+export const GAME_MODES: Record<
+  GameMode,
+  { emoji: string | false; badge: string }
+> = {
   normal: { emoji: false, badge: "" },
   ironman: { emoji: "♻️", badge: " §7♲" },
   stranded: { emoji: "🏝️", badge: " §a☀" },
@@ -63,10 +69,12 @@ export type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
 
 export interface SkyBlockCard {
   sections: SkyBlockSection[];
-  /** Never the museum: its response also leaves out a member who donated nothing, so networth notes it instead. */
+  // Never museum, since its response leaves out members who donated nothing.
   settings: Exclude<keyof ApiSettings, "museum">[];
   icons?: (member: MemberView) => ItemTexture[];
-  profile: SkyBlockProfile | { label: LocalizationString; profile: SkyBlockProfile }[];
+  profile:
+    | SkyBlockProfile
+    | { label: LocalizationString; profile: SkyBlockProfile }[];
 }
 
 export const SKYBLOCK_CARDS = {
@@ -106,8 +114,18 @@ export const SKYBLOCK_CARDS = {
     sections: ["dungeons"],
     settings: [],
     profile: [
-      { label: (t) => t("skyblock.catacombs"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="normal" /> },
-      { label: (t) => t("skyblock.masterMode"), profile: (props) => <SkyBlockDungeonsProfile {...props} mode="master" /> },
+      {
+        label: (t) => t("skyblock.catacombs"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="normal" />
+        ),
+      },
+      {
+        label: (t) => t("skyblock.masterMode"),
+        profile: (props) => (
+          <SkyBlockDungeonsProfile {...props} mode="master" />
+        ),
+      },
     ],
   },
   accessories: {
@@ -126,11 +144,17 @@ export const SKYBLOCK_CARDS = {
 
 export type SkyBlockCardName = keyof typeof SKYBLOCK_CARDS;
 
-export function skyBlockTitle(t: LocalizeFunction, profile: SkyBlockProfileView, name: SkyBlockCardName) {
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName}${GAME_MODES[profile.gameMode].badge}§r)`;
+export function skyBlockTitle(
+  t: LocalizeFunction,
+  profile: SkyBlockProfileView,
+  name: SkyBlockCardName,
+) {
+  const cuteName = FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName;
+  const { badge } = GAME_MODES[profile.gameMode];
+  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${cuteName}${badge}§r)`;
 }
 
 export function getSkyBlockBackground() {
-  // There are no SkyBlock backgrounds yet, and getBackground throws for a game without any
+  // getBackground throws for SkyBlock, which has no backgrounds yet.
   return getBackground("hypixel", "overall");
 }
