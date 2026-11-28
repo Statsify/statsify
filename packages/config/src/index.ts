@@ -279,7 +279,12 @@ async function loadConfig(): Promise<{ default: Config }> {
     };
   }
 
-  for (const file of ["config.json", "config.ts", "../../config.json", "../../config.ts"]) {
+  for (const file of [
+    "config.json",
+    "config.ts",
+    "../../config.json",
+    "../../config.ts",
+  ]) {
     const path = resolve(process.cwd(), file);
 
     if (existsSync(path)) {
