@@ -8,24 +8,19 @@
 
 import { ARMOR, SLOTS, hypixelItem, inRange, kitKey } from "./kits.js";
 import { type ItemStack, legacyMaterialId } from "@statsify/textures";
-import { armorOf } from "./armor.js";
+import { findArmor } from "./armor.js";
 import dumped from "../data/duels-modes.json" with { type: "json" };
 
 export interface KitItem {
-  /** Where the game's editor puts it before the player moves anything */
   slot: number;
-  /** The Bukkit material its token names, like monster_egg */
   material: string;
-  /** Shown in most of the mode's kits, so its token has no kit prefix */
   shared?: boolean;
   item: ItemStack;
 }
 
 export interface Kit {
-  /** As its picker names it, like Hype Train or Mini Scout */
   name: string;
   items: KitItem[];
-  /** The armor its picker lists, by armor slot */
   armor?: Record<string, ItemStack>;
 }
 
@@ -34,7 +29,6 @@ const MODES = dumped.modes as Record<string, Record<string, ItemStack>>;
 const DEFAULTS = dumped.defaults as Record<string, Record<string, string>>;
 const KITS = dumped.kits as Record<string, Record<string, Kit>>;
 
-// Each mode's shared items by material, the first kit's where kits differ
 const SHARED = Object.fromEntries(
   Object.entries(KITS).map(([mode, kits]) => {
     const byMaterial = new Map<string, ItemStack>();
@@ -47,14 +41,12 @@ const SHARED = Object.fromEntries(
   }),
 );
 
-// Modes with a layout per kit, like layout_mw_duel_herobrine
 const KIT_MODES = ["mw_duel", "blitz_duel", "sw_duel"] as const;
 const KIT_MODE_KEY = new RegExp(`^(${KIT_MODES.join("|")})_(.+)$`);
 
 // Their look depends on a Damage value the token doesn't carry
 const DAMAGE_DEPENDENT = new Set(["potion", "monster_egg"]);
 
-/** A layout key's mode and, for modes with one layout per kit, its kit */
 function duelsMode(key: string) {
   const name = key.replace(/^layout_/, "");
   const kit = KIT_MODE_KEY.exec(name);
@@ -63,12 +55,10 @@ function duelsMode(key: string) {
     : { mode: name.replace(/_layout$/, "") };
 }
 
-/** The layout keys of the single-kit modes whose default layout fromDuelsKit knows */
 export const DUELS_DEFAULT_KEYS = Object.keys(DEFAULTS).map(
   (mode) => `layout_${mode}_layout`,
 );
 
-/** Every kit with a default layout, by layout key and picker name */
 export const DUELS_KITS = Object.entries(KITS).flatMap(([mode, kits]) =>
   Object.entries(kits).map(([kit, { name }]) => ({
     key: `layout_${mode}_${kit}`,
@@ -82,8 +72,7 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
   if (kits[kit]) return kits[kit];
   if (mode !== "sw_duel") return kits[kitKey(kit)];
 
-  // SkyWars Duel keys use SkyWars kit ids, kit_<type>_<mode>_<kit>, where Mini's and Ranked's are
-  // the Mini picker's kits. Older keys name the kit alone
+  // Mini's and Ranked's SkyWars Duel keys name the Mini picker's kits
   const id = /^kit_([a-z]+)_([a-z]+)_(.+)$/.exec(kit);
   const name = kitKey(id?.[3] ?? kit);
   if (!id) return kits[`mini_${name}`] ?? kits[`insane_${name}`];
@@ -92,18 +81,14 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
   ];
 }
 
-/**
- * The armor a Duels kit's picker lists, by mode and kit as its layout_<mode>_<kit> key names them
- * (sw_duel and kit_mini_solo_scout), undefined for a kit the picker lists none for (every Mega Walls Duel class)
- */
 export function duelsKitArmor(mode: (typeof KIT_MODES)[number], kit: string) {
   const armor = duelsKit(mode, kit)?.armor;
-  return armor && armorOf(Object.values(armor));
+  return armor && findArmor(Object.values(armor));
 }
 
 const withoutCopy = (token: string) => token.replace(/_?\d+$/, "");
 const copyNumber = (token: string) => Number(/(\d+)$/.exec(token)?.[1] ?? 0);
-// Blitz's Shadow Knight and Shark wear a skull, which their editors leave out like armor
+// Blitz's Shadow Knight and Shark wear a skull their editors leave out
 const armorSlot = (material: string) =>
   material === "skull_item"
     ? ARMOR.helmet
@@ -111,7 +96,6 @@ const armorSlot = (material: string) =>
         material.endsWith(`_${piece}`),
       )?.[1];
 
-// Kit tokens end in a Bukkit material and a number, like hype_train_redstone_torch_on_10
 function endingMaterial(token: string) {
   const words = withoutCopy(token).split("_");
   return words
@@ -128,10 +112,6 @@ const bukkitItem = (material: string) =>
     ? undefined
     : hypixelItem(legacyMaterialId(material.toUpperCase())!);
 
-/**
- * A Duels layout_* object ({ "0": "diamond_sword" }) as 40 player inventory slots, or without one its key's default,
- * which is undefined for a key DUELS_DEFAULT_KEYS and DUELS_KITS don't list
- */
 export function fromDuelsKit(
   stored: Readonly<Record<string, string>> | null | undefined,
   key: string,
@@ -152,13 +132,11 @@ export function fromDuelsKit(
   const layout = stored ?? DEFAULTS[mode];
   if (!layout) return;
 
-  const entries = Object.entries(layout).flatMap(([slot, token]) =>
-    token && inRange(Number(slot), ARMOR.boots)
-      ? [[Number(slot), token] as const]
-      : [],
-  );
+  const entries: [number, string][] = [];
+  for (const [slot, token] of Object.entries(layout))
+    if (token && inRange(Number(slot), ARMOR.boots))
+      entries.push([Number(slot), token]);
 
-  // A kit's token is <kit>_<material>_<n>; a shared item's is just the material
   const own = (token: string) =>
     name && token.startsWith(`${name}_`)
       ? token.slice(name.length + 1)
@@ -168,8 +146,7 @@ export function fromDuelsKit(
   for (const [slot, token] of entries) {
     const tokenMaterial = material(token);
 
-    // Layouts saved before the editor hid armor still hold it, but the game equips it instead. Combo's
-    // (combo_helmet) names no material, so it's left out
+    // Layouts saved before the editor hid armor still hold it
     const worn = armorSlot(tokenMaterial);
     if (
       worn !== undefined &&
@@ -183,8 +160,6 @@ export function fromDuelsKit(
     let item: ItemStack | undefined = MODES[mode]?.[withoutCopy(token)];
 
     if (!item && kit) {
-      // Items of one material match their tokens in order: a kit's by the token's number, which
-      // follows the picker's list as the editor's slots do
       const isOwn = own(token) !== undefined;
       const same = kit.items.filter(
         (candidate) => candidate.material === tokenMaterial,
@@ -204,7 +179,6 @@ export function fromDuelsKit(
         ?.item;
     }
 
-    // A kit the dump doesn't have still shares the mode's items, like SkyWars' iron sword
     item ??= SHARED[mode]?.get(tokenMaterial);
 
     if (!item) {

@@ -16,7 +16,7 @@ import {
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
-// Bukkit's 1.8 Material enum, which Hypixel's kit layouts name items by, like GOLD_CHESTPLATE
+// Hypixel's kit layouts name items by Bukkit's 1.8 Material enum
 const BUKKIT_MATERIALS =
   "https://raw.githubusercontent.com/Attano/Spigot-1.8/9db48bc15e203179554b8d992ca6b0a528c8d300/org/bukkit/Material.java";
 
@@ -403,7 +403,7 @@ const materials = await fetch(BUKKIT_MATERIALS, {
 });
 if (!materials.ok) throw new Error(`Material.java: ${materials.status}`);
 
-// Entries look like GOLD_CHESTPLATE(315, 1, 112). Only ids the item table has are kept
+// Entries look like GOLD_CHESTPLATE(315, 1, 112)
 const drawn = new Set([
   POTION,
   ...Object.keys(output.items).map((key) => Number(key.split(":")[0])),
