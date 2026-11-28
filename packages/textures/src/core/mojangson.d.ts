@@ -15,10 +15,21 @@ declare module "mojangson" {
   type Tag =
     | Compound
     | {
-        type: "boolean" | "byte" | "short" | "int" | "long" | "float" | "double" | "string";
+        type:
+          | "boolean"
+          | "byte"
+          | "short"
+          | "int"
+          | "long"
+          | "float"
+          | "double"
+          | "string";
         value: unknown;
       }
-    | { type: "list" | "byteArray" | "intArray" | "longArray"; value: { type: string; value: unknown[] } };
+    | {
+        type: "list" | "byteArray" | "intArray" | "longArray";
+        value: { type: string; value: unknown[] };
+      };
 
   export function parse(text: string): Tag;
   export function simplify(tag: Compound): Record<string, unknown>;
