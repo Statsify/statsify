@@ -19,6 +19,7 @@ import {
   type StatValue,
 } from "#types";
 import { add, roundTo } from "@statsify/math";
+import { getBestiaryBoards, getCollectionBoards } from "@statsify/skyblock";
 import { normalizeItemText, parseStatName, parseStatRewards } from "#lore";
 import { prettify, removeFormatting } from "@statsify/util";
 import { skinHash } from "#textures";
@@ -723,8 +724,31 @@ const sorted = (value: unknown): unknown => {
   );
 };
 
+// Files wait for the board checks, so a failed run leaves src/generated alone.
+const pending = new Map<string, string>();
 const write = (file: string, data: unknown) =>
-  writeFile(new URL(file, out), `${JSON.stringify(sorted(data), null, 2)}\n`);
+  pending.set(file, `${JSON.stringify(sorted(data), null, 2)}\n`);
+
+const toBoardEntries = (list: { key: string; name: string }[]) =>
+  list.map(({ key, name }) => [key, name]);
+
+// A shared key merges two boards, and a dropped one keeps its old scores.
+function checkBoards(kind: string, old: string[][], next: string[][]) {
+  const keys = next.map(([key]) => key);
+  const shared = [
+    ...new Set(keys.filter((key, index) => keys.indexOf(key) !== index)),
+  ];
+  if (shared.length > 0) {
+    throw new Error(`${kind} boards share keys: ${shared.join(", ")}`);
+  }
+
+  const removed = old.map(([key]) => key).filter((key) => !keys.includes(key));
+  if (removed.length > 0 && process.env.ALLOW_REMOVED_BOARDS !== "1") {
+    throw new Error(
+      `${kind} boards removed: ${removed.join(", ")}. Rerun with ALLOW_REMOVED_BOARDS=1 to drop them anyway.`,
+    );
+  }
+}
 
 const skullHash = (nbt: string) => {
   const value = /Value:"([\w+/=]+)"/.exec(nbt)?.[1];
@@ -886,7 +910,11 @@ async function readBestiary() {
   >("constants/bestiary.json");
   const all = getBestiaryBrackets({ brackets, bracketSets });
 
-  const pages: { category?: string; name: string; families: unknown[] }[] = [];
+  const pages: {
+    category?: string;
+    name: string;
+    families: ReturnType<typeof getBestiaryFamilies>;
+  }[] = [];
   for (const page of Object.values(islands)) {
     if (!page.hasSubcategories) {
       pages.push({ name: page.name, families: getBestiaryFamilies(all, page) });
@@ -1010,9 +1038,8 @@ try {
       skills[skill].levels.map(({ totalExpRequired }) => totalExpRequired),
     );
 
-  await write(
-    "collections.json",
-    Object.entries(collections).map(([category, { name, items }]) => ({
+  const collectionData = Object.entries(collections).map(
+    ([category, { name, items }]) => ({
       id: category,
       name,
       items: Object.entries(items).map(([id, item]) => ({
@@ -1020,8 +1047,9 @@ try {
         name: item.name,
         tiers: item.tiers.map(({ amountRequired }) => amountRequired),
       })),
-    })),
+    }),
   );
+  write("collections.json", collectionData);
 
   const leveling = await readJson<Record<string, unknown>>(
     "constants/leveling.json",
@@ -1034,7 +1062,7 @@ try {
   const fairySouls = await readJson<{ "Max Souls": number }>(
     "constants/fairy_souls.json",
   );
-  await write("leveling.json", {
+  write("leveling.json", {
     catacombs: leveling.catacombs,
     fairy_souls: fairySouls["Max Souls"],
     HOTF: leveling.HOTF,
@@ -1055,7 +1083,7 @@ try {
     social: xpTable("SOCIAL"),
   });
 
-  await write("sblevels.json", {
+  write("sblevels.json", {
     core_task: {
       accessory_bag_xp: core_task.accessory_bag_xp,
       pet_score_xp: core_task.pet_score_xp,
@@ -1070,13 +1098,13 @@ try {
       "constants/hotflayout.json",
     ),
   ]);
-  await write("hotmlayout.json", toTreeLayout(hotm.perks));
-  await write("hotflayout.json", toTreeLayout(hotf.perks));
+  write("hotmlayout.json", toTreeLayout(hotm.perks));
+  write("hotflayout.json", toTreeLayout(hotf.perks));
 
   const { hoppity } = await readJson<{
     hoppity: { rarities: Record<string, { rabbits: string[] }> };
   }>("constants/hoppity.json");
-  await write(
+  write(
     "hoppity.json",
     Object.fromEntries(
       Object.entries(hoppity.rarities).map(([rarity, { rabbits }]) => [
@@ -1086,8 +1114,9 @@ try {
     ),
   );
 
-  await write("bestiary.json", await readBestiary());
-  await write("attribute-shards.json", await readAttributeShards());
+  const bestiaryData = await readBestiary();
+  write("bestiary.json", bestiaryData);
+  write("attribute-shards.json", await readAttributeShards());
 
   // player_data.perks spells NEU's eagle_advantage as eagles_advantage.
   const apiPerkIds: Record<string, string> = {
@@ -1096,7 +1125,7 @@ try {
   const shops = await readJson<
     Record<string, Record<string, { costs: number[] }>>
   >("constants/essenceshops.json");
-  await write("essenceshops.json", {
+  write("essenceshops.json", {
     ...Object.fromEntries(
       Object.entries(shops).map(([shop, perks]) => [
         shop.replace("ESSENCE_", ""),
@@ -1169,7 +1198,7 @@ try {
       24: 3_200_000,
     },
   };
-  await write("garden.json", {
+  write("garden.json", {
     garden_exp: garden.garden_exp,
     crop_milestones: Object.fromEntries(
       Object.entries(garden.crop_milestones).map(([crop, tiers]) => [
@@ -1282,24 +1311,24 @@ try {
     }
   }
 
-  await write("pet-textures.json", { pets: petTextures, skins: skinTextures });
+  write("pet-textures.json", { pets: petTextures, skins: skinTextures });
 
   const stones = items
     .map((item) => readPowerStone(item.lore ?? []))
     .filter((stone) => stone !== undefined);
-  await write("powers.json", Object.fromEntries(stones));
+  write("powers.json", Object.fromEntries(stones));
 
   const keyless = KUUDRA_TIERS.filter((tier) => !kuudraKeys[tier]);
   if (keyless.length > 0) {
     throw new Error(`no Kuudra key head for ${keyless.join(", ")}`);
   }
-  await write("kuudra-keys.json", kuudraKeys);
-  await write("trophyfish.json", trophyNames);
-  await write("pet-items.json", petItems);
+  write("kuudra-keys.json", kuudraKeys);
+  write("trophyfish.json", trophyNames);
+  write("pet-items.json", petItems);
 
   const pets = await readJson<Record<string, unknown>>("constants/pets.json");
   const offsets = pets.pet_rarity_offset as Record<string, number>;
-  await write("pets.json", {
+  write("pets.json", {
     custom_pet_leveling: pets.custom_pet_leveling,
     id_to_display_name: {
       ...petNames,
@@ -1345,7 +1374,7 @@ try {
     }
   }
 
-  await write("accessories.json", {
+  write("accessories.json", {
     ignored: [...new Set(misc.ignored_talisman.map(api))].toSorted(),
     upgrades: Object.fromEntries(
       [...upgrades].map(([id, ids]) => [id, [...ids].toSorted()]),
@@ -1372,7 +1401,7 @@ try {
     return stats;
   };
 
-  await write("stats.json", {
+  write("stats.json", {
     base: readNeuStats(misc.base_stats),
     skills: Object.fromEntries(
       Object.entries(skills).map(([id, { levels }]) => [
@@ -1413,7 +1442,7 @@ try {
       >
     >
   >("constants/petnums.json");
-  await write(
+  write(
     "petnums.json",
     Object.fromEntries(
       Object.entries(petnums).map(([type, rarities]) => [
@@ -1482,9 +1511,9 @@ try {
       ]),
   ]);
 
-  await write("textures-1.8.json", { materials, textures });
+  write("textures-1.8.json", { materials, textures });
 
-  await write("source.json", {
+  write("source.json", {
     minecraftData: {
       repo: `https://github.com/${MINECRAFT_DATA}`,
       sha: MINECRAFT_DATA_SHA,
@@ -1495,6 +1524,24 @@ try {
     collections: { url: HYPIXEL_COLLECTIONS, version: collectionsVersion },
     syncedAt: new Date().toISOString(),
   });
+
+  // Each key is a Mongo path and a Redis key, so a changed one strands a board.
+  const boardsFile = new URL(
+    "../../schemas/src/skyblock/boards.json",
+    import.meta.url,
+  );
+  const oldBoards = JSON.parse(await readFile(boardsFile, "utf8"));
+  const newBoards = {
+    collections: toBoardEntries(getCollectionBoards(collectionData)),
+    bestiary: toBoardEntries(getBestiaryBoards(bestiaryData)),
+  };
+  checkBoards("collections", oldBoards.collections, newBoards.collections);
+  checkBoards("bestiary", oldBoards.bestiary, newBoards.bestiary);
+  await writeFile(boardsFile, `${JSON.stringify(newBoards, null, 2)}\n`);
+  await Promise.all(
+    Array.from(pending, ([file, text]) => writeFile(new URL(file, out), text)),
+  );
+
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),

@@ -24,6 +24,7 @@ import {
   SkyBlockStats,
   type SkyBlockStatsRow,
   getLeaderboardField,
+  getLeaderboardFields,
   serialize,
   skyblockStatsId,
   skyblockStatsUuid,
@@ -45,6 +46,24 @@ const formatMemberName = (
 const getBoardKey = (field: string) => `skyblockstats.${field}`;
 
 const toRemovedRow = (id: string) => ({ id }) as Flatten<SkyBlockStats>;
+
+const BOARDS = getLeaderboardFields(SkyBlockStats).map(([field]) => ({
+  field,
+  mode: field.split(".")[0],
+  ...getLeaderboardField(SkyBlockStats, field),
+}));
+
+type Board = (typeof BOARDS)[number];
+
+// A hidden board ranks a sort key and shows its first additional field.
+const getShownPath = ({ hidden, additionalFields }: Board) =>
+  hidden ? additionalFields?.[0] : undefined;
+
+const SHOWN_PATHS = Object.fromEntries(
+  BOARDS.map(getShownPath)
+    .filter((path) => path !== undefined)
+    .map((path) => [path, true]),
+);
 
 @Injectable()
 export class SkyBlockLeaderboardService extends LeaderboardService {
@@ -181,6 +200,98 @@ export class SkyBlockLeaderboardService extends LeaderboardService {
       ...leaderboard,
       data: data.map((row, index) => ({ ...row, position: ranks[index] })),
     };
+  }
+
+  // Each board counts once, at the player's best profile on it.
+  public async getPlayerRankings(tag: string) {
+    const player = await this.playerService.findMongoDocument(tag, {
+      uuid: true,
+    });
+    if (!player) throw new PlayerNotFoundException();
+
+    const rows = await this.statsModel
+      .find({ uuid: player.uuid })
+      .select({ id: true, gameMode: true, ...SHOWN_PATHS })
+      .lean()
+      .exec();
+    const flatRows = new Map(
+      rows.map((row) => [row.id, flatten(row) as LeaderboardAdditionalStats]),
+    );
+
+    // A row is only on the overall boards and its own mode's.
+    const boards = BOARDS.map((board) => ({
+      board,
+      ids: rows
+        .filter(
+          (row) => board.mode === "overall" || row.gameMode === board.mode,
+        )
+        .map(({ id }) => id),
+    })).filter(({ ids }) => ids.length > 0);
+
+    const scores = this.redis.pipeline();
+    for (const { board, ids } of boards) {
+      scores.zmscore(getBoardKey(board.field), ids);
+    }
+    const scored = (await scores.exec()) ?? [];
+
+    const best: (Board & { id: string; score: number })[] = [];
+    for (const [index, { board, ids }] of boards.entries()) {
+      const [, replies] = scored[index];
+      let pick: { id: string; score: number } | undefined;
+
+      for (const [row, reply] of (replies as (string | null)[]).entries()) {
+        if (reply === null) continue;
+        const score = Number(reply);
+        const ascending = board.sort === "ASC";
+        const ahead =
+          !pick || (ascending ? score < pick.score : score > pick.score);
+        if (ahead) pick = { id: ids[row], score };
+      }
+
+      if (pick) best.push({ ...board, ...pick });
+    }
+
+    const places = this.redis.pipeline();
+    for (const { field, sort, score, id } of best) {
+      const key = getBoardKey(field);
+      if (sort === "ASC")
+        places.zcount(key, "-inf", `(${score}`).zrank(key, id);
+      else places.zcount(key, `(${score}`, "+inf").zrevrank(key, id);
+    }
+    const replies = (await places.exec()) ?? [];
+
+    // Ties share a rank, but only the first `limit` positions are on a board.
+    return best
+      .map((board, index) => ({
+        ...board,
+        rank: Number(replies[2 * index][1]) + 1,
+        position: Number(replies[2 * index + 1][1]),
+      }))
+      .filter(({ position, limit }) => position < limit)
+      .toSorted((a, b) => a.rank - b.rank)
+      .map((board) => {
+        const { field, name, id, rank, formatter, score } = board;
+        const path = getShownPath(board);
+        if (!path) {
+          return {
+            field,
+            name,
+            id,
+            rank,
+            value: formatter ? formatter(score) : score,
+          };
+        }
+
+        const metadata = getLeaderboardField(SkyBlockStats, path, false);
+        const value = flatRows.get(id)?.[path] ?? metadata.default;
+        return {
+          field,
+          name,
+          id,
+          rank,
+          value: metadata.formatter ? metadata.formatter(value) : value,
+        };
+      });
   }
 
   protected async searchLeaderboardInput(

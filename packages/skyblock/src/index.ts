@@ -29,6 +29,8 @@ export {
   MEMBER_STATS_SECTIONS,
   type MemberStat,
   type MemberStats,
+  getBestiaryBoards,
+  getCollectionBoards,
   toMemberStats,
 } from "./sections/member-stats.js";
 export { parseItemsResource, toItemView } from "./items.js";
