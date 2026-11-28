@@ -10,7 +10,13 @@ import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/arena.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
-const LOADOUT = ["offensive", "utility", "support", "ultimate", "active_rune"] as const;
+const LOADOUT = [
+  "offensive",
+  "utility",
+  "support",
+  "ultimate",
+  "active_rune",
+] as const;
 
 type ArenaSlot = (typeof LOADOUT)[number];
 
@@ -30,7 +36,9 @@ const RENAMED: Record<string, string | undefined> = {
 };
 
 /** An Arena loadout ({ offensive: "falcon_punch", active_rune: "damage" }) as the shop's items in LOADOUT's order */
-export function fromArenaLoadout(arena: Readonly<Partial<Record<ArenaSlot, string | null>>>): (ItemStack | undefined)[] {
+export function fromArenaLoadout(
+  arena: Readonly<Partial<Record<ArenaSlot, string | null>>>,
+): (ItemStack | undefined)[] {
   return LOADOUT.map((slot) => {
     const id = arena[slot];
     if (!id) return undefined;

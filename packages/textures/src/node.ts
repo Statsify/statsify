@@ -18,9 +18,10 @@ const COLOR_CHUNKS = new Set(["gAMA", "cHRM", "sRGB", "iCCP"]);
 
 function withoutColorChunks(png: Buffer) {
   const kept = [png.subarray(0, 8)];
-  for (let at = 8; at < png.length;) {
+  for (let at = 8; at < png.length; ) {
     const end = at + 12 + png.readUInt32BE(at);
-    if (!COLOR_CHUNKS.has(png.toString("latin1", at + 4, at + 8))) kept.push(png.subarray(at, end));
+    if (!COLOR_CHUNKS.has(png.toString("latin1", at + 4, at + 8)))
+      kept.push(png.subarray(at, end));
     at = end;
   }
 
@@ -31,7 +32,11 @@ function withoutColorChunks(png: Buffer) {
 export const skiaCanvas: CanvasBackend = {
   createCanvas: (width, height) => offscreen(new Canvas(width, height)),
   async decodePng(file) {
-    const image = await loadImage(withoutColorChunks(Buffer.from(file.buffer, file.byteOffset, file.byteLength)));
+    const image = await loadImage(
+      withoutColorChunks(
+        Buffer.from(file.buffer, file.byteOffset, file.byteLength),
+      ),
+    );
     const canvas = new Canvas(image.width, image.height);
     canvas.getContext("2d").drawImage(image, 0, 0);
     return offscreen(canvas);

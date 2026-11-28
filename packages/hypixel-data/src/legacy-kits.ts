@@ -30,10 +30,15 @@ type Game = "blitz" | "megawalls";
 const KITS = dumped as Record<Game, Record<string, LegacyKit>>;
 
 // Each Blitz kit's armor by level, I to X, from its Upgrades page
-const BLITZ_ARMOR = dumped.blitzArmor as Record<string, Record<string, ItemStack>[]>;
+const BLITZ_ARMOR = dumped.blitzArmor as Record<
+  string,
+  Record<string, ItemStack>[]
+>;
 
 const withDefaults = (game: Game) =>
-  Object.values(KITS[game]).flatMap(({ name, level, saved }) => (saved ? [] : [{ name, level }]));
+  Object.values(KITS[game]).flatMap(({ name, level, saved }) =>
+    saved ? [] : [{ name, level }],
+  );
 
 /** Every Blitz kit with a default layout, and the level it's for */
 export const BLITZ_KITS = withDefaults("blitz");
@@ -45,14 +50,18 @@ export const MEGA_WALLS_KITS = withDefaults("megawalls");
  * A layout of 1.8 "id,damage" values by slot ({ "0": "267,0" }), as Blitz, Mega Walls and Walls store kits.
  * Walls' InventoryLayout2 adds each item's name, or NONAME ({ "12": "273,0,§bSpeedy Spade" })
  */
-export function fromLegacyKit(layout: Readonly<Record<string, string>>): (ItemStack | undefined)[] {
+export function fromLegacyKit(
+  layout: Readonly<Record<string, string>>,
+): (ItemStack | undefined)[] {
   const slots: (ItemStack | undefined)[] = Array.from({ length: SLOTS });
 
   for (const [slot, value] of Object.entries(layout)) {
     const [id, damage, ...rest] = value.split(",");
     const item = hypixelItem(Number(id), Number(damage));
     const name = rest.join(",");
-    if (inRange(Number(slot), SLOTS)) slots[Number(slot)] = item && name && name !== "NONAME" ? { ...item, name } : item;
+    if (inRange(Number(slot), SLOTS))
+      slots[Number(slot)] =
+        item && name && name !== "NONAME" ? { ...item, name } : item;
   }
 
   return slots;
@@ -71,24 +80,34 @@ function fromDumpedKit(
   const layout =
     stored ??
     (dumpedAtLevel && !dumpedAtLevel.saved
-      ? Object.fromEntries(dumpedAtLevel.items.map(({ slot, token }) => [slot, token]))
+      ? Object.fromEntries(
+          dumpedAtLevel.items.map(({ slot, token }) => [slot, token]),
+        )
       : undefined);
   if (!layout) return;
 
-  const renamed = new Map(Object.entries(renames).map(([material, rename]) => [legacyMaterialId(material.toUpperCase()), rename]));
+  const renamed = new Map(
+    Object.entries(renames).map(([material, rename]) => [
+      legacyMaterialId(material.toUpperCase()),
+      rename,
+    ]),
+  );
   const slots = fromLegacyKit(layout);
 
   for (const [slot, token] of Object.entries(layout)) {
     const index = Number(slot);
     if (!inRange(index, SLOTS)) continue;
-    const item = dumpedAtLevel?.items.find((candidate) => candidate.token === token)?.item ?? slots[index];
+    const item =
+      dumpedAtLevel?.items.find((candidate) => candidate.token === token)
+        ?.item ?? slots[index];
     if (!item) continue;
 
     const rename = renamed.get(Number(token.split(",")[0]));
     slots[index] = rename ? { ...item, name: rename } : item;
   }
 
-  for (const [slot, item] of Object.entries(dumpedAtLevel?.armor ?? {})) slots[Number(slot)] = item;
+  for (const [slot, item] of Object.entries(dumpedAtLevel?.armor ?? {}))
+    slots[Number(slot)] = item;
 
   return slots;
 }
@@ -102,7 +121,9 @@ export function blitzKitArmor(kit: string, level: number) {
 /** A Mega Walls class's armor at a Kit upgrade level, which is only known at the level its editor was dumped at */
 export function megaWallsKitArmor(kit: string, level: number) {
   const dumpedKit = KITS.megawalls[kitKey(kit)];
-  return dumpedKit?.level === level ? armorOf(Object.values(dumpedKit.armor ?? {})) : undefined;
+  return dumpedKit?.level === level
+    ? armorOf(Object.values(dumpedKit.armor ?? {}))
+    : undefined;
 }
 
 /**

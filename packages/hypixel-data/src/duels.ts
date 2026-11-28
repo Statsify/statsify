@@ -38,7 +38,9 @@ const KITS = dumped.kits as Record<string, Record<string, Kit>>;
 const SHARED = Object.fromEntries(
   Object.entries(KITS).map(([mode, kits]) => {
     const byMaterial = new Map<string, ItemStack>();
-    for (const { material, shared, item } of Object.values(kits).flatMap((kit) => kit.items)) {
+    for (const { material, shared, item } of Object.values(kits).flatMap(
+      (kit) => kit.items,
+    )) {
       if (shared && !byMaterial.has(material)) byMaterial.set(material, item);
     }
     return [mode, byMaterial];
@@ -56,15 +58,22 @@ const DAMAGE_DEPENDENT = new Set(["potion", "monster_egg"]);
 function duelsMode(key: string) {
   const name = key.replace(/^layout_/, "");
   const kit = KIT_MODE_KEY.exec(name);
-  return kit ? { mode: kit[1], kit: kit[2] } : { mode: name.replace(/_layout$/, "") };
+  return kit
+    ? { mode: kit[1], kit: kit[2] }
+    : { mode: name.replace(/_layout$/, "") };
 }
 
 /** The layout keys of the single-kit modes whose default layout fromDuelsKit knows */
-export const DUELS_DEFAULT_KEYS = Object.keys(DEFAULTS).map((mode) => `layout_${mode}_layout`);
+export const DUELS_DEFAULT_KEYS = Object.keys(DEFAULTS).map(
+  (mode) => `layout_${mode}_layout`,
+);
 
 /** Every kit with a default layout, by layout key and picker name */
 export const DUELS_KITS = Object.entries(KITS).flatMap(([mode, kits]) =>
-  Object.entries(kits).map(([kit, { name }]) => ({ key: `layout_${mode}_${kit}`, name })),
+  Object.entries(kits).map(([kit, { name }]) => ({
+    key: `layout_${mode}_${kit}`,
+    name,
+  })),
 );
 
 function duelsKit(mode: string, kit: string): Kit | undefined {
@@ -78,7 +87,9 @@ function duelsKit(mode: string, kit: string): Kit | undefined {
   const id = /^kit_([a-z]+)_([a-z]+)_(.+)$/.exec(kit);
   const name = kitKey(id?.[3] ?? kit);
   if (!id) return kits[`mini_${name}`] ?? kits[`insane_${name}`];
-  return kits[`${id[1] === "mini" || id[2] === "ranked" ? "mini" : "insane"}_${name}`];
+  return kits[
+    `${id[1] === "mini" || id[2] === "ranked" ? "mini" : "insane"}_${name}`
+  ];
 }
 
 /**
@@ -96,18 +107,26 @@ const copyNumber = (token: string) => Number(/(\d+)$/.exec(token)?.[1] ?? 0);
 const armorSlot = (material: string) =>
   material === "skull_item"
     ? ARMOR.helmet
-    : Object.entries(ARMOR).find(([piece]) => material.endsWith(`_${piece}`))?.[1];
+    : Object.entries(ARMOR).find(([piece]) =>
+        material.endsWith(`_${piece}`),
+      )?.[1];
 
 // Kit tokens end in a Bukkit material and a number, like hype_train_redstone_torch_on_10
 function endingMaterial(token: string) {
   const words = withoutCopy(token).split("_");
   return words
     .map((_, start) => words.slice(start).join("_"))
-    .find((material) => DAMAGE_DEPENDENT.has(material) || legacyMaterialId(material.toUpperCase()) !== undefined);
+    .find(
+      (material) =>
+        DAMAGE_DEPENDENT.has(material) ||
+        legacyMaterialId(material.toUpperCase()) !== undefined,
+    );
 }
 
 const bukkitItem = (material: string) =>
-  DAMAGE_DEPENDENT.has(material) ? undefined : hypixelItem(legacyMaterialId(material.toUpperCase())!);
+  DAMAGE_DEPENDENT.has(material)
+    ? undefined
+    : hypixelItem(legacyMaterialId(material.toUpperCase())!);
 
 /**
  * A Duels layout_* object ({ "0": "diamond_sword" }) as 40 player inventory slots, or without one its key's default,
@@ -122,7 +141,8 @@ export function fromDuelsKit(
   const kit = name ? duelsKit(mode, name) : undefined;
 
   // The game puts on the kit's armor whatever the layout holds
-  for (const [slot, item] of Object.entries(kit?.armor ?? {})) slots[Number(slot)] = item;
+  for (const [slot, item] of Object.entries(kit?.armor ?? {}))
+    slots[Number(slot)] = item;
 
   if (!stored && kit) {
     for (const { slot, item } of kit.items) slots[slot] = item;
@@ -133,11 +153,16 @@ export function fromDuelsKit(
   if (!layout) return;
 
   const entries = Object.entries(layout).flatMap(([slot, token]) =>
-    token && inRange(Number(slot), ARMOR.boots) ? [[Number(slot), token] as const] : [],
+    token && inRange(Number(slot), ARMOR.boots)
+      ? [[Number(slot), token] as const]
+      : [],
   );
 
   // A kit's token is <kit>_<material>_<n>; a shared item's is just the material
-  const own = (token: string) => (name && token.startsWith(`${name}_`) ? token.slice(name.length + 1) : undefined);
+  const own = (token: string) =>
+    name && token.startsWith(`${name}_`)
+      ? token.slice(name.length + 1)
+      : undefined;
   const material = (token: string) => withoutCopy(own(token) ?? token);
 
   for (const [slot, token] of entries) {
@@ -146,7 +171,10 @@ export function fromDuelsKit(
     // Layouts saved before the editor hid armor still hold it, but the game equips it instead. Combo's
     // (combo_helmet) names no material, so it's left out
     const worn = armorSlot(tokenMaterial);
-    if (worn !== undefined && !kit?.items.some((candidate) => candidate.material === tokenMaterial)) {
+    if (
+      worn !== undefined &&
+      !kit?.items.some((candidate) => candidate.material === tokenMaterial)
+    ) {
       const ending = endingMaterial(token);
       if (ending) slots[worn] ??= bukkitItem(ending);
       continue;
@@ -158,13 +186,22 @@ export function fromDuelsKit(
       // Items of one material match their tokens in order: a kit's by the token's number, which
       // follows the picker's list as the editor's slots do
       const isOwn = own(token) !== undefined;
-      const same = kit.items.filter((candidate) => candidate.material === tokenMaterial);
-      const pool = same.filter((candidate) => Boolean(candidate.shared) !== isOwn);
+      const same = kit.items.filter(
+        (candidate) => candidate.material === tokenMaterial,
+      );
+      const pool = same.filter(
+        (candidate) => Boolean(candidate.shared) !== isOwn,
+      );
       const numbers = entries
-        .filter(([, other]) => (own(other) !== undefined) === isOwn && material(other) === tokenMaterial)
+        .filter(
+          ([, other]) =>
+            (own(other) !== undefined) === isOwn &&
+            material(other) === tokenMaterial,
+        )
         .map(([, other]) => copyNumber(other))
         .toSorted((a, b) => a - b);
-      item = (pool.length > 0 ? pool : same)[numbers.indexOf(copyNumber(token))]?.item;
+      item = (pool.length > 0 ? pool : same)[numbers.indexOf(copyNumber(token))]
+        ?.item;
     }
 
     // A kit the dump doesn't have still shares the mode's items, like SkyWars' iron sword
@@ -172,7 +209,8 @@ export function fromDuelsKit(
 
     if (!item) {
       const ending = endingMaterial(token);
-      if (ending === undefined) throw new Error(`No Duels item or Bukkit material for ${token}`);
+      if (ending === undefined)
+        throw new Error(`No Duels item or Bukkit material for ${token}`);
       item = bukkitItem(ending);
     }
 

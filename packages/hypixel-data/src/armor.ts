@@ -39,7 +39,9 @@ const SKULLS: Record<string, Skull | undefined> = {
 };
 
 const PIECE = /^minecraft:(\w+?)_(helmet|chestplate|leggings|boots)$/;
-const SKIN_HASH = new RegExp(`^https://${SKIN_HOST.replaceAll(".", "\\.")}/texture/([\\da-f]+)$`);
+const SKIN_HASH = new RegExp(
+  `^https://${SKIN_HOST.replaceAll(".", "\\.")}/texture/([\\da-f]+)$`,
+);
 
 /**
  * The armor among items, like Pit's inv_armor, a kit's items or slots 36 to 39, each piece the
@@ -65,7 +67,12 @@ export function armorOf(items: Iterable<ItemStack | undefined>): Armor {
 
     const piece = PIECE.exec(item.id);
     const material = piece && MATERIALS[piece[1]];
-    if (material) armor[piece[2] as keyof typeof ARMOR] ??= { material, color: item.color, enchanted: item.enchanted };
+    if (material)
+      armor[piece[2] as keyof typeof ARMOR] ??= {
+        material,
+        color: item.color,
+        enchanted: item.enchanted,
+      };
   }
 
   return armor;
@@ -95,7 +102,9 @@ const LEATHER_COLORS: Record<string, number | undefined> = {
 
 /** The dye a kit picker names on a leather piece, like "White Leather Chestplate" */
 export function leatherColor(name: string) {
-  const dye = /^(\w+) Leather (?:Helmet|Chestplate|Leggings|Boots)$/.exec(name)?.[1];
+  const dye = /^(\w+) Leather (?:Helmet|Chestplate|Leggings|Boots)$/.exec(
+    name,
+  )?.[1];
   if (dye === undefined) return undefined;
 
   const color = LEATHER_COLORS[dye];
@@ -113,21 +122,31 @@ if (import.meta.vitest) {
       expect(leatherColor("Leather Boots")).toBeUndefined();
       expect(() => leatherColor("Plaid Leather Boots")).toThrow();
 
-      const head = "51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40";
+      const head =
+        "51e05727d64ff697e27a13f69d88131f4e7d9b81d18e1c2581b1cdc4492e40";
       expect(
         armorOf([
           { id: "minecraft:leather_boots", color: 0 },
           undefined,
           { id: "minecraft:golden_chestplate", enchanted: true },
           { id: "minecraft:iron_chestplate" },
-          { id: "minecraft:player_head", enchanted: true, skin: `https://textures.minecraft.net/texture/${head}` },
+          {
+            id: "minecraft:player_head",
+            enchanted: true,
+            skin: `https://textures.minecraft.net/texture/${head}`,
+          },
         ]),
       ).toEqual({
         boots: { material: "leather", color: 0 },
         chestplate: { material: "gold", enchanted: true },
         helmet: { head, enchanted: true },
       });
-      expect(armorOf([{ id: "minecraft:carved_pumpkin" }, { id: "minecraft:wither_skeleton_skull" }])).toEqual({
+      expect(
+        armorOf([
+          { id: "minecraft:carved_pumpkin" },
+          { id: "minecraft:wither_skeleton_skull" },
+        ]),
+      ).toEqual({
         helmet: { skull: "wither_skeleton" },
       });
       expect(armorOf([{ id: "minecraft:dragon_head" }])).toEqual({});

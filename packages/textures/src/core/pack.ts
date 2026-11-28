@@ -83,12 +83,21 @@ function overlayApplies(entry: OverlayEntry) {
     return false;
   }
 
-  return compareFormats(min, TARGET_FORMAT) <= 0 && compareFormats(TARGET_FORMAT, max) <= 0;
+  return (
+    compareFormats(min, TARGET_FORMAT) <= 0 &&
+    compareFormats(TARGET_FORMAT, max) <= 0
+  );
 }
 
-function layoutOf(meta: PackMeta | undefined, files: ReadonlyMap<string, Uint8Array>): PackLayout {
+function layoutOf(
+  meta: PackMeta | undefined,
+  files: ReadonlyMap<string, Uint8Array>,
+): PackLayout {
   const pack = meta?.pack;
-  const format = pack?.min_format === undefined ? pack?.pack_format : toFormat(pack.min_format)[0];
+  const format =
+    pack?.min_format === undefined
+      ? pack?.pack_format
+      : toFormat(pack.min_format)[0];
 
   if (format !== undefined) {
     if (format >= MODERN_FORMAT) return "modern";
@@ -98,8 +107,10 @@ function layoutOf(meta: PackMeta | undefined, files: ReadonlyMap<string, Uint8Ar
 
   // Client jars have no pack.mcmeta
   const paths = [...files.keys()];
-  if (paths.some((path) => path.startsWith("assets/minecraft/items/"))) return "modern";
-  if (paths.some((path) => path.startsWith("assets/minecraft/textures/items/"))) return "legacy";
+  if (paths.some((path) => path.startsWith("assets/minecraft/items/")))
+    return "modern";
+  if (paths.some((path) => path.startsWith("assets/minecraft/textures/items/")))
+    return "legacy";
   return "flattened";
 }
 
@@ -107,7 +118,10 @@ const unzipAssets = (data: Uint8Array) =>
   new Promise<Unzipped>((resolve, reject) => {
     unzip(
       data,
-      { filter: ({ name }) => name.includes("assets/") || name.endsWith("pack.mcmeta") },
+      {
+        filter: ({ name }) =>
+          name.includes("assets/") || name.endsWith("pack.mcmeta"),
+      },
       (error, files) => {
         if (error) reject(error);
         else resolve(files);
@@ -117,13 +131,18 @@ const unzipAssets = (data: Uint8Array) =>
 
 const decoder = new TextDecoder();
 
-const parseJson = <T>(file: Uint8Array, reviver?: (key: string, value: unknown) => unknown) =>
-  JSON.parse(decoder.decode(file), reviver) as T;
+const parseJson = <T>(
+  file: Uint8Array,
+  reviver?: (key: string, value: unknown) => unknown,
+) => JSON.parse(decoder.decode(file), reviver) as T;
 
 const encoder = new TextEncoder();
 
 /** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
-export type LegacyTexture = string | null | { texture: string; position: number };
+export type LegacyTexture =
+  | string
+  | null
+  | { texture: string; position: number };
 
 interface Upgrade {
   textures: Record<string, LegacyTexture>;
@@ -136,7 +155,10 @@ const UPGRADES: Partial<Record<PackLayout, Upgrade>> = {
     textures: minecraftData.legacyTextures,
     models: minecraftData.legacyModels,
     // 1.8's banner patterns are opaque masks, where 26.3's use alpha
-    drop: ["assets/minecraft/blockstates/", "assets/minecraft/textures/entity/banner/"],
+    drop: [
+      "assets/minecraft/blockstates/",
+      "assets/minecraft/textures/entity/banner/",
+    ],
   },
 };
 
@@ -159,16 +181,26 @@ function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
 
   for (const [key, value] of Object.entries(model.textures ?? {})) {
     const id = withoutNamespace(value);
-    const target = value.startsWith("#") || !(id in textures) ? value : textures[id];
+    const target =
+      value.startsWith("#") || !(id in textures) ? value : textures[id];
     if (target === null) return;
 
     renamed[key] = typeof target === "string" ? target : target.texture;
   }
 
-  return encoder.encode(JSON.stringify({ ...model, parent: parent && (models[parent] ?? parent), textures: renamed }));
+  return encoder.encode(
+    JSON.stringify({
+      ...model,
+      parent: parent && (models[parent] ?? parent),
+      textures: renamed,
+    }),
+  );
 }
 
-function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade) {
+function upgrade(
+  files: ReadonlyMap<string, Uint8Array>,
+  layoutUpgrade: Upgrade,
+) {
   const upgraded = new Map<string, Uint8Array>();
   const { textures, models, drop } = layoutUpgrade;
 
@@ -179,7 +211,11 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
 
     if (model) {
       const upgradedModel = upgradeModel(file, layoutUpgrade);
-      if (upgradedModel) upgraded.set(assetPath(models[model[1]] ?? model[1], "models", ".json"), upgradedModel);
+      if (upgradedModel)
+        upgraded.set(
+          assetPath(models[model[1]] ?? model[1], "models", ".json"),
+          upgradedModel,
+        );
       continue;
     }
 
@@ -193,14 +229,22 @@ function upgrade(files: ReadonlyMap<string, Uint8Array>, layoutUpgrade: Upgrade)
     const target = texture[1] in textures ? textures[texture[1]] : texture[1];
 
     if (typeof target === "string") {
-      upgraded.set(assetPath(target, "textures", `.png${texture[2] ?? ""}`), file);
+      upgraded.set(
+        assetPath(target, "textures", `.png${texture[2] ?? ""}`),
+        file,
+      );
     } else if (target && !texture[2]) {
       // The strip's own mcmeta played every frame; this one holds the frame a slot shows
       const { width, height } = pngSize(file);
       const frames = Math.max(1, Math.floor(height / width));
-      const animation = { animation: { frames: [Math.floor(target.position * frames)] } };
+      const animation = {
+        animation: { frames: [Math.floor(target.position * frames)] },
+      };
       upgraded.set(assetPath(target.texture, "textures", ".png"), file);
-      upgraded.set(assetPath(target.texture, "textures", ".png.mcmeta"), encoder.encode(JSON.stringify(animation)));
+      upgraded.set(
+        assetPath(target.texture, "textures", ".png.mcmeta"),
+        encoder.encode(JSON.stringify(animation)),
+      );
     }
   }
 
@@ -211,8 +255,11 @@ export const DOWNLOAD_TIMEOUT = 60_000;
 
 async function readSource(source: PackSource): Promise<Uint8Array> {
   if (typeof source === "string") {
-    const response = await fetch(source, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
-    if (!response.ok) throw new Error(`${source}: ${response.status} ${response.statusText}`);
+    const response = await fetch(source, {
+      signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+    });
+    if (!response.ok)
+      throw new Error(`${source}: ${response.status} ${response.statusText}`);
     return new Uint8Array(await response.arrayBuffer());
   }
 
@@ -221,17 +268,23 @@ async function readSource(source: PackSource): Promise<Uint8Array> {
 }
 
 function sourceName(source: PackSource) {
-  if (typeof source === "string") return decodeURIComponent(source.split("/").at(-1) ?? source);
+  if (typeof source === "string")
+    return decodeURIComponent(source.split("/").at(-1) ?? source);
   if (source instanceof File) return source.name;
   return "pack";
 }
 
 async function sha256(data: Uint8Array<ArrayBuffer>) {
   const digest = await crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  return [...new Uint8Array(digest)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
-export async function loadPack(source: PackSource, name = sourceName(source)): Promise<Pack> {
+export async function loadPack(
+  source: PackSource,
+  name = sourceName(source),
+): Promise<Pack> {
   const data = (await readSource(source)) as Uint8Array<ArrayBuffer>;
   const [hash, entries] = await Promise.all([sha256(data), unzipAssets(data)]);
 
@@ -246,7 +299,9 @@ export async function loadPack(source: PackSource, name = sourceName(source)): P
 
   const directories = [
     "",
-    ...(meta?.overlays?.entries.filter(overlayApplies).map(({ directory }) => `${directory}/`) ?? []),
+    ...(meta?.overlays?.entries
+      .filter(overlayApplies)
+      .map(({ directory }) => `${directory}/`) ?? []),
   ];
 
   const files = new Map<string, Uint8Array>();
@@ -267,7 +322,12 @@ export async function loadPack(source: PackSource, name = sourceName(source)): P
   const layout = layoutOf(meta, files);
   const layoutUpgrade = UPGRADES[layout];
 
-  return { name, hash, layout, files: layoutUpgrade ? upgrade(files, layoutUpgrade) : files };
+  return {
+    name,
+    hash,
+    layout,
+    files: layoutUpgrade ? upgrade(files, layoutUpgrade) : files,
+  };
 }
 
 /** Packs layered the way Minecraft layers them, lowest priority first */
@@ -277,7 +337,9 @@ export class PackStack {
   public constructor(public readonly packs: readonly Pack[]) {
     // Only 26.3 packs have item model definitions, so older ones can only retexture one
     if (!packs.some((pack) => pack.layout === "modern")) {
-      throw new Error(`${packs.map((pack) => pack.name).join(", ")} need a 26.3 pack in the stack`);
+      throw new Error(
+        `${packs.map((pack) => pack.name).join(", ")} need a 26.3 pack in the stack`,
+      );
     }
 
     this.hash = packs.map((pack) => pack.hash.slice(0, 16)).join("+");
@@ -287,14 +349,18 @@ export class PackStack {
     return this.packs.findLast((pack) => pack.files.has(path))?.files.get(path);
   }
 
-  public json<T>(path: string, reviver?: (key: string, value: unknown) => unknown) {
+  public json<T>(
+    path: string,
+    reviver?: (key: string, value: unknown) => unknown,
+  ) {
     const file = this.get(path);
     return file ? parseJson<T>(file, reviver) : undefined;
   }
 }
 
 /** A namespaced id with or without its namespace, like "item/stick" or "minecraft:item/stick" */
-export const namespaced = (id: string) => (id.includes(":") ? id : `minecraft:${id}`);
+export const namespaced = (id: string) =>
+  id.includes(":") ? id : `minecraft:${id}`;
 
 export const withoutNamespace = (id: string) => id.replace(/^minecraft:/, "");
 
@@ -310,7 +376,8 @@ export function assetPath(id: string, folder: string, extension: string) {
 if (import.meta.vitest) {
   const { expect, it } = import.meta.vitest;
 
-  const applies = (format: Omit<OverlayEntry, "directory">) => overlayApplies({ directory: "overlay", ...format });
+  const applies = (format: Omit<OverlayEntry, "directory">) =>
+    overlayApplies({ directory: "overlay", ...format });
 
   it("applies an overlay whose upper format leaves off the minor to every minor", () => {
     expect(applies({ formats: 97 })).toBe(true);

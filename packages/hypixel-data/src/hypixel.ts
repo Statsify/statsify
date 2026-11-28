@@ -8,10 +8,17 @@
 
 import { ARMOR, HOTBAR, hypixelItem } from "./kits.js";
 import { type Compound, readNbt } from "./nbt.js";
-import { type ItemStack, legacyBannerPattern, legacyDye, legacyEffect, namespaced } from "@statsify/textures";
+import {
+  type ItemStack,
+  legacyBannerPattern,
+  legacyDye,
+  legacyEffect,
+  namespaced,
+} from "@statsify/textures";
 import { gunzipSync } from "fflate";
 
-const base64Bytes = (base64: string) => Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
+const base64Bytes = (base64: string) =>
+  Uint8Array.from(atob(base64), (char) => char.codePointAt(0)!);
 
 // The parts of a 1.8 item compound read here. An empty slot is {}
 interface LegacyItem {
@@ -25,7 +32,10 @@ interface LegacyItem {
     Unbreakable?: number;
     HideFlags?: number;
     SkullOwner?: { Properties?: { textures?: { Value?: string }[] } };
-    BlockEntityTag?: { Base?: number; Patterns?: { Pattern: string; Color: number }[] };
+    BlockEntityTag?: {
+      Base?: number;
+      Patterns?: { Pattern: string; Color: number }[];
+    };
   };
 }
 
@@ -41,7 +51,8 @@ export function skinUrl(value: string) {
   if (url === undefined) return undefined;
 
   const skin = new URL(url);
-  if (skin.hostname !== SKIN_HOST) throw new Error(`${url} isn't on ${SKIN_HOST}`);
+  if (skin.hostname !== SKIN_HOST)
+    throw new Error(`${url} isn't on ${SKIN_HOST}`);
 
   // The texture server allows cross-origin reads, but an https page can't fetch an http URL
   skin.protocol = "https:";
@@ -49,7 +60,12 @@ export function skinUrl(value: string) {
 }
 
 /** One 1.8 item compound as an ItemStack, or undefined for an empty slot or a spawn egg 26.3 has no item for */
-function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefined {
+function itemStack({
+  id,
+  Count,
+  Damage,
+  tag,
+}: LegacyItem): ItemStack | undefined {
   if (id === undefined) return;
 
   const item = hypixelItem(id, Damage);
@@ -71,7 +87,10 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
   return {
     ...item,
     // 1.8 colors a banner by its Base before its Damage
-    id: banner?.Base === undefined ? item.id : namespaced(`${legacyDye(banner.Base)}_banner`),
+    id:
+      banner?.Base === undefined
+        ? item.id
+        : namespaced(`${legacyDye(banner.Base)}_banner`),
     patterns: patterns?.length ? patterns : undefined,
     count: Count,
     name: tag?.display?.Name,
@@ -87,13 +106,21 @@ function itemStack({ id, Count, Damage, tag }: LegacyItem): ItemStack | undefine
 }
 
 /** Items from Hypixel's gzipped NBT as /player sends it, like the Pit's inv_contents, in their stored order */
-export function fromHypixelNBT({ data }: { data: number[] }): (ItemStack | undefined)[] {
+export function fromHypixelNBT({
+  data,
+}: {
+  data: number[];
+}): (ItemStack | undefined)[] {
   const root = readNbt(gunzipSync(Uint8Array.from(data)));
   const items = root.i;
-  if (!Array.isArray(items)) throw new TypeError("Hypixel's inventory NBT should have an i list");
+  if (!Array.isArray(items))
+    throw new TypeError("Hypixel's inventory NBT should have an i list");
 
   return (items as LegacyItem[]).map(itemStack);
 }
 
 /** A player inventory as the game shows it: the three main rows, then the hotbar */
-export const playerInventoryOrder = <T>(slots: T[]) => [...slots.slice(HOTBAR, ARMOR.boots), ...slots.slice(0, HOTBAR)];
+export const playerInventoryOrder = <T>(slots: T[]) => [
+  ...slots.slice(HOTBAR, ARMOR.boots),
+  ...slots.slice(0, HOTBAR),
+];

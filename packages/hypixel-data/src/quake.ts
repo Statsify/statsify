@@ -11,7 +11,17 @@ import dumped from "../data/quake.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
 // The gun's parts (sight is its laser), then the hat and the armor, as the Quake stats keys name them
-const LOADOUT = ["case", "barrel", "trigger", "muzzle", "sight", "hat", "armor", "leggings", "boots"] as const;
+const LOADOUT = [
+  "case",
+  "barrel",
+  "trigger",
+  "muzzle",
+  "sight",
+  "hat",
+  "armor",
+  "leggings",
+  "boots",
+] as const;
 
 type QuakePart = (typeof LOADOUT)[number];
 
@@ -23,13 +33,14 @@ const PARTS = dumped as Record<QuakePart, Record<string, ItemStack>>;
 const QUAKEZODIA = { exodia: "quakezodia" };
 
 // By part, since the laser keeps GOLD where the muzzle's is the Golden Muzzle
-const RENAMED: Partial<Record<QuakePart, Record<string, string | undefined>>> = {
-  muzzle: { gold: "golden", none: "no", wood: "wooden" },
-  hat: QUAKEZODIA,
-  armor: QUAKEZODIA,
-  leggings: QUAKEZODIA,
-  boots: QUAKEZODIA,
-};
+const RENAMED: Partial<Record<QuakePart, Record<string, string | undefined>>> =
+  {
+    muzzle: { gold: "golden", none: "no", wood: "wooden" },
+    hat: QUAKEZODIA,
+    armor: QUAKEZODIA,
+    leggings: QUAKEZODIA,
+    boots: QUAKEZODIA,
+  };
 
 const partKey = (part: QuakePart, id: string) => {
   const key = kitKey(id).replace(/(ball|hat|kit|leggings|boots)+$/, "");
@@ -40,7 +51,9 @@ const partKey = (part: QuakePart, id: string) => {
  * A Quake loadout ({ case: "SHINY_DIAMOND_HOE", barrel: "LARGE_BALL" }) as the shop's items in LOADOUT's order.
  * A part the menus don't match leaves its slot empty
  */
-export function fromQuakeLoadout(quake: Readonly<Partial<Record<QuakePart, string | null>>>): (ItemStack | undefined)[] {
+export function fromQuakeLoadout(
+  quake: Readonly<Partial<Record<QuakePart, string | null>>>,
+): (ItemStack | undefined)[] {
   return LOADOUT.map((part) => {
     const id = quake[part];
     return id ? PARTS[part][partKey(part, id)] : undefined;
