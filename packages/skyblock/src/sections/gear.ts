@@ -16,6 +16,68 @@ const ARMOR_PIECES = ["HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"] as const;
 // The rarity line ends with the item type, as in "EPIC BOW".
 const WEAPON_LINE = /\b(?:SWORD|LONGSWORD|BOW|GAUNTLET|WAND)$/;
 
+// 1.8 numbers armor from 298, helmet to boots for each material in turn.
+const FIRST_ARMOR_ID = 298;
+const ARMOR_MATERIALS = [
+  "leather",
+  "chainmail",
+  "iron",
+  "diamond",
+  "gold",
+] as const;
+const SKIN_SLOTS = ["helmet", "chestplate", "leggings", "boots"] as const;
+
+// 1.8's mob skulls by damage, where 3 is the player head.
+const SKULL_ID = 397;
+const SKULLS = [
+  "skeleton",
+  "wither_skeleton",
+  "zombie",
+  undefined,
+  "creeper",
+] as const;
+
+type SkinArmorPiece =
+  | {
+      material: (typeof ARMOR_MATERIALS)[number];
+      color?: number;
+      enchanted: boolean;
+    }
+  | { head: string }
+  | { skull: NonNullable<(typeof SKULLS)[number]> };
+
+export type SkinArmor = Partial<
+  Record<(typeof SKIN_SLOTS)[number], SkinArmorPiece>
+>;
+
+// The /skin route draws only these, so anything else in a slot is left off.
+function toSkinArmor(armor: Slots): SkinArmor {
+  const pieces = armor.map((item, slot): SkinArmorPiece | undefined => {
+    if (!item) return;
+
+    const { texture } = item;
+    if (texture.kind === "head") {
+      return slot === 0 ? { head: texture.skin } : undefined;
+    }
+
+    const isSkull = slot === 0 && texture.id === SKULL_ID;
+    const skull = isSkull ? SKULLS[texture.damage] : undefined;
+    if (skull) return { skull };
+
+    const offset = texture.id - FIRST_ARMOR_ID;
+    if (offset % 4 !== slot) return;
+
+    const material = ARMOR_MATERIALS[Math.floor(offset / 4)];
+    return (
+      material && { material, color: texture.color, enchanted: item.glint }
+    );
+  });
+
+  return Object.fromEntries(
+    SKIN_SLOTS.map((slot, index) => [slot, pieces[index]]),
+  );
+}
+
 function getWardrobe(
   member: RawMember,
   worn: Slots,
@@ -63,14 +125,23 @@ function getWardrobe(
   return { wardrobe, wardrobeSlot };
 }
 
+// The armor inventory runs from the boots up.
+const getWornArmor = (inventory: NonNullable<RawMember["inventory"]>): Slots =>
+  inventory.inv_armor
+    ? decodeSlots(inventory.inv_armor).toReversed()
+    : [null, null, null, null];
+
+export function getArmor(member: RawMember): SkinArmor | null {
+  const inventory = member.inventory;
+  if (!inventory?.inv_contents) return null;
+  return toSkinArmor(getWornArmor(inventory));
+}
+
 export function getGear(member: RawMember): GearSection | null {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
 
-  // The armor inventory runs from the boots up.
-  const armor = inventory.inv_armor
-    ? decodeSlots(inventory.inv_armor).toReversed()
-    : [null, null, null, null];
+  const armor = getWornArmor(inventory);
 
   return {
     armor,
@@ -84,4 +155,59 @@ export function getGear(member: RawMember): GearSection | null {
         WEAPON_LINE.test(removeFormatting(item.lore.at(-1) ?? "").trim()),
     ),
   };
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  const item = {
+    id: "",
+    name: "",
+    lore: [],
+    count: 1,
+    glint: false,
+    recombobulated: false,
+  };
+
+  suite("toSkinArmor", () => {
+    it("should map 1.8 armor ids, textured heads and mob skulls", () => {
+      expect(
+        toSkinArmor([
+          { ...item, texture: { kind: "head", skin: "abc123" } },
+          {
+            ...item,
+            glint: true,
+            texture: { kind: "item", id: 299, damage: 0, color: 0xff_00_00 },
+          },
+          { ...item, texture: { kind: "item", id: 316, damage: 0 } },
+          { ...item, texture: { kind: "item", id: 313, damage: 0 } },
+        ]),
+      ).toEqual({
+        helmet: { head: "abc123" },
+        chestplate: { material: "leather", color: 0xff_00_00, enchanted: true },
+        leggings: { material: "gold", enchanted: false },
+        boots: { material: "diamond", enchanted: false },
+      });
+    });
+
+    it("should leave off a piece in the wrong slot or a bare player head", () => {
+      expect(
+        toSkinArmor([
+          { ...item, texture: { kind: "item", id: 397, damage: 2 } },
+          { ...item, texture: { kind: "item", id: 301, damage: 0 } },
+          { ...item, texture: { kind: "item", id: 397, damage: 4 } },
+          null,
+        ]),
+      ).toEqual({ helmet: { skull: "zombie" } });
+
+      expect(
+        toSkinArmor([
+          { ...item, texture: { kind: "item", id: 397, damage: 3 } },
+          null,
+          null,
+          null,
+        ]),
+      ).toEqual({});
+    });
+  });
 }

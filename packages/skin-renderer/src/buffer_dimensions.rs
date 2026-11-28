@@ -1,5 +1,6 @@
 use std::mem::size_of;
 
+#[derive(Clone, Copy)]
 pub struct BufferDimensions {
   pub width: u32,
   pub height: u32,

@@ -12,7 +12,7 @@ import { getCrimson } from "./crimson.js";
 import { getDungeons } from "./dungeons.js";
 import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
-import { getGear } from "./gear.js";
+import { getArmor, getGear } from "./gear.js";
 import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
@@ -71,6 +71,7 @@ export const SECTIONS: {
       return getAccessories(member, items, prices, hasMarket(profile));
     },
   },
+  armor: { needs: [], compute: async ({ member }) => getArmor(member) },
   chocolate: {
     needs: [],
     compute: async ({ member }) => getChocolate(member),

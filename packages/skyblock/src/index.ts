@@ -50,7 +50,7 @@ export {
   type Catch,
   type TrophyTier,
 } from "./sections/fishing.js";
-export { getGear } from "./sections/gear.js";
+export { getArmor, getGear } from "./sections/gear.js";
 export { WHISPERS, getHotf, type Whisper } from "./sections/hotf.js";
 export { POWDERS, getHotm, type Powder } from "./sections/hotm.js";
 export { getInventories } from "./sections/inventories.js";

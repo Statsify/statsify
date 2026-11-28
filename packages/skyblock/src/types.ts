@@ -16,6 +16,7 @@ import type { Powder } from "./sections/hotm.js";
 import type { Whisper } from "./sections/hotf.js";
 import type { Skill } from "./sections/skills.js";
 import type { SlayerBoss } from "./sections/slayers.js";
+import type { SkinArmor } from "./sections/gear.js";
 
 export const RARITIES = [
   "COMMON",
@@ -80,6 +81,7 @@ export interface SkyBlockProfileView
 export interface MemberView {
   apiSettings: ApiSettings;
   accessories?: AccessoriesSection | null;
+  armor?: SkinArmor | null;
   skills?: SkillsSection | null;
   pets?: PetsSection;
   hotm?: HotmSection;
