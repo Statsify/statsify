@@ -32,8 +32,9 @@ const YEAR_DAYS = SKYBLOCK_MONTHS.length * MONTH_DAYS;
 
 export interface SkyBlockDate {
   year: number;
-  month: number; // from 0, Early Spring
-  day: number; // from 1
+  // Months count from 0, Early Spring, and days from 1.
+  month: number;
+  day: number;
 }
 
 export const toSkyBlockDate = (time: number): SkyBlockDate => {

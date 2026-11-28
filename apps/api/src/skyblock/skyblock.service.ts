@@ -32,8 +32,10 @@ import {
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
 import {
   FAILURE_BACKOFF_MS,
-  SkyBlockPricesService,
-} from "./skyblock-prices.service.js";
+  getFailureKey,
+} from "./skyblock-copies.service.js";
+import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockResourcesService } from "./skyblock-resources.service.js";
 import {
   MEMBER_STATS_SECTIONS,
   findProfile,
@@ -137,8 +139,6 @@ const readGarden = async ({ data, fetchedAt }: SkyBlockGarden) => ({
   fetchedAt,
 });
 
-const getFailureKey = (key: string) => `skyblock:failed:${key}`;
-
 @Injectable()
 export class SkyBlockService {
   private readonly logger = new Logger("SkyBlockService");
@@ -148,6 +148,7 @@ export class SkyBlockService {
     private readonly playerService: Circular<PlayerService>,
     private readonly hypixelService: HypixelService,
     private readonly pricesService: SkyBlockPricesService,
+    private readonly resourcesService: SkyBlockResourcesService,
     private readonly leaderboardService: SkyBlockLeaderboardService,
     @InjectModel(SkyBlockProfiles)
     private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
@@ -289,7 +290,7 @@ export class SkyBlockService {
   public async getBingo(tag: string): Promise<PlayerRef & BingoView> {
     const [resource, { uuid, username, displayName, bingo }] =
       await Promise.all([
-        this.pricesService.getBingo(),
+        this.resourcesService.getBingo(),
         this.getPlayer(tag).then(async (player) => ({
           ...player,
           bingo: await this.getPlayerBingo(player.uuid),
