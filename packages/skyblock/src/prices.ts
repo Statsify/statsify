@@ -62,7 +62,7 @@ export function parseBazaar(raw: RawBazaar): Bazaar {
 }
 
 // The networth library looks prices up by exact key, in these formats.
-const upper = (value: unknown) => String(value).toUpperCase();
+const toUpperCase = (value: unknown) => String(value).toUpperCase();
 
 // Pet keys use the API's tier, without Tier Boost.
 const petKey = (pet: RawPet, level: number) =>
@@ -70,13 +70,13 @@ const petKey = (pet: RawPet, level: number) =>
 
 const bookKeys = (attributes: Attributes) =>
   Object.entries(attributes.enchantments ?? {}).map(
-    ([name, level]) => `ENCHANTMENT_${upper(name)}_${level}`,
+    ([name, level]) => `ENCHANTMENT_${toUpperCase(name)}_${level}`,
   );
 
 function runeKey(attributes: Attributes) {
   const runes = (attributes.runes ?? {}) as Record<string, number>;
   const [rune] = Object.entries(runes);
-  return rune && upper(`RUNE_${rune[0]}_${rune[1]}`);
+  return rune && toUpperCase(`RUNE_${rune[0]}_${rune[1]}`);
 }
 
 const cakeKey = (attributes: Attributes) =>
@@ -84,11 +84,11 @@ const cakeKey = (attributes: Attributes) =>
 
 function hatKey(id: string, attributes: Attributes) {
   if (COLOR_HATS.has(id) && attributes.party_hat_color) {
-    return `${id}_${upper(attributes.party_hat_color)}`;
+    return `${id}_${toUpperCase(attributes.party_hat_color)}`;
   }
 
   if (id === "PARTY_HAT_SLOTH" && attributes.party_hat_emoji) {
-    return `${id}_${upper(attributes.party_hat_emoji)}`;
+    return `${id}_${toUpperCase(attributes.party_hat_emoji)}`;
   }
 
   return undefined;
@@ -232,7 +232,7 @@ export function lookupKeys(
 }
 
 // Skip a lowest BIN under half the second when a third backs the second.
-export function getBinPrice({ lowest, second, third }: Bins) {
+function getBinPrice({ lowest, second, third }: Bins) {
   if (second === undefined || third === undefined) return lowest;
   if (lowest >= second / 2) return lowest;
   return third <= second * 2 ? second : lowest;
