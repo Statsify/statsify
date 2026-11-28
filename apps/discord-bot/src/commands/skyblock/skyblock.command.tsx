@@ -20,7 +20,6 @@ import {
   paginate,
 } from "@statsify/discord";
 import {
-  GAME_MODES,
   SKYBLOCK_CARDS,
   type SkyBlockCard,
   type SkyBlockCardName,
@@ -31,13 +30,21 @@ import {
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
+import { hasMuseum } from "@statsify/skyblock/display";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
-import type { SkyBlockProfileView } from "@statsify/skyblock";
+import type { GameMode, SkyBlockProfileView } from "@statsify/skyblock";
 import type { User } from "@statsify/schemas";
+
+const GAME_MODE_EMOJI: Record<GameMode, string | false> = {
+  normal: false,
+  ironman: "♻️",
+  stranded: "🏝️",
+  bingo: "🎯",
+};
 
 export interface SkyBlockProfileProps {
   profile: SkyBlockProfileView;
@@ -51,21 +58,15 @@ export interface SkyBlockProfileProps {
   icons: ItemIcons;
 }
 
-function getNotes(
+function getSettingNotes(
   t: LocalizeFunction,
   view: SkyBlockProfileView,
   card: SkyBlockCard,
 ) {
-  const notes: string[] = [];
-
-  if (view.stale) {
-    const time = Math.floor(view.fetchedAt / 1000);
-    notes.push(t("skyblock.stale", { time }));
-  }
-
   // A new profile reads every API setting as off and has no museum yet.
-  if (view.newProfile) return notes.join("\n");
+  if (view.newProfile) return [];
 
+  const notes: string[] = [];
   const off = card.settings.filter(
     (setting) => view.member.apiSettings[setting] === false,
   );
@@ -80,8 +81,27 @@ function getNotes(
 
   if (off.includes("banking")) notes.push(t("skyblock.bankingOffNote"));
 
-  if (view.member.networth?.museumIncluded === false)
-    notes.push(t("skyblock.museumNotCounted"));
+  const museumMissed =
+    hasMuseum(view.gameMode) && view.member.networth?.museumIncluded === false;
+  if (museumMissed) notes.push(t("skyblock.museumNotCounted"));
+
+  return notes;
+}
+
+function getNotes(
+  t: LocalizeFunction,
+  view: SkyBlockProfileView,
+  card: SkyBlockCard,
+) {
+  const notes: string[] = [];
+
+  if (view.stale) {
+    const time = Math.floor(view.fetchedAt / 1000);
+    notes.push(t("skyblock.stale", { time }));
+  }
+
+  notes.push(...getSettingNotes(t, view, card));
+  if (view.marketDown) notes.push(t("skyblock.pricesNotReady"));
 
   return notes.join("\n");
 }
@@ -316,7 +336,7 @@ export class SkyBlockCommand {
       };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
-      const page = { label: cuteName, emoji: GAME_MODES[gameMode].emoji };
+      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode] };
 
       if (Array.isArray(card.profile)) {
         const subPages = card.profile.map(({ label, profile, icons }) => ({

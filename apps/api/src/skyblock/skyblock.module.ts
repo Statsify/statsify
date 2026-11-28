@@ -6,10 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { HttpModule } from "@nestjs/axios";
 import { HypixelModule } from "#hypixel";
+import { IMAGE_DOWNLOAD_TIMEOUT } from "@statsify/rendering";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { SkyBlockController } from "./skyblock.controller.js";
+import { SkyBlockIconsService } from "./skyblock-icons.service.js";
 import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { SkyBlockSearchController } from "./search/skyblock-search.controller.js";
@@ -22,8 +25,15 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     HypixelModule,
     PlayerModule,
     TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum]),
+    HttpModule.register({ timeout: IMAGE_DOWNLOAD_TIMEOUT }),
   ],
   controllers: [SkyBlockController, SkyBlockSearchController],
-  providers: [SkyBlockService, SkyBlockPricesService, SkyBlockSearchService],
+  providers: [
+    SkyBlockService,
+    SkyBlockPricesService,
+    SkyBlockSearchService,
+    SkyBlockIconsService,
+  ],
+  exports: [SkyBlockService, SkyBlockPricesService],
 })
 export class SkyBlockModule {}

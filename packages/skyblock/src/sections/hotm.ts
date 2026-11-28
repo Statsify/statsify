@@ -65,7 +65,7 @@ export function getHotm(member: RawMember): HotmSection {
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) =>
     /^mountain(_\d+)?$/.test(key),
   ).length;
-  const crystals = Object.values(core.crystals ?? {});
+  const crystals = Object.entries(core.crystals ?? {});
   const glacite = member.glacite_player_data;
 
   return {
@@ -98,8 +98,16 @@ export function getHotm(member: RawMember): HotmSection {
       core_of_the_mountain: coreLevel,
     }),
     crystals: {
-      found: add(...crystals.map((crystal) => crystal.total_found ?? 0)),
-      placed: add(...crystals.map((crystal) => crystal.total_placed ?? 0)),
+      found: add(...crystals.map(([, crystal]) => crystal.total_found ?? 0)),
+      placed: add(...crystals.map(([, crystal]) => crystal.total_placed ?? 0)),
+      gems: crystals
+        .filter(([, crystal]) => (crystal.total_found ?? 0) > 0)
+        .map(([key, crystal]) => ({
+          gem: key.replace(/_crystal$/, ""),
+          found: crystal.total_found!,
+          placed: crystal.total_placed,
+        }))
+        .toSorted((a, b) => b.found - a.found),
     },
     // The NUCLEUS_RUNS completion stops counting at 50.
     nucleusRuns: Math.min(
@@ -107,9 +115,14 @@ export function getHotm(member: RawMember): HotmSection {
         (gem) => core.crystals?.[`${gem}_crystal`]?.total_placed ?? 0,
       ),
     ),
+    kingQuests: core.biomes?.goblin?.king_quests_completed ?? 0,
     glacite: {
       corpses: add(...Object.values(glacite?.corpses_looted ?? {})),
+      corpsesByType: Object.entries(glacite?.corpses_looted ?? {})
+        .map(([type, count]) => ({ type, count }))
+        .toSorted((a, b) => b.count - a.count),
       fossils: glacite?.fossils_donated?.length ?? 0,
+      fossilDust: Math.floor(glacite?.fossil_dust ?? 0),
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },
   };

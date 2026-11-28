@@ -12,14 +12,15 @@ import { decodeInventory } from "#nbt";
 import { getItemCost } from "#prices";
 import { resourceTexture } from "#textures";
 import { toItemView } from "#items";
-import type {
-  AccessoriesSection,
-  InactiveAccessory,
-  ItemView,
-  ItemsResource,
-  MissingAccessory,
-  PriceMap,
-  Rarity,
+import {
+  RARITIES,
+  type AccessoriesSection,
+  type InactiveAccessory,
+  type ItemView,
+  type ItemsResource,
+  type MissingAccessory,
+  type PriceMap,
+  type Rarity,
 } from "#types";
 import type { RawMember } from "#raw";
 
@@ -330,6 +331,12 @@ export function getAccessories(
     tuning,
     tuningPoints: add(...Object.values(tuning)),
     enrichments: bag.active.filter((view) => view.enrichment).length,
+    unenriched: bag.active.filter(
+      (view) =>
+        !view.enrichment &&
+        RARITIES.indexOf(view.rarity!) >= RARITIES.indexOf("LEGENDARY"),
+    ).length,
+    recombobulated: bag.active.filter((view) => view.recombobulated).length,
     pricesAsOf: prices.asOf,
     market,
     active: bag.active,

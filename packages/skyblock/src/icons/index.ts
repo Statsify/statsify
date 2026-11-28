@@ -16,6 +16,8 @@ import type { ItemTexture } from "#types";
 
 interface IconOptions {
   size?: number;
+  // The glint is drawn at its first frame, as a still inventory shows it.
+  glint?: boolean;
 }
 
 type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
@@ -23,6 +25,10 @@ type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
 export const SKIN_URL = "https://textures.minecraft.net/texture/";
 
 const BASE_SIZE = 16;
+const GLINT = "misc/enchanted_item_glint";
+// 1.8 tints the glint 0x8040CC and draws it at -50° and 10°, at 1/8 scale.
+const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
+const GLINT_ANGLES = [(-5 * Math.PI) / 18, Math.PI / 18];
 const CACHE_SIZE = 2000;
 
 const GRASS = 2;
@@ -297,16 +303,82 @@ async function drawBase(plan: Plan, key: string) {
   return canvas;
 }
 
+let glintTexture: Promise<Canvas> | undefined;
+
+// Squared, so adding it with "lighter" gives the game's src² + dst.
+const getGlintTexture = () => {
+  glintTexture ??= loadTexture(GLINT).then((image) => {
+    const canvas = createCanvas(image.width, image.height);
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0);
+    const pixels = ctx.getImageData(0, 0, image.width, image.height);
+
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      for (let channel = 0; channel < 3; channel++) {
+        const strength = (pixels.data[i + channel] / 255) * GLINT_TINT[channel];
+        pixels.data[i + channel] = strength * strength * 255;
+      }
+      pixels.data[i + 3] = 255;
+    }
+
+    ctx.putImageData(pixels, 0, 0);
+    return canvas;
+  });
+  return glintTexture;
+};
+
+async function drawGlint(icon: Canvas) {
+  const glint = await getGlintTexture();
+  const { width, height } = icon;
+  const layer = createCanvas(width, height);
+  const ctx = layer.getContext("2d");
+  ctx.globalCompositeOperation = "lighter";
+
+  for (const angle of GLINT_ANGLES) {
+    // The pattern's transform is the inverse of the pixel-to-texel matrix.
+    const a11 = (glint.width * Math.cos(angle)) / (8 * width);
+    const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
+    const a21 = (glint.height * Math.sin(angle)) / (8 * width);
+    const a22 = (glint.height * Math.cos(angle)) / (8 * height);
+    const determinant = a11 * a22 - a12 * a21;
+
+    const pattern = ctx.createPattern(glint, "repeat")!;
+    pattern.setTransform(
+      a22 / determinant,
+      -a21 / determinant,
+      -a12 / determinant,
+      a11 / determinant,
+      0,
+      0,
+    );
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.drawImage(icon, 0, 0);
+
+  const iconCtx = icon.getContext("2d");
+  iconCtx.globalCompositeOperation = "lighter";
+  iconCtx.drawImage(layer, 0, 0);
+}
+
 const icons = new LRUCache<string, Promise<Canvas | undefined>>({
   max: CACHE_SIZE,
 });
 
-const getCacheKey = (texture: ItemTexture, size: number) => {
-  if (texture.kind === "head") return `${texture.skin}:${size}`;
-  return `${texture.id}:${texture.damage}:${texture.color ?? ""}:${size}`;
+const getCacheKey = (texture: ItemTexture, size: number, glint: boolean) => {
+  if (texture.kind === "head") return `${texture.skin}:${size}:${glint}`;
+  const { id, damage, color = "" } = texture;
+  return `${id}:${damage}:${color}:${size}:${glint}`;
 };
 
-async function drawIcon(texture: ItemTexture, size: number, key: string) {
+async function drawIcon(
+  texture: ItemTexture,
+  size: number,
+  glint: boolean,
+  key: string,
+) {
   const plan = getPlan(texture);
   if (!plan) return undefined;
 
@@ -315,19 +387,21 @@ async function drawIcon(texture: ItemTexture, size: number, key: string) {
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(base, 0, 0, size, size);
+  // 1.8 never draws the glint on heads, chests or banners.
+  if (glint && plan.kind === "layers") await drawGlint(canvas);
 
   return canvas;
 }
 
 export function getItemIcon(
   texture: ItemTexture,
-  { size = BASE_SIZE }: IconOptions = {},
+  { size = BASE_SIZE, glint = false }: IconOptions = {},
 ): Promise<Canvas | undefined> {
-  const key = getCacheKey(texture, size);
+  const key = getCacheKey(texture, size, glint);
   let icon = icons.get(key);
 
   if (!icon) {
-    icon = drawIcon(texture, size, key);
+    icon = drawIcon(texture, size, glint, key);
     icon.catch(() => icons.delete(key));
     icons.set(key, icon);
   }

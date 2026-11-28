@@ -21,6 +21,13 @@ export const SkyBlockSummaryProfile = ({
     profile.newProfile
       ? { value: t(0), color }
       : { value: t("skyblock.apiOff"), color: "§c" };
+  const notReady = { value: t("skyblock.notReady"), color: "§7" };
+
+  const getAccessoryPower = () => {
+    if (profile.marketDown?.includes("accessories")) return notReady;
+    if (!accessories) return missing("§d");
+    return { value: t(accessories.accessoryPower), color: "§d" };
+  };
   const bank =
     profile.bank === undefined
       ? missing("§6")
@@ -45,13 +52,18 @@ export const SkyBlockSummaryProfile = ({
         <Table.tr>
           <Table.td
             title={t("skyblock.networth")}
-            value={t(Math.floor(networth!.total))}
-            color="§6"
+            {...(networth
+              ? { value: t(Math.floor(networth.total)), color: "§6" }
+              : notReady)}
           />
           <Table.td
             title={t("skyblock.nonCosmeticNetworth")}
-            value={t(Math.floor(networth!.nonCosmetic.total))}
-            color="§e"
+            {...(networth
+              ? {
+                  value: t(Math.floor(networth.nonCosmetic.total)),
+                  color: "§e",
+                }
+              : notReady)}
           />
         </Table.tr>
         <Table.tr>
@@ -80,9 +92,7 @@ export const SkyBlockSummaryProfile = ({
           />
           <Table.td
             title={t("skyblock.accessoryPower")}
-            {...(accessories
-              ? { value: t(accessories.accessoryPower), color: "§d" }
-              : missing("§d"))}
+            {...getAccessoryPower()}
           />
           <Table.td
             title={t("skyblock.fairySouls")}

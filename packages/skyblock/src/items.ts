@@ -11,11 +11,13 @@ import {
   type ItemView,
   type ItemsResource,
   type Rarity,
+  type Slots,
 } from "#types";
 import { getItemTexture, skinHash } from "#textures";
+import { decodeInventory } from "#nbt";
 import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
-import type { RawItem, RawItemsResource } from "#raw";
+import type { RawItem, RawItemsResource, RawNbt } from "#raw";
 
 const RARITY_NAMES = new Map<string, Rarity>([
   ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
@@ -53,7 +55,6 @@ export function toItemView(item: RawItem): ItemView {
 
   return {
     id,
-    uuid: attributes.uuid,
     name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
     rarity: getLoreRarity(lore),
@@ -65,12 +66,28 @@ export function toItemView(item: RawItem): ItemView {
     recombobulated: Boolean(attributes.rarity_upgrades),
     enchantments: attributes.enchantments,
     enrichment: attributes.talisman_enrichment,
+    hotPotato: nbtNumber(attributes.hot_potato_count),
+    obtainedAt: nbtNumber(attributes.timestamp),
   };
 }
 
+export function decodeSlots(blob: RawNbt): Slots {
+  return decodeInventory(blob).map((item) => item && toItemView(item));
+}
+
 export function parseItemsResource(raw: RawItemsResource): ItemsResource {
+  // The museum keeps an armor set under the set's key, which its pieces name.
+  const museum: Record<string, string> = {};
+  for (const { id, museum_data: data } of raw.items) {
+    if (!data?.category) continue;
+    if (data.donation_xp !== undefined) museum[id] = data.category;
+    for (const set of Object.keys(data.armor_set_donation_xp ?? {}))
+      museum[set] = data.category;
+  }
+
   return {
     lastUpdated: raw.lastUpdated,
+    museum,
     items: Object.fromEntries(
       raw.items.map(
         ({
@@ -86,6 +103,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           origin,
           rift_transferrable,
           npc_sell_price,
+          glowing,
         }) => [
           id,
           {
@@ -102,6 +120,7 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
             riftOnly:
               origin === "RIFT" && !rift_transferrable ? true : undefined,
             npcPrice: npc_sell_price,
+            glowing,
           },
         ],
       ),

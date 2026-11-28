@@ -114,7 +114,7 @@ if (import.meta.vitest) {
   });
 
   const bazaar: Bazaar = { lastUpdated: 1, products: {} };
-  const items: ItemsResource = { lastUpdated: 1, items: {} };
+  const items: ItemsResource = { lastUpdated: 1, museum: {}, items: {} };
 
   suite("buildPriceMap", () => {
     it("should price each BIN per unit, once per auction", async () => {

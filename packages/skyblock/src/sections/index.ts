@@ -10,12 +10,18 @@ import { getAccessories } from "./accessories.js";
 import { getChocolate } from "./chocolate.js";
 import { getCrimson } from "./crimson.js";
 import { getDungeons } from "./dungeons.js";
+import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
+import { getGear } from "./gear.js";
+import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
 import { getJacob } from "./jacob.js";
+import { getMisc } from "./misc.js";
 import { getSkyBlockLevel } from "./level.js";
+import { getMuseum } from "./museum.js";
 import { getPets } from "./pets.js";
+import { getRift } from "./rift.js";
 import { getSkills } from "./skills.js";
 import { getSlayers } from "./slayers.js";
 import { hasMarket } from "../profiles.js";
@@ -71,9 +77,21 @@ export const SECTIONS: {
   },
   crimson: { needs: [], compute: async ({ member }) => getCrimson(member) },
   dungeons: { needs: [], compute: async ({ member }) => getDungeons(member) },
+  experiments: {
+    needs: [],
+    compute: async ({ member }) => getExperiments(member),
+  },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
+  gear: { needs: [], compute: async ({ member }) => getGear(member) },
   hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },
+  inventories: {
+    needs: ["items"],
+    compute: async ({ member, items }) => {
+      if (!items) throw new TypeError("inventories needs items");
+      return getInventories(member, items);
+    },
+  },
   jacob: {
     needs: ["items"],
     compute: async ({ member, items }) => getJacob(member, items),
@@ -86,10 +104,19 @@ export const SECTIONS: {
       return getSkyBlockLevel(member, items, prices, hasMarket(profile));
     },
   },
+  misc: { needs: [], compute: async ({ member }) => getMisc(member) },
+  museum: {
+    needs: ["items", "museum"],
+    compute: async ({ items, museum }) => {
+      if (!items) throw new TypeError("museum needs items");
+      return getMuseum(museum, items);
+    },
+  },
   pets: {
     needs: ["items"],
     compute: async ({ member, items }) => getPets(member, items),
   },
+  rift: { needs: [], compute: async ({ member }) => getRift(member) },
   skills: {
     needs: [],
     compute: async ({ profile, member }) => getSkills(profile, member),

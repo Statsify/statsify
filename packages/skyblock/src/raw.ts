@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Experiment } from "./sections/experiments.js";
 import type { Faction } from "./sections/crimson.js";
 import type { JacobMedal } from "./sections/jacob.js";
 import type { Whisper } from "./sections/hotf.js";
@@ -39,7 +40,27 @@ export interface RawDungeonType {
   fastest_time_s?: Record<string, number>;
   fastest_time_s_plus?: Record<string, number>;
   watcher_kills?: Record<string, number>;
+  // Each also has a "total" or "best" key that isn't a floor.
+  mobs_killed?: Record<string, number>;
+  most_mobs_killed?: Record<string, number>;
+  most_healing?: Record<string, number>;
+  milestone_completions?: Record<string, number>;
   [damage: `most_damage_${string}`]: Record<string, number> | undefined;
+}
+
+export interface RawExperiment {
+  bonus_clicks?: number;
+  [tier: `${"attempts" | "claims" | "best_score"}_${number}`]:
+    | number
+    | undefined;
+}
+
+interface RawArmorSet {
+  id?: number;
+  HELMET?: RawNbt;
+  CHESTPLATE?: RawNbt;
+  LEGGINGS?: RawNbt;
+  BOOTS?: RawNbt;
 }
 
 export interface RawSlayerBoss {
@@ -58,12 +79,37 @@ export interface RawMember {
   leveling?: { experience?: number; highest_pet_score?: number };
   currencies?: {
     coin_purse?: number;
+    motes_purse?: number;
     essence?: Record<string, { current?: number }>;
+  };
+  item_data?: { soulflow?: number };
+  experimentation?: Partial<Record<Experiment, RawExperiment>> & {
+    serums_drank?: number;
   };
   fairy_soul?: { total_collected?: number };
   player_stats?: {
     pets?: { total_exp_gained?: number };
     items_fished?: Record<string, number>;
+    // Kills are by mob id, plus "total".
+    kills?: Record<string, number>;
+    // Deaths are by cause, plus "total".
+    deaths?: Record<string, number>;
+    highest_damage?: number;
+    highest_critical_damage?: number;
+    auctions?: {
+      created?: number;
+      completed?: number;
+      won?: number;
+      bids?: number;
+      highest_bid?: number;
+      gold_spent?: number;
+      gold_earned?: number;
+      fees?: number;
+    };
+    gifts?: { total_given?: number; total_received?: number };
+    mythos?: { kills?: number; burrows_chains_complete?: { total?: number } };
+    candy_collected?: { total?: number };
+    rift?: { visits?: number; lifetime_motes_earned?: number };
   };
   bestiary?: {
     kills?: {
@@ -87,6 +133,7 @@ export interface RawMember {
     wardrobe_contents?: RawNbt;
     wardrobe_equipped_slot?: number;
     backpack_contents?: Record<string, RawNbt>;
+    backpack_icons?: Record<string, RawNbt>;
     bag_contents?: {
       talisman_bag?: RawNbt;
       potion_bag?: RawNbt;
@@ -95,6 +142,10 @@ export interface RawMember {
       sacks_bag?: RawNbt;
     };
     sacks_counts?: Record<string, number>;
+  };
+  // The wardrobe moved here from inventory.wardrobe_contents, one set per slot.
+  loadout?: {
+    armor?: { equipped_set?: number; [slot: `${number}`]: RawArmorSet };
   };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
@@ -154,11 +205,13 @@ export interface RawMember {
     tokens_spent?: number;
     selected_pickaxe_ability?: string;
     crystals?: Record<string, { total_found?: number; total_placed?: number }>;
+    biomes?: { goblin?: { king_quests_completed?: number } };
     [powder: `powder_${string}`]: number | undefined;
   };
   glacite_player_data?: {
     corpses_looted?: Record<string, number>;
     fossils_donated?: string[];
+    fossil_dust?: number;
     mineshafts_entered?: number;
   };
   accessory_bag_storage?: {
@@ -168,7 +221,9 @@ export interface RawMember {
   };
   rift?: {
     access?: { consumed_prism?: boolean };
-    dead_cats?: { montezuma?: RawPet };
+    dead_cats?: { montezuma?: RawPet; found_cats?: string[] };
+    enigma?: { found_souls?: string[] };
+    gallery?: { secured_trophies?: unknown[] };
   };
   nether_island_player_data?: {
     abiphone?: { active_contacts?: string[] };
@@ -215,7 +270,6 @@ export interface RawItem {
     display?: { Name?: string; Lore?: string[]; color?: number };
     ExtraAttributes?: {
       id?: string;
-      uuid?: string;
       modifier?: string;
       upgrade_level?: number;
       // A few items store it as a long, which the decode leaves as [high, low].
@@ -242,6 +296,12 @@ export interface RawResourceItem {
   origin?: string;
   rift_transferrable?: boolean;
   npc_sell_price?: number;
+  glowing?: boolean;
+  museum_data?: {
+    category?: string;
+    donation_xp?: number;
+    armor_set_donation_xp?: Record<string, number>;
+  };
 }
 
 export interface RawItemsResource {

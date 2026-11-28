@@ -30,10 +30,10 @@ import { SkyBlockPetsProfile, getPetIcons } from "./pets.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
+import { formatProfileName } from "@statsify/skyblock/display";
 import { getBackground } from "@statsify/assets";
 import type {
   ApiSettings,
-  GameMode,
   ItemTexture,
   MemberView,
   SkyBlockProfileView,
@@ -41,40 +41,6 @@ import type {
 } from "@statsify/skyblock";
 import type { LocalizationString, LocalizeFunction } from "@statsify/discord";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-export const GAME_MODES: Record<
-  GameMode,
-  { emoji: string | false; badge: string }
-> = {
-  normal: { emoji: false, badge: "" },
-  ironman: { emoji: "♻️", badge: " §7♲" },
-  stranded: { emoji: "🏝️", badge: " §a☀" },
-  bingo: { emoji: "🎯", badge: " §6Ⓑ" },
-};
-
-const FORMATTED_PROFILES: Record<string, string | undefined> = {
-  Apple: "§cApple",
-  Banana: "§eBanana",
-  Blueberry: "§9Blueberry",
-  Coconut: "§6Coco§fnut",
-  Cucumber: "§2Cucumber",
-  Grapes: "§5Grapes",
-  Kiwi: "§aKiwi",
-  Lemon: "§eLemon",
-  Lime: "§aLime",
-  Mango: "§6Mango",
-  Orange: "§6Orange",
-  Papaya: "§6Papaya",
-  Peach: "§dPeach",
-  Pear: "§aPear",
-  Pineapple: "§ePineapple",
-  Pomegranate: "§4Pomegranate",
-  Raspberry: "§dRaspberry",
-  Strawberry: "§cStrawberry",
-  Tomato: "§cTomato",
-  Watermelon: "§aWater§cmelon",
-  Zucchini: "§2Zucchini",
-};
 
 export type SkyBlockProfile = (props: SkyBlockProfileProps) => JSX.Element;
 
@@ -219,9 +185,8 @@ export function getSkyBlockTitle(
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,
 ) {
-  const cuteName = FORMATTED_PROFILES[profile.cuteName] ?? profile.cuteName;
-  const { badge } = GAME_MODES[profile.gameMode];
-  return `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)} §r(${cuteName}${badge}§r)`;
+  const title = t(`skyblock.titles.${name}`);
+  return `§l${FormattedGame.SKYBLOCK} §f${title} §r(${formatProfileName(profile)}§r)`;
 }
 
 export function getSkyBlockBackground() {

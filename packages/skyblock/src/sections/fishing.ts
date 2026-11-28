@@ -15,6 +15,15 @@ export const TROPHY_TIERS = ["bronze", "silver", "gold", "diamond"] as const;
 
 export type TrophyTier = (typeof TROPHY_TIERS)[number];
 
+export const CATCHES = [
+  "normal",
+  "treasure",
+  "largeTreasure",
+  "outstanding",
+] as const;
+
+export type Catch = (typeof CATCHES)[number];
+
 export function getFishing(member: RawMember): FishingSection | null {
   const trophy = member.trophy_fish ?? {};
   const caught = (key: string) => Number(trophy[key] ?? 0);

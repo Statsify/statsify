@@ -10,15 +10,9 @@ import { Card } from "./components/Card.js";
 import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
-import { POWDERS, type Powder } from "@statsify/skyblock";
+import { POWDERS, POWDER_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const POWDER_COLORS: Record<Powder, string> = {
-  mithril: "§2",
-  gemstone: "§d",
-  glacite: "§b",
-};
 
 export const SkyBlockHotmProfile = ({
   profile,

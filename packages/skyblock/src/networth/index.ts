@@ -65,7 +65,8 @@ function getPricedTexture(
   { id, item, petData }: Priced,
   items: ItemsResource,
 ): ItemTexture | undefined {
-  if (item) return getItemTexture(item);
+  // A toolkit's items are bare ExtraAttributes, with no id to draw.
+  if (item?.id !== undefined) return getItemTexture(item);
   if (petData) {
     const rarity = boostedRarity(petData);
     return getPetTexture(petData.type, rarity, { skin: petData.skin, items });
@@ -79,6 +80,29 @@ function getPricedTexture(
   return resource && resourceTexture(resource);
 }
 
+// These replace an item's base price, so their entries repeat the new base.
+const BASE_PRICE_TYPES = new Set([
+  "SHENS_AUCTION",
+  "ENCHANT",
+  "CROWN_OF_AVARICE",
+]);
+
+function getModifiers(
+  calculation: Item["calculation"] = [],
+): NetworthItem["modifiers"] {
+  const sums = new Map<string, number>();
+  for (const { type, price } of calculation) {
+    if (BASE_PRICE_TYPES.has(type) || type.includes("MIDAS_")) continue;
+    sums.set(type, (sums.get(type) ?? 0) + price);
+  }
+
+  // Pet candy takes value off, so only kinds worth exactly 0 are dropped.
+  return [...sums]
+    .filter(([, price]) => price !== 0)
+    .map(([type, price]) => ({ type, price }))
+    .toSorted((a, b) => b.price - a.price);
+}
+
 const toNetworthItem = (
   priced: Priced,
   items: ItemsResource,
@@ -90,6 +114,9 @@ const toNetworthItem = (
   soulbound: priced.soulbound,
   cosmetic: priced.cosmetic ?? false,
   texture: getPricedTexture(priced, items),
+  basePrice: priced.basePrice,
+  // A stack's base doesn't scale like its price, so only single items get them.
+  modifiers: (priced.count ?? 1) > 1 ? [] : getModifiers(priced.calculation),
 });
 
 function getUnpriced(
@@ -175,6 +202,11 @@ const NETWORTH: Section<"networth"> = {
           },
         ]),
       ),
+      petPrices: Object.fromEntries(
+        ((total.types.pets?.items ?? []) as Priced[])
+          .filter(({ petData }) => petData?.uuid)
+          .map(({ petData, price }) => [petData!.uuid, price]),
+      ),
       ...getUnpriced(parsed, prices, items),
     };
   },
@@ -184,3 +216,27 @@ export const ALL_SECTIONS: { [K in SkyBlockSection]: Section<K> } = {
   ...SECTIONS,
   [NETWORTH_SECTION]: NETWORTH,
 };
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("getModifiers", () => {
+    it("should sum each kind, keeping negatives but not base prices", () => {
+      const calculation = (
+        [
+          ["ENCHANT", 5_000_000],
+          ["MIDAS_SWORD_50M", 50_000_000],
+          ["ENCHANTMENT", 2],
+          ["PET_CANDY", -4],
+          ["ENCHANTMENT", 3],
+          ["REFORGE", 0],
+        ] as const
+      ).map(([type, price]) => ({ id: type, type, price, count: 1 }));
+
+      expect(getModifiers(calculation)).toEqual([
+        { type: "ENCHANTMENT", price: 5 },
+        { type: "PET_CANDY", price: -4 },
+      ]);
+    });
+  });
+}

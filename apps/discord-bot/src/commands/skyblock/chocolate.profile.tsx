@@ -8,7 +8,8 @@
 
 import { Card, EmptyCard } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
-import { RARITY_COLORS, getGridRows } from "./components/ItemGrid.js";
+import { RARITY_COLORS } from "@statsify/skyblock/display";
+import { getGridRows } from "./components/ItemGrid.js";
 import { prettify, romanNumeral } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

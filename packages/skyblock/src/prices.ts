@@ -10,6 +10,7 @@ import {
   RARITIES,
   type Bazaar,
   type ItemCost,
+  type ItemMatch,
   type ItemsResource,
   type PriceEntry,
   type PriceMap,
@@ -351,6 +352,32 @@ export function describeKey(
   };
 }
 
+export function labelVariants(
+  name: string,
+  keys: Omit<ItemMatch, "name">[],
+): ItemMatch[] {
+  if (keys.length === 1) return [{ ...keys[0], name }];
+
+  const rarities = new Set(keys.map(({ rarity }) => rarity));
+  if (rarities.size === keys.length && !rarities.has(undefined)) {
+    return keys.map((key) => ({
+      ...key,
+      name: `${name} (${prettify(key.rarity!)})`,
+    }));
+  }
+
+  const words = keys.map(({ id }) => id.split("_"));
+  const shared = words[0].filter((word) =>
+    words.every((other) => other.includes(word)),
+  );
+
+  return keys.map((key, index) => {
+    const differs = words[index].filter((word) => !shared.includes(word));
+    if (differs.length === 0) return { ...key, name };
+    return { ...key, name: `${name} (${prettify(differs.join("_"))})` };
+  });
+}
+
 export function toPriceView(
   id: string,
   map: PriceMap,
@@ -367,7 +394,15 @@ export function toPriceView(
   const npc = getOwn(items.items, id)?.npcPrice;
   if (!described || !(product || lowestBin || npc)) return;
 
-  return { ...described, bazaar: product, lowestBin, npc, asOf: map.asOf };
+  const current = entry && { coins: entry.coins, source: entry.source };
+  return {
+    ...described,
+    current,
+    bazaar: product,
+    lowestBin,
+    npc,
+    asOf: map.asOf,
+  };
 }
 
 // An NPC price is what an NPC pays, so it's never what an item costs.
@@ -382,6 +417,9 @@ export function getItemCost(entry?: PriceEntry): ItemCost | undefined {
 
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
+
+  const getNames = (name: string, keys: Omit<ItemMatch, "name">[]) =>
+    labelVariants(name, keys).map((match) => match.name);
 
   const skull = { id: 397, Count: 1, Damage: 3 };
   const item = (id: string, attributes: Record<string, unknown> = {}) => ({
@@ -598,6 +636,7 @@ if (import.meta.vitest) {
       };
       const items: ItemsResource = {
         lastUpdated: 1,
+        museum: {},
         items: {
           ARROW: { name: "Arrow", material: "ARROW", npcPrice: 2 },
           HYPERION: { name: "Hyperion", material: "IRON_SWORD", npcPrice: 100 },
@@ -609,6 +648,32 @@ if (import.meta.vitest) {
         ENCHANTED_DIAMOND: { coins: 1700, source: "bazaar", buy: 2000 },
         ARROW: { coins: 2, source: "npc" },
       });
+    });
+  });
+
+  suite("labelVariants", () => {
+    it("should keep a name only one key has", () => {
+      expect(getNames("Apple", [{ id: "APPLE", rarity: "COMMON" }])).toEqual([
+        "Apple",
+      ]);
+    });
+
+    it("should tell keys apart by rarity", () => {
+      expect(
+        getNames("Salmon Helmet", [
+          { id: "SALMON_HELMET_NEW", rarity: "RARE" },
+          { id: "SALMON_HELMET", rarity: "EPIC" },
+        ]),
+      ).toEqual(["Salmon Helmet (Rare)", "Salmon Helmet (Epic)"]);
+    });
+
+    it("should tell keys apart by the words their ids don't share", () => {
+      expect(
+        getNames("Melon", [
+          { id: "MELON_BLOCK", rarity: "COMMON" },
+          { id: "BUILDER_MELON", rarity: "COMMON" },
+        ]),
+      ).toEqual(["Melon (Block)", "Melon (Builder)"]);
     });
   });
 }

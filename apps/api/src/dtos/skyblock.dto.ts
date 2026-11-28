@@ -7,6 +7,7 @@
  */
 
 import { CachedPlayerDto } from "./cached-player.dto.js";
+import { ICON_SIZES } from "@statsify/skyblock/icon-key";
 import { SKYBLOCK_SECTIONS } from "@statsify/skyblock";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
@@ -35,6 +36,20 @@ export class SkyBlockPriceDto extends createZodDto(
       example: "HYPERION",
       description: "A price key from /skyblock/items",
     }),
+  }),
+) {}
+
+export class SkyBlockIconDto extends createZodDto(
+  z.object({
+    texture: z.string().max(70).meta({
+      example: "item-276-0",
+      description: "item-<id>-<damage>[-<color hex>] or head-<skin hash>",
+    }),
+    size: z.coerce.number().pipe(z.literal(ICON_SIZES)),
+    glint: z.coerce
+      .number()
+      .pipe(z.literal([0, 1]))
+      .default(0),
   }),
 ) {}
 

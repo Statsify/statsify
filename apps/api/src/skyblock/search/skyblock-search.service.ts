@@ -11,6 +11,7 @@ import {
   type ItemsResource,
   type PriceMap,
   describeKey,
+  labelVariants,
 } from "@statsify/skyblock";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
@@ -47,12 +48,7 @@ export class SkyBlockSearchService {
       })) as string[] | null;
 
     return arrayGroup(reply ?? [], 2)
-      .flatMap(([name, payload]) =>
-        (JSON.parse(payload) as Omit<ItemMatch, "name">[]).map((key) => ({
-          ...key,
-          name,
-        })),
-      )
+      .flatMap(([name, payload]) => labelVariants(name, JSON.parse(payload)))
       .slice(0, MAX_MATCHES);
   }
 
@@ -68,7 +64,7 @@ export class SkyBlockSearchService {
     // Redis keeps one suggestion per name, so its payload lists every key.
     for (const [name, keys] of Map.groupBy(described, ({ name }) => name)) {
       const payload = JSON.stringify(
-        keys.map(({ id, rarity }) => ({ id, rarity })),
+        keys.map(({ id, rarity, texture }) => ({ id, rarity, texture })),
       );
       pipeline.call("FT.SUGADD", next, name, "1", "PAYLOAD", payload);
     }

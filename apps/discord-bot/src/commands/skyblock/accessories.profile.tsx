@@ -10,11 +10,8 @@ import { Card } from "./components/Card.js";
 import type { SidebarItem } from "#components";
 import { Empty } from "./components/Empty.js";
 import { EmptySection } from "./components/EmptySection.js";
-import {
-  ItemGrid,
-  RARITY_COLORS,
-  formatPriceAge,
-} from "./components/ItemGrid.js";
+import { ItemGrid, formatPriceAge } from "./components/ItemGrid.js";
+import { RARITY_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
 import type {
   InactiveAccessory,

@@ -7,6 +7,7 @@
  */
 
 import { boostedRarity, getPetLevel, getPetScore } from "#leveling";
+import { add } from "@statsify/math";
 import {
   RARITIES,
   type ItemsResource,
@@ -56,5 +57,7 @@ export function getPets(member: RawMember, items?: ItemsResource): PetsSection {
     active: pets.find((pet) => pet.active),
     pets,
     totalXp: member.player_stats?.pets?.total_exp_gained ?? 0,
+    skinned: pets.filter(({ skin }) => skin).length,
+    candyUsed: add(...pets.map(({ candyUsed }) => candyUsed)),
   };
 }

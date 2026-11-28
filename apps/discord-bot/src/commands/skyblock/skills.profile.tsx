@@ -10,24 +10,9 @@ import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { EmptySection } from "./components/EmptySection.js";
 import { type LevelBarProps, getLevelBarRows } from "./components/LevelBar.js";
-import { SKILLS, type Skill } from "@statsify/skyblock";
+import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
-
-const SKILL_COLORS: Record<Skill, string> = {
-  farming: "§e",
-  mining: "§7",
-  combat: "§c",
-  foraging: "§2",
-  fishing: "§3",
-  enchanting: "§5",
-  alchemy: "§d",
-  taming: "§a",
-  carpentry: "§6",
-  hunting: "§b",
-  runecrafting: "§d",
-  social: "§a",
-};
 
 export const SkyBlockSkillsProfile = ({
   profile,
