@@ -18,6 +18,7 @@ import {
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
+  GetGuildSearchResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
@@ -119,6 +120,14 @@ export class ApiService {
       guild: tag,
       type,
     });
+  }
+
+  public getGuildAutocomplete(query: string) {
+    return this.requestKey<GetGuildSearchResponse, "guilds">(
+      "/guild/search",
+      "guilds",
+      { query }
+    );
   }
 
   public getGuildLeaderboard(

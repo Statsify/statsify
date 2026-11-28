@@ -10,6 +10,7 @@ import {
   CacheLevel,
   GuildNotFoundException,
   GuildQuery,
+  MAX_AUTOCOMPLETE_CHOICES,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
@@ -153,6 +154,19 @@ export class GuildService {
     return deserialize(Guild, flatGuild);
   }
 
+  public async search(query: string): Promise<Pick<Guild, "name" | "nameFormatted">[]> {
+    if (!query) return [];
+    const prefix = query.toLowerCase();
+
+    return this.guildModel
+      .find({ nameToLower: { $gte: prefix, $lt: `${prefix}\uffff` } })
+      .sort({ nameToLower: 1 })
+      .limit(MAX_AUTOCOMPLETE_CHOICES)
+      .select({ _id: false, name: true, nameFormatted: true })
+      .lean()
+      .exec();
+  }
+
   private async getCachedGuild(
     tag: string,
     type: GuildQuery
@@ -207,6 +221,9 @@ export class GuildService {
         .lean()
         .exec();
     }
+
+    // A renamed guild isn't found by its old name, so only a miss by id means it's gone
+    if (type === GuildQuery.NAME) return;
 
     return await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
   }

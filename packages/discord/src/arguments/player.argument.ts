@@ -15,6 +15,7 @@ import { ApiService } from "#services";
 import { CommandContext } from "#command";
 import { Container } from "typedi";
 import { LocalizationString } from "#messages";
+import { MAX_AUTOCOMPLETE_CHOICES } from "@statsify/api-client";
 
 const apiClient = Container.get(ApiService);
 
@@ -32,20 +33,26 @@ export class PlayerArgument extends AbstractArgument {
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
     const query = context.option<string>(this.name).toLowerCase();
-
-    const searched = { name: query, value: query };
-
-    if (query.length > 16) return [searched];
-
-    const players = await apiClient.getPlayerAutocomplete(query);
-
-    let results = players.map((p) => ({ name: p, value: p }));
-
-    if (query && (players.length === 0 || !players.some((p) => p.toLowerCase() === query))) {
-      results = results.slice(0, 24);
-      results.push(searched);
-    }
-
-    return results;
+    return autocompleteNames(query, 16, () => apiClient.getPlayerAutocomplete(query));
   }
+}
+
+/** Offers the typed query as the last choice when no result matches it exactly */
+export async function autocompleteNames(
+  query: string,
+  maxLength: number,
+  search: () => Promise<string[]>
+): Promise<APIApplicationCommandOptionChoice[]> {
+  const searched = { name: query, value: query };
+
+  // Discord rejects the whole list when a choice is over 100 characters
+  if (query.length > 100) return [];
+  if (query.length > maxLength) return [searched];
+
+  const names = await search();
+  const results = names.map((name) => ({ name, value: name }));
+
+  if (!query || names.some((name) => name.toLowerCase() === query.toLowerCase())) return results;
+
+  return [...results.slice(0, MAX_AUTOCOMPLETE_CHOICES - 1), searched];
 }
