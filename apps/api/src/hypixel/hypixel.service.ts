@@ -31,7 +31,7 @@ import type {
 } from "@statsify/skyblock";
 
 // A big co-op's profiles run to several MB, past the default timeout.
-export const SKYBLOCK_TIMEOUT = 10_000;
+export const SKYBLOCK_TIMEOUT_MS = 10_000;
 
 // Axios leaves out a null header, so this drops the module's API-Key.
 const KEYLESS_HEADERS = { "API-Key": null };
@@ -209,7 +209,7 @@ export class HypixelService {
     const request = this.request<{ garden: RawGarden }>(
       "/v2/skyblock/garden",
       { profile: profileId },
-      { timeout: SKYBLOCK_TIMEOUT }
+      { timeout: SKYBLOCK_TIMEOUT_MS }
     );
 
     return lastValueFrom(
@@ -245,7 +245,7 @@ export class HypixelService {
     { params, keyless }: { params?: Record<string, unknown>; keyless?: boolean } = {}
   ) {
     return lastValueFrom(
-      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT, keyless }).pipe(
+      this.request<T>(url, params, { timeout: SKYBLOCK_TIMEOUT_MS, keyless }).pipe(
         catchError((error) => throwError(() => toSkyBlockError(error)))
       )
     );

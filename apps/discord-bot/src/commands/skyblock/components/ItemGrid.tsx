@@ -22,7 +22,7 @@ interface GridRowsOptions {
 }
 
 // Table.tr splits its width by cell, so a short last row gets padding.
-export const gridRows = (
+export const getGridRows = (
   cells: JSX.Element[],
   columns: number,
   { spreadLastRow = false }: GridRowsOptions = {},
@@ -98,6 +98,6 @@ export const ItemGrid = ({
   ));
 
   return (
-    <Table.table>{gridRows(cells, columns, { spreadLastRow })}</Table.table>
+    <Table.table>{getGridRows(cells, columns, { spreadLastRow })}</Table.table>
   );
 };

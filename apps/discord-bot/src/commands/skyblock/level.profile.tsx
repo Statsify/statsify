@@ -17,11 +17,11 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const SOURCES_SHOWN = 12;
 
-const topSources = ({ level }: MemberView) =>
+const getTopSources = ({ level }: MemberView) =>
   level!.sources.slice(0, SOURCES_SHOWN);
 
-export const levelIcons = (member: MemberView) =>
-  topSources(member).map(({ texture }) => texture);
+export const getLevelIcons = (member: MemberView) =>
+  getTopSources(member).map(({ texture }) => texture);
 
 export const SkyBlockLevelProfile = ({
   profile,
@@ -33,7 +33,7 @@ export const SkyBlockLevelProfile = ({
 
   const sidebar: SidebarItem[] = [[t("skyblock.xp"), t(level.xp), "§3"]];
 
-  const sources = topSources(profile.member);
+  const sources = getTopSources(profile.member);
   // A price or the outside-bag note would widen the card beside the name.
   const stacked = market || sources.some(({ outsideBag }) => outsideBag);
 

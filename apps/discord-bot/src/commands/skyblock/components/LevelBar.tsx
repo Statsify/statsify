@@ -21,7 +21,8 @@ export interface LevelBarProps {
   color: string;
   t: LocalizeFunction;
   notes?: string[];
-  lines?: number; // note lines to fit, blank past the notes
+  // The bar fits this many note lines and leaves the extra ones blank.
+  lines?: number;
 }
 
 export const LevelBar = ({
@@ -68,7 +69,7 @@ export const LevelBar = ({
 };
 
 // Each bar fits its row's most notes, so the row's boxes end level.
-export const levelBarRows = (bars: LevelBarProps[], columns: number) =>
+export const getLevelBarRows = (bars: LevelBarProps[], columns: number) =>
   arrayGroup(bars, columns).map((row) => {
     const lines = Math.max(...row.map(({ notes = [] }) => notes.length));
     return (
