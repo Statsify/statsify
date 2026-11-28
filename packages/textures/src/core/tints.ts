@@ -8,7 +8,6 @@
 
 import type { ItemStack, PotionEffect } from "./item-stack.js";
 
-/** An ARGB integer, or RGB floats from 0 to 1 */
 export type TintColor = number | [number, number, number];
 
 export type TintSource =
@@ -21,8 +20,7 @@ export type TintSource =
   | { type: "minecraft:custom_model_data"; index?: number; default: TintColor }
   | { type: "minecraft:grass"; temperature: number; downfall: number };
 
-// 26.3's effect colors for the effects 1.8 items can carry, from
-// https://minecraft.wiki/w/Effect_colors
+// 26.3's colors for the effects 1.8 items can carry
 const EFFECT_COLORS: Record<string, number | undefined> = {
   "minecraft:speed": 0x33_eb_ff,
   "minecraft:slowness": 0x8b_af_e0,
@@ -56,7 +54,7 @@ const rgb = (color: TintColor) =>
       (Math.round(color[1] * 255) << 8) |
       Math.round(color[2] * 255);
 
-/** Effects mix weighted by level, as potion colors do in game */
+// Effects mix weighted by level, as potion colors do in game
 function potionColor(effects: PotionEffect[]) {
   let red = 0;
   let green = 0;
@@ -75,12 +73,17 @@ function potionColor(effects: PotionEffect[]) {
   }
 
   return (
-    (Math.round(red / total) << 16) | (Math.round(green / total) << 8) | Math.round(blue / total)
+    (Math.round(red / total) << 16) |
+    (Math.round(green / total) << 8) |
+    Math.round(blue / total)
   );
 }
 
-/** A grass color from the pack's colormap/grass.png */
-function grassColor(colormap: ImageData, temperature: number, downfall: number) {
+function grassColor(
+  colormap: ImageData,
+  temperature: number,
+  downfall: number,
+) {
   const x = Math.floor((1 - temperature) * 255);
   const y = Math.floor((1 - downfall * temperature) * 255);
   const pixel = (y * colormap.width + x) * 4;
@@ -89,8 +92,11 @@ function grassColor(colormap: ImageData, temperature: number, downfall: number) 
   return (red << 16) | (green << 8) | blue;
 }
 
-/** The color a tint source gives this item, as 0xRRGGBB */
-export function tintColor(tint: TintSource, item: ItemStack, grass?: ImageData): number {
+export function tintColor(
+  tint: TintSource,
+  item: ItemStack,
+  grass?: ImageData,
+): number {
   switch (tint.type) {
     case "minecraft:constant":
       return rgb(tint.value);
@@ -99,7 +105,9 @@ export function tintColor(tint: TintSource, item: ItemStack, grass?: ImageData):
       return item.color ?? rgb(tint.default);
 
     case "minecraft:potion":
-      return item.effects?.length ? potionColor(item.effects) : rgb(tint.default);
+      return item.effects?.length
+        ? potionColor(item.effects)
+        : rgb(tint.default);
 
     case "minecraft:firework":
     case "minecraft:map_color":

@@ -17,26 +17,30 @@ interface Animation {
   frames?: (number | { index: number; time?: number })[];
 }
 
-/** The frame an animated texture shows at a game tick, and how far it has blended into the next */
 interface Frame {
   index: number;
   next: number;
   blend: number;
-  /** The ticks this frame starts at and the next one starts at */
   start: number;
   end: number;
 }
 
-// Frames are sized the way Minecraft sizes them: square unless the animation says otherwise
+// Frames are square unless the animation gives their size
 function frameSize(width: number, height: number, animation: Animation) {
   return {
-    width: animation.width ?? (animation.height ? width : Math.min(width, height)),
-    height: animation.height ?? (animation.width ? height : Math.min(width, height)),
+    width:
+      animation.width ?? (animation.height ? width : Math.min(width, height)),
+    height:
+      animation.height ?? (animation.width ? height : Math.min(width, height)),
   };
 }
 
-/** A frame's place in the texture */
-function frameRect(width: number, height: number, animation: Animation | undefined, index: number) {
+function frameRect(
+  width: number,
+  height: number,
+  animation: Animation | undefined,
+  index: number,
+) {
   if (!animation) return { x: 0, y: 0, width, height };
 
   const size = frameSize(width, height, animation);
@@ -49,12 +53,19 @@ function frameRect(width: number, height: number, animation: Animation | undefin
   };
 }
 
-/** Plays the animation forward to a game tick */
-function frameAt(width: number, height: number, animation: Animation, tick: number): Frame {
+function frameAt(
+  width: number,
+  height: number,
+  animation: Animation,
+  tick: number,
+): Frame {
   const size = frameSize(width, height, animation);
-  const count = Math.floor(width / size.width) * Math.floor(height / size.height);
+  const count =
+    Math.floor(width / size.width) * Math.floor(height / size.height);
 
-  const frames = (animation.frames ?? Array.from({ length: count }, (_, index) => index)).map((frame) =>
+  const frames = (
+    animation.frames ?? Array.from({ length: count }, (_, index) => index)
+  ).map((frame) =>
     typeof frame === "number"
       ? { index: frame, time: animation.frametime ?? 1 }
       : { index: frame.index, time: frame.time ?? animation.frametime ?? 1 },
@@ -77,22 +88,35 @@ function frameAt(width: number, height: number, animation: Animation, tick: numb
     remaining -= frame.time;
   }
 
-  return { index: frames[0].index, next: frames[0].index, blend: 0, start: tick, end: tick };
+  return {
+    index: frames[0].index,
+    next: frames[0].index,
+    blend: 0,
+    start: tick,
+    end: tick,
+  };
 }
 
-/** Sprites from a pack stack as pixels, decoded once each */
+export function mixPixels(pixels: ImageData, next: ImageData, amount: number) {
+  for (let i = 0; i < pixels.data.length; i++) {
+    pixels.data[i] = pixels.data[i] * (1 - amount) + next.data[i] * amount;
+  }
+}
+
 export class TextureLoader {
   private textures = new Map<string, Promise<ImageData>>();
   private animations = new Map<string, Animation | undefined>();
 
   public constructor(private stack: PackStack) {}
 
-  /** The frame a texture shows at a game tick, or undefined when it doesn't animate */
   public frame(id: string, tick: number): Frame | undefined {
     const path = assetPath(id, "textures", ".png");
 
     if (!this.animations.has(path)) {
-      this.animations.set(path, this.stack.json<{ animation?: Animation }>(`${path}.mcmeta`)?.animation);
+      this.animations.set(
+        path,
+        this.stack.json<{ animation?: Animation }>(`${path}.mcmeta`)?.animation,
+      );
     }
 
     const animation = this.animations.get(path);
@@ -103,7 +127,6 @@ export class TextureLoader {
     return frameAt(width, height, animation, tick);
   }
 
-  /** A texture's pixels at a game tick, 20 to a second */
   public get(id: string, tick = 0): Promise<ImageData> {
     const frame = this.frame(id, tick);
 
@@ -130,19 +153,17 @@ export class TextureLoader {
     const animation = this.animations.get(path);
 
     const read = (index: number) => {
-      const rect = frameRect(image.canvas.width, image.canvas.height, animation, index);
+      const rect = frameRect(
+        image.canvas.width,
+        image.canvas.height,
+        animation,
+        index,
+      );
       return image.getImageData(rect.x, rect.y, rect.width, rect.height);
     };
 
     const pixels = read(frame?.index ?? 0);
-
-    // Interpolated animations mix each frame into the next over its time
-    if (frame?.blend) {
-      const next = read(frame.next);
-      for (let i = 0; i < pixels.data.length; i++) {
-        pixels.data[i] = pixels.data[i] * (1 - frame.blend) + next.data[i] * frame.blend;
-      }
-    }
+    if (frame?.blend) mixPixels(pixels, read(frame.next), frame.blend);
 
     return pixels;
   }

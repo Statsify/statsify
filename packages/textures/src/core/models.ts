@@ -6,11 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+// oxlint-disable-next-line typescript/triple-slash-reference -- importers don't load our tsconfig
+/// <reference path="./mojangson.d.ts" />
+
 import { type PackStack, assetPath, namespaceIds, namespaced } from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
 import { maxDamage } from "./legacy-items.js";
-import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
+import mojangson from "mojangson";
+import { LRUCache } from "lru-cache";
+import {
+  type Transformation,
+  type Vec3,
+  composeTransforms,
+} from "./geometry.js";
 
 export interface Transform {
   rotation?: Vec3;
@@ -50,10 +59,8 @@ interface ModelFile {
   gui_light?: "front" | "side";
 }
 
-/** A model with its parents merged in and its #texture references resolved */
 export interface Model {
   id: string;
-  /** builtin/generated items are drawn flat from layer0, layer1, … */
   generated: boolean;
   textures: Record<string, string>;
   elements: ModelElement[];
@@ -61,7 +68,6 @@ export interface Model {
   guiLight: "front" | "side";
 }
 
-/** Geometry drawn in code, like heads and chests, placed by its base model's display */
 export interface SpecialModel {
   type: string;
   kind?: string;
@@ -75,7 +81,6 @@ export interface ItemLayer {
   special?: SpecialModel;
 }
 
-// https://minecraft.wiki/w/Items_model_definition
 type ItemModel =
   | { type: "minecraft:model"; model: string; tints?: TintSource[] }
   | { type: "minecraft:composite"; models: ItemModel[] }
@@ -110,52 +115,68 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
-const SNBT_ENTRY = /\s*([\w.+-]+|"(?:[^"\\]|\\.)*")\s*:\s*("(?:[^"\\]|\\.)*"|[\w.+-]+)\s*(?:,|(?=\}$))/y;
-const SNBT_NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?[bdfls]?$/i;
+const SNBT_CACHE_LIMIT = 10_000;
 
-const snbtString = (token: string) => (token.startsWith('"') ? (JSON.parse(token) as string) : token);
+const snbtCache = new LRUCache<string, Record<string, unknown>>({
+  max: SNBT_CACHE_LIMIT,
+});
 
-function snbtValue(token: string) {
-  if (token === "true" || token === "false") return Number(token === "true");
-  return SNBT_NUMBER.test(token) ? Number.parseFloat(token) : snbtString(token);
-}
-
-/** A compound of plain values, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
 function parseSnbt(snbt: string) {
-  const text = snbt.trim();
-  if (!text.startsWith("{") || !text.endsWith("}")) throw new Error(`${snbt} isn't an SNBT compound`);
+  const cached = snbtCache.get(snbt);
+  if (cached) return cached;
 
-  const compound: Record<string, number | string> = {};
+  const tag = mojangson.parse(snbt);
+  if (tag.type !== "compound")
+    throw new Error(`${snbt} isn't an SNBT compound`);
 
-  for (SNBT_ENTRY.lastIndex = 1; text.slice(SNBT_ENTRY.lastIndex, -1).trim(); ) {
-    const entry = SNBT_ENTRY.exec(text);
-    if (!entry) throw new Error(`${snbt} holds something other than numbers, booleans and strings`);
-    compound[snbtString(entry[1])] = snbtValue(entry[2]);
-  }
+  // SNBT stores booleans as the bytes 1 and 0
+  const parsed = Object.fromEntries(
+    Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
+      key,
+      typeof value === "boolean" ? Number(value) : value,
+    ]),
+  );
 
-  return compound;
+  snbtCache.set(snbt, parsed);
+  return parsed;
 }
 
-// Properties are read as they are for an item sitting in an inventory: not in use, selected,
-// cast or held by a key, so every condition without a case here is false
-function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
+// Every condition without a case is false for an item sitting in a slot
+function condition(
+  model: Extract<ItemModel, { type: "minecraft:condition" }>,
+  item: ItemStack,
+) {
   switch (model.property) {
     case "minecraft:has_component":
-      return model.component === "minecraft:dyed_color" && item.color !== undefined;
+      return (
+        model.component === "minecraft:dyed_color" && item.color !== undefined
+      );
 
     case "minecraft:component": {
       if (model.predicate !== "minecraft:custom_data") return false;
       if (typeof model.value !== "string") {
-        throw new TypeError(`${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`);
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`,
+        );
       }
 
       const expected = Object.entries(parseSnbt(model.value));
+      if (expected.some(([, value]) => typeof value === "object")) {
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition compares a nested value`,
+        );
+      }
+
       return expected.every(([key, value]) => item.customData?.[key] === value);
     }
 
     case "minecraft:broken": {
       const durability = maxDamage(item.id);
-      return durability !== undefined && !item.unbreakable && (item.damage ?? 0) >= durability - 1;
+      return (
+        durability !== undefined &&
+        !item.unbreakable &&
+        (item.damage ?? 0) >= durability - 1
+      );
     }
 
     default:
@@ -163,14 +184,16 @@ function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, i
   }
 }
 
-// Trims, block states, charge types and clock times aren't on Hypixel's items, so those
-// selects take their fallback
+// Hypixel's items have none of these, so their selects take the fallback
 const select = (model: Extract<ItemModel, { type: "minecraft:select" }>) =>
   model.property === "minecraft:display_context" ? "gui" : undefined;
 
 const BUILTIN_GENERATED = "minecraft:builtin/generated";
 
-const LEGACY_TURN: Transform = { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] };
+const LEGACY_TURN: Transform = {
+  rotation: [30, 225, 0],
+  scale: [0.625, 0.625, 0.625],
+};
 
 export class ModelResolver {
   private models = new Map<string, Model>();
@@ -178,7 +201,6 @@ export class ModelResolver {
 
   public constructor(private stack: PackStack) {}
 
-  /** The models an item draws in an inventory slot, bottom layer first */
   public resolve(item: ItemStack): ItemLayer[] {
     return this.layers(this.definition(item.itemModel ?? item.id), item);
   }
@@ -188,8 +210,12 @@ export class ModelResolver {
     const cached = this.definitions.get(path);
     if (cached) return cached;
 
-    const definition = this.stack.json<{ model: ItemModel }>(path, namespaceIds);
-    if (!definition) throw new Error(`${id} has no item model definition (${path})`);
+    const definition = this.stack.json<{ model: ItemModel }>(
+      path,
+      namespaceIds,
+    );
+    if (!definition)
+      throw new Error(`${id} has no item model definition (${path})`);
 
     this.definitions.set(path, definition.model);
     return definition.model;
@@ -211,61 +237,82 @@ export class ModelResolver {
 
       const path = assetPath(next, "models", ".json");
       const file: ModelFile | undefined = this.stack.json(path);
-      if (!file) throw new Error(`${id} needs the model ${next}, which isn't in the pack`);
+      if (!file)
+        throw new Error(
+          `${id} needs the model ${next}, which isn't in the pack`,
+        );
 
       chain.push(file);
-      legacy.push(this.stack.packs.findLast(({ files }) => files.has(path))?.layout === "legacy");
+      legacy.push(
+        this.stack.packs.findLast(({ files }) => files.has(path))?.layout ===
+          "legacy",
+      );
       next = file.parent;
     }
 
-    // Children override their parents' textures and display transforms key by key, and
-    // replace their elements whole
+    // Children override textures and display key by key but replace elements
     const root = chain.toReversed();
 
     const model: Model = {
       id: namespaced(id),
       generated,
-      textures: resolveTextures(Object.assign({}, ...root.map((file) => file.textures))),
+      textures: resolveTextures(
+        Object.assign({}, ...root.map((file) => file.textures)),
+      ),
       elements: chain.find((file) => file.elements)?.elements ?? [],
       display: Object.assign({}, ...root.map((file) => file.display)),
       guiLight: chain.find((file) => file.gui_light)?.gui_light ?? "side",
     };
 
-    // 1.8.9 turned every 3D item like a block in code before the gui transform its model inherits,
-    // so a model gets both when that transform comes from a 1.8.9 file, or it has none and any 1.8.9 file
+    // 1.8.9 turned every 3D item like a block before its gui transform
     const gui = chain.findIndex((file) => file.display?.gui);
     if (!generated && (gui === -1 ? legacy.includes(true) : legacy[gui])) {
-      model.display.gui = composeTransforms(LEGACY_TURN, model.display.gui ?? {});
+      model.display.gui = composeTransforms(
+        LEGACY_TURN,
+        model.display.gui ?? {},
+      );
     }
 
     this.models.set(model.id, model);
     return model;
   }
 
-  // 1.8.9 drew block items through an item model of their own, with its own gui transform,
-  // where 26.3's definitions select the block's model
+  // 1.8.9 drew block items through their own item model and gui transform
   private itemModel(item: ItemStack, selected: string) {
-    if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
+    if (!namespaced(selected).split(":")[1].startsWith("block/"))
+      return selected;
 
     const [namespace, name] = namespaced(item.itemModel ?? item.id).split(":");
     const legacy = `${namespace}:item/${name}`;
     const legacyPath = assetPath(legacy, "models", ".json");
     const selectedPath = assetPath(selected, "models", ".json");
 
-    const pack = this.stack.packs.findLast(({ files }) => files.has(legacyPath) || files.has(selectedPath));
-    return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
+    const pack = this.stack.packs.findLast(
+      ({ files }) => files.has(legacyPath) || files.has(selectedPath),
+    );
+    return pack?.layout === "legacy" && pack.files.has(legacyPath)
+      ? legacy
+      : selected;
   }
 
   private layers(model: ItemModel, item: ItemStack): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
-        return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
+        return [
+          {
+            model: this.model(this.itemModel(item, model.model)),
+            tints: model.tints ?? [],
+          },
+        ];
 
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
 
       case "minecraft:condition":
-        return this.layers(condition(model, item) ? model.on_true : model.on_false, item);
+        return this.layers(
+          condition(model, item) ? model.on_true : model.on_false,
+          item,
+        );
 
       case "minecraft:select": {
         const value = select(model);
@@ -275,15 +322,21 @@ export class ModelResolver {
         );
 
         const next = match?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} ${value}`);
+        if (!next)
+          throw new Error(
+            `${item.id} has no model for ${model.property} ${value}`,
+          );
 
         return this.layers(next, item);
       }
 
       // Compasses, clocks and bows sit at their first frame
       case "minecraft:range_dispatch": {
-        const next = model.entries.findLast(({ threshold }) => threshold <= 0)?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} 0`);
+        const next =
+          model.entries.findLast(({ threshold }) => threshold <= 0)?.model ??
+          model.fallback;
+        if (!next)
+          throw new Error(`${item.id} has no model for ${model.property} 0`);
 
         return this.layers(next, item);
       }
@@ -304,8 +357,7 @@ export class ModelResolver {
   }
 }
 
-/** Follows #references until each texture is a sprite id, and drops any that never get one */
-function resolveTextures(textures: Record<string, TextureValue>) {
+export function resolveTextures(textures: Record<string, TextureValue>) {
   const resolved: Record<string, string> = {};
 
   for (const key of Object.keys(textures)) {
@@ -332,14 +384,17 @@ if (import.meta.vitest) {
 
   const encoder = new TextEncoder();
 
-  const packOf = (files: Record<string, unknown>) =>
+  const createStack = (files: Record<string, unknown>) =>
     new PackStack([
       {
         name: "test",
         hash: "test",
         layout: "modern",
         files: new Map(
-          Object.entries(files).map(([path, json]) => [path, encoder.encode(JSON.stringify(json))]),
+          Object.entries(files).map(([path, json]) => [
+            path,
+            encoder.encode(JSON.stringify(json)),
+          ]),
         ),
       },
     ]);
@@ -347,7 +402,7 @@ if (import.meta.vitest) {
   describe("ModelResolver", () => {
     it("merges parents and resolves texture references", () => {
       const resolver = new ModelResolver(
-        packOf({
+        createStack({
           "assets/minecraft/items/leather_boots.json": {
             model: {
               type: "condition",
@@ -359,7 +414,10 @@ if (import.meta.vitest) {
           },
           "assets/minecraft/models/item/dyed.json": {
             parent: "item/base",
-            textures: { layer1: "#layer0", layer0: "minecraft:item/leather_boots" },
+            textures: {
+              layer1: "#layer0",
+              layer0: "minecraft:item/leather_boots",
+            },
           },
           "assets/minecraft/models/item/base.json": {
             parent: "builtin/generated",
@@ -369,71 +427,99 @@ if (import.meta.vitest) {
         }),
       );
 
-      const [layer] = resolver.resolve({ id: "minecraft:leather_boots", color: 0xff_00_00 });
+      const [layer] = resolver.resolve({
+        id: "minecraft:leather_boots",
+        color: 0xff_00_00,
+      });
 
       expect(layer.model).toMatchObject({
         id: "minecraft:item/dyed",
         generated: true,
         guiLight: "front",
-        textures: { layer0: "minecraft:item/leather_boots", layer1: "minecraft:item/leather_boots" },
+        textures: {
+          layer0: "minecraft:item/leather_boots",
+          layer1: "minecraft:item/leather_boots",
+        },
       });
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });
 
     it("draws an item's own definition, whose ids may leave off their namespace", () => {
       const resolver = new ModelResolver(
-        packOf({
+        createStack({
           "assets/pack/items/dagger.json": {
             model: {
               type: "select",
               property: "display_context",
-              cases: [{ when: "gui", model: { type: "model", model: "pack:item/dagger" } }],
+              cases: [
+                {
+                  when: "gui",
+                  model: { type: "model", model: "pack:item/dagger" },
+                },
+              ],
               fallback: { type: "model", model: "pack:item/in_hand" },
             },
           },
-          "assets/pack/models/item/dagger.json": { parent: "builtin/generated" },
+          "assets/pack/models/item/dagger.json": {
+            parent: "builtin/generated",
+          },
         }),
       );
 
-      const [layer] = resolver.resolve({ id: "minecraft:golden_sword", itemModel: "pack:dagger" });
+      const [layer] = resolver.resolve({
+        id: "minecraft:golden_sword",
+        itemModel: "pack:dagger",
+      });
       expect(layer.model.id).toBe("pack:item/dagger");
     });
   });
 
   it("reads conditions from an item's custom data and wear", () => {
-    const when = (property: string, predicate?: Partial<Parameters<typeof condition>[0]>) =>
+    const when = (
+      property: string,
+      fields?: Partial<Parameters<typeof condition>[0]>,
+    ) =>
       ({
         type: "minecraft:condition",
         property,
         on_true: { type: "minecraft:empty" },
         on_false: { type: "minecraft:empty" },
-        ...predicate,
+        ...fields,
       }) as const;
 
-    const mode = when("minecraft:component", { predicate: "minecraft:custom_data", value: "{mode:1}" });
+    const mode = when("minecraft:component", {
+      predicate: "minecraft:custom_data",
+      value: "{mode:1}",
+    });
     const broken = when("minecraft:broken");
     const dagger = { id: "minecraft:golden_sword" };
     const can = { id: "minecraft:carrot_on_a_stick" };
 
     expect(condition(mode, dagger)).toBe(false);
-    expect(condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } })).toBe(true);
+    expect(
+      condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } }),
+    ).toBe(true);
     expect(condition(mode, { ...dagger, customData: { mode: 3 } })).toBe(false);
     expect(condition(broken, { ...can, damage: 23 })).toBe(false);
     expect(condition(broken, { ...can, damage: 24 })).toBe(true);
-    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(false);
+    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(
+      false,
+    );
   });
 
   it("reads SNBT compounds of plain values", () => {
     expect(parseSnbt("{ }")).toEqual({});
     expect(parseSnbt("{active:true, }")).toEqual({ active: 1 });
     expect(parseSnbt("{td_attune_mode:1}")).toEqual({ td_attune_mode: 1 });
-    expect(parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }')).toEqual({
+    expect(
+      parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }'),
+    ).toEqual({
       active: 1,
       "a key": "b,c",
       level: 2.5,
       tier: -3,
     });
-    expect(() => parseSnbt("{nested:{a:1}}")).toThrow();
+    expect(parseSnbt("{nested:{a:1}}")).toEqual({ nested: { a: 1 } });
     expect(() => parseSnbt("td_attune_mode:1")).toThrow();
   });
 }

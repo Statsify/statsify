@@ -6,49 +6,68 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 import { decodePng } from "./canvas.js";
 
 const STORE = "icons";
 
-// Bump whenever icons draw differently, so browsers drop the ones older code drew
+// Bump this when icons draw differently, so browsers drop old icons
 const VERSION = 2;
 
-const settled = <T>(request: IDBRequest<T>) =>
-  new Promise<T>((resolve, reject) => {
-    request.addEventListener("success", () => resolve(request.result));
-    request.addEventListener("error", () => reject(request.error));
+interface Icons extends DBSchema {
+  [STORE]: { key: string; value: Blob };
+}
+
+function open(onClose: () => void) {
+  const db = openDB<Icons>("statsify-textures", VERSION, {
+    upgrade(database) {
+      if (database.objectStoreNames.contains(STORE))
+        database.deleteObjectStore(STORE);
+      database.createObjectStore(STORE);
+    },
+    // Newer code can't upgrade the database until every other tab closes it
+    blocking() {
+      void db.then((database) => database.close());
+      onClose();
+    },
+    terminated: onClose,
   });
-
-async function open(name: string) {
-  const opening = indexedDB.open(name, VERSION);
-
-  opening.addEventListener("upgradeneeded", () => {
-    const db = opening.result;
-    if (db.objectStoreNames.contains(STORE)) db.deleteObjectStore(STORE);
-    db.createObjectStore(STORE);
-  });
-
-  const db = await settled(opening);
-
-  // A tab with newer code can't upgrade the database until every other tab lets go of it
-  db.addEventListener("versionchange", () => db.close());
 
   return db;
 }
 
-/** Rendered icons as PNGs in IndexedDB, so the next page load skips drawing them */
-export class IconCache {
-  private db = open("statsify-textures");
+async function keepStack(db: IDBPDatabase<Icons>, stack: string) {
+  const store = db.transaction(STORE, "readwrite").store;
+  const keys = await store.getAllKeys();
+  await Promise.all(
+    keys
+      .filter((key) => !key.startsWith(`${stack}/`))
+      .map((key) => store.delete(key)),
+  );
+}
 
-  public async get(key: string) {
-    const store = (await this.db).transaction(STORE).objectStore(STORE);
-    const png = await settled<Blob | undefined>(store.get(key));
+// The first pack stack to open the cache after a page load drops the rest
+export class IconCache {
+  private db?: Promise<IDBPDatabase<Icons>>;
+
+  private async database(stack: string) {
+    this.db ??= open(() => (this.db = undefined)).then(async (db) => {
+      await keepStack(db, stack);
+      return db;
+    });
+
+    return this.db;
+  }
+
+  public async get(stack: string, key: string) {
+    const png = await this.database(stack)
+      .then((db) => db.get(STORE, key))
+      .catch(() => undefined);
     return png && decodePng(new Uint8Array(await png.arrayBuffer()));
   }
 
-  public async set(key: string, icon: OffscreenCanvas) {
+  public async set(stack: string, key: string, icon: OffscreenCanvas) {
     const png = await icon.convertToBlob();
-    const store = (await this.db).transaction(STORE, "readwrite").objectStore(STORE);
-    await settled(store.put(png, key));
+    await (await this.database(stack)).put(STORE, png, key);
   }
 }

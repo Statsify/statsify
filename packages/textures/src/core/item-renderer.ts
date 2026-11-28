@@ -26,45 +26,32 @@ import {
   decodePng,
   hex,
 } from "./canvas.js";
-import { TextureLoader } from "./textures.js";
+import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
+import { LRUCache } from "lru-cache";
 import { type PackStack, assetPath, namespaced } from "./pack.js";
 import { tintColor } from "./tints.js";
 
 const SIZE = 16;
 
+export const MS_PER_TICK = 50;
+
 const CACHE_LIMIT = 2000;
 
-class PromiseCache<T> {
-  private entries = new Map<string, Promise<T>>();
-
-  public get(key: string, load: () => Promise<T>) {
-    let entry = this.entries.get(key);
-
-    if (entry) {
-      this.entries.delete(key);
-    } else {
-      const loading = load();
-      loading.catch(() => {
-        if (this.entries.get(key) === loading) this.entries.delete(key);
-      });
-      entry = loading;
-    }
-
-    this.entries.set(key, entry);
-    if (this.entries.size > CACHE_LIMIT)
-      this.entries.delete(this.entries.keys().next().value!);
-
-    return entry;
-  }
+function promiseCache<T extends NonNullable<unknown>>() {
+  return new LRUCache<string, T, () => Promise<T>>({
+    max: CACHE_LIMIT,
+    // Without it, an evicted load that's still running rejects as aborted
+    ignoreFetchAbort: true,
+    fetchMethod: (_key, _stale, { context }) => context(),
+  });
 }
 
 interface TintedLayer extends ItemLayer {
   colors: number[];
 }
 
-// Mob heads by their special model kind. Zombies have a hat layer, like players
 const HEADS: Record<string, { texture: string; hat: boolean }> = {
   skeleton: { texture: "entity/skeleton/skeleton", hat: false },
   wither_skeleton: { texture: "entity/skeleton/wither_skeleton", hat: false },
@@ -74,13 +61,14 @@ const HEADS: Record<string, { texture: string; hat: boolean }> = {
 
 const DEFAULT_SKIN = "entity/player/wide/steve";
 
-// Old 64 × 32 skins from before hats often filled the hat area in, so the game drops it when none of it is see-through
+// The game drops an old 64 × 32 skin's hat when none of it is see-through.
 function withoutFilledHat(skin: ImageData) {
   if (skin.height !== 32) return skin;
 
   const hat: number[] = [];
-  for (let y = 0; y < 32; y++)
+  for (let y = 0; y < 32; y++) {
     for (let x = 32; x < 64; x++) hat.push((y * skin.width + x) * 4 + 3);
+  }
   if (hat.some((alpha) => skin.data[alpha] < 128)) return skin;
 
   for (const alpha of hat) skin.data[alpha] = 0;
@@ -133,7 +121,7 @@ interface Glint {
 }
 
 function modernGlint(tick: number): Glint {
-  const time = tick * 50 * 0.5 * 8;
+  const time = tick * MS_PER_TICK * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
   return {
     passes: [
@@ -144,7 +132,7 @@ function modernGlint(tick: number): Glint {
 }
 
 function legacyGlint(tick: number): Glint {
-  const ms = tick * 50;
+  const ms = tick * MS_PER_TICK;
   return {
     passes: [
       { angle: (-5 * Math.PI) / 18, scrollU: (ms % 3000) / 3000, scrollV: 0 },
@@ -154,7 +142,7 @@ function legacyGlint(tick: number): Glint {
   };
 }
 
-/** The glint texture tinted and squared, so adding it with "lighter" is Minecraft's src² + dst */
+// Squared, so adding it with "lighter" matches the game's src² + dst
 function squaredGlint(texture: ImageData, tint: Glint["tint"]) {
   const squared = createImageData(texture.width, texture.height);
 
@@ -177,8 +165,7 @@ const translucent = (icon: OffscreenCanvas) =>
     .getImageData(0, 0, icon.width, icon.height)
     .data.some((value, i) => i % 4 === 3 && value > 0 && value < 255);
 
-// "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
-// to their pixels' colors one by one
+// "lighter" adds alpha too, so translucent icons add the glint per pixel
 function addGlint(
   ctx: OffscreenCanvasRenderingContext2D,
   glint: ImageData,
@@ -225,7 +212,6 @@ function drawGlint(
   layerCtx.globalCompositeOperation = "lighter";
 
   for (const { angle, scrollU, scrollV } of passes) {
-    // A pixel center c samples the texel at A·c + offset: rotated, an eighth of a texture per icon
     const a11 = (glint.width * Math.cos(angle)) / (8 * width);
     const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
     const a21 = (glint.height * Math.sin(angle)) / (8 * width);
@@ -233,7 +219,6 @@ function drawGlint(
     const offsetX = scrollU * glint.width;
     const offsetY = scrollV * glint.height;
 
-    // The pattern's transform goes the other way, from texels to pixels
     const determinant = a11 * a22 - a12 * a21;
     const a = a22 / determinant;
     const b = -a21 / determinant;
@@ -260,15 +245,10 @@ function drawGlint(
   ctx.drawImage(layer, 0, 0);
 }
 
-// Mixed pixel by pixel like the texels, since drawing one icon over the other at an alpha isn't a
-// linear blend: two identical translucent icons would come out more opaque
+// Drawing one icon over the other at an alpha isn't a linear blend
 function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
   const pixels = context(from).getImageData(0, 0, from.width, from.height);
-  const next = context(to).getImageData(0, 0, to.width, to.height);
-
-  for (let i = 0; i < pixels.data.length; i++) {
-    pixels.data[i] = pixels.data[i] * (1 - blend) + next.data[i] * blend;
-  }
+  mixPixels(pixels, context(to).getImageData(0, 0, to.width, to.height), blend);
 
   const canvas = createCanvas(from.width, from.height);
   context(canvas).putImageData(pixels, 0, 0);
@@ -283,7 +263,6 @@ function faceTexture(model: Model, reference: string) {
   return id;
 }
 
-/** The pack sprites a layer draws: layer0, layer1, … when generated, or its faces' textures */
 function textureIds({ model, special }: ItemLayer) {
   if (special) return [];
 
@@ -300,25 +279,13 @@ function textureIds({ model, special }: ItemLayer) {
   return [...new Set(faces.map((face) => faceTexture(model, face.texture)))];
 }
 
-/** A player head's skin PNG by its URL; undefined when it has none */
-export type SkinSource = (url: string) => Promise<Uint8Array | undefined>;
-
-const SKIN_TIMEOUT = 5000;
-
-const fetchSkin: SkinSource = async (url) => {
-  const response = await fetch(url, {
-    signal: AbortSignal.timeout(SKIN_TIMEOUT),
-  });
-  if (!response.ok)
-    throw new Error(`${url}: ${response.status} ${response.statusText}`);
-  return new Uint8Array(await response.arrayBuffer());
-};
+// The renderer never fetches skins, so the caller picks where they come from
+export type SkinLoader = (url: string) => Promise<Uint8Array>;
 
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
-  private icons = new PromiseCache<OffscreenCanvas>();
-  private skins = new PromiseCache<ImageData>();
+  private icons = promiseCache<OffscreenCanvas>();
   private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
@@ -326,7 +293,7 @@ export class ItemRenderer {
   public constructor(
     private stack: PackStack,
     private cache?: IconCache,
-    private loadSkin = fetchSkin,
+    private loadSkin?: SkinLoader,
   ) {
     this.models = new ModelResolver(stack);
     this.textures = new TextureLoader(stack);
@@ -342,7 +309,6 @@ export class ItemRenderer {
         ?.files.has(legacy) ?? false;
   }
 
-  /** Draws an item 16 × scale pixels square, at a game tick for animated textures and the glint */
   public async render(
     item: ItemStack,
     scale: number,
@@ -351,7 +317,7 @@ export class ItemRenderer {
     const icon = await this.base(item, scale, tick);
     if (!item.enchanted) return icon;
 
-    // The glint moves every tick, so it goes over the cached icon rather than into it
+    // The glint moves every tick, so it's drawn over the cached icon
     const canvas = createCanvas(icon.width, icon.height);
     const ctx = context(canvas);
     ctx.drawImage(icon, 0, 0);
@@ -373,16 +339,10 @@ export class ItemRenderer {
   }
 
   private async base(
-    requested: ItemStack,
+    item: ItemStack,
     scale: number,
     tick: number,
   ): Promise<OffscreenCanvas> {
-    // Failed skins share the default head's cache entry
-    const item =
-      requested.skin && !(await this.skin(requested.skin))
-        ? { ...requested, skin: undefined }
-        : requested;
-
     const resolved = this.models.resolve(item);
 
     const animated = resolved
@@ -390,8 +350,7 @@ export class ItemRenderer {
       .map((id) => this.textures.frame(id, tick))
       .filter((frame) => frame !== undefined);
 
-    // Blending two frames' texels blends the icons drawn from them, so when every texture fades
-    // between the same two ticks, the frame is a cross-fade of those two cached icons
+    // Fading between the same two ticks is a cross-fade of two cached icons
     const [first] = animated;
     const fades =
       first !== undefined &&
@@ -419,14 +378,13 @@ export class ItemRenderer {
       colors: layer.tints.map((tint) => tintColor(tint, item, grass)),
     }));
 
-    // Textures blending on different timings change every tick, so they're drawn fresh each time
+    // Textures blending on different timings are drawn fresh every tick
     if (animated.some(({ blend }) => blend > 0)) {
       return this.draw(layers, item, scale, tick);
     }
 
     const frames = animated.map(({ index }) => index);
 
-    // Items that resolve to the same models and colors share an icon
     const key = [
       this.stack.hash,
       ...layers.map(({ model, colors, special }) =>
@@ -449,7 +407,9 @@ export class ItemRenderer {
       .filter((part) => part !== undefined)
       .join("/");
 
-    return this.icons.get(key, () => this.load(key, layers, item, scale, tick));
+    return this.icons.forceFetch(key, {
+      context: () => this.load(key, layers, item, scale, tick),
+    });
   }
 
   private async load(
@@ -459,11 +419,11 @@ export class ItemRenderer {
     scale: number,
     tick: number,
   ) {
-    const cached = await this.cache?.get(key);
+    const cached = await this.cache?.get(this.stack.hash, key);
     if (cached) return cached;
 
     const icon = await this.draw(layers, item, scale, tick);
-    void this.cache?.set(key, icon).catch(console.error);
+    void this.cache?.set(this.stack.hash, key, icon).catch(console.error);
 
     return icon;
   }
@@ -539,7 +499,6 @@ export class ItemRenderer {
     special: SpecialModel,
     item: ItemStack,
   ): Promise<Quad[]> {
-    // Ender and trapped chests are chests with another texture
     if (special.type === "minecraft:chest" && special.texture) {
       const [namespace, name] = namespaced(special.texture).split(":");
       const texture = await this.textures.get(
@@ -556,12 +515,10 @@ export class ItemRenderer {
       );
     }
 
-    const head =
-      special.type === "minecraft:player_head"
-        ? { texture: undefined, hat: true }
-        : special.type === "minecraft:head"
-          ? HEADS[special.kind ?? ""]
-          : undefined;
+    let head: { texture?: string; hat: boolean } | undefined;
+    if (special.type === "minecraft:player_head") head = { hat: true };
+    else if (special.type === "minecraft:head")
+      head = HEADS[special.kind ?? ""];
 
     if (!head) {
       const name = special.kind
@@ -572,10 +529,10 @@ export class ItemRenderer {
       );
     }
 
-    const skin =
-      !head.texture && item.skin ? await this.skin(item.skin) : undefined;
     const texture =
-      skin ?? (await this.textures.get(head.texture ?? DEFAULT_SKIN));
+      !head.texture && item.skin
+        ? await this.skin(item.skin)
+        : await this.textures.get(head.texture ?? DEFAULT_SKIN);
 
     const quads = boxQuads([-4, -8, -4], [8, 8, 8], [0, 0], texture);
     if (head.hat)
@@ -584,59 +541,69 @@ export class ItemRenderer {
     return transformQuads(quads, special.transformation);
   }
 
-  /** A skin's pixels; failed loads return undefined and are retried */
-  private skin(url: string) {
-    return this.skins
-      .get(url, async () => {
-        const file = await this.loadSkin(url);
-        if (!file) throw new Error(`${url} has no skin`);
+  private async skin(url: string) {
+    if (!this.loadSkin)
+      throw new Error(
+        `Drawing ${url} needs the ItemRenderer to have a skin loader`,
+      );
 
-        const image = await decodePng(file);
-        return withoutFilledHat(
-          context(image).getImageData(0, 0, image.width, image.height),
-        );
-      })
-      .catch(() => undefined);
+    const image = await decodePng(await this.loadSkin(url));
+    const skin = context(image).getImageData(0, 0, image.width, image.height);
+    return withoutFilledHat(skin);
   }
 }
 
 if (import.meta.vitest) {
-  const { expect, it } = import.meta.vitest;
+  const { expect, it, suite } = import.meta.vitest;
 
   it("keeps the most recently used promises and retries rejected ones", async () => {
-    const cache = new PromiseCache<number>();
+    const cache = promiseCache<number>();
+    const get = (key: string, load: () => Promise<number>) =>
+      cache.forceFetch(key, { context: load });
 
     await expect(
-      cache.get("a", () => Promise.reject(new Error("failed"))),
+      get("a", () => Promise.reject(new Error("failed"))),
     ).rejects.toThrow();
-    expect(await cache.get("a", async () => 1)).toBe(1);
-    expect(await cache.get("a", async () => 2)).toBe(1);
+    expect(
+      await Promise.all([get("a", async () => 1), get("a", async () => 2)]),
+    ).toEqual([1, 1]);
+    expect(await get("a", async () => 3)).toBe(1);
 
     await Promise.all(
       Array.from({ length: CACHE_LIMIT - 1 }, (_, key) =>
-        cache.get(`${key + 1}`, async () => key),
+        get(`${key + 1}`, async () => key),
       ),
     );
-    expect(await cache.get("a", async () => 3)).toBe(1);
+    expect(await get("a", async () => 4)).toBe(1);
 
-    await cache.get("b", async () => 0);
-    expect(await cache.get("1", async () => 4)).toBe(4);
+    await get("b", async () => 0);
+    expect(await get("1", async () => 5)).toBe(5);
   });
 
-  it("drops an old 64 × 32 skin's hat only when none of it is see-through", () => {
-    const [hat, face] = [(4 * 64 + 40) * 4 + 3, (12 * 64 + 12) * 4 + 3];
-    const [old, seeThrough, modern] = [32, 32, 64].map(
-      (height) =>
-        ({
-          width: 64,
-          height,
-          data: new Uint8ClampedArray(64 * height * 4).fill(255),
-        }) as ImageData,
-    );
-    seeThrough.data[(20 * 64 + 60) * 4 + 3] = 0;
+  const toSkin = (height: number) =>
+    ({
+      width: 64,
+      height,
+      data: new Uint8ClampedArray(64 * height * 4).fill(255),
+    }) as ImageData;
 
-    expect([withoutFilledHat(old).data[hat], old.data[face]]).toEqual([0, 255]);
-    expect(withoutFilledHat(seeThrough).data[hat]).toBe(255);
-    expect(withoutFilledHat(modern).data[hat]).toBe(255);
+  suite("withoutFilledHat", () => {
+    const hat = (4 * 64 + 40) * 4 + 3;
+
+    it("should drop an old skin's hat when none of it is see-through", () => {
+      const old = toSkin(32);
+      const face = (12 * 64 + 12) * 4 + 3;
+
+      expect(withoutFilledHat(old).data[hat]).toBe(0);
+      expect(old.data[face]).toBe(255);
+    });
+
+    it("should keep a see-through hat and a modern skin's hat", () => {
+      const seeThrough = toSkin(32);
+      seeThrough.data[(20 * 64 + 60) * 4 + 3] = 0;
+
+      expect(withoutFilledHat(seeThrough).data[hat]).toBe(255);
+      expect(withoutFilledHat(toSkin(64)).data[hat]).toBe(255);
+    });
   });
 }

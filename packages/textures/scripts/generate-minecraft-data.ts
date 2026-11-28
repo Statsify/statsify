@@ -6,19 +6,27 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import {
+  DOWNLOAD_TIMEOUT,
+  type LegacyTexture,
+  resolveTextures,
+  withoutNamespace,
+} from "@statsify/textures";
 import { readFile, writeFile } from "node:fs/promises";
 import { unzipSync } from "fflate";
 
-const MINECRAFT_DATA = "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
+const MINECRAFT_DATA =
+  "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
 
 const fetchJson = async <T>(path: string): Promise<T> => {
-  const response = await fetch(`${MINECRAFT_DATA}/${path}`);
+  const response = await fetch(`${MINECRAFT_DATA}/${path}`, {
+    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+  });
   if (!response.ok) throw new Error(`${path}: ${response.status}`);
   return response.json() as Promise<T>;
 };
 
-// minecraft-data's 1.13 names that 26.3 renamed (stone_slab still exists but names another block,
-// so the pack check can't catch it). null drops eggs for entity types that never had one
+// The pack check misses renames whose old name now means another block
 const RENAMES: Record<string, string | null> = {
   grass: "short_grass",
   sign: "oak_sign",
@@ -33,7 +41,7 @@ const RENAMES: Record<string, string | null> = {
   giant_spawn_egg: null,
 };
 
-// 1.8's dye items by color, with silver as 1.8's name for light gray
+// 1.8 calls light gray dye silver
 const DYES: Record<string, string> = {
   white: "bone_meal",
   orange: "orange_dye",
@@ -53,20 +61,44 @@ const DYES: Record<string, string> = {
   black: "ink_sac",
 };
 
-const RECORDS = ["11", "13", "blocks", "cat", "chirp", "far", "mall", "mellohi", "stal", "strad", "wait", "ward"] as const;
+// Ids the legacy table skips or names by a later version
+const LEGACY_ITEMS: Record<string, string> = {
+  "31:0": "minecraft:dead_bush",
+  "355:0": "minecraft:red_bed",
+};
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
-type LegacyTexture = string | null | { texture: string; position: number };
+const RECORDS = [
+  "11",
+  "13",
+  "blocks",
+  "cat",
+  "chirp",
+  "far",
+  "mall",
+  "mellohi",
+  "stal",
+  "strad",
+  "wait",
+  "ward",
+] as const;
 
-// 1.8.9 textures whose models were renamed too, so no same-named model pairs them with 26.3's
+// These models were renamed too, so no same-named model pairs them up
 const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   ...Object.fromEntries(
     Object.entries(DYES).flatMap(([color, dye]) => [
-      [`blocks/hardened_clay_stained_${color}`, `block/${color === "silver" ? "light_gray" : color}_terracotta`],
+      [
+        `blocks/hardened_clay_stained_${color}`,
+        `block/${color === "silver" ? "light_gray" : color}_terracotta`,
+      ],
       [`items/dye_powder_${color}`, `item/${dye}`],
     ]),
   ),
-  ...Object.fromEntries(RECORDS.map((record) => [`items/record_${record}`, `item/music_disc_${record}`])),
+  ...Object.fromEntries(
+    RECORDS.map((record) => [
+      `items/record_${record}`,
+      `item/music_disc_${record}`,
+    ]),
+  ),
   "blocks/anvil_base": "block/anvil",
   "blocks/anvil_top_damaged_0": "block/anvil_top",
   "blocks/anvil_top_damaged_1": "block/chipped_anvil_top",
@@ -129,11 +161,10 @@ const LEGACY_TEXTURES: Record<string, LegacyTexture> = {
   "items/potion_bottle_splash": "item/splash_potion",
   "items/reeds": "item/sugar_cane",
   "items/sign": "item/oak_sign",
-  // 1.8 animated these strips in code; a slot shows 26.3's first entry, frame 0 of 64 and 16 of 32.
-  // Packs replace them with strips of any length, so the frame is kept as a point along the strip
+  // 1.8 animated these in code, so a slot shows one point along the strip
   "items/clock": { texture: "item/clock_00", position: 0 },
   "items/compass": { texture: "item/compass_16", position: 0.5 },
-  // 26.3 draws beds in code, and gives each spawn egg its own texture where 1.8 tinted one
+  // 26.3 draws beds in code and gives each spawn egg its own texture
   "items/bed": null,
   "items/spawn_egg": null,
   "items/spawn_egg_overlay": null,
@@ -164,7 +195,9 @@ const snakeCase = (name: string) =>
 
 const [path, legacyPath, namesPath] = process.argv.slice(2);
 if (!path || !legacyPath || !namesPath) {
-  throw new Error("Pass the paths to a 26.3 client jar or vanilla pack zip, a 1.8.9 client jar and a /sdump names export");
+  throw new Error(
+    "Pass the paths to a 26.3 client jar or vanilla pack zip, a 1.8.9 client jar and a /sdump names export",
+  );
 }
 
 const names = { items: new Set<string>(), effects: new Set<string>() };
@@ -199,34 +232,24 @@ async function readAssets(source: string) {
   return { models, textures };
 }
 
-const stripNamespace = (id: string) => id.replace("minecraft:", "");
-
-/** A model's textures with its parents' merged in and #references followed */
 function modelTextures(models: Map<string, ModelFile>, id: string) {
-  const merged: Record<string, string> = {};
   const chain: ModelFile[] = [];
 
   for (let next: string | undefined = id; next && models.has(next); ) {
     const model: ModelFile = models.get(next)!;
     chain.push(model);
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
-  for (const model of chain.toReversed()) {
-    for (const [key, value] of Object.entries(model.textures ?? {})) {
-      merged[key] = stripNamespace(typeof value === "string" ? value : value.sprite);
-    }
-  }
-
-  const resolved: Record<string, string> = {};
-
-  for (const key of Object.keys(merged)) {
-    let value: string | undefined = merged[key];
-    while (value?.startsWith("#")) value = merged[value.slice(1)];
-    if (value && !value.startsWith("#")) resolved[key] = value;
-  }
-
-  return resolved;
+  const textures = resolveTextures(
+    Object.assign({}, ...chain.toReversed().map((model) => model.textures)),
+  );
+  return Object.fromEntries(
+    Object.entries(textures).map(([key, texture]) => [
+      key,
+      withoutNamespace(texture),
+    ]),
+  );
 }
 
 unzipSync(await readFile(path), {
@@ -234,25 +257,34 @@ unzipSync(await readFile(path), {
     const item = /^assets\/minecraft\/items\/(.+)\.json$/.exec(name);
     if (item) names.items.add(item[1]);
 
-    const effect = /^assets\/minecraft\/textures\/mob_effect\/(.+)\.png$/.exec(name);
+    const effect = /^assets\/minecraft\/textures\/mob_effect\/(.+)\.png$/.exec(
+      name,
+    );
     if (effect) names.effects.add(effect[1]);
 
     return false;
   },
 });
 
-if (names.items.size === 0) throw new Error(`${path} has no assets/minecraft/items folder`);
+if (names.items.size === 0)
+  throw new Error(`${path} has no assets/minecraft/items folder`);
 
-const [modernAssets, legacyAssets] = await Promise.all([readAssets(path), readAssets(legacyPath)]);
-if (!legacyAssets.textures.has("items/diamond_sword")) throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
-
-const [legacy, items, entities, effects, modernItems] = await Promise.all([
-  fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
-  fetchJson<LegacyItem[]>("1.8/items.json"),
-  fetchJson<LegacyEntity[]>("1.8/entities.json"),
-  fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
-  fetchJson<ModernItem[]>("26.1/items.json"),
+const [modernAssets, legacyAssets] = await Promise.all([
+  readAssets(path),
+  readAssets(legacyPath),
 ]);
+if (!legacyAssets.textures.has("items/diamond_sword"))
+  throw new Error(`${legacyPath} isn't a 1.8.9 client jar`);
+
+const [legacy, items, blocks, entities, effects, modernItems] =
+  await Promise.all([
+    fetchJson<{ items: Record<string, string | null> }>("common/legacy.json"),
+    fetchJson<LegacyItem[]>("1.8/items.json"),
+    fetchJson<LegacyItem[]>("1.8/blocks.json"),
+    fetchJson<LegacyEntity[]>("1.8/entities.json"),
+    fetchJson<{ id: number; name: string }[]>("1.8/effects.json"),
+    fetchJson<ModernItem[]>("26.1/items.json"),
+  ]);
 
 const missing: string[] = [];
 
@@ -277,35 +309,54 @@ const SPAWN_EGG = 383;
 const POTION = 373;
 
 const mobs = new Map(
-  entities.filter((entity) => entity.type === "mob").map((entity) => [entity.id, entity]),
+  entities
+    .filter((entity) => entity.type === "mob")
+    .map((entity) => [entity.id, entity]),
 );
 
-// The legacy table has every id:damage pair an item had, so an id with only :0 is keyed by
-// its id alone, and any Damage on it (tool wear) still finds it
+// The legacy table also has later versions' Damage values
+const legacyDamages = new Map<number, Set<number>>();
+for (const { id, variations = [] } of [...items, ...blocks]) {
+  legacyDamages.set(
+    id,
+    new Set([
+      ...(legacyDamages.get(id) ?? []),
+      0,
+      ...variations.map(({ metadata }) => metadata),
+    ]),
+  );
+}
+
+// An id with only :0 is keyed by its id alone, so tool wear still finds it
 const variants = Map.groupBy(
-  Object.entries(legacy.items).map(([key, name]) => {
-    const [id, damage] = key.split(":").map(Number);
-    return { id, damage, name };
-  }),
+  Object.entries({ ...legacy.items, ...LEGACY_ITEMS })
+    .map(([key, name]) => {
+      const [id, damage] = key.split(":").map(Number);
+      return { id, damage, name };
+    })
+    .filter(({ id, damage }) => legacyDamages.get(id)?.has(damage) ?? true),
   ({ id }) => id,
 );
 
 for (const [id, entries] of variants) {
   if (id === 0) continue;
 
-  // Potions take their effects from the Damage value at runtime, see legacy-items.ts
+  // Potions take their effects from Damage at runtime, see legacy-items.ts
   if (id === POTION) continue;
+
+  // The table's only egg, 383:0, is an untyped egg 26.3 has no item for
+  if (id === SPAWN_EGG) continue;
 
   for (const { damage, name } of entries) {
     if (!name) continue;
 
     const key = entries.length === 1 ? `${id}` : `${id}:${damage}`;
-    const modern = modernName(key, name.replace("minecraft:", ""));
+    const modern = modernName(key, withoutNamespace(name));
     if (modern) output.items[key] = modern;
   }
 }
 
-// The legacy table has no spawn eggs, whose Damage is the mob's entity id
+// A spawn egg's Damage is its mob's entity id
 const eggs = items.find(({ id }) => id === SPAWN_EGG)?.variations ?? [];
 
 for (const { metadata } of eggs) {
@@ -324,10 +375,14 @@ interface DumpedName {
   rarity: string;
 }
 
-const dumpedNames: DumpedName[] = JSON.parse(await readFile(namesPath, "utf8")).items;
+const dumpedNames: DumpedName[] = JSON.parse(
+  await readFile(namesPath, "utf8"),
+).items;
 
 for (const { id, damage, name, rarity } of dumpedNames) {
-  const modern = output.items[`${id}:${damage}`] ?? (damage === 0 ? output.items[id] : undefined);
+  const modern =
+    output.items[`${id}:${damage}`] ??
+    (damage === 0 ? output.items[id] : undefined);
   if (modern) output.legacyNames[modern] = `${rarity}${name}`;
 }
 
@@ -345,7 +400,7 @@ for (const effect of effects) {
   else missing.push(`effect ${effect.id} ${name}`);
 }
 
-// 1.8's command block texture has several 26.3 counterparts; the most common pairing wins
+// Where a 1.8 texture has several 26.3 counterparts, the most common wins
 const pairings = new Map<string, Map<string, number>>();
 
 for (const id of legacyAssets.models.keys()) {
@@ -353,9 +408,16 @@ for (const id of legacyAssets.models.keys()) {
 
   const after = modelTextures(modernAssets.models, id);
 
-  for (const [key, texture] of Object.entries(modelTextures(legacyAssets.models, id))) {
+  for (const [key, texture] of Object.entries(
+    modelTextures(legacyAssets.models, id),
+  )) {
     const target = after[key];
-    if (!target || !legacyAssets.textures.has(texture) || !modernAssets.textures.has(target)) continue;
+    if (
+      !target ||
+      !legacyAssets.textures.has(texture) ||
+      !modernAssets.textures.has(target)
+    )
+      continue;
 
     const counts = pairings.get(texture) ?? new Map<string, number>();
     counts.set(target, (counts.get(target) ?? 0) + 1);
@@ -366,7 +428,8 @@ for (const id of legacyAssets.models.keys()) {
 const mostPaired = (counts: Map<string, number>) =>
   [...counts].toSorted(([a, x], [b, y]) => y - x || a.localeCompare(b))[0][0];
 
-const sameName = (texture: string) => texture.replace(/^items\//, "item/").replace(/^blocks\//, "block/");
+const sameName = (texture: string) =>
+  texture.replace(/^items\//, "item/").replace(/^blocks\//, "block/");
 
 const itemTextures = new Set(
   [...legacyAssets.models.keys()]
@@ -374,18 +437,25 @@ const itemTextures = new Set(
     .flatMap((id) => Object.values(modelTextures(legacyAssets.models, id))),
 );
 
-for (const texture of [...legacyAssets.textures].toSorted()) {
+const findLegacyTarget = (texture: string) => {
+  if (texture in LEGACY_TEXTURES) return LEGACY_TEXTURES[texture];
+  if (modernAssets.textures.has(sameName(texture))) return sameName(texture);
+
   const paired = pairings.get(texture);
-  const target =
-    texture in LEGACY_TEXTURES
-      ? LEGACY_TEXTURES[texture]
-      : modernAssets.textures.has(sameName(texture))
-        ? sameName(texture)
-        : paired && mostPaired(paired);
+  return paired && mostPaired(paired);
+};
+
+for (const texture of [...legacyAssets.textures].toSorted()) {
+  const target = findLegacyTarget(texture);
 
   if (target === undefined) {
     if (itemTextures.has(texture)) missing.push(`texture ${texture}`);
-  } else if (target !== null && !modernAssets.textures.has(typeof target === "string" ? target : target.texture)) {
+  } else if (
+    target !== null &&
+    !modernAssets.textures.has(
+      typeof target === "string" ? target : target.texture,
+    )
+  ) {
     missing.push(`texture ${texture} as ${JSON.stringify(target)}`);
   } else if (target !== texture) {
     output.legacyTextures[texture] = target;
@@ -393,74 +463,87 @@ for (const texture of [...legacyAssets.textures].toSorted()) {
 }
 
 const renamedTexture = (texture: string) => {
-  const target = texture in output.legacyTextures ? output.legacyTextures[texture] : texture;
+  const target =
+    texture in output.legacyTextures ? output.legacyTextures[texture] : texture;
   return typeof target === "string" ? target : target?.texture;
 };
 
-/** Whether a model's elements use a texture variable it never sets, as a parent template does */
 function isTemplate(models: Map<string, ModelFile>, id: string) {
   const textures = modelTextures(models, id);
   let elements: ModelFile["elements"];
 
-  for (let next: string | undefined = id; next && models.has(next) && !elements; ) {
+  for (
+    let next: string | undefined = id;
+    next && models.has(next) && !elements;
+  ) {
     const model: ModelFile = models.get(next)!;
     elements = model.elements;
-    next = model.parent && stripNamespace(model.parent);
+    next = model.parent && withoutNamespace(model.parent);
   }
 
   return (elements ?? []).some((element) =>
-    Object.values(element.faces).some(({ texture }) => texture.startsWith("#") && !(texture.slice(1) in textures)),
+    Object.values(element.faces).some(
+      ({ texture }) =>
+        texture.startsWith("#") && !(texture.slice(1) in textures),
+    ),
   );
 }
 
-// A 1.8.9 model whose name 26.3 gives another role (1.8's block/anvil is its damage levels'
-// template, 26.3's is the anvil) moves aside, so it doesn't replace 26.3's, and its children follow it
+// A 1.8.9 model whose name 26.3 uses for another model moves aside
 const moved = new Set(
   [...legacyAssets.models.keys()].filter(
-    (id) => modernAssets.models.has(id) && isTemplate(legacyAssets.models, id) !== isTemplate(modernAssets.models, id),
+    (id) =>
+      modernAssets.models.has(id) &&
+      isTemplate(legacyAssets.models, id) !==
+        isTemplate(modernAssets.models, id),
   ),
 );
 
 for (const id of moved) output.legacyModels[id] = `legacy/${id}`;
 
-const modelNames = Map.groupBy(
-  [...legacyAssets.models.keys()]
-    .filter((id) => !modernAssets.models.has(id))
-    .flatMap((id) => {
-      const name = Object.values(modelTextures(legacyAssets.models, id))
-        .map(renamedTexture)
-        .find(
-          (texture) =>
-            texture?.startsWith(id.slice(0, id.indexOf("/") + 1)) &&
-            modernAssets.models.has(texture) &&
-            (!legacyAssets.models.has(texture) || moved.has(texture)),
-        );
+const renamedModels: { id: string; name: string }[] = [];
+for (const id of legacyAssets.models.keys()) {
+  if (modernAssets.models.has(id)) continue;
 
-      return name ? [{ id, name }] : [];
-    }),
-  ({ name }) => name,
-);
+  const name = Object.values(modelTextures(legacyAssets.models, id))
+    .map(renamedTexture)
+    .find(
+      (texture) =>
+        texture?.startsWith(id.slice(0, id.indexOf("/") + 1)) &&
+        modernAssets.models.has(texture) &&
+        (!legacyAssets.models.has(texture) || moved.has(texture)),
+    );
+
+  if (name) renamedModels.push({ id, name });
+}
+
+const modelNames = Map.groupBy(renamedModels, ({ name }) => name);
 
 for (const [name, models] of modelNames) {
   if (models.length === 1) output.legacyModels[models[0].id] = name;
 }
 
-// Flat items whose frame 1.8 picked in code, which the pinned strip frames above stand in for
+// 1.8 picked these frames in code, so they draw the pinned strip frames
 output.legacyModels["builtin/clock"] = "builtin/generated";
 output.legacyModels["builtin/compass"] = "builtin/generated";
 
-// Block items draw 1.8.9's item model of the same name, and these 1.8 names are other 26.3 items:
-// 1.8's snow is the block, its stone slab and stairs are smooth stone and cobblestone's
+// These 1.8 block item names are other items in 26.3
 Object.assign(output.legacyModels, {
+  "item/double_grass": "item/tall_grass",
+  "item/nether_brick": "legacy/item/nether_brick",
+  "item/netherbrick": "item/nether_brick",
   "item/smooth_red_sandstone": "item/cut_red_sandstone",
   "item/smooth_sandstone": "item/cut_sandstone",
   "item/snow": "item/snow_block",
   "item/stone_slab": "item/smooth_stone_slab",
   "item/stone_stairs": "item/cobblestone_stairs",
+  "item/tall_grass": "item/short_grass",
 });
 
 if (missing.length > 0) {
-  throw new Error(`Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`);
+  throw new Error(
+    `Not in ${path}, add them to RENAMES or LEGACY_TEXTURES:\n${missing.join("\n")}`,
+  );
 }
 
 await writeFile(
