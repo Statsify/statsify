@@ -21,7 +21,8 @@ export interface LevelBarProps {
   color: string;
   t: LocalizeFunction;
   notes?: string[];
-  lines?: number; // note lines to fit, blank past the notes
+  // The bar fits this many note lines and leaves the extra ones blank.
+  lines?: number;
 }
 
 export const LevelBar = ({
