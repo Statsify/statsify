@@ -11,7 +11,7 @@ import { decodePng } from "./canvas.js";
 
 const STORE = "icons";
 
-// Bump whenever icons draw differently, so browsers drop the ones older code drew
+// Bump this when icons draw differently, so browsers drop old icons
 const VERSION = 3;
 
 interface Icons extends DBSchema {
@@ -25,7 +25,7 @@ function open(onClose: () => void) {
         database.deleteObjectStore(STORE);
       database.createObjectStore(STORE);
     },
-    // A tab with newer code can't upgrade the database until every other tab lets go of it
+    // Newer code can't upgrade the database until every other tab closes it
     blocking() {
       void db.then((database) => database.close());
       onClose();
@@ -46,7 +46,7 @@ async function keepStack(db: IDBPDatabase<Icons>, stack: string) {
   );
 }
 
-/** Keyed by their pack stack's hash first. The first stack to open it after a page load drops the others' icons */
+// The first pack stack to open the cache after a page load drops the rest
 export class IconCache {
   private db?: Promise<IDBPDatabase<Icons>>;
 

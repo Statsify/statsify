@@ -10,30 +10,22 @@ import minecraftData from "../../data/minecraft-data.json" with { type: "json" }
 import { type Unzipped, unzip } from "fflate";
 import { pngSize } from "./canvas.js";
 
-/** A pack zip, or a client jar, as bytes or a URL to fetch */
 export type PackSource = Blob | ArrayBuffer | Uint8Array | string;
 
-/**
- * modern: item model definitions in items/ (1.21.4+)
- * flattened: textures/item, textures/block (1.13 to 1.21.3)
- * legacy: textures/items, textures/blocks (1.8.9)
- */
+// legacy is 1.8.9, flattened 1.13 to 1.21.3, modern 1.21.4 and later
 export type PackLayout = "modern" | "flattened" | "legacy";
 
 export interface Pack {
   name: string;
   hash: string;
   layout: PackLayout;
-  /** Paths from the pack root, like "assets/minecraft/items/stone.json" */
-  files: ReadonlyMap<string, Uint8Array>;
+  files: Map<string, Uint8Array>;
 }
 
 type Format = [major: number, minor: number];
 
-// 26.3's resource pack format, used to pick which of a pack's overlays apply
 const TARGET_FORMAT: Format = [97, 1];
 
-// Item model definitions arrived in format 46 (1.21.4), flattened names in format 4 (1.13)
 const MODERN_FORMAT = 46;
 const FLATTENED_FORMAT = 4;
 
@@ -55,7 +47,7 @@ interface PackMeta {
   };
 }
 
-// The game reads a format without its minor as minor 0 for a lower bound and any minor for an upper one
+// A format without a minor is minor 0 as a lower bound, any minor as upper
 const toFormat = (value: FormatValue, minor = 0): Format =>
   typeof value === "number" ? [value, minor] : [value[0], value[1] ?? minor];
 
@@ -89,9 +81,9 @@ function overlayApplies(entry: OverlayEntry) {
   );
 }
 
-function layoutOf(
+function detectLayout(
   meta: PackMeta | undefined,
-  files: ReadonlyMap<string, Uint8Array>,
+  files: Map<string, Uint8Array>,
 ): PackLayout {
   const pack = meta?.pack;
   const format =
@@ -138,7 +130,6 @@ const parseJson = <T>(
 
 const encoder = new TextEncoder();
 
-/** A texture's 26.3 name, null where 26.3 draws it another way, or one frame of a 1.8 strip, by how far along it sits */
 export type LegacyTexture =
   | string
   | null
@@ -174,7 +165,6 @@ function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   const model = parseJson<OlderModel>(file);
   const parent = model.parent && withoutNamespace(model.parent);
 
-  // Chests, heads and banners, which 26.3 draws in code
   if (parent === "builtin/entity") return;
 
   const renamed: Record<string, string> = {};
@@ -197,10 +187,7 @@ function upgradeModel(file: Uint8Array, { textures, models }: Upgrade) {
   );
 }
 
-function upgrade(
-  files: ReadonlyMap<string, Uint8Array>,
-  layoutUpgrade: Upgrade,
-) {
+function upgrade(files: Map<string, Uint8Array>, layoutUpgrade: Upgrade) {
   const upgraded = new Map<string, Uint8Array>();
   const { textures, models, drop } = layoutUpgrade;
 
@@ -234,7 +221,7 @@ function upgrade(
         file,
       );
     } else if (target && !texture[2]) {
-      // The strip's own mcmeta played every frame; this one holds the frame a slot shows
+      // This mcmeta holds the one frame a slot shows
       const { width, height } = pngSize(file);
       const frames = Math.max(1, Math.floor(height / width));
       const animation = {
@@ -288,7 +275,7 @@ export async function loadPack(
   const data = (await readSource(source)) as Uint8Array<ArrayBuffer>;
   const [hash, entries] = await Promise.all([sha256(data), unzipAssets(data)]);
 
-  // Packs are often zipped with their folder, so pack.mcmeta sits one level down
+  // Packs zipped with their folder have pack.mcmeta one level down
   const metaPath = Object.keys(entries)
     .filter((path) => path.endsWith("pack.mcmeta"))
     .toSorted((a, b) => a.length - b.length)
@@ -306,7 +293,6 @@ export async function loadPack(
 
   const files = new Map<string, Uint8Array>();
 
-  // Later overlays replace files from earlier ones and from the pack itself
   for (const directory of directories) {
     const prefix = `${root}${directory}assets/`;
 
@@ -319,7 +305,7 @@ export async function loadPack(
 
   if (files.size === 0) throw new Error(`${name} has no assets folder`);
 
-  const layout = layoutOf(meta, files);
+  const layout = detectLayout(meta, files);
   const layoutUpgrade = UPGRADES[layout];
 
   return {
@@ -330,12 +316,11 @@ export async function loadPack(
   };
 }
 
-/** Packs layered the way Minecraft layers them, lowest priority first */
 export class PackStack {
   public readonly hash: string;
 
-  public constructor(public readonly packs: readonly Pack[]) {
-    // Only 26.3 packs have item model definitions, so older ones can only retexture one
+  public constructor(public readonly packs: Pack[]) {
+    // Only 26.3 packs have item model definitions, so older ones only retexture
     if (!packs.some((pack) => pack.layout === "modern")) {
       throw new Error(
         `${packs.map((pack) => pack.name).join(", ")} need a 26.3 pack in the stack`,
@@ -358,13 +343,11 @@ export class PackStack {
   }
 }
 
-/** A namespaced id with or without its namespace, like "item/stick" or "minecraft:item/stick" */
 export const namespaced = (id: string) =>
   id.includes(":") ? id : `minecraft:${id}`;
 
 export const withoutNamespace = (id: string) => id.replace(/^minecraft:/, "");
 
-/** A JSON reviver for item model definitions and fonts, where every "type" is an id with an optional namespace */
 export const namespaceTypes = (key: string, value: unknown) =>
   key === "type" && typeof value === "string" ? namespaced(value) : value;
 
