@@ -7,7 +7,7 @@
  */
 
 import { getPetLevel } from "#leveling";
-import type { Bazaar, ItemsResource, PriceEntry, PriceMap } from "#types";
+import type { Bazaar, ItemsResource, PriceEntry } from "#types";
 import type { RawBazaar, RawItem, RawPet } from "#raw";
 
 type Attributes = NonNullable<NonNullable<RawItem["tag"]>["ExtraAttributes"]>;
@@ -155,80 +155,6 @@ export function listingKey(item: RawItem): string | undefined {
   if (attributes.skin) return skinnedKey(id, attributes);
   if (attributes.is_shiny) return shinyKey(id);
   return hatKey(id, attributes) ?? editionKey(id, attributes) ?? id;
-}
-
-// This mirrors the networth library's getItemId, which reads the map.
-function getNetworthId(id: string, attributes: Attributes, map: PriceMap) {
-  const price = (key: string) => map.entries[key]?.coins;
-
-  // It compares prices[skinned] > prices[id], which is false with no id price.
-  const idPrice = price(id);
-  const skinnedPrice = price(skinnedKey(id, attributes)) ?? 0;
-  if (attributes.skin && idPrice !== undefined && skinnedPrice > idPrice) {
-    return skinnedKey(id, attributes);
-  }
-
-  const sloth = id === "PARTY_HAT_SLOTH" ? hatKey(id, attributes) : undefined;
-  if (sloth && price(sloth)) return sloth;
-
-  const rune = RUNES.has(id) && runeKey(attributes);
-  if (rune) return rune;
-  if (id === "NEW_YEAR_CAKE") return cakeKey(attributes);
-
-  const hat = COLOR_HATS.has(id) && hatKey(id, attributes);
-  const variant = hat || editionKey(id, attributes);
-  if (variant) return variant;
-
-  if (attributes.is_shiny && price(shinyKey(id))) return shinyKey(id);
-
-  const unstarred = id.replace(/^STARRED_/, "");
-  if (unstarred !== id && !price(id) && price(unstarred)) return unstarred;
-  return id;
-}
-
-// The library interpolates a pet's price between the priced levels around it.
-function getPetLookupKeys(pet: RawPet, map: PriceMap) {
-  const { level } = getPetLevel(pet);
-  const keyAtLevel = (pricedLevel: number) => {
-    const unskinned = petKey({ ...pet, skin: null }, pricedLevel);
-    const skinned = petKey(pet, pricedLevel);
-    return map.entries[unskinned] || !map.entries[skinned]
-      ? unskinned
-      : skinned;
-  };
-
-  const [low, mid, high] = PRICED_PET_LEVELS;
-  if (level < mid) return [keyAtLevel(low), keyAtLevel(mid)];
-  if (level === mid) return [keyAtLevel(mid)];
-  return [keyAtLevel(mid), keyAtLevel(high)];
-}
-
-// The keys the library reads for an item's base price, before modifiers.
-export function lookupKeys(
-  itemOrPet: RawItem | RawPet,
-  map: PriceMap,
-): string[] {
-  if ("exp" in itemOrPet) return getPetLookupKeys(itemOrPet, map);
-
-  const attributes = itemOrPet.tag?.ExtraAttributes;
-  const pet = parsePetInfo(attributes);
-  if (pet) return getPetLookupKeys(pet, map);
-
-  const id = attributes?.id;
-  if (!attributes || id === undefined) return [];
-
-  const books = id === "ENCHANTED_BOOK" ? bookKeys(attributes) : [];
-  if (books.length > 0) return books;
-
-  if (Number(attributes.collected_coins ?? 0) > 0) {
-    const crown = crownKey(attributes);
-    return crown ? [crown] : [...CROWNS];
-  }
-
-  const midas = id in MIDAS_WEAPONS ? midasKey(id, attributes) : id;
-  if (midas !== id && map.entries[midas]) return [midas];
-
-  return [getNetworthId(id, attributes, map)];
 }
 
 // Skip a lowest BIN under half the second when a third backs the second.
@@ -380,77 +306,6 @@ if (import.meta.vitest) {
       expect(listingKey(item("POWER_WITHER_CHESTPLATE", { is_shiny: 1 }))).toBe(
         "POWER_WITHER_CHESTPLATE_SHINY",
       );
-    });
-  });
-
-  suite("lookupKeys", () => {
-    const listings = 2;
-    const map: PriceMap = {
-      asOf: 1,
-      entries: {
-        HELMET: { coins: 10, source: "bin", listings },
-        HELMET_SKINNED_GOLD: { coins: 20, source: "bin", listings },
-        BONZO_STAFF: { coins: 5, source: "bin", listings },
-        ARMOR_SHINY: { coins: 9, source: "bin", listings },
-        MIDAS_SWORD_50M: { coins: 99, source: "bin", listings },
-      },
-    };
-
-    it("should read the skinned key only over a priced id", () => {
-      const gold = { skin: "GOLD" };
-      expect(lookupKeys(item("HELMET", gold), map)).toEqual([
-        "HELMET_SKINNED_GOLD",
-      ]);
-      expect(lookupKeys(item("BOOTS", gold), map)).toEqual(["BOOTS"]);
-    });
-
-    it("should fall back to the priced variant", () => {
-      expect(lookupKeys(item("STARRED_BONZO_STAFF"), map)).toEqual([
-        "BONZO_STAFF",
-      ]);
-      expect(lookupKeys(item("ARMOR", { is_shiny: 1 }), map)).toEqual([
-        "ARMOR_SHINY",
-      ]);
-
-      const max = { winning_bid: 50_000_000 };
-      expect(lookupKeys(item("MIDAS_SWORD", max), map)).toEqual([
-        "MIDAS_SWORD_50M",
-      ]);
-    });
-
-    it("should read every enchantment and both crowns", () => {
-      const books = { enchantments: { sharpness: 6, telekinesis: 1 } };
-      expect(lookupKeys(item("ENCHANTED_BOOK", books), map)).toEqual([
-        "ENCHANTMENT_SHARPNESS_6",
-        "ENCHANTMENT_TELEKINESIS_1",
-      ]);
-
-      const coins = { collected_coins: 5_000_000 };
-      expect(lookupKeys(item("CROWN_OF_AVARICE", coins), map)).toEqual([
-        "CROWN_OF_AVARICE",
-        "CROWN_OF_AVARICE_1B",
-      ]);
-    });
-
-    it("should read the priced levels around a pet", () => {
-      const griffin = {
-        type: "GRIFFIN",
-        tier: "EPIC",
-        exp: 0,
-        active: false,
-        skin: "X",
-      };
-      expect(lookupKeys(griffin, map)).toEqual([
-        "LVL_1_EPIC_GRIFFIN",
-        "LVL_100_EPIC_GRIFFIN",
-      ]);
-      expect(
-        lookupKeys(pet("GOLDEN_DRAGON", "LEGENDARY", 30_000_000), map),
-      ).toEqual([
-        "LVL_100_LEGENDARY_GOLDEN_DRAGON",
-        "LVL_200_LEGENDARY_GOLDEN_DRAGON",
-      ]);
-      expect(lookupKeys({ id: 1, Count: 1, Damage: 0 }, map)).toEqual([]);
     });
   });
 
