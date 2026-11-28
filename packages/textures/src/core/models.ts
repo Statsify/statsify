@@ -119,6 +119,7 @@ function parseSnbt(snbt: string) {
   if (tag.type !== "compound")
     throw new Error(`${snbt} isn't an SNBT compound`);
 
+  // SNBT stores booleans as the bytes 1 and 0
   return Object.fromEntries(
     Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
       key,

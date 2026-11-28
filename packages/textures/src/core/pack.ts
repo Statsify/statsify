@@ -280,6 +280,7 @@ export async function loadPack(
   const metaRoot = paths
     .filter((path) => path.endsWith("pack.mcmeta"))
     .map((path) => path.slice(0, -"pack.mcmeta".length))
+    // A pack can keep all its assets in overlays, one directory down
     .filter((root) =>
       paths.some(
         (path) =>
