@@ -124,20 +124,20 @@ export const HELMETS = {
 
 // Leather suits are dyed with 1.8's dye names and colors
 export const SUIT_DYES = {
-  WHITE: 0xFF_FF_FF,
-  ORANGE: 0xD8_7F_33,
-  MAGENTA: 0xB2_4C_D8,
-  LIGHT_BLUE: 0x66_99_D8,
-  YELLOW: 0xE5_E5_33,
-  LIME: 0x7F_CC_19,
-  PINK: 0xF2_7F_A5,
-  GRAY: 0x4C_4C_4C,
+  WHITE: 0xff_ff_ff,
+  ORANGE: 0xd8_7f_33,
+  MAGENTA: 0xb2_4c_d8,
+  LIGHT_BLUE: 0x66_99_d8,
+  YELLOW: 0xe5_e5_33,
+  LIME: 0x7f_cc_19,
+  PINK: 0xf2_7f_a5,
+  GRAY: 0x4c_4c_4c,
   SILVER: 0x99_99_99,
-  CYAN: 0x4C_7F_99,
-  PURPLE: 0x7F_3F_B2,
-  BLUE: 0x33_4C_B2,
-  BROWN: 0x66_4C_33,
-  GREEN: 0x66_7F_33,
+  CYAN: 0x4c_7f_99,
+  PURPLE: 0x7f_3f_b2,
+  BLUE: 0x33_4c_b2,
+  BROWN: 0x66_4c_33,
+  GREEN: 0x66_7f_33,
   RED: 0x99_33_33,
   BLACK: 0x19_19_19,
 } as const;
@@ -153,25 +153,40 @@ const SUIT_MATERIALS = {
 type SuitPiece = "JACKET" | "PANTS" | "SHOES";
 
 // Object.hasOwn, since an index would also find keys like "constructor" on the prototype
-export function lookup<T extends object>(registry: T, key: string, error: string): T[keyof T] {
+export function lookup<T extends object>(
+  registry: T,
+  key: string,
+  error: string,
+): T[keyof T] {
   if (!Object.hasOwn(registry, key)) throw new BadRequestException(error);
   return registry[key as keyof T];
 }
 
-export const getKartModel = (kart: string) => lookup(KARTS, kart, `Unknown kart ${kart}`);
+export const getKartModel = (kart: string) =>
+  lookup(KARTS, kart, `Unknown kart ${kart}`);
 
 export const getHelmetModel = (helmet?: string) =>
-  helmet === undefined || helmet === "NO_HELMET" ? undefined : lookup(HELMETS, helmet, `Unknown helmet ${helmet}`);
+  helmet === undefined || helmet === "NO_HELMET"
+    ? undefined
+    : lookup(HELMETS, helmet, `Unknown helmet ${helmet}`);
 
 /** Reads a stored suit piece such as `GOLD_JACKET`, `LEATHER_JACKET` (undyed) or `LEATHER_JACKET:RED` */
-export function parseSuitPiece(value: string | undefined, piece: SuitPiece): ArmorPieceDto | undefined {
+export function parseSuitPiece(
+  value: string | undefined,
+  piece: SuitPiece,
+): ArmorPieceDto | undefined {
   if (value === undefined || value === `NO_${piece}`) return;
 
   const error = `Unknown ${piece.toLowerCase()} ${value}`;
   const [item, dye, ...rest] = value.split(":");
-  if (!item.endsWith(`_${piece}`) || rest.length > 0) throw new BadRequestException(error);
+  if (!item.endsWith(`_${piece}`) || rest.length > 0)
+    throw new BadRequestException(error);
 
-  const material = lookup(SUIT_MATERIALS, item.slice(0, -piece.length - 1), error);
+  const material = lookup(
+    SUIT_MATERIALS,
+    item.slice(0, -piece.length - 1),
+    error,
+  );
   if (dye === undefined) return { material };
   if (material !== "leather") throw new BadRequestException(error);
 
@@ -184,15 +199,32 @@ if (import.meta.vitest) {
   suite("parseSuitPiece", () => {
     it("should read stored suit pieces and reject values that aren't a piece of that slot", () => {
       expect(parseSuitPiece("NO_JACKET", "JACKET")).toBeUndefined();
-      expect(parseSuitPiece("CHAIN_PANTS", "PANTS")).toEqual({ material: "chainmail" });
-      expect(parseSuitPiece("LEATHER_SHOES", "SHOES")).toEqual({ material: "leather" });
-      expect(parseSuitPiece("LEATHER_JACKET:LIGHT_BLUE", "JACKET")).toEqual({ material: "leather", color: 0x66_99_D8 });
+      expect(parseSuitPiece("CHAIN_PANTS", "PANTS")).toEqual({
+        material: "chainmail",
+      });
+      expect(parseSuitPiece("LEATHER_SHOES", "SHOES")).toEqual({
+        material: "leather",
+      });
+      expect(parseSuitPiece("LEATHER_JACKET:LIGHT_BLUE", "JACKET")).toEqual({
+        material: "leather",
+        color: 0x66_99_d8,
+      });
 
-      expect(() => parseSuitPiece("GOLD_PANTS", "JACKET")).toThrow(BadRequestException);
-      expect(() => parseSuitPiece("GOLD_JACKET:RED", "JACKET")).toThrow(BadRequestException);
-      expect(() => parseSuitPiece("LEATHER_JACKET:TEAL", "JACKET")).toThrow(BadRequestException);
-      expect(() => parseSuitPiece("constructor_JACKET", "JACKET")).toThrow(BadRequestException);
-      expect(() => parseSuitPiece("_JACKET", "JACKET")).toThrow(BadRequestException);
+      expect(() => parseSuitPiece("GOLD_PANTS", "JACKET")).toThrow(
+        BadRequestException,
+      );
+      expect(() => parseSuitPiece("GOLD_JACKET:RED", "JACKET")).toThrow(
+        BadRequestException,
+      );
+      expect(() => parseSuitPiece("LEATHER_JACKET:TEAL", "JACKET")).toThrow(
+        BadRequestException,
+      );
+      expect(() => parseSuitPiece("constructor_JACKET", "JACKET")).toThrow(
+        BadRequestException,
+      );
+      expect(() => parseSuitPiece("_JACKET", "JACKET")).toThrow(
+        BadRequestException,
+      );
     });
   });
 }

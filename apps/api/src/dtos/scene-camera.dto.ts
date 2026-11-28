@@ -12,15 +12,26 @@ import { z } from "zod";
 const MIN_SIZE = 64;
 const MAX_SIZE = 1024;
 
-const size = (fallback: number) => z.coerce.number().int().min(MIN_SIZE).max(MAX_SIZE).optional().meta({ default: fallback });
+const size = (fallback: number) =>
+  z.coerce
+    .number()
+    .int()
+    .min(MIN_SIZE)
+    .max(MAX_SIZE)
+    .optional()
+    .meta({ default: fallback });
 
 export const sceneCamera = (
   camera: { yaw: number; pitch: number; width: number; height: number },
-  descriptions: { height?: string } = {}
+  descriptions: { height?: string } = {},
 ) =>
   z.object({
-    yaw: queryAngle(Math.PI * 2, camera.yaw).describe("Camera angle around the scene in radians: 0 faces the front, π the back"),
-    pitch: queryAngle(Math.PI / 2, camera.pitch).describe("Camera angle above the horizon in radians"),
+    yaw: queryAngle(Math.PI * 2, camera.yaw).describe(
+      "Camera angle around the scene in radians: 0 faces the front, π the back",
+    ),
+    pitch: queryAngle(Math.PI / 2, camera.pitch).describe(
+      "Camera angle above the horizon in radians",
+    ),
     width: size(camera.width),
     height: size(camera.height).meta({ description: descriptions.height }),
   });
