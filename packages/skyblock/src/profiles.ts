@@ -25,6 +25,13 @@ const GAME_MODES: Record<string, GameMode> = {
   bingo: "bingo",
 };
 
+const LEVEL_COLORS = Object.entries(LEVELING.sblevel_colours).map(
+  ([from, id]) => ({
+    from: Number(from),
+    code: minecraftColors.find((color) => color.id === id)!.code,
+  }),
+);
+
 export const getGameMode = ({ game_mode }: RawProfile): GameMode =>
   GAME_MODES[game_mode ?? "normal"] ?? "normal";
 
@@ -60,10 +67,9 @@ function isMember(profile: RawProfile, uuid: string) {
 }
 
 function getLevelColor(level: number) {
-  const brackets = Object.entries(LEVELING.sblevel_colours);
-  const [, id] =
-    brackets.findLast(([from]) => level >= Number(from)) ?? brackets[0];
-  return minecraftColors.find((color) => color.id === id)!.code;
+  const bracket =
+    LEVEL_COLORS.findLast(({ from }) => level >= from) ?? LEVEL_COLORS[0];
+  return bracket.code;
 }
 
 export function toProfileSummary(
