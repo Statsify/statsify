@@ -504,7 +504,8 @@ export interface RawElection {
 interface RawBingoGoal {
   id: string;
   name: string;
-  lore?: string; // Hypixel's docs require only the id and name
+  // Hypixel's docs require only the id and name.
+  lore?: string;
   // Only community goals have these: the network's progress and tier amounts.
   tiers?: number[];
   progress?: number;
