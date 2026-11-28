@@ -46,7 +46,7 @@ export class UserService {
 
     let badgePath: string | undefined = undefined;
 
-    if (user.hasBadge && User.isGold(user)) {
+    if (User.hasCustomBadge(user)) {
       badgePath = getBadgePath(user.id);
     } else if (user.tier) {
       badgePath = getLogoPath(user);
