@@ -16,7 +16,10 @@ const PROGRESS_BAR = /\[[|■]+\]/;
 
 const getText = (node: JSX.Element): string[] => {
   if (node.type === "text") {
-    const text = (node.props.text as TextNode[]).map(({ text }) => text).join("").trim();
+    const text = (node.props.text as TextNode[])
+      .map(({ text }) => text)
+      .join("")
+      .trim();
     return PROGRESS_BAR.test(text) ? [] : [text];
   }
 
@@ -33,19 +36,27 @@ const getAltText = (card: JSX.Element): string => {
   const walk = (node: JSX.Element, inHeader = false) => {
     const isHeader = inHeader || node.component === Header.name;
 
-    if (node.component === Sidebar.name || node.component === Footer.name) return;
+    if (node.component === Sidebar.name || node.component === Footer.name)
+      return;
 
     if (node.component === HeaderBody.name) {
       header.push(getText(node).at(-1)!);
     } else if (node.component === List.name) {
       // List lays its items out column by column, so read each row across the columns
       const columns = node.children!.map((column) =>
-        column.children!.map((cell) => join(getText(cell)))
+        column.children!.map((cell) => join(getText(cell))),
       );
-      cells.push(...columns[0].map((_, row) => join(columns.map((column) => column[row]))));
+      cells.push(
+        ...columns[0].map((_, row) =>
+          join(columns.map((column) => column[row])),
+        ),
+      );
     } else if (isHeader && node.type === "text") {
       header.push(...getText(node));
-    } else if (!isHeader && node.children?.some((child) => child.type === "text")) {
+    } else if (
+      !isHeader &&
+      node.children?.some((child) => child.type === "text")
+    ) {
       cells.push(join(getText(node)));
     } else {
       for (const child of node.children ?? []) walk(child, isHeader);
@@ -70,15 +81,23 @@ const getAltText = (card: JSX.Element): string => {
 export const renderAttachment = async (
   card: JSX.Element,
   name: string,
-  theme?: Theme
+  theme?: Theme,
 ): Promise<InteractionAttachment> => {
   const description = getAltText(card);
   const canvas = render(card, theme);
 
-  return { name, data: await canvas.toBuffer("png"), type: "image/png", description };
+  return {
+    name,
+    data: await canvas.toBuffer("png"),
+    type: "image/png",
+    description,
+  };
 };
 
-export const renderWithAltText = async (card: JSX.Element, theme?: Theme): Promise<IMessage> => ({
+export const renderWithAltText = async (
+  card: JSX.Element,
+  theme?: Theme,
+): Promise<IMessage> => ({
   files: [await renderAttachment(card, "image.png", theme)],
   attachments: [],
 });
