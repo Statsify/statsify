@@ -12,17 +12,24 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import { inspect } from "node:util";
 
-const LOG_LEVELS = ["log", "error", "warn", "debug", "verbose", "fatal"] as const;
+const LOG_LEVELS = [
+  "log",
+  "error",
+  "warn",
+  "debug",
+  "verbose",
+  "fatal",
+] as const;
 
 export type LogLevel = (typeof LOG_LEVELS)[number];
 
 export const STATUS_COLORS = {
-  debug: 0xC700E7,
-  warn: 0xFAB627,
-  error: 0xCD1820,
-  info: 0x6469F5,
-  success: 0x36D494,
-  fatal: 0x81181A,
+  debug: 0xc700e7,
+  warn: 0xfab627,
+  error: 0xcd1820,
+  info: 0x6469f5,
+  success: 0x36d494,
+  fatal: 0x81181a,
 } as const;
 
 const ColorByLogLevel: Record<LogLevel, number> = {
@@ -43,7 +50,7 @@ const SentryLogByLogLevel: Record<LogLevel, typeof Sentry.logger.info> = {
   fatal: Sentry.logger.fatal,
 };
 
-const isProduction = await config("environment") === "prod";
+const isProduction = (await config("environment")) === "prod";
 
 // Sentry doesn't scrub these, so no Discord usernames or API keys
 export type RequestAttributes = {
@@ -113,21 +120,34 @@ export class Logger {
 
     if (isErrorLevel && message instanceof Error) {
       const span = Sentry.getActiveSpan();
-      if (span) Sentry.getRootSpan(span).setStatus({ code: 2, message: "internal_error" });
+      if (span)
+        Sentry.getRootSpan(span).setStatus({
+          code: 2,
+          message: "internal_error",
+        });
 
       Sentry.captureException(message);
     }
 
     const icon = chalk.bold(isErrorLevel ? "📉" : "📈");
-    const context = chalk.hex(ColorByLogLevel[level].toString(16))(this.context);
-    const time = chalk.gray(`${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`);
+    const context = chalk.hex(ColorByLogLevel[level].toString(16))(
+      this.context,
+    );
+    const time = chalk.gray(
+      `${Logger.getTimeStamp()}${isProduction ? "" : "ms"}`,
+    );
 
-    process[isErrorLevel ? "stderr" : "stdout"].write(`${icon} ${context} ${time} ${output}\n`);
+    process[isErrorLevel ? "stderr" : "stdout"].write(
+      `${icon} ${context} ${time} ${output}\n`,
+    );
 
-    SentryLogByLogLevel[level](message instanceof Error ? message.message : output, {
-      context: this.context,
-      ...(message instanceof Error && { "error.type": message.name }),
-    });
+    SentryLogByLogLevel[level](
+      message instanceof Error ? message.message : output,
+      {
+        context: this.context,
+        ...(message instanceof Error && { "error.type": message.name }),
+      },
+    );
   }
 
   private static getTimeStamp() {
