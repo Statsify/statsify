@@ -12,7 +12,6 @@ import { IMAGE_DOWNLOAD_TIMEOUT } from "@statsify/rendering";
 import { Module } from "@nestjs/common";
 import { Player, SkyBlockStats } from "@statsify/schemas";
 import { PlayerModule } from "#player";
-import { SkyBlockBudgetService } from "./skyblock-budget.service.js";
 import { SkyBlockController } from "./skyblock.controller.js";
 import { SkyBlockIconsService } from "./skyblock-icons.service.js";
 import { SkyBlockLeaderboardController } from "./leaderboards/skyblock-leaderboard.controller.js";
@@ -23,6 +22,8 @@ import {
   SkyBlockProfiles,
 } from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import { SkyBlockSearchController } from "./search/skyblock-search.controller.js";
+import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
 import { SkyBlockService } from "./skyblock.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
@@ -39,11 +40,15 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     ]),
     HttpModule.register({ timeout: IMAGE_DOWNLOAD_TIMEOUT }),
   ],
-  controllers: [SkyBlockController, SkyBlockLeaderboardController],
+  controllers: [
+    SkyBlockController,
+    SkyBlockSearchController,
+    SkyBlockLeaderboardController,
+  ],
   providers: [
     SkyBlockService,
-    SkyBlockBudgetService,
     SkyBlockPricesService,
+    SkyBlockSearchService,
     SkyBlockIconsService,
     SkyBlockLeaderboardService,
   ],

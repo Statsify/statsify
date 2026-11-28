@@ -14,33 +14,55 @@ import { SKILLS, SKILL_COLORS } from "@statsify/skyblock/display";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
-export const SkyBlockSkillsProfile = ({ profile, t, ...card }: SkyBlockProfileProps) => {
+export const SkyBlockSkillsProfile = ({
+  profile,
+  t,
+  ...card
+}: SkyBlockProfileProps) => {
   const { skills } = profile.member;
 
-  const sidebar: SidebarItem[] = skills ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]] : [];
+  const sidebar: SidebarItem[] = skills
+    ? [[t("skyblock.skillAverage"), t(skills.average), "§a"]]
+    : [];
 
-  const cells = skills ?
-    SKILLS.map((name) => {
-      const level = skills.skills[name];
-      const pastMax = level.xpForNext === undefined && level.xpCurrent > 0 && !level.unverified ?
-        `§7${t("skyblock.xpPastMax", { xp: t(Math.floor(level.xpCurrent)) })}` :
-        undefined;
+  const cells = skills
+    ? SKILLS.map((name) => {
+        const level = skills.skills[name];
+        const maxed = level.xpForNext === undefined && !level.unverified;
+        const xp = t(Math.floor(level.xpCurrent));
 
-      return <LevelBar title={prettify(name)} level={level} color={SKILL_COLORS[name]} t={t} note={pastMax} />;
-    }) :
-    [];
+        return (
+          <LevelBar
+            title={prettify(name)}
+            level={level}
+            color={SKILL_COLORS[name]}
+            t={t}
+            note={
+              maxed && level.xpCurrent > 0
+                ? `§7${t("skyblock.xpPastMax", { xp })}`
+                : undefined
+            }
+          />
+        );
+      })
+    : [];
 
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
-      {skills ?
-        (
-          <Table.table>
-            {arrayGroup(cells, 4).map((row) => (
-              <Table.tr>{row}</Table.tr>
-            ))}
-          </Table.table>
-        ) :
-        <EmptySection setting="skills" newProfile={profile.newProfile} empty={t("skyblock.noSkills")} t={t} />}
+      {skills ? (
+        <Table.table>
+          {arrayGroup(cells, 4).map((row) => (
+            <Table.tr>{row}</Table.tr>
+          ))}
+        </Table.table>
+      ) : (
+        <EmptySection
+          setting="skills"
+          newProfile={profile.newProfile}
+          empty={t("skyblock.noSkills")}
+          t={t}
+        />
+      )}
     </Card>
   );
 };

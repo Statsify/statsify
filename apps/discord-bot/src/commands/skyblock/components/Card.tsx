@@ -10,21 +10,41 @@ import { Container, Footer, Header, type SidebarItem } from "#components";
 import { Empty } from "./Empty.js";
 import type { SkyBlockProfileProps } from "../skyblock.command.js";
 
-export interface CardProps extends Pick<SkyBlockProfileProps, "title" | "skin" | "badge" | "background" | "logo" | "user"> {
+export interface CardProps extends Pick<
+  SkyBlockProfileProps,
+  "title" | "skin" | "badge" | "background" | "logo" | "user"
+> {
   name: string;
   sidebar?: SidebarItem[];
   children: JSX.Children;
 }
 
-export const Card = ({ name, sidebar = [], title, skin, badge, background, logo, user, children }: CardProps) => (
+export const Card = ({
+  name,
+  sidebar = [],
+  title,
+  skin,
+  badge,
+  background,
+  logo,
+  user,
+  children,
+}: CardProps) => (
   <Container background={background}>
-    <Header skin={skin} name={name} badge={badge} sidebar={sidebar} title={title} time="LIVE" />
+    <Header
+      skin={skin}
+      name={name}
+      badge={badge}
+      sidebar={sidebar}
+      title={title}
+      time="LIVE"
+    />
     <>{children}</>
     <Footer logo={logo} user={user} />
   </Container>
 );
 
-export interface EmptyCardProps extends Omit<CardProps, "children"> {
+interface EmptyCardProps extends Omit<CardProps, "children"> {
   text: string;
 }
 

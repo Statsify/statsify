@@ -6,25 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AVERAGED, xpOf } from "./sections/skills.js";
-import {
-  DUNGEON_CLASSES,
-  type DungeonClass,
-  KUUDRA_TIERS,
-  type Level,
-  type MemberView,
-  SKILLS,
-  SLAYER_BOSSES,
-  type Skill,
-  type SlayerBoss,
-} from "#types";
+import { AVERAGED, SKILLS, type Skill, getSkillXp } from "./skills.js";
+import { DUNGEON_CLASSES, type DungeonClass } from "./dungeons.js";
+import { KUUDRA_TIERS, type Level, type MemberView } from "#types";
+import { SLAYER_BOSSES, type SlayerBoss } from "./slayers.js";
 import { add } from "@statsify/math";
-import { bagAccessories } from "./sections/accessories.js";
-import { isMember, toProfileSummary } from "./profiles.js";
-import type { SectionInput, SkyBlockSection } from "./sections/index.js";
+import { isMember, toProfileSummary } from "../profiles.js";
+import { readBag } from "./accessories.js";
+import type { SectionInput, SkyBlockSection } from "./index.js";
 
-/** The sections a member's stats come from; the level and fairy souls are the profile summary's. */
-export const MEMBER_STATS_SECTIONS = [
+// The level and fairy souls come from the profile summary instead.
+export const MEMBER_STATS_SECTIONS: SkyBlockSection[] = [
   "chocolate",
   "crimson",
   "dungeons",
@@ -34,7 +26,7 @@ export const MEMBER_STATS_SECTIONS = [
   "pets",
   "skills",
   "slayers",
-] as const satisfies readonly SkyBlockSection[];
+];
 
 const KUUDRA_STATS = {
   none: "kuudraBasic",
@@ -44,7 +36,7 @@ const KUUDRA_STATS = {
   infernal: "kuudraInfernal",
 } as const satisfies Record<(typeof KUUDRA_TIERS)[number], string>;
 
-// The page's Social is the co-op's sum and level, so its board ranks the member's own XP, with no level
+// The page's Social is the co-op's, so its board ranks the member's own XP.
 type LeveledSkill = Exclude<Skill, "social">;
 const LEVELED_SKILLS = SKILLS.filter(
   (skill): skill is LeveledSkill => skill !== "social",
@@ -76,23 +68,20 @@ export type MemberStat =
   | "trophyFish"
   | "chocolate";
 
-/** A member's numbers at a fetch, as their profile page shows them, except for what a co-op shares. */
 export type MemberStats = Record<MemberStat, number>;
 
-// 13 bits hold the average in hundredths (60.00 at most) and 40 the XP, so the score stays an exact integer
+// 13 bits hold the average in hundredths and 40 the XP, an exact integer.
 const XP_SPAN = 2 ** 40;
 
-/** The skill average board's score: the average as shown, to two decimals, then the averaged skills' XP. */
-export const skillAverageOrder = (average: number, xp: number) =>
+// Maxed members tie on the shown average, so the XP under it breaks ties.
+export const getSkillAverageOrder = (average: number, xp: number) =>
   Math.round(average * 100) * XP_SPAN + Math.min(Math.floor(xp), XP_SPAN - 1);
 
-// The page counts Catacombs and class levels past 50; the boards show the game's
-const cappedLevel = ({ level, maxLevel }: Level) => Math.min(level, maxLevel);
+// The page counts Catacombs and class levels past 50, but the boards don't.
+const getCappedLevel = ({ level, maxLevel }: Level) =>
+  Math.min(level, maxLevel);
 
-/**
- * A section left out of `view` leaves its numbers out, so a caller can keep the ones it had; a section the API settings
- * hide counts 0. What a co-op shares counts the member's own part: their own Social XP, and their share of the bank.
- */
+// A section left out of the view leaves its stats out, so stored ones stay.
 export function toMemberStats(
   {
     uuid,
@@ -139,23 +128,26 @@ export function toMemberStats(
       ? add(...AVERAGED.map((skill) => skills.skills[skill].xp))
       : 0;
     stats.skillAverage = skills?.average ?? 0;
-    stats.skillAverageOrder = skillAverageOrder(stats.skillAverage, averagedXp);
+    stats.skillAverageOrder = getSkillAverageOrder(
+      stats.skillAverage,
+      averagedXp,
+    );
 
     for (const skill of LEVELED_SKILLS) {
       stats[`${skill}Xp`] = Math.floor(skills?.skills[skill].xp ?? 0);
       stats[`${skill}Level`] = skills?.skills[skill].level ?? 0;
     }
 
-    stats.socialXp = skills ? Math.floor(xpOf(member, "social")) : 0;
+    stats.socialXp = skills ? Math.floor(getSkillXp(member, "social")) : 0;
   }
 
   if (dungeons) {
     stats.catacombsXp = Math.floor(dungeons.catacombs.xp);
-    stats.catacombsLevel = cappedLevel(dungeons.catacombs);
+    stats.catacombsLevel = getCappedLevel(dungeons.catacombs);
 
     for (const name of DUNGEON_CLASSES) {
       stats[`${name}Xp`] = Math.floor(dungeons.classes[name].xp);
-      stats[`${name}Level`] = cappedLevel(dungeons.classes[name]);
+      stats[`${name}Level`] = getCappedLevel(dungeons.classes[name]);
     }
 
     stats.secrets = dungeons.secrets;
@@ -172,9 +164,8 @@ export function toMemberStats(
 
   if (crimson !== undefined) {
     for (const tier of KUUDRA_TIERS) {
-      stats[KUUDRA_STATS[tier]] =
-        crimson?.kuudra.find((kuudra) => kuudra.tier === tier)?.completions ??
-        0;
+      const kuudra = crimson?.kuudra.find((entry) => entry.tier === tier);
+      stats[KUUDRA_STATS[tier]] = kuudra?.completions ?? 0;
     }
   }
 
@@ -183,10 +174,11 @@ export function toMemberStats(
     stats.hotmLevel = hotm.level.level;
   }
 
-  // The bag alone, without the accessories section's stored items and upgrades. It waits for prices as that section
-  // does, so the board and the page agree
-  if (items && prices)
-    stats.accessoryPower = bagAccessories(member, items)?.accessoryPower ?? 0;
+  // It waits for prices like the accessories section, so the two agree.
+  if (items && prices) {
+    stats.accessoryPower = readBag(member, items)?.accessoryPower ?? 0;
+  }
+
   if (pets) stats.petScore = pets.score;
   if (fishing !== undefined) stats.trophyFish = fishing?.trophyFishCaught ?? 0;
   if (chocolate !== undefined) stats.chocolate = chocolate?.total ?? 0;
@@ -195,18 +187,23 @@ export function toMemberStats(
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("skillAverageOrder ranks by the shown average, then by the XP under it", () => {
-    expect(skillAverageOrder(55.7, 0)).toBeGreaterThan(
-      skillAverageOrder(55.69, 1e11),
-    );
-    expect(skillAverageOrder(55.704, 2)).toBeGreaterThan(
-      skillAverageOrder(55.696, 1),
-    );
-    expect(skillAverageOrder(55.7, 1e13)).toBe(
-      skillAverageOrder(55.7, 2 ** 40),
-    );
-    expect(Number.isSafeInteger(skillAverageOrder(60, 1e13))).toBe(true);
+  suite("getSkillAverageOrder", () => {
+    it("should rank by the shown average first", () => {
+      expect(getSkillAverageOrder(55.7, 0)).toBeGreaterThan(
+        getSkillAverageOrder(55.69, 1e11),
+      );
+      expect(getSkillAverageOrder(55.704, 2)).toBeGreaterThan(
+        getSkillAverageOrder(55.696, 1),
+      );
+    });
+
+    it("should cap the XP so the score stays an exact integer", () => {
+      expect(getSkillAverageOrder(55.7, 1e13)).toBe(
+        getSkillAverageOrder(55.7, 2 ** 40),
+      );
+      expect(Number.isSafeInteger(getSkillAverageOrder(60, 1e13))).toBe(true);
+    });
   });
 }

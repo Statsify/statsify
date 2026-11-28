@@ -7,6 +7,7 @@
  */
 
 import { LEVELING } from "#data";
+import { toSkyBlockLevel } from "#leveling";
 import { minecraftColors } from "@statsify/util";
 import type {
   Freshness,
@@ -17,11 +18,6 @@ import type {
 } from "#types";
 import type { RawMember, RawProfile } from "#raw";
 
-export const SKYBLOCK_XP_PER_LEVEL = 100;
-
-export const skyblockLevel = (xp: number) =>
-  Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
-
 const GAME_MODES: Record<string, GameMode> = {
   normal: "normal",
   ironman: "ironman",
@@ -29,20 +25,29 @@ const GAME_MODES: Record<string, GameMode> = {
   bingo: "bingo",
 };
 
-export const gameModeOf = ({ game_mode }: RawProfile): GameMode =>
+const LEVEL_COLORS = Object.entries(LEVELING.sblevel_colours).map(
+  ([from, id]) => ({
+    from: Number(from),
+    code: minecraftColors.find((color) => color.id === id)!.code,
+  }),
+);
+
+export const getGameMode = ({ game_mode }: RawProfile): GameMode =>
   GAME_MODES[game_mode ?? "normal"] ?? "normal";
 
-/**
- * Brand new: SkyBlock levels exist with 0 XP and there's no skill XP. Profiles older than SkyBlock levels have no
- * `leveling`, and an inventory holding only the sacks bag is the inventory API being off, never a new profile.
- */
+// Ironman, stranded and bingo profiles can't use the Auction House or Bazaar.
+export const hasMarket = (profile: RawProfile) =>
+  getGameMode(profile) === "normal";
+
 function isNew(member: RawMember) {
   const skillXp = Object.entries(member.player_data?.experience ?? {}).some(
     ([key, xp]) => /^SKILL_[A-Z]+$/.test(key) && xp > 0,
   );
+  // With the inventory API off, inventory can still hold the sacks bag.
   const inventoryOff =
     member.inventory !== undefined &&
     member.inventory.inv_contents === undefined;
+  // Profiles from before SkyBlock levels have no leveling at all.
   return (
     member.leveling !== undefined &&
     !member.leveling.experience &&
@@ -51,7 +56,7 @@ function isNew(member: RawMember) {
   );
 }
 
-/** Leaving a profile leaves the member behind with a deletion_notice; a pending invite lists them unconfirmed. */
+// A member who left keeps a deletion_notice, and an invitee is unconfirmed.
 export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
@@ -61,12 +66,10 @@ export function isMember(profile: RawProfile, uuid: string) {
   );
 }
 
-/** NEU's level brackets, one every 40 levels from gray to dark red; level 0 takes the first. */
-function levelColor(level: number) {
-  const brackets = Object.entries(LEVELING.sblevel_colours);
-  const [, id] =
-    brackets.findLast(([from]) => level >= Number(from)) ?? brackets[0];
-  return minecraftColors.find((color) => color.id === id)!.code;
+function getLevelColor(level: number) {
+  const bracket =
+    LEVEL_COLORS.findLast(({ from }) => level >= from) ?? LEVEL_COLORS[0];
+  return bracket.code;
 }
 
 export function toProfileSummary(
@@ -75,19 +78,19 @@ export function toProfileSummary(
 ): ProfileSummary {
   const member = profile.members[uuid];
   const xp = member.leveling?.experience ?? 0;
-  const level = skyblockLevel(xp);
+  const { level } = toSkyBlockLevel(xp);
 
   return {
     id: profile.profile_id,
     cuteName: profile.cute_name,
-    gameMode: gameModeOf(profile),
+    gameMode: getGameMode(profile),
     selected: profile.selected ?? false,
     members: Object.entries(profile.members).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
     })),
     level,
-    levelColor: levelColor(level),
+    levelColor: getLevelColor(level),
     xp,
     newProfile: isNew(member),
     purse: member.currencies?.coin_purse ?? 0,
@@ -112,10 +115,6 @@ export function toProfilesView(
   };
 }
 
-/**
- * A profile by id or cute name (any case). Without one, the selected profile, or the one with the most SkyBlock XP when
- * none is selected. Only profiles the player is still in.
- */
 export function findProfile(
   profiles: RawProfile[],
   uuid: string,
@@ -124,11 +123,11 @@ export function findProfile(
   const own = profiles.filter((candidate) => isMember(candidate, uuid));
   const xp = ({ members }: RawProfile) =>
     members[uuid].leveling?.experience ?? 0;
-  if (profile === undefined)
-    return (
-      own.find(({ selected }) => selected) ??
-      own.toSorted((a, b) => xp(b) - xp(a))[0]
-    );
+
+  if (profile === undefined) {
+    const selected = own.find(({ selected }) => selected);
+    return selected ?? own.toSorted((a, b) => xp(b) - xp(a))[0];
+  }
 
   const name = profile.toLowerCase();
   return own.find(
