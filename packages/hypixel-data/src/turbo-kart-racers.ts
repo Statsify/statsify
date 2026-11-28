@@ -18,6 +18,7 @@ export interface KartPart {
 // Built by scripts/import-dump.ts from the Kart Customizer's part selectors
 const PARTS = dumped as Record<string, KartPart[]>;
 
+// In the Kart Customizer's order: engine, turbocharger, frame
 const KART = ["engine_active", "booster_active", "frame_active"] as const;
 
 const sameAttributes = (a: Record<string, number>, b: Record<string, number>) =>

@@ -41,6 +41,7 @@ const SHARED = Object.fromEntries(
   }),
 );
 
+// These modes have a layout per kit, like layout_mw_duel_herobrine
 const KIT_MODES = ["mw_duel", "blitz_duel", "sw_duel"] as const;
 const KIT_MODE_KEY = new RegExp(`^(${KIT_MODES.join("|")})_(.+)$`);
 
@@ -96,6 +97,7 @@ const armorSlot = (material: string) =>
         material.endsWith(`_${piece}`),
       )?.[1];
 
+// Kit tokens end in a Bukkit material and a number
 function endingMaterial(token: string) {
   const words = withoutCopy(token).split("_");
   return words
@@ -160,6 +162,8 @@ export function fromDuelsKit(
     let item: ItemStack | undefined = MODES[mode]?.[withoutCopy(token)];
 
     if (!item && kit) {
+      // A kit token's number follows its item's place in the picker's list,
+      // so items of one material match their tokens in order
       const isOwn = own(token) !== undefined;
       const same = kit.items.filter(
         (candidate) => candidate.material === tokenMaterial,
