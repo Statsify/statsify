@@ -68,26 +68,34 @@ const armor = z.object({
 export type ArmorPieceDto = z.infer<typeof armorPiece>;
 export type ArmorDto = z.infer<typeof armor>;
 
+export const queryAngle = (limit: number, fallback?: number) => {
+  const angle = z.coerce.number().min(-limit).max(limit);
+  // OpenAPI drops a default set on the transform, so it goes on the number
+  const documented =
+    fallback === undefined ? angle : angle.meta({ default: fallback });
+
+  // An empty value keeps the default, where z.coerce.number() reads "" as 0
+  return z
+    .literal("")
+    .transform(() => undefined)
+    .or(documented)
+    .optional();
+};
+
+export const queryBoolean = (fallback?: "true" | "false") => {
+  const flag = z.enum(["true", "false"]);
+  return (
+    fallback === undefined ? flag : flag.meta({ default: fallback })
+  ).transform((value) => value === "true");
+};
+
 export class SkinRenderDto extends createZodDto(
   UuidDto.schema.extend({
-    // An empty ?yaw= keeps the default angle, where z.coerce.number() would read "" as 0, the front
-    yaw: z
-      .literal("")
-      .transform(() => undefined)
-      .or(
-        z.coerce
-          .number()
-          .min(-Math.PI * 2)
-          .max(Math.PI * 2),
-      )
-      .optional()
-      .describe(
-        "Camera angle around the player in radians: 0 faces the front, π the back",
-      ),
+    yaw: queryAngle(Math.PI * 2).describe(
+      "Camera angle around the player in radians: 0 faces the front, π the back",
+    ),
     pose: z.enum(POSES).optional(),
-    cape: z
-      .enum(["true", "false"])
-      .transform((value) => value === "true")
+    cape: queryBoolean()
       .optional()
       .describe("Draw the player's cape, if they have one"),
     // Bad JSON is an issue so it answers 400, where a throw here would be a 500

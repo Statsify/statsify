@@ -10,20 +10,44 @@ import { HttpService } from "@nestjs/axios";
 import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
-import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException,
+} from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Redis } from "ioredis";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { createCanvas, loadImage } from "@statsify/rendering";
-import { getMinecraftTexturePath } from "@statsify/assets";
-import { type Armor, type ArmorPiece, renderSkin } from "@statsify/skin-renderer";
-import type { ArmorDto, ArmorPieceDto, SKULLS, SkinRenderDto } from "#dtos";
+import { getAssetPath, getMinecraftTexturePath } from "@statsify/assets";
+import { getHelmetModel, getKartModel, parseSuitPiece } from "./kart-cosmetics.js";
+import { join } from "node:path";
+import {
+  type Armor,
+  type ArmorPiece,
+  type ModelInstance,
+  ModelLibrary,
+  renderScene,
+  renderSkin,
+} from "@statsify/skin-renderer";
+import {
+  type ArmorDto,
+  type ArmorPieceDto,
+  KART_CAMERA,
+  type KartRenderDto,
+  type SKULLS,
+  type SkinRenderDto,
+} from "#dtos";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import { readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 
 @Injectable()
 export class SkinService {
+  private kartLibrary?: Promise<ModelLibrary>;
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>,
@@ -72,6 +96,23 @@ export class SkinService {
       armor: resolvedArmor,
       glint,
       cape: capeImage && imageData(capeImage),
+    });
+  }
+
+  public async getKartRender({ uuid, ...options }: KartRenderDto): Promise<Buffer> {
+    const kart = resolveKart(options, uuid !== undefined);
+
+    const [library, player, armor] = await Promise.all([
+      this.getKartLibrary(),
+      uuid
+        ? this.getSkin(uuid).then((skin) => this.resolveSkin(skin.skinUrl, skin.slim))
+        : undefined,
+      resolvePackArmor(KART_PACK, kart.suit),
+    ]);
+
+    return renderKart(library, kart, {
+      ...options,
+      player: player && { skin: imageData(player.skin), slim: player.slim, armor },
     });
   }
 
@@ -162,6 +203,16 @@ export class SkinService {
     return { texture: head, enchanted: false, skull: true };
   }
 
+  // Forgets a failed load, so a pack copied in after startup is picked up without a restart
+  private getKartLibrary() {
+    this.kartLibrary ??= loadKartLibrary().catch((error) => {
+      this.kartLibrary = undefined;
+      throw error;
+    });
+
+    return this.kartLibrary;
+  }
+
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(
       this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
@@ -218,8 +269,12 @@ const SKULL_TEXTURES: Record<(typeof SKULLS)[number], string> = {
 
 const UNDYED_LEATHER = 0xA0_65_40;
 
-async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto, layer: 1 | 2): Promise<ArmorPiece> {
-  const path = getMinecraftTexturePath(`textures/models/armor/${material}_layer_${layer}`);
+async function resolveArmorPiece(
+  { material, color = UNDYED_LEATHER, enchanted = false }: ArmorPieceDto,
+  layer: 1 | 2,
+  textures = getMinecraftTexturePath("textures")
+): Promise<ArmorPiece> {
+  const path = join(textures, `models/armor/${material}_layer_${layer}`);
   if (material !== "leather") return { texture: await readFile(`${path}.png`), enchanted };
 
   // The dye tints the base, then the overlay adds the undyed details
@@ -242,6 +297,119 @@ async function resolveArmorPiece({ material, color = UNDYED_LEATHER, enchanted =
   ctx.drawImage(overlay, 0, 0);
 
   return { texture: await canvas.toBuffer("png"), enchanted };
+}
+
+// Hypixel's pack listing doesn't carry the Turbo Kart Racers pack, so it's copied in by hand
+const KART_PACK = join(
+  getAssetPath("resource-packs/turbo-kart-racers", "public"),
+  "assets/minecraft"
+);
+
+// The kart is worn by an armor stand the rider sits on: the stand's mounted offset
+// (1.975 × 0.75 blocks) less the player's riding offset (0.35), in pixels
+const KART_MOUNT = -(1.975 * 0.75 - 0.35) * 16;
+
+async function readPackFiles<T>(
+  folder: string,
+  extension: string,
+  read: (path: string) => Promise<T>
+) {
+  const entries = await readdir(join(KART_PACK, folder), { recursive: true });
+  const files = entries.filter((file) => file.endsWith(extension));
+  const contents = await Promise.all(files.map((file) => read(join(KART_PACK, folder, file))));
+
+  return Object.fromEntries(
+    files.map((file, index) => [file.slice(0, -extension.length), contents[index]])
+  );
+}
+
+export async function loadKartLibrary(): Promise<ModelLibrary> {
+  // Only a missing pack is a 503, since Sentry skips 503s and anything else is broken state
+  await access(KART_PACK).catch((error: NodeJS.ErrnoException) => {
+    if (error.code === "ENOENT") {
+      throw new ServiceUnavailableException("The Turbo Kart Racers pack isn't installed");
+    }
+
+    throw error;
+  });
+
+  const [models, textures, mcmeta] = await Promise.all([
+    readPackFiles("models", ".json", (path) => readFile(path, "utf8")),
+    readPackFiles("textures", ".png", (path) => readFile(path)),
+    readPackFiles("textures", ".png.mcmeta", (path) => readFile(path, "utf8")),
+  ]);
+
+  return new ModelLibrary({ models, textures, mcmeta });
+}
+
+export interface KartScene {
+  models: ModelInstance[];
+  suit: Omit<ArmorDto, "helmet">;
+}
+
+export function resolveKart(
+  {
+    kart,
+    helmet,
+    jacket,
+    pants,
+    shoes,
+  }: Pick<KartRenderDto, "kart" | "helmet" | "jacket" | "pants" | "shoes">,
+  seated: boolean
+): KartScene {
+  const models: ModelInstance[] = [
+    { model: getKartModel(kart), bone: "root", display: "head", translation: [0, KART_MOUNT, 0] },
+  ];
+
+  const helmetModel = getHelmetModel(helmet);
+  if (helmetModel) models.push({ model: helmetModel, bone: "head", display: "head" });
+
+  const suit = {
+    chestplate: parseSuitPiece(jacket, "JACKET"),
+    leggings: parseSuitPiece(pants, "PANTS"),
+    boots: parseSuitPiece(shoes, "SHOES"),
+  };
+
+  if (!seated && (helmetModel || Object.values(suit).some(Boolean))) {
+    throw new BadRequestException("A helmet or suit needs a uuid to wear it");
+  }
+
+  return { models, suit };
+}
+
+export interface KartRenderOptions
+  extends Pick<KartRenderDto, "extruded" | "width" | "height" | "yaw" | "pitch"> {
+  player?: { skin: Uint8Array; slim: boolean; armor: Armor };
+}
+
+async function resolvePackArmor(pack: string, pieces: Omit<ArmorDto, "helmet">): Promise<Armor> {
+  const textures = join(pack, "textures");
+  const [chestplate, leggings, boots] = await Promise.all([
+    pieces.chestplate && resolveArmorPiece(pieces.chestplate, 1, textures),
+    pieces.leggings && resolveArmorPiece(pieces.leggings, 2, textures),
+    pieces.boots && resolveArmorPiece(pieces.boots, 1, textures),
+  ]);
+
+  return { chestplate, leggings, boots };
+}
+
+export function renderKart(
+  library: ModelLibrary,
+  { models }: KartScene,
+  {
+    player,
+    extruded = false,
+    width = KART_CAMERA.width,
+    height = KART_CAMERA.height,
+    yaw = KART_CAMERA.yaw,
+    pitch = KART_CAMERA.pitch,
+  }: KartRenderOptions
+): Promise<Buffer> {
+  const output = { width, height, yaw, pitch };
+
+  if (!player) return renderScene(library, { models }, output);
+
+  return renderScene(library, { player: { ...player, extruded, pose: "sit" }, models }, output);
 }
 
 interface MojangProfile {
