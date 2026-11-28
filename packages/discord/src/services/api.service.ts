@@ -184,7 +184,9 @@ export class ApiService extends StatsifyApiService {
     guild?: string
   ) {
     return super.getPlayerLeaderboard(field, input, type, guild).catch((err: AxiosError) => {
-      const error = err.response?.data as GuildNotFoundException | PlayerNotFoundException;
+      if (!err.response || !err.response.data) throw this.unknownError();
+
+      const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
       if (guild && error.message === "guild") {
         const guildType = GUILD_ID_REGEX.test(guild) ? GuildQuery.ID : GuildQuery.NAME;
