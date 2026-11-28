@@ -15,7 +15,11 @@ import {
   paginate,
   PlayerArgument,
 } from "@statsify/discord";
-import { FISHING_PAGES, type FishingPage, FishingProfile } from "./fishing.profile.js";
+import {
+  FISHING_PAGES,
+  type FishingPage,
+  FishingProfile,
+} from "./fishing.profile.js";
 import { type FishingSeasonalYear, GENERAL_MODES } from "@statsify/schemas";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -32,21 +36,32 @@ export class FishingCommand {
 
   public async run(context: CommandContext) {
     const user = context.getUser();
-    const player = await this.apiService.getPlayer(context.option("player"), user);
+    const player = await this.apiService.getPlayer(
+      context.option("player"),
+      user,
+    );
     const { seasonal } = player.stats.general.fishing;
 
     const [logo, skin, badge, background] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
-      getBackground(...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0])),
+      getBackground(
+        ...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0]),
+      ),
     ]);
 
     const yearGroups = arrayGroup(seasonal.toReversed(), 3);
     const pages: readonly FishingPage[] =
-      yearGroups.length > 0 ? FISHING_PAGES : FISHING_PAGES.filter((page) => page !== "yearly");
+      yearGroups.length > 0
+        ? FISHING_PAGES
+        : FISHING_PAGES.filter((page) => page !== "yearly");
 
-    const renderPage = (t: LocalizeFunction, page: FishingPage, seasonalYears: FishingSeasonalYear[]) =>
+    const renderPage = (
+      t: LocalizeFunction,
+      page: FishingPage,
+      seasonalYears: FishingSeasonalYear[],
+    ) =>
       render(
         <FishingProfile
           player={player}
@@ -62,7 +77,7 @@ export class FishingCommand {
           pageCount={pages.length}
           seasonalYears={seasonalYears}
         />,
-        getTheme(user)
+        getTheme(user),
       );
 
     return paginate(
@@ -81,7 +96,7 @@ export class FishingCommand {
         }
 
         return { label, generator: (t) => renderPage(t, page, []) };
-      })
+      }),
     );
   }
 }

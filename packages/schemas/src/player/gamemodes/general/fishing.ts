@@ -13,31 +13,115 @@ import type { APIData } from "@statsify/util";
 export const FISHING_ENVIRONMENTS = ["water", "lava", "ice"] as const;
 export type FishingEnvironment = (typeof FISHING_ENVIRONMENTS)[number];
 
-export const FISHING_EVENTS = ["halloween", "christmas", "easter", "summer"] as const;
+export const FISHING_EVENTS = [
+  "halloween",
+  "christmas",
+  "easter",
+  "summer",
+] as const;
 export type FishingEvent = (typeof FISHING_EVENTS)[number];
 
-export const FISHING_CATCH_TYPES = ["fish", "junk", "treasure", "plant", "creature"] as const;
+export const FISHING_CATCH_TYPES = [
+  "fish",
+  "junk",
+  "treasure",
+  "plant",
+  "creature",
+] as const;
 export type FishingCatchType = (typeof FISHING_CATCH_TYPES)[number];
 
 export const FISHING_ITEMS = {
-  fish: ["salmon", "clownfish", "cooked_salmon", "charred_pufferfish", "cooked_cod", "pufferfish", "cod", "trout", "pike", "perch"],
+  fish: [
+    "salmon",
+    "clownfish",
+    "cooked_salmon",
+    "charred_pufferfish",
+    "cooked_cod",
+    "pufferfish",
+    "cod",
+    "trout",
+    "pike",
+    "perch",
+  ],
   junk: [
-    "charcoal", "soggy_paper", "ink_sac", "broken_fishing_rod", "water_bottle", "bowl", "rotten_flesh", "string", "rabbit_hide",
-    "leather", "lily_pad", "bone", "leather_boots", "tripwire_hook", "stick", "coal", "fermented_spider_eye", "burned_flesh",
-    "steak", "nether_brick", "lava_bucket", "clump_of_leaves", "frozen_flesh", "snowball", "ice_shard",
+    "charcoal",
+    "soggy_paper",
+    "ink_sac",
+    "broken_fishing_rod",
+    "water_bottle",
+    "bowl",
+    "rotten_flesh",
+    "string",
+    "rabbit_hide",
+    "leather",
+    "lily_pad",
+    "bone",
+    "leather_boots",
+    "tripwire_hook",
+    "stick",
+    "coal",
+    "fermented_spider_eye",
+    "burned_flesh",
+    "steak",
+    "nether_brick",
+    "lava_bucket",
+    "clump_of_leaves",
+    "frozen_flesh",
+    "snowball",
+    "ice_shard",
   ],
   treasure: [
-    "eye_of_ender", "molten_gold", "blaze_powder", "gold_sword", "name_tag", "enchanted_book", "diamond", "compass", "gold_pickaxe",
-    "emerald", "enchanted_fishing_rod", "enchanted_bow", "saddle", "diamond_sword", "magma_cream", "blaze_rod",
-    "chainmail_chestplate", "iron_sword", "nautilus_shell",
+    "eye_of_ender",
+    "molten_gold",
+    "blaze_powder",
+    "gold_sword",
+    "name_tag",
+    "enchanted_book",
+    "diamond",
+    "compass",
+    "gold_pickaxe",
+    "emerald",
+    "enchanted_fishing_rod",
+    "enchanted_bow",
+    "saddle",
+    "diamond_sword",
+    "magma_cream",
+    "blaze_rod",
+    "chainmail_chestplate",
+    "iron_sword",
+    "nautilus_shell",
   ],
   plant: [
-    "kelp", "bamboo", "dried_kelp", "glow_berries", "melon", "potato", "sweet_berries", "wheat", "frozen_kelp", "baked_potato",
-    "charred_berries", "nether_wart", "glistering_melon", "warped_roots",
+    "kelp",
+    "bamboo",
+    "dried_kelp",
+    "glow_berries",
+    "melon",
+    "potato",
+    "sweet_berries",
+    "wheat",
+    "frozen_kelp",
+    "baked_potato",
+    "charred_berries",
+    "nether_wart",
+    "glistering_melon",
+    "warped_roots",
   ],
   creature: [
-    "chicken", "cow", "creeper", "pig", "sheep", "skeleton", "slime", "spider", "squid", "zombie", "blaze", "cave_spider",
-    "magma_cube", "pig_zombie",
+    "chicken",
+    "cow",
+    "creeper",
+    "pig",
+    "sheep",
+    "skeleton",
+    "slime",
+    "spider",
+    "squid",
+    "zombie",
+    "blaze",
+    "cave_spider",
+    "magma_cube",
+    "pig_zombie",
   ],
 } as const satisfies Record<FishingCatchType, readonly string[]>;
 
@@ -45,7 +129,12 @@ export const FISHING_MYTHICAL_FISH = [
   { id: "helios", name: "Ember of Helios", rarity: "common", maxWeight: 15 },
   { id: "selene", name: "Dust of Selene", rarity: "common", maxWeight: 15 },
   { id: "nyx", name: "Shadow of Nyx", rarity: "uncommon", maxWeight: 25 },
-  { id: "aphrodite", name: "Heart of Aphrodite", rarity: "uncommon", maxWeight: 25 },
+  {
+    id: "aphrodite",
+    name: "Heart of Aphrodite",
+    rarity: "uncommon",
+    maxWeight: 25,
+  },
   { id: "zeus", name: "Spark of Zeus", rarity: "rare", maxWeight: 40 },
   { id: "demeter", name: "Spirit of Demeter", rarity: "rare", maxWeight: 40 },
   { id: "archimedes", name: "Automaton of Daedalus", rarity: "ultra_rare" },
@@ -60,7 +149,11 @@ export const FISHING_SPECIAL_FISH = [
   { id: "knockback_slimeball", source: "anytime", environment: "water" },
   { id: "hot_potato", source: "anytime", environment: "water" },
   { id: "fish_monger_suit_helmet", source: "anytime", environment: "water" },
-  { id: "fish_monger_suit_chestplate", source: "anytime", environment: "water" },
+  {
+    id: "fish_monger_suit_chestplate",
+    source: "anytime",
+    environment: "water",
+  },
   { id: "fish_monger_suit_leggings", source: "anytime", environment: "water" },
   { id: "fish_monger_suit_boots", source: "anytime", environment: "water" },
   { id: "barnacle", source: "anytime", environment: "water" },
@@ -139,9 +232,12 @@ export type FishingHookTrail = (typeof FISHING_HOOK_TRAILS)[number];
 
 // A field per id instead of an array, so Mongo stores only what a player has and a
 // reordered registry can't shift stored values onto other items
-const createRegistryStats = <Id extends string, Type extends NumberConstructor | BooleanConstructor>(
+const createRegistryStats = <
+  Id extends string,
+  Type extends NumberConstructor | BooleanConstructor,
+>(
   ids: readonly Id[],
-  type: Type
+  type: Type,
 ) => {
   class RegistryStats {
     [id: string]: ReturnType<Type>;
@@ -151,23 +247,45 @@ const createRegistryStats = <Id extends string, Type extends NumberConstructor |
     }
   }
 
-  for (const id of ids) Field({ type: () => type, leaderboard: { enabled: false } })(RegistryStats.prototype, id);
+  for (const id of ids)
+    Field({ type: () => type, leaderboard: { enabled: false } })(
+      RegistryStats.prototype,
+      id,
+    );
 
-  return RegistryStats as unknown as new (value: (id: Id) => ReturnType<Type>) => Record<Id, ReturnType<Type>>;
+  return RegistryStats as unknown as new (
+    value: (id: Id) => ReturnType<Type>,
+  ) => Record<Id, ReturnType<Type>>;
 };
 
-type FishingItem<T extends FishingCatchType> = (typeof FISHING_ITEMS)[T][number];
+type FishingItem<T extends FishingCatchType> =
+  (typeof FISHING_ITEMS)[T][number];
 
-const FishingMythicalStats = createRegistryStats(FISHING_MYTHICAL_FISH.map((mythical) => mythical.id), Number);
-const FishingSpecialFishUnlocks = createRegistryStats(FISHING_SPECIAL_FISH.map((fish) => fish.id), Boolean);
+const FishingMythicalStats = createRegistryStats(
+  FISHING_MYTHICAL_FISH.map((mythical) => mythical.id),
+  Number,
+);
+const FishingSpecialFishUnlocks = createRegistryStats(
+  FISHING_SPECIAL_FISH.map((fish) => fish.id),
+  Boolean,
+);
 const FishingRodUnlocks = createRegistryStats(FISHING_RODS, Boolean);
-const FishingHookTrailUnlocks = createRegistryStats(FISHING_HOOK_TRAILS, Boolean);
+const FishingHookTrailUnlocks = createRegistryStats(
+  FISHING_HOOK_TRAILS,
+  Boolean,
+);
 
 const FishingFishCatches = createRegistryStats(FISHING_ITEMS.fish, Number);
 const FishingJunkCatches = createRegistryStats(FISHING_ITEMS.junk, Number);
-const FishingTreasureCatches = createRegistryStats(FISHING_ITEMS.treasure, Number);
+const FishingTreasureCatches = createRegistryStats(
+  FISHING_ITEMS.treasure,
+  Number,
+);
 const FishingPlantCatches = createRegistryStats(FISHING_ITEMS.plant, Number);
-const FishingCreatureCatches = createRegistryStats(FISHING_ITEMS.creature, Number);
+const FishingCreatureCatches = createRegistryStats(
+  FISHING_ITEMS.creature,
+  Number,
+);
 
 export class FishingItemCatches {
   @Field({ type: () => FishingFishCatches })
@@ -223,7 +341,14 @@ export class FishingEnvironmentStats {
     this.plant = data.plant;
     this.creature = data.creature;
     this.mythical = data.orb;
-    this.total = add(this.fish, this.junk, this.treasure, this.plant, this.creature, this.mythical);
+    this.total = add(
+      this.fish,
+      this.junk,
+      this.treasure,
+      this.plant,
+      this.creature,
+      this.mythical,
+    );
   }
 }
 
@@ -273,7 +398,12 @@ export class FishingSeasonalYear {
     this.christmas = new FishingSeasonalEvent(data.christmas);
     this.easter = new FishingSeasonalEvent(data.easter);
     this.summer = new FishingSeasonalEvent(data.summer);
-    this.total = add(this.halloween.total, this.christmas.total, this.easter.total, this.summer.total);
+    this.total = add(
+      this.halloween.total,
+      this.christmas.total,
+      this.easter.total,
+      this.summer.total,
+    );
   }
 }
 
@@ -409,17 +539,36 @@ export class Fishing {
 
     this.fish = add(this.water.fish, this.lava.fish, this.ice.fish);
     this.junk = add(this.water.junk, this.lava.junk, this.ice.junk);
-    this.treasure = add(this.water.treasure, this.lava.treasure, this.ice.treasure);
+    this.treasure = add(
+      this.water.treasure,
+      this.lava.treasure,
+      this.ice.treasure,
+    );
     this.plant = add(this.water.plant, this.lava.plant, this.ice.plant);
-    this.creature = add(this.water.creature, this.lava.creature, this.ice.creature);
+    this.creature = add(
+      this.water.creature,
+      this.lava.creature,
+      this.ice.creature,
+    );
 
     this.mythicals = new FishingMythicalStats((id) => fishing.orbs?.[id]);
-    this.mythicalWeights = new FishingMythicalStats((id) => fishing.orbs?.weight?.[id]);
+    this.mythicalWeights = new FishingMythicalStats(
+      (id) => fishing.orbs?.weight?.[id],
+    );
     this.mythical = add(...Object.values(this.mythicals));
 
-    this.totalCatches = add(this.fish, this.junk, this.treasure, this.plant, this.creature, this.mythical);
+    this.totalCatches = add(
+      this.fish,
+      this.junk,
+      this.treasure,
+      this.plant,
+      this.creature,
+      this.mythical,
+    );
 
-    this.specialFish = new FishingSpecialFishUnlocks((id) => fishing.special_fish?.[id] === true);
+    this.specialFish = new FishingSpecialFishUnlocks(
+      (id) => fishing.special_fish?.[id] === true,
+    );
     this.special = Object.values(this.specialFish).filter(Boolean).length;
 
     this.catches = new FishingItemCatches(permanent.individual);
@@ -430,18 +579,28 @@ export class Fishing {
       .sort((a, b) => Number(a.year) - Number(b.year));
 
     this.activeRod = fishing.activeFishingRod;
-    this.activeHookTrail = fishing.activeFishHookTrail === "none" ? undefined : fishing.activeFishHookTrail;
+    this.activeHookTrail =
+      fishing.activeFishHookTrail === "none"
+        ? undefined
+        : fishing.activeFishHookTrail;
 
     // Hypixel only lists event rewards in packages, so the rest are inferred from their requirements
     const unlockedRods: Partial<Record<FishingRod, boolean>> = {
-      inaugural_ice_fishing_rod: this.seasonal.some((year) => year.year === "2022" && year.christmas.ice.total > 0),
+      inaugural_ice_fishing_rod: this.seasonal.some(
+        (year) => year.year === "2022" && year.christmas.ice.total > 0,
+      ),
       fishing_rod_overgrown:
-        this.specialFish.poisonous_potato && this.specialFish.golden_apple && this.specialFish.burnt_plant,
+        this.specialFish.poisonous_potato &&
+        this.specialFish.golden_apple &&
+        this.specialFish.burnt_plant,
       fishing_rod_zoologist: this.catches.creature.squid > 0,
     };
 
     this.rods = new FishingRodUnlocks(
-      (id) => packages.includes(id) || id === this.activeRod || (unlockedRods[id] ?? false)
+      (id) =>
+        packages.includes(id) ||
+        id === this.activeRod ||
+        (unlockedRods[id] ?? false),
     );
 
     const unlockedHookTrails: Partial<Record<FishingHookTrail, boolean>> = {
@@ -456,7 +615,10 @@ export class Fishing {
     };
 
     this.hookTrails = new FishingHookTrailUnlocks(
-      (id) => packages.includes(id) || id === this.activeHookTrail || (unlockedHookTrails[id] ?? false)
+      (id) =>
+        packages.includes(id) ||
+        id === this.activeHookTrail ||
+        (unlockedHookTrails[id] ?? false),
     );
 
     this.enchants = new FishingEnchantments(fishing.enchants);

@@ -94,9 +94,12 @@ const ENCHANTS = [
 const DEFAULT_ROD: FishingRod = "fishing_rod_3000";
 const SPECIALS_PER_PAGE = 24;
 
-const rodName = (id: string) => prettify(id.replace(/^fishing_rod_|_fishing_rod$/, ""));
-const hookTrailName = (id: string) => prettify(id.replace("mainlobby_fishing_", ""));
-const isRodUnlocked = (fishing: Fishing, id: FishingRod) => id === DEFAULT_ROD || fishing.rods[id];
+const rodName = (id: string) =>
+  prettify(id.replace(/^fishing_rod_|_fishing_rod$/, ""));
+const hookTrailName = (id: string) =>
+  prettify(id.replace("mainlobby_fishing_", ""));
+const isRodUnlocked = (fishing: Fishing, id: FishingRod) =>
+  id === DEFAULT_ROD || fishing.rods[id];
 
 interface FishingProfileProps extends BaseProfileProps {
   page: FishingPage;
@@ -119,16 +122,30 @@ interface CollectionItem {
   detail?: string;
 }
 
-const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: CollectionItem[]; columns: number }) => (
+const CollectionTable = ({
+  t,
+  items,
+  columns,
+}: {
+  t: LocalizeFunction;
+  items: CollectionItem[];
+  columns: number;
+}) => (
   <Table.table>
     {arrayGroup(items, columns).map((row) => (
       <Table.tr>
         {row.map((item) => {
           const color = item.unlocked ? "§a" : "§c";
-          const status = t(item.unlocked ? "stats.fishing.unlocked" : "stats.fishing.locked");
+          const status = t(
+            item.unlocked ? "stats.fishing.unlocked" : "stats.fishing.locked",
+          );
 
           return (
-            <box width="100%" direction="column" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+            <box
+              width="100%"
+              direction="column"
+              padding={{ left: 8, right: 8, top: 4, bottom: 4 }}
+            >
               <text>
                 §l{color}
                 {item.active ? "§n" : ""}
@@ -148,25 +165,35 @@ const CollectionTable = ({ t, items, columns }: { t: LocalizeFunction; items: Co
   </Table.table>
 );
 
-const eventStats = (years: FishingSeasonalYear[], events: readonly FishingEvent[]) =>
-  years.flatMap((year) => events.flatMap((event) => FISHING_ENVIRONMENTS.map((environment) => year[event][environment])));
+const eventStats = (
+  years: FishingSeasonalYear[],
+  events: readonly FishingEvent[],
+) =>
+  years.flatMap((year) =>
+    events.flatMap((event) =>
+      FISHING_ENVIRONMENTS.map((environment) => year[event][environment]),
+    ),
+  );
 
-const eventTotal = (years: FishingSeasonalYear[], event: FishingEvent) => add(...years.map((year) => year[event].total));
+const eventTotal = (years: FishingSeasonalYear[], event: FishingEvent) =>
+  add(...years.map((year) => year[event].total));
 
 const Overview = ({ t, fishing }: PageProps) => (
   <Table.table>
     <Table.ts title={`§b${t("stats.fishing.lifetimeCatches")}`}>
-      {arrayGroup([...FISHING_CATCH_TYPES, "mythical" as const], 3).map((types) => (
-        <Table.tr>
-          {types.map((type) => (
-            <Table.td
-              title={t(`stats.fishing.catchTypes.${type}`)}
-              value={t(fishing[type])}
-              color={CATCH_TYPE_COLORS[type]}
-            />
-          ))}
-        </Table.tr>
-      ))}
+      {arrayGroup([...FISHING_CATCH_TYPES, "mythical" as const], 3).map(
+        (types) => (
+          <Table.tr>
+            {types.map((type) => (
+              <Table.td
+                title={t(`stats.fishing.catchTypes.${type}`)}
+                value={t(fishing[type])}
+                color={CATCH_TYPE_COLORS[type]}
+              />
+            ))}
+          </Table.tr>
+        ),
+      )}
     </Table.ts>
     <Table.ts title={`§b${t("stats.fishing.environmentBreakdown")}`}>
       {FISHING_ENVIRONMENTS.map((environment) => {
@@ -198,16 +225,32 @@ const Overview = ({ t, fishing }: PageProps) => (
       {arrayGroup([...ENCHANTS], 3).map((row) => (
         <Table.tr>
           {row.map(([enchant, color]) => (
-            <Table.td title={t(`stats.fishing.enchants.${enchant}`)} value={t(fishing.enchants[enchant])} color={color} />
+            <Table.td
+              title={t(`stats.fishing.enchants.${enchant}`)}
+              value={t(fishing.enchants[enchant])}
+              color={color}
+            />
           ))}
         </Table.tr>
       ))}
     </Table.ts>
     <Table.ts title={`§b${t("stats.fishing.fireproofing.title")}`}>
       <Table.tr>
-        <Table.td title={t("stats.fishing.fireproofing.scales")} value={t(fishing.fireproofing.scales)} color="§e" />
-        <Table.td title={t("stats.fishing.fireproofing.sealant")} value={t(fishing.fireproofing.sealant)} color="§a" />
-        <Table.td title={t("stats.fishing.fireproofing.flame")} value={t(fishing.fireproofing.flame)} color="§c" />
+        <Table.td
+          title={t("stats.fishing.fireproofing.scales")}
+          value={t(fishing.fireproofing.scales)}
+          color="§e"
+        />
+        <Table.td
+          title={t("stats.fishing.fireproofing.sealant")}
+          value={t(fishing.fireproofing.sealant)}
+          color="§a"
+        />
+        <Table.td
+          title={t("stats.fishing.fireproofing.flame")}
+          value={t(fishing.fireproofing.flame)}
+          color="§c"
+        />
       </Table.tr>
     </Table.ts>
   </Table.table>
@@ -224,15 +267,21 @@ const Mythicals = ({ t, fishing }: PageProps) => (
 
           return (
             <Table.ts title={`§d${mythical.name}`}>
-              <box width="100%" direction="column" padding={{ left: 8, right: 8 }}>
+              <box
+                width="100%"
+                direction="column"
+                padding={{ left: 8, right: 8 }}
+              >
                 <Multiline>
                   {[
                     `§7${t("stats.fishing.rarity")}: §b${t(`stats.fishing.rarities.${mythical.rarity}`)}`,
                     `§7${t("stats.fishing.catches")}: §6${t(catches)}`,
                     `§7${t("stats.fishing.share")}: §6${t(ratio(catches, fishing.mythical, 100))}%`,
-                    ...(weight ?
-                      [`§7${t("stats.fishing.maxWeight")}: §6${t(weight)}kg${maxed ? ` §a${t("stats.fishing.maxed")}` : ""}`] :
-                      []),
+                    ...(weight
+                      ? [
+                          `§7${t("stats.fishing.maxWeight")}: §6${t(weight)}kg${maxed ? ` §a${t("stats.fishing.maxed")}` : ""}`,
+                        ]
+                      : []),
                   ].join("\n")}
                 </Multiline>
               </box>
@@ -244,7 +293,11 @@ const Mythicals = ({ t, fishing }: PageProps) => (
   </Table.table>
 );
 
-const Specials = ({ t, fishing, specialFish }: PageProps & { specialFish: (typeof FISHING_SPECIAL_FISH)[number][] }) => {
+const Specials = ({
+  t,
+  fishing,
+  specialFish,
+}: PageProps & { specialFish: (typeof FISHING_SPECIAL_FISH)[number][] }) => {
   const items = specialFish.map((fish) => ({
     name: prettify(fish.id),
     unlocked: fishing.specialFish[fish.id],
@@ -283,16 +336,31 @@ const Collections = ({ t, fishing }: PageProps) => (
   </Table.table>
 );
 
-const CatchSection = ({ t, fishing, type }: { t: LocalizeFunction; fishing: Fishing; type: FishingCatchType }) => {
+const CatchSection = ({
+  t,
+  fishing,
+  type,
+}: {
+  t: LocalizeFunction;
+  fishing: Fishing;
+  type: FishingCatchType;
+}) => {
   const catches: Record<string, number> = fishing.catches[type];
   const color = CATCH_TYPE_COLORS[type];
 
   return (
-    <Table.ts title={`§b${t(`stats.fishing.catchTypes.${type}`)} §7- ${color}${t(fishing[type])}`}>
+    <Table.ts
+      title={`§b${t(`stats.fishing.catchTypes.${type}`)} §7- ${color}${t(fishing[type])}`}
+    >
       {arrayGroup([...FISHING_ITEMS[type]], 3).map((row) => (
         <Table.tr>
           {row.map((id) => (
-            <Table.td title={prettify(id)} value={t(catches[id])} color={color} size="inline" />
+            <Table.td
+              title={prettify(id)}
+              value={t(catches[id])}
+              color={color}
+              size="inline"
+            />
           ))}
         </Table.tr>
       ))}
@@ -300,7 +368,11 @@ const CatchSection = ({ t, fishing, type }: { t: LocalizeFunction; fishing: Fish
   );
 };
 
-const Catches = ({ t, fishing, types }: PageProps & { types: FishingCatchType[] }) => (
+const Catches = ({
+  t,
+  fishing,
+  types,
+}: PageProps & { types: FishingCatchType[] }) => (
   <Table.table>
     {types.map((type) => (
       <CatchSection t={t} fishing={fishing} type={type} />
@@ -352,16 +424,30 @@ const Seasonal = ({ t, fishing }: PageProps) => (
   <Table.table>
     {[
       <Table.ts title={`§b${t("stats.fishing.seasonalCatchTypes")}`}>
-        <CatchTypeRow t={t} stats={eventStats(fishing.seasonal, FISHING_EVENTS)} types={FISHING_CATCH_TYPES} />
+        <CatchTypeRow
+          t={t}
+          stats={eventStats(fishing.seasonal, FISHING_EVENTS)}
+          types={FISHING_CATCH_TYPES}
+        />
       </Table.ts>,
       ...arrayGroup([...FISHING_EVENTS], 2).map((events) => (
         <Table.tr>
           {events.map((event) => {
             const stats = eventStats(fishing.seasonal, [event]);
             return (
-              <Table.ts title={`${EVENT_COLORS[event]}${t(`stats.fishing.events.${event}`)} §7- §f${t(eventTotal(fishing.seasonal, event))}`}>
-                <CatchTypeRow t={t} stats={stats} types={["fish", "junk", "treasure"]} />
-                <CatchTypeRow t={t} stats={stats} types={["plant", "creature", "mythical"]} />
+              <Table.ts
+                title={`${EVENT_COLORS[event]}${t(`stats.fishing.events.${event}`)} §7- §f${t(eventTotal(fishing.seasonal, event))}`}
+              >
+                <CatchTypeRow
+                  t={t}
+                  stats={stats}
+                  types={["fish", "junk", "treasure"]}
+                />
+                <CatchTypeRow
+                  t={t}
+                  stats={stats}
+                  types={["plant", "creature", "mythical"]}
+                />
               </Table.ts>
             );
           })}
@@ -377,7 +463,9 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
   return (
     <Table.table>
       {[
-        <Table.ts title={`§b${t("stats.fishing.allTimeSeasonal")} §7- §f${t(total)}`}>
+        <Table.ts
+          title={`§b${t("stats.fishing.allTimeSeasonal")} §7- §f${t(total)}`}
+        >
           <Table.tr>
             {FISHING_EVENTS.map((event) => (
               <Table.td
@@ -392,7 +480,11 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
           <Table.ts title={`§b§l${year.year} §r§7- §f${t(year.total)}`}>
             <Table.tr>
               {FISHING_EVENTS.map((event) => (
-                <Table.td title={t(`stats.fishing.events.${event}`)} value={t(year[event].total)} color={EVENT_COLORS[event]} />
+                <Table.td
+                  title={t(`stats.fishing.events.${event}`)}
+                  value={t(year[event].total)}
+                  color={EVENT_COLORS[event]}
+                />
               ))}
             </Table.tr>
             <Table.tr>
@@ -400,13 +492,25 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
                 ...FISHING_ENVIRONMENTS.map((environment) => (
                   <Table.td
                     title={t(`stats.fishing.environments.${environment}`)}
-                    value={t(add(...FISHING_EVENTS.map((event) => year[event][environment].total)))}
+                    value={t(
+                      add(
+                        ...FISHING_EVENTS.map(
+                          (event) => year[event][environment].total,
+                        ),
+                      ),
+                    )}
                     color={ENVIRONMENT_COLORS[environment]}
                   />
                 )),
                 <Table.td
                   title={t("stats.fishing.catchTypes.mythical")}
-                  value={t(add(...eventStats([year], FISHING_EVENTS).map((environment) => environment.mythical)))}
+                  value={t(
+                    add(
+                      ...eventStats([year], FISHING_EVENTS).map(
+                        (environment) => environment.mythical,
+                      ),
+                    ),
+                  )}
                   color={CATCH_TYPE_COLORS.mythical}
                 />,
               ]}
@@ -421,10 +525,22 @@ const Yearly = ({ t, fishing, seasonalYears }: PageProps) => {
 const PAGE_CONTENT: Record<FishingPage, (props: PageProps) => JSX.Element> = {
   overview: Overview,
   mythicals: Mythicals,
-  specialsOne: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(0, SPECIALS_PER_PAGE)} />,
-  specialsTwo: (props) => <Specials {...props} specialFish={FISHING_SPECIAL_FISH.slice(SPECIALS_PER_PAGE)} />,
+  specialsOne: (props) => (
+    <Specials
+      {...props}
+      specialFish={FISHING_SPECIAL_FISH.slice(0, SPECIALS_PER_PAGE)}
+    />
+  ),
+  specialsTwo: (props) => (
+    <Specials
+      {...props}
+      specialFish={FISHING_SPECIAL_FISH.slice(SPECIALS_PER_PAGE)}
+    />
+  ),
   collections: Collections,
-  catchesOne: (props) => <Catches {...props} types={["fish", "plant", "creature"]} />,
+  catchesOne: (props) => (
+    <Catches {...props} types={["fish", "plant", "creature"]} />
+  ),
   catchesTwo: (props) => <Catches {...props} types={["treasure", "junk"]} />,
   environments: Environments,
   seasonal: Seasonal,
@@ -446,19 +562,45 @@ export const FishingProfile = ({
   seasonalYears,
 }: FishingProfileProps) => {
   const { fishing } = player.stats.general;
-  const unlockedRods = FISHING_RODS.filter((id) => isRodUnlocked(fishing, id)).length;
-  const unlockedHookTrails = FISHING_HOOK_TRAILS.filter((id) => fishing.hookTrails[id]).length;
+  const unlockedRods = FISHING_RODS.filter((id) =>
+    isRodUnlocked(fishing, id),
+  ).length;
+  const unlockedHookTrails = FISHING_HOOK_TRAILS.filter(
+    (id) => fishing.hookTrails[id],
+  ).length;
 
   const sidebar: SidebarItem[] = [
     [t("stats.fishing.totalCatches"), t(fishing.totalCatches), "§b"],
     [t("stats.fishing.catchTypes.mythical"), t(fishing.mythical), "§6"],
-    [t("stats.fishing.specialFish"), `${t(fishing.special)}/${t(FISHING_SPECIAL_FISH.length)}`, "§d"],
-    [t("stats.fishing.rods"), `${t(unlockedRods)}/${t(FISHING_RODS.length)}`, "§a"],
-    [t("stats.fishing.hookTrails"), `${t(unlockedHookTrails)}/${t(FISHING_HOOK_TRAILS.length)}`, "§6"],
+    [
+      t("stats.fishing.specialFish"),
+      `${t(fishing.special)}/${t(FISHING_SPECIAL_FISH.length)}`,
+      "§d",
+    ],
+    [
+      t("stats.fishing.rods"),
+      `${t(unlockedRods)}/${t(FISHING_RODS.length)}`,
+      "§a",
+    ],
+    [
+      t("stats.fishing.hookTrails"),
+      `${t(unlockedHookTrails)}/${t(FISHING_HOOK_TRAILS.length)}`,
+      "§6",
+    ],
   ];
 
-  if (fishing.activeRod) sidebar.push([t("stats.fishing.activeRod"), rodName(fishing.activeRod), "§a"]);
-  if (fishing.activeHookTrail) sidebar.push([t("stats.fishing.activeTrail"), hookTrailName(fishing.activeHookTrail), "§6"]);
+  if (fishing.activeRod)
+    sidebar.push([
+      t("stats.fishing.activeRod"),
+      rodName(fishing.activeRod),
+      "§a",
+    ]);
+  if (fishing.activeHookTrail)
+    sidebar.push([
+      t("stats.fishing.activeTrail"),
+      hookTrailName(fishing.activeHookTrail),
+      "§6",
+    ]);
 
   const Content = PAGE_CONTENT[page];
 
