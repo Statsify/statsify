@@ -7,9 +7,7 @@
  */
 
 import {
-  ActionRowBuilder,
   ApiService,
-  ButtonBuilder,
   Command,
   CommandContext,
   ErrorMessage,
@@ -21,7 +19,6 @@ import {
   SubCommand,
   paginate,
 } from "@statsify/discord";
-import { ButtonStyle } from "discord-api-types/v10";
 import {
   SKYBLOCK_CARDS,
   type SkyBlockCard,
@@ -33,7 +30,6 @@ import {
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
-import { config } from "@statsify/util";
 import { hasMuseum } from "@statsify/skyblock/display";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getLogo } from "@statsify/assets";
@@ -42,8 +38,6 @@ import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 import type { GameMode, SkyBlockProfileView } from "@statsify/skyblock";
 import type { User } from "@statsify/schemas";
-
-const siteUrl = await config("discordBot.siteUrl", { required: false });
 
 const GAME_MODE_EMOJI: Record<GameMode, string | false> = {
   normal: false,
@@ -62,19 +56,6 @@ export interface SkyBlockProfileProps {
   user: User | null;
   t: LocalizeFunction;
   icons: ItemIcons;
-}
-
-// The link names the profile by uuid, since a name like "item" is a site path.
-function getFullProfileRows(uuid: string, cuteName: string) {
-  if (!siteUrl) return;
-
-  const name = encodeURIComponent(cuteName.toLowerCase());
-  const button = new ButtonBuilder()
-    .label((t) => t("skyblock.fullProfile"))
-    .style(ButtonStyle.Link)
-    .url(`${siteUrl}/skyblock/${uuid}/${name}`);
-
-  return [new ActionRowBuilder([button])];
 }
 
 function getSettingNotes(
@@ -363,11 +344,7 @@ export class SkyBlockCommand {
       };
 
     const pages: Page[] = summaries.map(({ id, cuteName, gameMode }) => {
-      const page = {
-        label: cuteName,
-        emoji: GAME_MODE_EMOJI[gameMode],
-        rows: getFullProfileRows(player.uuid, cuteName),
-      };
+      const page = { label: cuteName, emoji: GAME_MODE_EMOJI[gameMode] };
 
       if (Array.isArray(card.profile)) {
         const subPages = card.profile.map(({ label, profile, icons }) => ({

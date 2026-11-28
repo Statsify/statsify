@@ -76,11 +76,6 @@ export interface Config {
      * The guild id to post slash commands to in development mode
      */
     testingGuild: string;
-    /**
-     * The site's origin for the /skyblock cards' Full Profile link, which is hidden when empty
-     * @example "https://statsify.net"
-     */
-    siteUrl?: string;
   };
 
   supportBot: {

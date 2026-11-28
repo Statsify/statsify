@@ -29,7 +29,6 @@ export default {
     token: "",
     applicationId: "",
     testingGuild: "",
-    siteUrl: "",
   },
   supportBot: {
     createTicketChannel: "",

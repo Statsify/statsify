@@ -33,10 +33,8 @@ type PaginateInteractionContentGenerator = (
   t: LocalizeFunction,
 ) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
 
-export type Page = PageInput & {
-  // The page's own rows, shown under the pickers.
-  rows?: ActionRowBuilder[];
-} & (
+export type Page = PageInput &
+  (
     | { subPages: SubPage[] }
     | { generator: PaginateInteractionContentGenerator }
   );
@@ -99,11 +97,7 @@ export async function paginate(
     });
 
   // If there is only one page with no sub pages, return the message immediately without pagination
-  if (pages.length === 1 && "generator" in pages[0]) {
-    const message = await getMessage(0, 0);
-    if (pages[0].rows) message.components = [...(message.components ?? []), ...pages[0].rows];
-    return message;
-  }
+  if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
 
   const userId = context.getInteraction().getUserId();
   const listener = context.getListener();
@@ -176,17 +170,14 @@ export async function paginate(
     if (index !== currentIndex || subIndex !== currentSubIndex) return;
 
     // A pick that lands after the timeout has no hooks left, so it gets no pickers
-    message.components = closed ? [] : components(index);
+    message.components = closed
+      ? []
+      : [
+          mainController?.getActionRow(),
+          subController?.getActionRow(),
+        ].filter((row) => row !== undefined);
 
     return context.reply(message);
-  }
-
-  function components(index: number) {
-    return [
-      mainController?.getActionRow(),
-      subController?.getActionRow(),
-      ...(pages[index].rows ?? []),
-    ].filter((row) => row !== undefined);
   }
 
   function onTimeout() {
@@ -194,13 +185,16 @@ export async function paginate(
     mainController?.unregister(listener);
     subController?.unregister(listener);
     cache.clear();
-    return context.reply({ components: pages[currentIndex].rows ?? [] });
+    return context.reply({ components: [] });
   }
 
   setTimeout(onTimeout, timeout);
 
   const message = await getMessage(currentIndex, currentSubIndex);
-  message.components = components(currentIndex);
+  message.components = [
+    mainController?.getActionRow(),
+    subController?.getActionRow(),
+  ].filter((row) => row !== undefined);
 
   return message;
 }
