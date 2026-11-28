@@ -14,6 +14,7 @@ import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
 import { maxDamage } from "./legacy-items.js";
 import mojangson from "mojangson";
+import { LRUCache } from "lru-cache";
 import {
   type Transformation,
   type Vec3,
@@ -114,18 +115,30 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
+const SNBT_CACHE_LIMIT = 10_000;
+
+const snbtCache = new LRUCache<string, Record<string, unknown>>({
+  max: SNBT_CACHE_LIMIT,
+});
+
 function parseSnbt(snbt: string) {
+  const cached = snbtCache.get(snbt);
+  if (cached) return cached;
+
   const tag = mojangson.parse(snbt);
   if (tag.type !== "compound")
     throw new Error(`${snbt} isn't an SNBT compound`);
 
   // SNBT stores booleans as the bytes 1 and 0
-  return Object.fromEntries(
+  const parsed = Object.fromEntries(
     Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
       key,
       typeof value === "boolean" ? Number(value) : value,
     ]),
   );
+
+  snbtCache.set(snbt, parsed);
+  return parsed;
 }
 
 // Every condition without a case is false for an item sitting in a slot
