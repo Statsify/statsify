@@ -10,8 +10,6 @@ import { Guild, Player } from "@statsify/schemas";
 import { GuildController } from "./guild.controller.js";
 import { GuildLeaderboardController } from "./leaderboards/guild-leaderboard.controller.js";
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
-import { GuildSearchController } from "./search/guild-search.controller.js";
-import { GuildSearchService } from "./search/guild-search.service.js";
 import { GuildService } from "./guild.service.js";
 import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
@@ -20,7 +18,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [HypixelModule, PlayerModule, TypegooseModule.forFeature([Guild, Player])],
-  controllers: [GuildController, GuildLeaderboardController, GuildSearchController],
-  providers: [GuildService, GuildLeaderboardService, GuildSearchService],
+  controllers: [GuildController, GuildLeaderboardController],
+  providers: [GuildService, GuildLeaderboardService],
 })
 export class GuildModule {}

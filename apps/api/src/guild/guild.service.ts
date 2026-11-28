@@ -15,7 +15,6 @@ import {
 } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
-import { GuildSearchService } from "./search/guild-search.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
@@ -32,7 +31,6 @@ export class GuildService {
     private readonly hypixelService: HypixelService,
     private readonly playerService: PlayerService,
     private readonly guildLeaderboardService: GuildLeaderboardService,
-    private readonly guildSearchService: GuildSearchService,
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
@@ -146,14 +144,12 @@ export class GuildService {
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
 
-    await Promise.all([
-      this.guildModel
-        .replaceOne({ id: guild.id }, serializedGuild, { upsert: true })
-        .lean()
-        .exec(),
-      this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id"),
-      this.guildSearchService.add(guild.name),
-    ]);
+    await this.guildModel
+      .replaceOne({ id: guild.id }, serializedGuild, { upsert: true })
+      .lean()
+      .exec();
+
+    await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return deserialize(Guild, flatGuild);
   }

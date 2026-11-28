@@ -16,6 +16,7 @@ import {
   ApiService,
   CommandContext,
   LocalizationString,
+  autocompleteNames,
 } from "@statsify/discord";
 import {
   ClassMetadata,
@@ -24,6 +25,7 @@ import {
   getLeaderboardFields,
 } from "@statsify/schemas";
 import { Container } from "typedi";
+import { MAX_AUTOCOMPLETE_NAME_LENGTH } from "@statsify/api-client";
 import { removeFormatting } from "@statsify/util";
 
 const apiClient = Container.get(ApiService);
@@ -95,22 +97,12 @@ export class PlayerLeaderboardGuildArgument extends AbstractArgument {
   public async autocompleteHandler(
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
-    const query = context.option<string>(this.name, "").toLowerCase();
+    const query = context.option<string>(this.name);
+    if (!query) return [];
 
-    const searched = { name: query, value: query };
-
-    if (query.length > 32) return [searched];
-
-    const guilds = await apiClient.getGuildAutocomplete(query);
-
-    let results = guilds.map((guild) => ({ name: guild, value: guild }));
-
-    if (query && !guilds.some((guild) => guild.toLowerCase() === query)) {
-      results = results.slice(0, 24);
-      results.push(searched);
-    }
-
-    return results;
+    return autocompleteNames(query, MAX_AUTOCOMPLETE_NAME_LENGTH, () =>
+      apiClient.getGuildAutocomplete(query)
+    );
   }
 }
 
