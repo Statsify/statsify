@@ -88,8 +88,7 @@ const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) =>
 
 const generationId = ({ packs }: Generation) => packs.join(" ");
 
-// Unlike Promise.all, this waits for every write and delete before throwing,
-// so none outlives the update's lock
+// Promise.all would throw while other writes or deletes outlive the lock
 async function settle<T>(promises: Promise<T>[]) {
   const results = await Promise.allSettled(promises);
 
@@ -270,7 +269,6 @@ async function prune(kept: Generation[]) {
     }),
   );
 
-  // An update that died mid-write leaves its staging folder behind
   const staging = (await readdir(ROOT)).filter((folder) =>
     folder.startsWith(STAGING),
   );
@@ -304,7 +302,6 @@ async function lock() {
   }
 }
 
-// Another process can activate packs too
 export async function activeResourcePacks() {
   const active = await readGeneration(ACTIVE);
   return active && generationId(active);
@@ -327,7 +324,6 @@ export async function loadResourcePacks(): Promise<
   }
 }
 
-// The active packs stay when anything fails or a pack's license changes
 export async function updateResourcePacks(): Promise<PackUpdate> {
   await mkdir(ROOT, { recursive: true });
 
