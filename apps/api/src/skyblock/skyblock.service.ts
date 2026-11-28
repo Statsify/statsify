@@ -24,7 +24,11 @@ import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
-import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
+import {
+  SkyBlockGarden,
+  SkyBlockMuseum,
+  SkyBlockProfiles,
+} from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import {
   findProfile,
@@ -36,6 +40,7 @@ import { gunzipJson, gzipJson } from "./zip.js";
 import type {
   MemberView,
   PlayerRef,
+  RawGarden,
   RawMuseum,
   RawProfile,
   SectionInput,
@@ -53,6 +58,7 @@ const SECTION_CACHE_SECONDS = 300;
 const SECTION_VERSION = 4;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
 const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
+const STORED_COPIES = ["museum", "garden"] as const;
 
 const isFresh = (fetchedAt: number, cache: CacheLevel) =>
   cache === CacheLevel.CACHE_ONLY ||
@@ -83,6 +89,11 @@ const readMuseum = async ({ data, fetchedAt }: SkyBlockMuseum) => ({
   fetchedAt,
 });
 
+const readGarden = async ({ data, fetchedAt }: SkyBlockGarden) => ({
+  garden: await gunzipJson<RawGarden | null>(data),
+  fetchedAt,
+});
+
 const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 @Injectable()
@@ -97,6 +108,8 @@ export class SkyBlockService {
     private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
     @InjectModel(SkyBlockMuseum)
     private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
+    @InjectModel(SkyBlockGarden)
+    private readonly gardenModel: ReturnModelType<typeof SkyBlockGarden>,
     @InjectRedis() private readonly redis: Redis,
   ) {}
 
@@ -130,11 +143,13 @@ export class SkyBlockService {
     return this.getProfileFor(player, sections, cache, profileName);
   }
 
+  // With requireGarden, a Garden Hypixel can't send throws like the profiles.
   public async getProfileFor(
     player: PlayerRef,
     sections: SkyBlockSection[],
     cache: CacheLevel,
     profileName?: string,
+    { requireGarden = false } = {},
   ): Promise<SkyBlockProfileView> {
     const needs = new Set(sections.flatMap((name) => ALL_SECTIONS[name].needs));
     const reads = {
@@ -150,7 +165,12 @@ export class SkyBlockService {
     if (!profile) throw new SkyBlockNotFoundException("profile");
     const member = profile.members[player.uuid];
 
-    const built = { museum: true, prices: !!prices, items: !!items };
+    const built = {
+      museum: true,
+      garden: true,
+      prices: !!prices,
+      items: !!items,
+    };
     const ready = sections.filter((name) =>
       ALL_SECTIONS[name].needs.every((need) => built[need]),
     );
@@ -159,15 +179,21 @@ export class SkyBlockService {
       throw new SkyBlockUnavailableException("market");
     }
 
-    const museum = needs.has("museum")
-      ? await this.getMuseum(profile.profile_id, cache)
-      : undefined;
+    const [museum, garden] = await Promise.all([
+      needs.has("museum")
+        ? this.getMuseum(profile.profile_id, cache)
+        : undefined,
+      needs.has("garden")
+        ? this.getGarden(profile.profile_id, cache, requireGarden)
+        : undefined,
+    ]);
 
     const input: SectionInput = {
       uuid: player.uuid,
       profile,
       member,
       museum: museum?.museum.members?.[player.uuid],
+      garden: garden?.garden,
       prices,
       items: items?.parsed,
       rawItems: items?.raw,
@@ -175,12 +201,10 @@ export class SkyBlockService {
 
     const computed = await Promise.all(
       ready.map(async (name) => {
-        const section = await this.getSection(
-          name,
-          input,
-          fetchedAt,
-          museum?.fetchedAt,
-        );
+        const section = await this.getSection(name, input, fetchedAt, {
+          museum: museum?.fetchedAt,
+          garden: garden?.fetchedAt,
+        });
 
         return [name, section] as const;
       }),
@@ -196,15 +220,35 @@ export class SkyBlockService {
         ...Object.fromEntries(computed),
       },
       museumFetchedAt: museum?.fetchedAt,
+      gardenFetchedAt: garden?.fetchedAt,
       ...(marketDown.length > 0 && { marketDown }),
     };
   }
 
   // undefined means a lookup would refetch now.
-  public async getNextRefetchAt(uuid: string): Promise<number | undefined> {
-    const [stored, failedFor] = await Promise.all([
+  public getNextRefetchAt(uuid: string): Promise<number | undefined> {
+    return this.getRefetchAt(
+      `profiles:${uuid}`,
       this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec(),
-      this.redis.pttl(getFailureKey(`profiles:${uuid}`)),
+    );
+  }
+
+  public getNextGardenRefetchAt(
+    profileId: string,
+  ): Promise<number | undefined> {
+    return this.getRefetchAt(
+      `garden:${profileId}`,
+      this.gardenModel.findOne({ profileId }, { fetchedAt: true }).exec(),
+    );
+  }
+
+  private async getRefetchAt(
+    key: string,
+    document: Promise<{ fetchedAt: number } | null>,
+  ) {
+    const [stored, failedFor] = await Promise.all([
+      document,
+      this.redis.pttl(getFailureKey(key)),
     ]);
 
     if (!stored) return undefined;
@@ -310,6 +354,45 @@ export class SkyBlockService {
     }
   }
 
+  // A lookup goes on without the Garden unless the caller requires it.
+  private async getGarden(
+    profileId: string,
+    cache: CacheLevel,
+    required: boolean,
+  ) {
+    const key = `garden:${profileId}`;
+    const stored = await this.gardenModel.findOne({ profileId }).exec();
+
+    if (stored && isFresh(stored.fetchedAt, cache)) return readGarden(stored);
+    if (cache === CacheLevel.CACHE_ONLY) return;
+
+    if (stored && (await this.failedRecently(key, stored.fetchedAt))) {
+      return readGarden(stored);
+    }
+
+    try {
+      const garden = await this.hypixelService.getSkyBlockGarden(profileId);
+      const fetchedAt = Date.now();
+
+      const data = await this.compress(garden, profileId);
+      if (data) {
+        await this.gardenModel.replaceOne(
+          { profileId },
+          { profileId, fetchedAt, data },
+          { upsert: true },
+        );
+      }
+
+      return { garden, fetchedAt };
+    } catch (error) {
+      if (!(error instanceof HypixelUnavailableError)) throw error;
+
+      await this.recordFailure(key, error, stored?.fetchedAt);
+      if (!stored && required) throw toUnavailable(error);
+      return stored ? readGarden(stored) : undefined;
+    }
+  }
+
   private async failedRecently(key: string, storedAt: number) {
     const failed = await this.redis.exists(getFailureKey(key));
     if (failed) {
@@ -343,17 +426,18 @@ export class SkyBlockService {
     return data;
   }
 
-  // Keying on the museum's time stops a section made without it being reused.
+  // Keying on each copy's time stops a section made without it being reused.
   private async getSection(
     name: SkyBlockSection,
     input: SectionInput,
     fetchedAt: number,
-    museumFetchedAt = 0,
+    copies: Partial<Record<(typeof STORED_COPIES)[number], number>>,
   ) {
     const section = ALL_SECTIONS[name];
-    const version = section.needs.includes("museum")
-      ? `${fetchedAt}:${museumFetchedAt}`
-      : fetchedAt;
+    const copyTimes = STORED_COPIES.filter((copy) =>
+      section.needs.includes(copy),
+    ).map((copy) => copies[copy] ?? 0);
+    const version = [fetchedAt, ...copyTimes].join(":");
     const key = `skyblock:section:v${SECTION_VERSION}:${input.uuid}:${input.profile.profile_id}:${name}:${version}`;
 
     const cached = await this.redis.getBuffer(key);

@@ -23,6 +23,7 @@ import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from 
 import type { APIData } from "@statsify/util";
 import type {
   RawBazaar,
+  RawGarden,
   RawItemsResource,
   RawMuseum,
   RawProfile,
@@ -45,7 +46,7 @@ export class HypixelThrottledError extends HypixelUnavailableError {
   }
 }
 
-function toSkyBlockError(error: Error) {
+function getErrorResponse(error: Error) {
   const { response } = (error.cause ?? {}) as {
     response?: {
       status: number;
@@ -53,6 +54,11 @@ function toSkyBlockError(error: Error) {
       data?: { global?: boolean };
     };
   };
+  return response;
+}
+
+function toSkyBlockError(error: Error) {
+  const response = getErrorResponse(error);
   if (response?.status !== 429) {
     const message = `Hypixel did not answer (${String(error)})`;
     return new HypixelUnavailableError(message, { cause: error });
@@ -195,6 +201,26 @@ export class HypixelService {
     return this.getSkyBlock<RawMuseum>("/v2/skyblock/museum", {
       params: { profile: profileId },
     });
+  }
+
+  // Hypixel answers a profile with no Garden with a 404.
+  public getSkyBlockGarden(profileId: string) {
+    const request = this.request<{ garden: RawGarden }>(
+      "/v2/skyblock/garden",
+      { profile: profileId },
+      { timeout: SKYBLOCK_TIMEOUT_MS }
+    );
+
+    return lastValueFrom(
+      request.pipe(
+        map(({ garden }) => garden),
+        catchError((error) =>
+          getErrorResponse(error)?.status === 404
+            ? of(null)
+            : throwError(() => toSkyBlockError(error))
+        )
+      )
+    );
   }
 
   public getSkyBlockBazaar() {

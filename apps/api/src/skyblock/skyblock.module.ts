@@ -13,7 +13,11 @@ import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { SkyBlockController } from "./skyblock.controller.js";
 import { SkyBlockIconsService } from "./skyblock-icons.service.js";
-import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
+import {
+  SkyBlockGarden,
+  SkyBlockMuseum,
+  SkyBlockProfiles,
+} from "./skyblock.model.js";
 import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import { SkyBlockSearchController } from "./search/skyblock-search.controller.js";
 import { SkyBlockSearchService } from "./search/skyblock-search.service.js";
@@ -24,7 +28,11 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
   imports: [
     HypixelModule,
     PlayerModule,
-    TypegooseModule.forFeature([SkyBlockProfiles, SkyBlockMuseum]),
+    TypegooseModule.forFeature([
+      SkyBlockProfiles,
+      SkyBlockMuseum,
+      SkyBlockGarden,
+    ]),
     HttpModule.register({ timeout: IMAGE_DOWNLOAD_TIMEOUT }),
   ],
   controllers: [SkyBlockController, SkyBlockSearchController],

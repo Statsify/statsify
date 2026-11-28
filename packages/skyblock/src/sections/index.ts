@@ -12,6 +12,7 @@ import { getCrimson } from "./crimson.js";
 import { getDungeons } from "./dungeons.js";
 import { getExperiments } from "./experiments.js";
 import { getFishing } from "./fishing.js";
+import { getGarden } from "./garden.js";
 import { getGear } from "./gear.js";
 import { getInventories } from "./inventories.js";
 import { getHotf } from "./hotf.js";
@@ -27,6 +28,7 @@ import { getSlayers } from "./slayers.js";
 import { hasMarket } from "../profiles.js";
 import type { ApiSettings, ItemsResource, MemberView, PriceMap } from "#types";
 import type {
+  RawGarden,
   RawItemsResource,
   RawMember,
   RawMuseum,
@@ -34,13 +36,15 @@ import type {
   RawProfile,
 } from "#raw";
 
-export type SectionNeed = "museum" | "prices" | "items";
+export type SectionNeed = "museum" | "garden" | "prices" | "items";
 
 export interface SectionInput {
   uuid: string;
   profile: RawProfile;
   member: RawMember;
   museum?: RawMuseumMember;
+  // The Garden is null when the profile has none.
+  garden?: RawGarden | null;
   prices?: PriceMap;
   items?: ItemsResource;
   rawItems?: RawItemsResource;
@@ -82,6 +86,13 @@ export const SECTIONS: {
     compute: async ({ member }) => getExperiments(member),
   },
   fishing: { needs: [], compute: async ({ member }) => getFishing(member) },
+  garden: {
+    needs: ["garden", "items"],
+    compute: async ({ member, garden, items }) => {
+      if (!items) throw new TypeError("garden needs items");
+      return getGarden(member, garden, items);
+    },
+  },
   gear: { needs: [], compute: async ({ member }) => getGear(member) },
   hotf: { needs: [], compute: async ({ member }) => getHotf(member) },
   hotm: { needs: [], compute: async ({ member }) => getHotm(member) },

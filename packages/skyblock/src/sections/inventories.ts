@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { arrayGroup, prettify } from "@statsify/util";
+import { arrayGroup } from "@statsify/util";
 import { decodeSlots } from "#items";
-import { resourceTexture } from "#textures";
+import { resourceItem } from "#textures";
 import type {
   InventoriesSection,
   InventoryId,
@@ -66,11 +66,10 @@ export function getInventories(
       const resource = items.items[id];
       return {
         id,
-        name: resource?.name ?? prettify(id),
+        ...resourceItem(items, id),
         count,
         rarity: resource?.tier,
         glint: resource?.glowing ?? false,
-        texture: resource && resourceTexture(resource),
       };
     })
     .toSorted((a, b) => b.count - a.count);

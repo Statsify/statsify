@@ -7,6 +7,7 @@
  */
 
 import { MATERIAL_IDS, PET_TEXTURES } from "#data";
+import { prettify } from "@statsify/util";
 import {
   RARITIES,
   type ItemTexture,
@@ -55,6 +56,14 @@ export function resourceTexture({
 
   const [red, green, blue] = color.split(",").map(Number);
   return { kind: "item", id, damage, color: (red << 16) | (green << 8) | blue };
+}
+
+export function resourceItem(items: ItemsResource | undefined, id: string) {
+  const found = items?.items[id];
+  return {
+    name: found?.name ?? prettify(id),
+    texture: found && resourceTexture(found),
+  };
 }
 
 interface PetTextureOptions {

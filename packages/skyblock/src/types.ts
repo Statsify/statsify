@@ -72,6 +72,7 @@ export interface SkyBlockProfileView
   extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
+  gardenFetchedAt?: number;
   // Sections asked for but left out until the price map and items are built.
   marketDown?: Exclude<keyof MemberView, "apiSettings">[];
 }
@@ -90,6 +91,7 @@ export interface MemberView {
   crimson?: CrimsonSection | null;
   fishing?: FishingSection | null;
   jacob?: JacobSection | null;
+  garden?: GardenSection;
   chocolate?: ChocolateSection | null;
   hotf?: HotfSection | null;
   gear?: GearSection | null;
@@ -341,6 +343,50 @@ export interface JacobCrop {
   // The bracket is the best one reached.
   bracket?: JacobBracket;
   personalBest?: number;
+}
+
+export interface GardenSection {
+  copper: number;
+  // The greenhouse lists the discovered crops, by name.
+  greenhouse: GreenhouseCrop[];
+  // gardenFetchedAt says whether a null Garden was fetched.
+  garden: GardenView | null;
+}
+
+interface GreenhouseCrop {
+  id: string;
+  name: string;
+  analyzed: boolean;
+}
+
+export interface GardenView {
+  level: Level;
+  plots: { unlocked: number; total: number };
+  // Crops lists every crop with milestones, by name.
+  crops: GardenCrop[];
+  composter: { id: string; name: string; level: number; maxLevel: number }[];
+  visitors: { unique: number; served: number; list: GardenVisitor[] };
+  barnSkins: { selected?: string; unlocked: string[] };
+  greenhouseSkins: string[];
+}
+
+interface GardenCrop {
+  // The id is the API's item id, as in JacobCrop.
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  collected: number;
+  milestone: Level;
+  upgrade: { level: number; maxLevel: number };
+}
+
+interface GardenVisitor {
+  id: string;
+  name: string;
+  // A visitor NEU-REPO doesn't list has no rarity.
+  rarity?: Rarity;
+  visits: number;
+  completed: number;
 }
 
 export interface ChocolateSection {

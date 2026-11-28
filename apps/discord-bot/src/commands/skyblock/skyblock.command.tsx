@@ -207,6 +207,14 @@ export class SkyBlockCommand {
   }
 
   @SubCommand({
+    description: (t) => t("commands.skyblock-garden"),
+    args: [PlayerArgument],
+  })
+  public garden(context: CommandContext) {
+    return this.run(context, "garden");
+  }
+
+  @SubCommand({
     description: (t) => t("commands.skyblock-chocolate"),
     args: [PlayerArgument],
   })

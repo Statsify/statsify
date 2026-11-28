@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { prettify } from "@statsify/util";
-import { resourceTexture } from "#textures";
+import { resourceItem } from "#textures";
 import type { ItemsResource, JacobSection } from "#types";
 import type { RawMember } from "#raw";
 
@@ -47,18 +46,14 @@ export function getJacob(
     ) as JacobSection["medals"],
     contests,
     crops: [...crops]
-      .map((id) => {
-        const item = items?.items[id];
-        return {
-          id,
-          name: item?.name ?? prettify(id),
-          texture: item && resourceTexture(item),
-          bracket: JACOB_BRACKETS.findLast((bracket) =>
-            brackets[bracket]?.includes(id),
-          ),
-          personalBest: bests[id],
-        };
-      })
+      .map((id) => ({
+        id,
+        ...resourceItem(items, id),
+        bracket: JACOB_BRACKETS.findLast((bracket) =>
+          brackets[bracket]?.includes(id),
+        ),
+        personalBest: bests[id],
+      }))
       .toSorted((a, b) => a.name.localeCompare(b.name)),
     perks: {
       // The wiki's Anita page gives 4 Farming Fortune per double_drops tier.

@@ -147,6 +147,11 @@ export interface RawMember {
   loadout?: {
     armor?: { equipped_set?: number; [slot: `${number}`]: RawArmorSet };
   };
+  garden_player_data?: {
+    copper?: number;
+    discovered_greenhouse_crops?: string[];
+    analyzed_greenhouse_crops?: string[];
+  };
   jacobs_contest?: {
     perks?: { farming_level_cap?: number; double_drops?: number };
     medals_inv?: Partial<Record<JacobMedal, number>>;
@@ -259,6 +264,25 @@ export interface RawMuseumMember {
 // The museum lists only the members whose museum API is on.
 export interface RawMuseum {
   members?: Record<string, RawMuseumMember>;
+}
+
+// The Garden is the profile's, so every member reads the same one.
+export interface RawGarden {
+  garden_experience?: number;
+  // Resources are keyed by the crop's item id.
+  resources_collected?: Record<string, number>;
+  crop_upgrade_levels?: Record<string, number>;
+  unlocked_plots_ids?: string[];
+  composter_data?: { upgrades?: Record<string, number> };
+  commission_data?: {
+    // Visits are keyed by visitor id.
+    visits?: Record<string, number>;
+    completed?: Record<string, number>;
+    total_completed?: number;
+    unique_npcs_served?: number;
+  };
+  selected_barn_skin?: string;
+  unlocked_barn_skins?: string[];
 }
 
 // One inventory slot, as prismarine-nbt's simplify() returns it.
