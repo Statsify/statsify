@@ -27,6 +27,7 @@ import type {
 } from "#types";
 import type { RawItem, RawItemsResource, RawPet } from "#raw";
 import {
+  NETWORTH_SECTION,
   SECTIONS,
   type Section,
   type SkyBlockSection,
@@ -180,5 +181,5 @@ const NETWORTH: Section<"networth"> = {
 
 export const ALL_SECTIONS: { [K in SkyBlockSection]: Section<K> } = {
   ...SECTIONS,
-  networth: NETWORTH,
+  [NETWORTH_SECTION]: NETWORTH,
 };
