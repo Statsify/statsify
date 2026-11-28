@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type PackStack,
-  assetPath,
-  namespaceTypes,
-  namespaced,
-} from "./pack.js";
+// oxlint-disable-next-line typescript/triple-slash-reference -- importers don't load our tsconfig
+/// <reference path="./mojangson.d.ts" />
+
+import { type PackStack, assetPath, namespaceIds, namespaced } from "./pack.js";
 import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
+import { maxDamage } from "./legacy-items.js";
+import mojangson from "mojangson";
+import { LRUCache } from "lru-cache";
 import {
   type Transformation,
   type Vec3,
@@ -35,15 +36,15 @@ export interface ModelFace {
   tintindex?: number;
 }
 
+type ElementRotation = { origin: Vec3 } & (
+  | { axis: "x" | "y" | "z"; angle: number; rescale?: boolean }
+  | { x?: number; y?: number; z?: number }
+);
+
 export interface ModelElement {
   from: Vec3;
   to: Vec3;
-  rotation?: {
-    origin: Vec3;
-    axis: "x" | "y" | "z";
-    angle: number;
-    rescale?: boolean;
-  };
+  rotation?: ElementRotation;
   shade?: boolean;
   faces: Partial<Record<Direction, ModelFace>>;
 }
@@ -87,6 +88,8 @@ type ItemModel =
       type: "minecraft:condition";
       property: string;
       component?: string;
+      predicate?: string;
+      value?: unknown;
       on_true: ItemModel;
       on_false: ItemModel;
     }
@@ -112,13 +115,73 @@ type ItemModel =
   | { type: "minecraft:empty" }
   | { type: "minecraft:bundle/selected_item" };
 
+const SNBT_CACHE_LIMIT = 10_000;
+
+const snbtCache = new LRUCache<string, Record<string, unknown>>({
+  max: SNBT_CACHE_LIMIT,
+});
+
+function parseSnbt(snbt: string) {
+  const cached = snbtCache.get(snbt);
+  if (cached) return cached;
+
+  const tag = mojangson.parse(snbt);
+  if (tag.type !== "compound")
+    throw new Error(`${snbt} isn't an SNBT compound`);
+
+  // SNBT stores booleans as the bytes 1 and 0
+  const parsed = Object.fromEntries(
+    Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
+      key,
+      typeof value === "boolean" ? Number(value) : value,
+    ]),
+  );
+
+  snbtCache.set(snbt, parsed);
+  return parsed;
+}
+
 // Every condition without a case is false for an item sitting in a slot
 function condition(
   model: Extract<ItemModel, { type: "minecraft:condition" }>,
   item: ItemStack,
 ) {
-  if (model.property !== "minecraft:has_component") return false;
-  return model.component === "minecraft:dyed_color" && item.color !== undefined;
+  switch (model.property) {
+    case "minecraft:has_component":
+      return (
+        model.component === "minecraft:dyed_color" && item.color !== undefined
+      );
+
+    case "minecraft:component": {
+      if (model.predicate !== "minecraft:custom_data") return false;
+      if (typeof model.value !== "string") {
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`,
+        );
+      }
+
+      const expected = Object.entries(parseSnbt(model.value));
+      if (expected.some(([, value]) => typeof value === "object")) {
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition compares a nested value`,
+        );
+      }
+
+      return expected.every(([key, value]) => item.customData?.[key] === value);
+    }
+
+    case "minecraft:broken": {
+      const durability = maxDamage(item.id);
+      return (
+        durability !== undefined &&
+        !item.unbreakable &&
+        (item.damage ?? 0) >= durability - 1
+      );
+    }
+
+    default:
+      return false;
+  }
 }
 
 // Hypixel's items have none of these, so their selects take the fallback
@@ -139,7 +202,7 @@ export class ModelResolver {
   public constructor(private stack: PackStack) {}
 
   public resolve(item: ItemStack): ItemLayer[] {
-    return this.layers(this.definition(item.id), item);
+    return this.layers(this.definition(item.itemModel ?? item.id), item);
   }
 
   private definition(id: string) {
@@ -149,7 +212,7 @@ export class ModelResolver {
 
     const definition = this.stack.json<{ model: ItemModel }>(
       path,
-      namespaceTypes,
+      namespaceIds,
     );
     if (!definition)
       throw new Error(`${id} has no item model definition (${path})`);
@@ -219,7 +282,7 @@ export class ModelResolver {
     if (!namespaced(selected).split(":")[1].startsWith("block/"))
       return selected;
 
-    const [namespace, name] = namespaced(item.id).split(":");
+    const [namespace, name] = namespaced(item.itemModel ?? item.id).split(":");
     const legacy = `${namespace}:item/${name}`;
     const legacyPath = assetPath(legacy, "models", ".json");
     const selectedPath = assetPath(selected, "models", ".json");
@@ -380,5 +443,83 @@ if (import.meta.vitest) {
       });
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });
+
+    it("draws an item's own definition, whose ids may leave off their namespace", () => {
+      const resolver = new ModelResolver(
+        createStack({
+          "assets/pack/items/dagger.json": {
+            model: {
+              type: "select",
+              property: "display_context",
+              cases: [
+                {
+                  when: "gui",
+                  model: { type: "model", model: "pack:item/dagger" },
+                },
+              ],
+              fallback: { type: "model", model: "pack:item/in_hand" },
+            },
+          },
+          "assets/pack/models/item/dagger.json": {
+            parent: "builtin/generated",
+          },
+        }),
+      );
+
+      const [layer] = resolver.resolve({
+        id: "minecraft:golden_sword",
+        itemModel: "pack:dagger",
+      });
+      expect(layer.model.id).toBe("pack:item/dagger");
+    });
+  });
+
+  it("reads conditions from an item's custom data and wear", () => {
+    const when = (
+      property: string,
+      fields?: Partial<Parameters<typeof condition>[0]>,
+    ) =>
+      ({
+        type: "minecraft:condition",
+        property,
+        on_true: { type: "minecraft:empty" },
+        on_false: { type: "minecraft:empty" },
+        ...fields,
+      }) as const;
+
+    const mode = when("minecraft:component", {
+      predicate: "minecraft:custom_data",
+      value: "{mode:1}",
+    });
+    const broken = when("minecraft:broken");
+    const dagger = { id: "minecraft:golden_sword" };
+    const can = { id: "minecraft:carrot_on_a_stick" };
+
+    expect(condition(mode, dagger)).toBe(false);
+    expect(
+      condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } }),
+    ).toBe(true);
+    expect(condition(mode, { ...dagger, customData: { mode: 3 } })).toBe(false);
+    expect(condition(broken, { ...can, damage: 23 })).toBe(false);
+    expect(condition(broken, { ...can, damage: 24 })).toBe(true);
+    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(
+      false,
+    );
+  });
+
+  it("reads SNBT compounds of plain values", () => {
+    expect(parseSnbt("{ }")).toEqual({});
+    expect(parseSnbt("{active:true, }")).toEqual({ active: 1 });
+    expect(parseSnbt("{td_attune_mode:1}")).toEqual({ td_attune_mode: 1 });
+    expect(
+      parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }'),
+    ).toEqual({
+      active: 1,
+      "a key": "b,c",
+      level: 2.5,
+      tier: -3,
+    });
+    expect(parseSnbt("{nested:{a:1}}")).toEqual({ nested: { a: 1 } });
+    expect(() => parseSnbt("td_attune_mode:1")).toThrow();
   });
 }

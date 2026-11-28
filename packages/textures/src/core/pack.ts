@@ -275,14 +275,27 @@ export async function loadPack(
   const data = (await readSource(source)) as Uint8Array<ArrayBuffer>;
   const [hash, entries] = await Promise.all([sha256(data), unzipAssets(data)]);
 
-  // Packs zipped with their folder have pack.mcmeta one level down
-  const metaPath = Object.keys(entries)
+  // pack.mcmeta can sit one level down, and client jars only have data packs'
+  const paths = Object.keys(entries);
+  const metaRoot = paths
     .filter((path) => path.endsWith("pack.mcmeta"))
+    .map((path) => path.slice(0, -"pack.mcmeta".length))
+    // A pack can keep all its assets in overlays, one directory down
+    .filter((root) =>
+      paths.some(
+        (path) =>
+          path.startsWith(root) &&
+          /^([^/]+\/)?assets\//.test(path.slice(root.length)),
+      ),
+    )
     .toSorted((a, b) => a.length - b.length)
     .at(0);
 
-  const root = metaPath?.slice(0, -"pack.mcmeta".length) ?? "";
-  const meta = metaPath ? parseJson<PackMeta>(entries[metaPath]) : undefined;
+  const root = metaRoot ?? "";
+  const meta =
+    metaRoot === undefined
+      ? undefined
+      : parseJson<PackMeta>(entries[`${root}pack.mcmeta`]);
 
   const directories = [
     "",
@@ -350,8 +363,10 @@ export const namespaced = (id: string) =>
 
 export const withoutNamespace = (id: string) => id.replace(/^minecraft:/, "");
 
-export const namespaceTypes = (key: string, value: unknown) =>
-  key === "type" && typeof value === "string" ? namespaced(value) : value;
+const ID_KEYS = new Set(["type", "property", "component", "predicate"]);
+
+export const namespaceIds = (key: string, value: unknown) =>
+  ID_KEYS.has(key) && typeof value === "string" ? namespaced(value) : value;
 
 export function assetPath(id: string, folder: string, extension: string) {
   const [namespace, path] = namespaced(id).split(":");
@@ -360,6 +375,49 @@ export function assetPath(id: string, folder: string, extension: string) {
 
 if (import.meta.vitest) {
   const { expect, it } = import.meta.vitest;
+  const { strToU8, zipSync } = await import("fflate");
+
+  const meta = strToU8(JSON.stringify({ pack: { pack_format: 97 } }));
+  const definition = strToU8("{}");
+
+  it("finds a pack's assets inside its folder or its overlays, and a jar's beside its data packs", async () => {
+    const zipped = await loadPack(
+      zipSync({
+        "pack/pack.mcmeta": meta,
+        "pack/assets/minecraft/items/stone.json": definition,
+      }),
+    );
+    expect([...zipped.files.keys()]).toEqual([
+      "assets/minecraft/items/stone.json",
+    ]);
+
+    const overlaid = strToU8(
+      JSON.stringify({
+        pack: { pack_format: 97 },
+        overlays: { entries: [{ formats: [97], directory: "v97" }] },
+      }),
+    );
+    const overlays = await loadPack(
+      zipSync({
+        "pack.mcmeta": overlaid,
+        "v97/assets/minecraft/items/stone.json": definition,
+      }),
+    );
+    expect([...overlays.files.keys()]).toEqual([
+      "assets/minecraft/items/stone.json",
+    ]);
+
+    const jar = await loadPack(
+      zipSync({
+        "data/minecraft/datapacks/extra/pack.mcmeta": meta,
+        "assets/minecraft/items/stone.json": definition,
+      }),
+    );
+    expect(jar).toMatchObject({ layout: "modern" });
+    expect([...jar.files.keys()]).toEqual([
+      "assets/minecraft/items/stone.json",
+    ]);
+  });
 
   const applies = (format: Omit<OverlayEntry, "directory">) =>
     overlayApplies({ directory: "overlay", ...format });

@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type PackStack,
-  assetPath,
-  namespaceTypes,
-  namespaced,
-} from "./pack.js";
+import { type PackStack, assetPath, namespaceIds, namespaced } from "./pack.js";
 import { context, createCanvas, decodePng, hex } from "./canvas.js";
 import { unzipSync } from "fflate";
 
@@ -305,7 +300,7 @@ export class TextRenderer {
     const collect = (id: string) => {
       const font = stack.json<{ providers: Provider[] }>(
         assetPath(id, "font", ".json"),
-        namespaceTypes,
+        namespaceIds,
       );
 
       for (const provider of font?.providers ?? []) {

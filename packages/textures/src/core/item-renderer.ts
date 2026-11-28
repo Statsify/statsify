@@ -29,12 +29,24 @@ import {
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
+import { LRUCache } from "lru-cache";
 import { type PackStack, assetPath, namespaced } from "./pack.js";
 import { tintColor } from "./tints.js";
 
 const SIZE = 16;
 
 export const MS_PER_TICK = 50;
+
+const CACHE_LIMIT = 2000;
+
+function promiseCache<T extends NonNullable<unknown>>() {
+  return new LRUCache<string, T, () => Promise<T>>({
+    max: CACHE_LIMIT,
+    // Without it, an evicted load that's still running rejects as aborted
+    ignoreFetchAbort: true,
+    fetchMethod: (_key, _stale, { context }) => context(),
+  });
+}
 
 interface TintedLayer extends ItemLayer {
   colors: number[];
@@ -259,7 +271,7 @@ export type SkinLoader = (url: string) => Promise<Uint8Array>;
 export class ItemRenderer {
   private models: ModelResolver;
   private textures: TextureLoader;
-  private icons = new Map<string, Promise<OffscreenCanvas>>();
+  private icons = promiseCache<OffscreenCanvas>();
   private legacyGlint: boolean;
   private glint?: Promise<ReturnType<typeof squaredGlint>>;
   private translucentIcons = new WeakMap<OffscreenCanvas, boolean>();
@@ -381,15 +393,9 @@ export class ItemRenderer {
       .filter((part) => part !== undefined)
       .join("/");
 
-    let icon = this.icons.get(key);
-
-    if (!icon) {
-      icon = this.load(key, layers, item, scale, tick);
-      this.icons.set(key, icon);
-      void icon.catch(() => this.icons.delete(key));
-    }
-
-    return icon;
+    return this.icons.forceFetch(key, {
+      context: () => this.load(key, layers, item, scale, tick),
+    });
   }
 
   private async load(
@@ -530,4 +536,32 @@ export class ItemRenderer {
     const image = await decodePng(await this.loadSkin(url));
     return context(image).getImageData(0, 0, image.width, image.height);
   }
+}
+
+if (import.meta.vitest) {
+  const { expect, it } = import.meta.vitest;
+
+  it("keeps the most recently used promises and retries rejected ones", async () => {
+    const cache = promiseCache<number>();
+    const get = (key: string, load: () => Promise<number>) =>
+      cache.forceFetch(key, { context: load });
+
+    await expect(
+      get("a", () => Promise.reject(new Error("failed"))),
+    ).rejects.toThrow();
+    expect(
+      await Promise.all([get("a", async () => 1), get("a", async () => 2)]),
+    ).toEqual([1, 1]);
+    expect(await get("a", async () => 3)).toBe(1);
+
+    await Promise.all(
+      Array.from({ length: CACHE_LIMIT - 1 }, (_, key) =>
+        get(`${key + 1}`, async () => key),
+      ),
+    );
+    expect(await get("a", async () => 4)).toBe(1);
+
+    await get("b", async () => 0);
+    expect(await get("1", async () => 5)).toBe(5);
+  });
 }
