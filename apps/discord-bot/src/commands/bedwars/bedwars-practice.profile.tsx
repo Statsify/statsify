@@ -6,8 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
-import { type BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import {
+  Container,
+  Footer,
+  Header,
+  type SidebarItem,
+  Table,
+} from "#components";
+import {
+  type BedWarsModes,
+  FormattedGame,
+  type GameMode,
+} from "@statsify/schemas";
 import { formatRaceTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -92,9 +102,11 @@ export const BedWarsPracticeProfile = ({
               {row.map((record) => (
                 <Table.td
                   title={t(`stats.${record}`)}
-                  value={practice.bridgingRecords[record] === 0 ?
-                    `§7${t("stats.notAvailable")}` :
-                    formatRaceTime(practice.bridgingRecords[record])}
+                  value={
+                    practice.bridgingRecords[record] === 0
+                      ? `§7${t("stats.notAvailable")}`
+                      : formatRaceTime(practice.bridgingRecords[record])
+                  }
                   color={record.startsWith("straight") ? "§e" : "§d"}
                   size="small"
                 />
