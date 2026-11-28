@@ -513,7 +513,8 @@ export interface TrophyFish {
   id: string;
   name: string;
   tiers: Record<TrophyTier, number>;
-  texture: ItemTexture; // the best tier caught, or bronze
+  // The texture is the best tier caught, or bronze.
+  texture: ItemTexture;
 }
 
 export interface TrophyFrog {
@@ -1188,7 +1189,8 @@ export interface ItemView {
 // An item's id is its 1.8 numeric id, and a head's skin is a texture hash.
 export type ItemTexture = {
   model?: string;
-  customData?: Record<string, number>; // the ExtraAttributes that pick its look
+  // customData holds the ExtraAttributes that pick its look.
+  customData?: Record<string, number>;
 } & (
   | { kind: "item"; id: number; damage: number; color?: number }
   | { kind: "head"; skin: string }
@@ -1208,7 +1210,8 @@ export interface ItemsResource {
       durability?: number;
       skin?: string;
       color?: string;
-      model?: string; // item_model
+      // The model is the resource's item_model.
+      model?: string;
       category?: string;
       riftOnly?: boolean;
       npcPrice?: number;

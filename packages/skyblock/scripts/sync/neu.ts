@@ -182,7 +182,8 @@ function readPetItem(lore: string[]) {
 
 interface NeuItem {
   internalname: string;
-  itemid: string; // its 1.8 material, like minecraft:skull, or a newer id
+  // itemid is the 1.8 material, like minecraft:skull, or a newer id.
+  itemid: string;
   damage: number;
   displayname: string;
   lore?: string[];
