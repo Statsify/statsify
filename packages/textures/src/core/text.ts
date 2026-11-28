@@ -38,6 +38,7 @@ export type TextComponent =
       extra?: TextComponent[];
     };
 
+// The chat colors by name, in § code order
 const COLORS: Record<string, number> = {
   black: 0x00_00_00,
   dark_blue: 0x00_00_aa,
@@ -175,6 +176,7 @@ interface Unihex {
   overrides: { from: number; to: number; left: number; right: number }[];
 }
 
+// These are the game's defaults for the options a font filter can ask for
 const FONT_OPTIONS: Record<string, boolean> = { uniform: false, jp: false };
 
 const FALLBACK_FONT = "Minecraft";
@@ -201,6 +203,7 @@ function readUnihex(zip: Uint8Array) {
   return rows;
 }
 
+// Each of a unifont glyph's 16 hex rows has one digit per four columns
 function unihexGlyph(
   glyphHex: string,
   override?: { left: number; right: number },
@@ -436,6 +439,7 @@ export class TextRenderer {
   ) {
     const runs = parseComponent(text, plainStyle(options.color));
 
+    // Vanilla draws the shadow first, down and right at a quarter of the color
     if (options.shadow ?? true) this.line(ctx, runs, x, y, options, true);
     this.line(ctx, runs, x, y, options, false);
   }
