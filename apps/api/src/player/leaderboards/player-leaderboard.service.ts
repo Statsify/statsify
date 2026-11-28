@@ -13,7 +13,7 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import {
-  LeaderboardAdditionalStats,
+  type LeaderboardAdditionalStats,
   LeaderboardService,
   PAGE_SIZE,
   isRankedScore,
@@ -93,9 +93,9 @@ export class PlayerLeaderboardService extends LeaderboardService {
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    input = await this.getPlayerId(input);
+    const uuid = await this.getPlayerId(input);
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+    const ranking = await this.getLeaderboardRankings(Player, [field], uuid);
 
     if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 
@@ -140,18 +140,23 @@ export class PlayerLeaderboardService extends LeaderboardService {
       .lean()
       .exec();
 
-    return players.flatMap((player) => {
-      const score = (flatten(player) as LeaderboardAdditionalStats)[field];
-      return isRankedScore(score) ? [{ id: player.uuid, score }] : [];
-    });
+    return players
+      .map((player) => ({
+        id: player.uuid,
+        score: (flatten(player) as LeaderboardAdditionalStats)[field],
+      }))
+      .filter(({ score }) => isRankedScore(score));
   }
 
   private async getRedisScores(field: string, ids: string[]) {
     const scores = await this.redis.zmscore(`player.${field}`, ...ids);
+    const members: { id: string; score: number }[] = [];
 
-    return scores.flatMap((score, index) =>
-      score === null ? [] : [{ id: ids[index], score: Number(score) }]
-    );
+    for (const [index, score] of scores.entries()) {
+      if (score !== null) members.push({ id: ids[index], score: Number(score) });
+    }
+
+    return members;
   }
 
   private async getPlayerId(input: string) {
