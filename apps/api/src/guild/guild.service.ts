@@ -16,7 +16,7 @@ import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/sc
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable } from "@nestjs/common";
+import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
@@ -42,16 +42,20 @@ export class GuildService {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
-      return {
-        ...deserialize(Guild, flatten(cachedGuild)),
-        cached: true,
-      };
+      return this.fromCache(cachedGuild);
     }
 
-    const guild = await this.hypixelService.getGuild(
-      tag,
-      type.toLowerCase() as Lowercase<GuildQuery>
-    );
+    let guild: Guild | null;
+
+    try {
+      guild = await this.hypixelService.getGuild(
+        tag,
+        type.toLowerCase() as Lowercase<GuildQuery>
+      );
+    } catch {
+      if (cachedGuild) return this.fromCache(cachedGuild);
+      throw new ServiceUnavailableException();
+    }
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
@@ -151,6 +155,10 @@ export class GuildService {
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return deserialize(Guild, flatGuild);
+  }
+
+  private fromCache(cachedGuild: Guild): Guild {
+    return { ...deserialize(Guild, flatten(cachedGuild)), cached: true };
   }
 
   private async getCachedGuild(
