@@ -10,7 +10,10 @@ import { API } from "@discordjs/core/http-only";
 import { Agent } from "undici";
 import { REST, type RESTOptions } from "@discordjs/rest";
 
-export function createDiscordApi(token: string, options: Pick<Partial<RESTOptions>, "timeout"> = {}) {
+export function createDiscordApi(
+  token: string,
+  options: Pick<Partial<RESTOptions>, "timeout"> = {},
+) {
   const rest = new REST({
     ...options,
     // Below Discord's idle close, since a request sent on a socket it closed isn't retried
