@@ -452,7 +452,8 @@ export interface RawResourceItem {
     category?: string;
     donation_xp?: number;
     armor_set_donation_xp?: Record<string, number>;
-    parent?: Record<string, string>; // a museum key → its upgrade
+    // parent maps a museum key to its upgrade.
+    parent?: Record<string, string>;
   };
 }
 

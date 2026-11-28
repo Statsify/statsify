@@ -428,9 +428,11 @@ const countPerfectGems = ({ gems }: ItemView) =>
 
 interface InPlaceUpgrade {
   unit: TierUnit;
-  tiers: Partial<Record<Rarity, number>>; // before a recombobulator
+  // The tiers are before a recombobulator.
+  tiers: Partial<Record<Rarity, number>>;
   getProgress: (view: ItemView, member: RawMember) => number;
-  recombobulates?: boolean; // the others drop back when recombobulated
+  // The others drop back a tier when recombobulated.
+  recombobulates?: boolean;
 }
 
 // An item has no counter until its first use, so a missing one is at 0.

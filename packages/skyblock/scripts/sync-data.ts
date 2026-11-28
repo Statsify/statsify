@@ -21,7 +21,8 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 export interface SyncContext {
-  neu: string; // NEU-REPO's checkout, empty when only textures run
+  // neu is NEU-REPO's checkout, empty when only textures run.
+  neu: string;
   readJson: <T>(path: string) => Promise<T>;
   write: (file: string, data: unknown) => void;
   setBoards: (

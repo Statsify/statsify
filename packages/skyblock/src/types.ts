@@ -127,7 +127,8 @@ export interface ProfileSummary {
   newProfile: boolean;
   purse: number;
   bank?: number;
-  bankTier: BankTier; // the highest any member has
+  // The bank tier is the highest any member has.
+  bankTier: BankTier;
   bankLimit: number;
   personalBank?: number;
   personalBankLimit?: number;
@@ -280,9 +281,11 @@ export interface MuseumView {
   // An id is an item or an armor set.
   items: { id: string; category?: string; donatedAt?: number; items: Slots }[];
   special: { donatedAt?: number; items: Slots }[];
-  donated: MuseumCategory[]; // every category, most donated first
+  // Every category is listed, most donated first.
+  donated: MuseumCategory[];
   xp: number;
-  maxXp: number; // what every key in the items resource pays
+  // maxXp is what every key in the items resource pays.
+  maxXp: number;
   milestone: number;
 }
 
@@ -496,7 +499,8 @@ export interface FishingSection {
   trophyFish: TrophyFish[];
   trophyFishCaught: number;
   trophyFrogs: TrophyFrog[];
-  trophyFrogsCaught?: number; // missing on some saves with frogs caught
+  // Some saves with frogs caught don't have this count.
+  trophyFrogsCaught?: number;
   itemsFished: Record<"total" | Catch, number>;
   seaCreatureKills: number;
   // Sea creatures sort by the most kills first.
@@ -514,7 +518,8 @@ export interface TrophyFish {
 export interface TrophyFrog {
   id: string;
   name: string;
-  tiers: Record<TrophyTier, boolean>; // caught at least once
+  // A tier is true once it's caught at least once.
+  tiers: Record<TrophyTier, boolean>;
 }
 
 export interface JacobSection {
@@ -578,7 +583,8 @@ export interface CollectionView {
   id: string;
   name: string;
   texture?: ItemTexture;
-  amount?: number; // missing with the Collections API off
+  // The amount is missing with the Collections API off.
+  amount?: number;
   tier: number;
   maxTier: number;
   // next is the amount the next tier needs.
@@ -979,7 +985,8 @@ export interface PetsSection {
   totalXp: number;
   skinned: number;
   candyUsed: number;
-  activeStats?: Stats; // with its held item, as the stat totals count them
+  // activeStats count the held item, as the stat totals do.
+  activeStats?: Stats;
 }
 
 export interface PetView {
@@ -992,7 +999,8 @@ export interface PetView {
   heldItem?: string;
   heldItemTexture?: ItemTexture;
   skin?: string;
-  skinColor?: string; // the color of the ✦ after a skinned pet's name
+  // skinColor is the color of the ✦ after a skinned pet's name.
+  skinColor?: string;
   candyUsed: number;
   active: boolean;
   texture: ItemTexture;
@@ -1042,7 +1050,8 @@ export interface MissingAccessory {
   coinsPerAccessoryPower?: number;
   replaces?: string;
   texture: ItemTexture;
-  nextTier?: { unit: TierUnit; has: number; at: number }; // an in-place upgrade
+  // nextTier is set for an in-place upgrade.
+  nextTier?: { unit: TierUnit; has: number; at: number };
 }
 
 export type TierUnit =
@@ -1065,8 +1074,10 @@ export interface AccessoriesSection {
   // Only Legendary and higher accessories can take an enrichment.
   unenriched: number;
   recombobulated: number;
-  unique: number; // one per chain, and a consumed Rift Prism
-  chains: number; // in the items resource
+  // unique counts one per chain, and a consumed Rift Prism.
+  unique: number;
+  // chains counts the chains in the items resource.
+  chains: number;
   pricesAsOf: number;
   market: boolean;
   active: ItemView[];

@@ -10,7 +10,8 @@ import { arrayGroup } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { PowerStat } from "@statsify/skyblock";
 
-const MAX_STATS_PER_LINE = 3; // more is wider than the card
+// More stats on a line make it wider than the card.
+const MAX_STATS_PER_LINE = 3;
 
 interface StatLinesProps {
   label: string;
