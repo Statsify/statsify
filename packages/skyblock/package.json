@@ -15,8 +15,7 @@
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
-    "prismarine-nbt": "2.8.0",
-    "zod": "^4.1.5"
+    "prismarine-nbt": "2.8.0"
   },
   "imports": {
     "#types": {
