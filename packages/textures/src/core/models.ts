@@ -14,7 +14,11 @@ import type { ItemStack } from "./item-stack.js";
 import type { TintSource } from "./tints.js";
 import { maxDamage } from "./legacy-items.js";
 import mojangson from "mojangson";
-import { type Transformation, type Vec3, composeTransforms } from "./geometry.js";
+import {
+  type Transformation,
+  type Vec3,
+  composeTransforms,
+} from "./geometry.js";
 
 export interface Transform {
   rotation?: Vec3;
@@ -117,7 +121,8 @@ type ItemModel =
 /** An SNBT compound, like {td_attune_mode:1}, with booleans as the bytes 1 and 0 */
 function parseSnbt(snbt: string) {
   const tag = mojangson.parse(snbt);
-  if (tag.type !== "compound") throw new Error(`${snbt} isn't an SNBT compound`);
+  if (tag.type !== "compound")
+    throw new Error(`${snbt} isn't an SNBT compound`);
 
   return Object.fromEntries(
     Object.entries(mojangson.simplify(tag)).map(([key, value]) => [
@@ -129,20 +134,29 @@ function parseSnbt(snbt: string) {
 
 // Properties are read as they are for an item sitting in an inventory: not in use, selected
 // or cast, with no key held down, so every condition without a case here is false
-function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, item: ItemStack) {
+function condition(
+  model: Extract<ItemModel, { type: "minecraft:condition" }>,
+  item: ItemStack,
+) {
   switch (model.property) {
     case "minecraft:has_component":
-      return model.component === "minecraft:dyed_color" && item.color !== undefined;
+      return (
+        model.component === "minecraft:dyed_color" && item.color !== undefined
+      );
 
     case "minecraft:component": {
       if (model.predicate !== "minecraft:custom_data") return false;
       if (typeof model.value !== "string") {
-        throw new TypeError(`${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`);
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition isn't SNBT`,
+        );
       }
 
       const expected = Object.entries(parseSnbt(model.value));
       if (expected.some(([, value]) => typeof value === "object")) {
-        throw new TypeError(`${item.itemModel ?? item.id}'s custom_data condition compares a nested value`);
+        throw new TypeError(
+          `${item.itemModel ?? item.id}'s custom_data condition compares a nested value`,
+        );
       }
 
       return expected.every(([key, value]) => item.customData?.[key] === value);
@@ -150,7 +164,11 @@ function condition(model: Extract<ItemModel, { type: "minecraft:condition" }>, i
 
     case "minecraft:broken": {
       const durability = maxDamage(item.id);
-      return durability !== undefined && !item.unbreakable && (item.damage ?? 0) >= durability - 1;
+      return (
+        durability !== undefined &&
+        !item.unbreakable &&
+        (item.damage ?? 0) >= durability - 1
+      );
     }
 
     default:
@@ -165,7 +183,10 @@ const select = (model: Extract<ItemModel, { type: "minecraft:select" }>) =>
 
 const BUILTIN_GENERATED = "minecraft:builtin/generated";
 
-const LEGACY_TURN: Transform = { rotation: [30, 225, 0], scale: [0.625, 0.625, 0.625] };
+const LEGACY_TURN: Transform = {
+  rotation: [30, 225, 0],
+  scale: [0.625, 0.625, 0.625],
+};
 
 export class ModelResolver {
   private models = new Map<string, Model>();
@@ -183,8 +204,12 @@ export class ModelResolver {
     const cached = this.definitions.get(path);
     if (cached) return cached;
 
-    const definition = this.stack.json<{ model: ItemModel }>(path, namespaceIds);
-    if (!definition) throw new Error(`${id} has no item model definition (${path})`);
+    const definition = this.stack.json<{ model: ItemModel }>(
+      path,
+      namespaceIds,
+    );
+    if (!definition)
+      throw new Error(`${id} has no item model definition (${path})`);
 
     this.definitions.set(path, definition.model);
     return definition.model;
@@ -206,10 +231,16 @@ export class ModelResolver {
 
       const path = assetPath(next, "models", ".json");
       const file: ModelFile | undefined = this.stack.json(path);
-      if (!file) throw new Error(`${id} needs the model ${next}, which isn't in the pack`);
+      if (!file)
+        throw new Error(
+          `${id} needs the model ${next}, which isn't in the pack`,
+        );
 
       chain.push(file);
-      legacy.push(this.stack.packs.findLast(({ files }) => files.has(path))?.layout === "legacy");
+      legacy.push(
+        this.stack.packs.findLast(({ files }) => files.has(path))?.layout ===
+          "legacy",
+      );
       next = file.parent;
     }
 
@@ -220,7 +251,9 @@ export class ModelResolver {
     const model: Model = {
       id: namespaced(id),
       generated,
-      textures: resolveTextures(Object.assign({}, ...root.map((file) => file.textures))),
+      textures: resolveTextures(
+        Object.assign({}, ...root.map((file) => file.textures)),
+      ),
       elements: chain.find((file) => file.elements)?.elements ?? [],
       display: Object.assign({}, ...root.map((file) => file.display)),
       guiLight: chain.find((file) => file.gui_light)?.gui_light ?? "side",
@@ -230,7 +263,10 @@ export class ModelResolver {
     // so a model gets both when that transform comes from a 1.8.9 file, or it has none and any 1.8.9 file
     const gui = chain.findIndex((file) => file.display?.gui);
     if (!generated && (gui === -1 ? legacy.includes(true) : legacy[gui])) {
-      model.display.gui = composeTransforms(LEGACY_TURN, model.display.gui ?? {});
+      model.display.gui = composeTransforms(
+        LEGACY_TURN,
+        model.display.gui ?? {},
+      );
     }
 
     this.models.set(model.id, model);
@@ -240,27 +276,40 @@ export class ModelResolver {
   // 1.8.9 drew block items through an item model of their own, with its own gui transform,
   // where 26.3's definitions select the block's model
   private itemModel(item: ItemStack, selected: string) {
-    if (!namespaced(selected).split(":")[1].startsWith("block/")) return selected;
+    if (!namespaced(selected).split(":")[1].startsWith("block/"))
+      return selected;
 
     const [namespace, name] = namespaced(item.itemModel ?? item.id).split(":");
     const legacy = `${namespace}:item/${name}`;
     const legacyPath = assetPath(legacy, "models", ".json");
     const selectedPath = assetPath(selected, "models", ".json");
 
-    const pack = this.stack.packs.findLast(({ files }) => files.has(legacyPath) || files.has(selectedPath));
-    return pack?.layout === "legacy" && pack.files.has(legacyPath) ? legacy : selected;
+    const pack = this.stack.packs.findLast(
+      ({ files }) => files.has(legacyPath) || files.has(selectedPath),
+    );
+    return pack?.layout === "legacy" && pack.files.has(legacyPath)
+      ? legacy
+      : selected;
   }
 
   private layers(model: ItemModel, item: ItemStack): ItemLayer[] {
     switch (model.type) {
       case "minecraft:model":
-        return [{ model: this.model(this.itemModel(item, model.model)), tints: model.tints ?? [] }];
+        return [
+          {
+            model: this.model(this.itemModel(item, model.model)),
+            tints: model.tints ?? [],
+          },
+        ];
 
       case "minecraft:composite":
         return model.models.flatMap((child) => this.layers(child, item));
 
       case "minecraft:condition":
-        return this.layers(condition(model, item) ? model.on_true : model.on_false, item);
+        return this.layers(
+          condition(model, item) ? model.on_true : model.on_false,
+          item,
+        );
 
       case "minecraft:select": {
         const value = select(model);
@@ -270,15 +319,21 @@ export class ModelResolver {
         );
 
         const next = match?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} ${value}`);
+        if (!next)
+          throw new Error(
+            `${item.id} has no model for ${model.property} ${value}`,
+          );
 
         return this.layers(next, item);
       }
 
       // Compasses, clocks and bows sit at their first frame
       case "minecraft:range_dispatch": {
-        const next = model.entries.findLast(({ threshold }) => threshold <= 0)?.model ?? model.fallback;
-        if (!next) throw new Error(`${item.id} has no model for ${model.property} 0`);
+        const next =
+          model.entries.findLast(({ threshold }) => threshold <= 0)?.model ??
+          model.fallback;
+        if (!next)
+          throw new Error(`${item.id} has no model for ${model.property} 0`);
 
         return this.layers(next, item);
       }
@@ -334,7 +389,10 @@ if (import.meta.vitest) {
         hash: "test",
         layout: "modern",
         files: new Map(
-          Object.entries(files).map(([path, json]) => [path, encoder.encode(JSON.stringify(json))]),
+          Object.entries(files).map(([path, json]) => [
+            path,
+            encoder.encode(JSON.stringify(json)),
+          ]),
         ),
       },
     ]);
@@ -354,7 +412,10 @@ if (import.meta.vitest) {
           },
           "assets/minecraft/models/item/dyed.json": {
             parent: "item/base",
-            textures: { layer1: "#layer0", layer0: "minecraft:item/leather_boots" },
+            textures: {
+              layer1: "#layer0",
+              layer0: "minecraft:item/leather_boots",
+            },
           },
           "assets/minecraft/models/item/base.json": {
             parent: "builtin/generated",
@@ -364,13 +425,19 @@ if (import.meta.vitest) {
         }),
       );
 
-      const [layer] = resolver.resolve({ id: "minecraft:leather_boots", color: 0xff_00_00 });
+      const [layer] = resolver.resolve({
+        id: "minecraft:leather_boots",
+        color: 0xff_00_00,
+      });
 
       expect(layer.model).toMatchObject({
         id: "minecraft:item/dyed",
         generated: true,
         guiLight: "front",
-        textures: { layer0: "minecraft:item/leather_boots", layer1: "minecraft:item/leather_boots" },
+        textures: {
+          layer0: "minecraft:item/leather_boots",
+          layer1: "minecraft:item/leather_boots",
+        },
       });
       expect(layer.model.textures).not.toHaveProperty("layer2");
     });
@@ -382,21 +449,34 @@ if (import.meta.vitest) {
             model: {
               type: "select",
               property: "display_context",
-              cases: [{ when: "gui", model: { type: "model", model: "pack:item/dagger" } }],
+              cases: [
+                {
+                  when: "gui",
+                  model: { type: "model", model: "pack:item/dagger" },
+                },
+              ],
               fallback: { type: "model", model: "pack:item/in_hand" },
             },
           },
-          "assets/pack/models/item/dagger.json": { parent: "builtin/generated" },
+          "assets/pack/models/item/dagger.json": {
+            parent: "builtin/generated",
+          },
         }),
       );
 
-      const [layer] = resolver.resolve({ id: "minecraft:golden_sword", itemModel: "pack:dagger" });
+      const [layer] = resolver.resolve({
+        id: "minecraft:golden_sword",
+        itemModel: "pack:dagger",
+      });
       expect(layer.model.id).toBe("pack:item/dagger");
     });
   });
 
   it("reads conditions from an item's custom data and wear", () => {
-    const when = (property: string, fields?: Partial<Parameters<typeof condition>[0]>) =>
+    const when = (
+      property: string,
+      fields?: Partial<Parameters<typeof condition>[0]>,
+    ) =>
       ({
         type: "minecraft:condition",
         property,
@@ -405,24 +485,33 @@ if (import.meta.vitest) {
         ...fields,
       }) as const;
 
-    const mode = when("minecraft:component", { predicate: "minecraft:custom_data", value: "{mode:1}" });
+    const mode = when("minecraft:component", {
+      predicate: "minecraft:custom_data",
+      value: "{mode:1}",
+    });
     const broken = when("minecraft:broken");
     const dagger = { id: "minecraft:golden_sword" };
     const can = { id: "minecraft:carrot_on_a_stick" };
 
     expect(condition(mode, dagger)).toBe(false);
-    expect(condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } })).toBe(true);
+    expect(
+      condition(mode, { ...dagger, customData: { id: "DAGGER", mode: 1 } }),
+    ).toBe(true);
     expect(condition(mode, { ...dagger, customData: { mode: 3 } })).toBe(false);
     expect(condition(broken, { ...can, damage: 23 })).toBe(false);
     expect(condition(broken, { ...can, damage: 24 })).toBe(true);
-    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(false);
+    expect(condition(broken, { ...can, damage: 24, unbreakable: true })).toBe(
+      false,
+    );
   });
 
   it("reads SNBT compounds of plain values", () => {
     expect(parseSnbt("{ }")).toEqual({});
     expect(parseSnbt("{active:true, }")).toEqual({ active: 1 });
     expect(parseSnbt("{td_attune_mode:1}")).toEqual({ td_attune_mode: 1 });
-    expect(parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }')).toEqual({
+    expect(
+      parseSnbt('{ active:true, "a key":"b,c", level:2.5f, tier:-3b }'),
+    ).toEqual({
       active: 1,
       "a key": "b,c",
       level: 2.5,

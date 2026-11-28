@@ -30,12 +30,19 @@ interface Frame {
 // Frames are sized the way Minecraft sizes them: square unless the animation says otherwise
 function frameSize(width: number, height: number, animation: Animation) {
   return {
-    width: animation.width ?? (animation.height ? width : Math.min(width, height)),
-    height: animation.height ?? (animation.width ? height : Math.min(width, height)),
+    width:
+      animation.width ?? (animation.height ? width : Math.min(width, height)),
+    height:
+      animation.height ?? (animation.width ? height : Math.min(width, height)),
   };
 }
 
-function frameRect(width: number, height: number, animation: Animation | undefined, index: number) {
+function frameRect(
+  width: number,
+  height: number,
+  animation: Animation | undefined,
+  index: number,
+) {
   if (!animation) return { x: 0, y: 0, width, height };
 
   const size = frameSize(width, height, animation);
@@ -49,11 +56,19 @@ function frameRect(width: number, height: number, animation: Animation | undefin
 }
 
 /** Plays the animation forward to a game tick */
-function frameAt(width: number, height: number, animation: Animation, tick: number): Frame {
+function frameAt(
+  width: number,
+  height: number,
+  animation: Animation,
+  tick: number,
+): Frame {
   const size = frameSize(width, height, animation);
-  const count = Math.floor(width / size.width) * Math.floor(height / size.height);
+  const count =
+    Math.floor(width / size.width) * Math.floor(height / size.height);
 
-  const frames = (animation.frames ?? Array.from({ length: count }, (_, index) => index)).map((frame) =>
+  const frames = (
+    animation.frames ?? Array.from({ length: count }, (_, index) => index)
+  ).map((frame) =>
     typeof frame === "number"
       ? { index: frame, time: animation.frametime ?? 1 }
       : { index: frame.index, time: frame.time ?? animation.frametime ?? 1 },
@@ -76,7 +91,13 @@ function frameAt(width: number, height: number, animation: Animation, tick: numb
     remaining -= frame.time;
   }
 
-  return { index: frames[0].index, next: frames[0].index, blend: 0, start: tick, end: tick };
+  return {
+    index: frames[0].index,
+    next: frames[0].index,
+    blend: 0,
+    start: tick,
+    end: tick,
+  };
 }
 
 /** Mixes next into pixels value by value, by an amount from 0 to 1 */
@@ -98,7 +119,10 @@ export class TextureLoader {
     const path = assetPath(id, "textures", ".png");
 
     if (!this.animations.has(path)) {
-      this.animations.set(path, this.stack.json<{ animation?: Animation }>(`${path}.mcmeta`)?.animation);
+      this.animations.set(
+        path,
+        this.stack.json<{ animation?: Animation }>(`${path}.mcmeta`)?.animation,
+      );
     }
 
     const animation = this.animations.get(path);
@@ -136,7 +160,12 @@ export class TextureLoader {
     const animation = this.animations.get(path);
 
     const read = (index: number) => {
-      const rect = frameRect(image.canvas.width, image.canvas.height, animation, index);
+      const rect = frameRect(
+        image.canvas.width,
+        image.canvas.height,
+        animation,
+        index,
+      );
       return image.getImageData(rect.x, rect.y, rect.width, rect.height);
     };
 

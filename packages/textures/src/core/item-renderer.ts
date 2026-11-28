@@ -6,9 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ItemLayer, type Model, ModelResolver, type SpecialModel } from "./models.js";
-import { type Quad, boxQuads, elementQuads, rasterize, transformQuads } from "./geometry.js";
-import { context, createCanvas, createImageData, decodePng, hex } from "./canvas.js";
+import {
+  type ItemLayer,
+  type Model,
+  ModelResolver,
+  type SpecialModel,
+} from "./models.js";
+import {
+  type Quad,
+  boxQuads,
+  elementQuads,
+  rasterize,
+  transformQuads,
+} from "./geometry.js";
+import {
+  context,
+  createCanvas,
+  createImageData,
+  decodePng,
+  hex,
+} from "./canvas.js";
 import { TextureLoader, mixPixels } from "./textures.js";
 import type { IconCache } from "./icon-cache.js";
 import type { ItemStack } from "./item-stack.js";
@@ -64,9 +81,17 @@ function tinted(pixels: ImageData, color: number) {
   return out;
 }
 
-function drawSprite(ctx: OffscreenCanvasRenderingContext2D, pixels: ImageData, color?: number) {
+function drawSprite(
+  ctx: OffscreenCanvasRenderingContext2D,
+  pixels: ImageData,
+  color?: number,
+) {
   const sprite = createCanvas(pixels.width, pixels.height);
-  context(sprite).putImageData(color === undefined ? pixels : tinted(pixels, color), 0, 0);
+  context(sprite).putImageData(
+    color === undefined ? pixels : tinted(pixels, color),
+    0,
+    0,
+  );
   ctx.drawImage(sprite, 0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
@@ -84,7 +109,12 @@ interface Glint {
 function modernGlint(tick: number): Glint {
   const time = tick * MS_PER_TICK * 0.5 * 8;
   const scrollV = (time % 30_000) / 30_000;
-  return { passes: [{ angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV }], tint: [0.75, 0.75, 0.75] };
+  return {
+    passes: [
+      { angle: Math.PI / 18, scrollU: -(time % 110_000) / 110_000, scrollV },
+    ],
+    tint: [0.75, 0.75, 0.75],
+  };
 }
 
 function legacyGlint(tick: number): Glint {
@@ -123,7 +153,11 @@ const translucent = (icon: OffscreenCanvas) =>
 
 // "lighter" adds alpha too, which would make translucent icons more opaque, so those add the glint
 // to their pixels' colors one by one
-function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, passes: GlintPass[]) {
+function addGlint(
+  ctx: OffscreenCanvasRenderingContext2D,
+  glint: ImageData,
+  passes: GlintPass[],
+) {
   const { width, height } = ctx.canvas;
   const pixels = ctx.getImageData(0, 0, width, height);
 
@@ -144,7 +178,8 @@ function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, pass
         const gy = Math.floor((gv - Math.floor(gv)) * glint.height);
         const texel = (gy * glint.width + gx) * 4;
 
-        for (let channel = 0; channel < 3; channel++) pixels.data[out + channel] += glint.data[texel + channel];
+        for (let channel = 0; channel < 3; channel++)
+          pixels.data[out + channel] += glint.data[texel + channel];
       }
     }
   }
@@ -153,7 +188,11 @@ function addGlint(ctx: OffscreenCanvasRenderingContext2D, glint: ImageData, pass
 }
 
 // A canvas pattern avoids reading pixels back for each tick
-function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanvas, passes: GlintPass[]) {
+function drawGlint(
+  ctx: OffscreenCanvasRenderingContext2D,
+  glint: OffscreenCanvas,
+  passes: GlintPass[],
+) {
   const { width, height } = ctx.canvas;
   const layer = createCanvas(width, height);
   const layerCtx = context(layer);
@@ -176,7 +215,14 @@ function drawGlint(ctx: OffscreenCanvasRenderingContext2D, glint: OffscreenCanva
     const d = a11 / determinant;
 
     const pattern = layerCtx.createPattern(glint, "repeat")!;
-    pattern.setTransform({ a, b, c, d, e: -(a * offsetX + c * offsetY), f: -(b * offsetX + d * offsetY) });
+    pattern.setTransform({
+      a,
+      b,
+      c,
+      d,
+      e: -(a * offsetX + c * offsetY),
+      f: -(b * offsetX + d * offsetY),
+    });
     layerCtx.fillStyle = pattern;
     layerCtx.fillRect(0, 0, width, height);
   }
@@ -200,7 +246,9 @@ function crossFade(from: OffscreenCanvas, to: OffscreenCanvas, blend: number) {
 }
 
 function faceTexture(model: Model, reference: string) {
-  const id = reference.startsWith("#") ? model.textures[reference.slice(1)] : reference;
+  const id = reference.startsWith("#")
+    ? model.textures[reference.slice(1)]
+    : reference;
   if (!id) throw new Error(`${model.id} has no texture for ${reference}`);
   return id;
 }
@@ -211,11 +259,14 @@ function textureIds({ model, special }: ItemLayer) {
 
   if (model.generated) {
     const ids: string[] = [];
-    for (let layer = 0; model.textures[`layer${layer}`]; layer++) ids.push(model.textures[`layer${layer}`]);
+    for (let layer = 0; model.textures[`layer${layer}`]; layer++)
+      ids.push(model.textures[`layer${layer}`]);
     return ids;
   }
 
-  const faces = model.elements.flatMap((element) => Object.values(element.faces));
+  const faces = model.elements.flatMap((element) =>
+    Object.values(element.faces),
+  );
   return [...new Set(faces.map((face) => faceTexture(model, face.texture)))];
 }
 
@@ -243,12 +294,21 @@ export class ItemRenderer {
 
     const legacy = assetPath(LEGACY_GLINT, "textures", ".png");
     this.legacyGlint =
-      stack.packs.findLast(({ files }) => files.has(legacy) || files.has(assetPath(GLINT, "textures", ".png")))
+      stack.packs
+        .findLast(
+          ({ files }) =>
+            files.has(legacy) ||
+            files.has(assetPath(GLINT, "textures", ".png")),
+        )
         ?.files.has(legacy) ?? false;
   }
 
   /** Draws an item 16 × scale pixels square, at a game tick for animated textures and the glint */
-  public async render(item: ItemStack, scale: number, tick = 0): Promise<OffscreenCanvas> {
+  public async render(
+    item: ItemStack,
+    scale: number,
+    tick = 0,
+  ): Promise<OffscreenCanvas> {
     const icon = await this.base(item, scale, tick);
     if (!item.enchanted) return icon;
 
@@ -256,11 +316,16 @@ export class ItemRenderer {
     const canvas = createCanvas(icon.width, icon.height);
     const ctx = context(canvas);
     ctx.drawImage(icon, 0, 0);
-    const { passes, tint } = this.legacyGlint ? legacyGlint(tick) : modernGlint(tick);
-    this.glint ??= this.textures.get(this.legacyGlint ? LEGACY_GLINT : GLINT).then((texture) => squaredGlint(texture, tint));
+    const { passes, tint } = this.legacyGlint
+      ? legacyGlint(tick)
+      : modernGlint(tick);
+    this.glint ??= this.textures
+      .get(this.legacyGlint ? LEGACY_GLINT : GLINT)
+      .then((texture) => squaredGlint(texture, tint));
     const glint = await this.glint;
 
-    if (!this.translucentIcons.has(icon)) this.translucentIcons.set(icon, translucent(icon));
+    if (!this.translucentIcons.has(icon))
+      this.translucentIcons.set(icon, translucent(icon));
 
     if (this.translucentIcons.get(icon)) addGlint(ctx, glint.pixels, passes);
     else drawGlint(ctx, glint.canvas, passes);
@@ -268,7 +333,11 @@ export class ItemRenderer {
     return canvas;
   }
 
-  private async base(item: ItemStack, scale: number, tick: number): Promise<OffscreenCanvas> {
+  private async base(
+    item: ItemStack,
+    scale: number,
+    tick: number,
+  ): Promise<OffscreenCanvas> {
     const resolved = this.models.resolve(item);
 
     const animated = resolved
@@ -281,14 +350,22 @@ export class ItemRenderer {
     const [first] = animated;
     const fades =
       first !== undefined &&
-      animated.every(({ blend, start, end }) => blend > 0 && start === first.start && end === first.end);
+      animated.every(
+        ({ blend, start, end }) =>
+          blend > 0 && start === first.start && end === first.end,
+      );
 
     if (fades) {
-      const [from, to] = await Promise.all([this.base(item, scale, first.start), this.base(item, scale, first.end)]);
+      const [from, to] = await Promise.all([
+        this.base(item, scale, first.start),
+        this.base(item, scale, first.end),
+      ]);
       return crossFade(from, to, first.blend);
     }
 
-    const grass = resolved.some(({ tints }) => tints.some(({ type }) => type === "minecraft:grass"))
+    const grass = resolved.some(({ tints }) =>
+      tints.some(({ type }) => type === "minecraft:grass"),
+    )
       ? await this.textures.get("colormap/grass")
       : undefined;
 
@@ -308,21 +385,37 @@ export class ItemRenderer {
     const key = [
       this.stack.hash,
       ...layers.map(({ model, colors, special }) =>
-        [model.id, special?.type, special?.kind, special?.texture, ...colors.map(hex)]
+        [
+          model.id,
+          special?.type,
+          special?.kind,
+          special?.texture,
+          ...colors.map(hex),
+        ]
           .filter(Boolean)
           .join(","),
       ),
-      layers.some(({ special }) => special?.type === "minecraft:player_head") ? item.skin : undefined,
+      layers.some(({ special }) => special?.type === "minecraft:player_head")
+        ? item.skin
+        : undefined,
       frames.length > 0 ? frames.join(",") : undefined,
       scale,
     ]
       .filter((part) => part !== undefined)
       .join("/");
 
-    return this.icons.forceFetch(key, { context: () => this.load(key, layers, item, scale, tick) });
+    return this.icons.forceFetch(key, {
+      context: () => this.load(key, layers, item, scale, tick),
+    });
   }
 
-  private async load(key: string, layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
+  private async load(
+    key: string,
+    layers: TintedLayer[],
+    item: ItemStack,
+    scale: number,
+    tick: number,
+  ) {
     const cached = await this.cache?.get(this.stack.hash, key);
     if (cached) return cached;
 
@@ -332,23 +425,41 @@ export class ItemRenderer {
     return icon;
   }
 
-  private async draw(layers: TintedLayer[], item: ItemStack, scale: number, tick: number) {
+  private async draw(
+    layers: TintedLayer[],
+    item: ItemStack,
+    scale: number,
+    tick: number,
+  ) {
     const canvas = createCanvas(SIZE * scale, SIZE * scale);
     const ctx = context(canvas);
 
     const drawings = await Promise.all(
-      layers.map(async (layer): Promise<{ pixels: ImageData; color?: number }[]> => {
-        if (layer.model.generated && !layer.special) return this.sprites(layer, tick);
+      layers.map(
+        async (layer): Promise<{ pixels: ImageData; color?: number }[]> => {
+          if (layer.model.generated && !layer.special)
+            return this.sprites(layer, tick);
 
-        const quads = layer.special
-          ? await this.specialQuads(layer.special, item)
-          : await this.elementQuads(layer, tick);
+          const quads = layer.special
+            ? await this.specialQuads(layer.special, item)
+            : await this.elementQuads(layer, tick);
 
-        return [{ pixels: rasterize(quads, layer.model.display.gui, layer.model.guiLight, scale) }];
-      }),
+          return [
+            {
+              pixels: rasterize(
+                quads,
+                layer.model.display.gui,
+                layer.model.guiLight,
+                scale,
+              ),
+            },
+          ];
+        },
+      ),
     );
 
-    for (const { pixels, color } of drawings.flat()) drawSprite(ctx, pixels, color);
+    for (const { pixels, color } of drawings.flat())
+      drawSprite(ctx, pixels, color);
 
     return canvas;
   }
@@ -367,7 +478,9 @@ export class ItemRenderer {
 
     const textures = new Map(
       await Promise.all(
-        textureIds(layer).map(async (id) => [id, await this.textures.get(id, tick)] as const),
+        textureIds(layer).map(
+          async (id) => [id, await this.textures.get(id, tick)] as const,
+        ),
       ),
     );
 
@@ -379,11 +492,16 @@ export class ItemRenderer {
     );
   }
 
-  private async specialQuads(special: SpecialModel, item: ItemStack): Promise<Quad[]> {
+  private async specialQuads(
+    special: SpecialModel,
+    item: ItemStack,
+  ): Promise<Quad[]> {
     // Ender and trapped chests are chests with another texture
     if (special.type === "minecraft:chest" && special.texture) {
       const [namespace, name] = namespaced(special.texture).split(":");
-      const texture = await this.textures.get(`${namespace}:entity/chest/${name}`);
+      const texture = await this.textures.get(
+        `${namespace}:entity/chest/${name}`,
+      );
 
       return transformQuads(
         [
@@ -403,21 +521,31 @@ export class ItemRenderer {
           : undefined;
 
     if (!head) {
-      const name = special.kind ? `${special.kind} ${special.type}` : special.type;
-      throw new Error(`${item.id} uses a ${name} model, which isn't supported yet`);
+      const name = special.kind
+        ? `${special.kind} ${special.type}`
+        : special.type;
+      throw new Error(
+        `${item.id} uses a ${name} model, which isn't supported yet`,
+      );
     }
 
     const texture =
-      !head.texture && item.skin ? await this.skin(item.skin) : await this.textures.get(head.texture ?? DEFAULT_SKIN);
+      !head.texture && item.skin
+        ? await this.skin(item.skin)
+        : await this.textures.get(head.texture ?? DEFAULT_SKIN);
 
     const quads = boxQuads([-4, -8, -4], [8, 8, 8], [0, 0], texture);
-    if (head.hat) quads.push(...boxQuads([-4, -8, -4], [8, 8, 8], [32, 0], texture, 0.25));
+    if (head.hat)
+      quads.push(...boxQuads([-4, -8, -4], [8, 8, 8], [32, 0], texture, 0.25));
 
     return transformQuads(quads, special.transformation);
   }
 
   private async skin(url: string) {
-    if (!this.loadSkin) throw new Error(`Drawing ${url} needs the ItemRenderer to have a skin loader`);
+    if (!this.loadSkin)
+      throw new Error(
+        `Drawing ${url} needs the ItemRenderer to have a skin loader`,
+      );
 
     const image = await decodePng(await this.loadSkin(url));
     return context(image).getImageData(0, 0, image.width, image.height);
@@ -429,13 +557,22 @@ if (import.meta.vitest) {
 
   it("keeps the most recently used promises and retries rejected ones", async () => {
     const cache = promiseCache<number>();
-    const get = (key: string, load: () => Promise<number>) => cache.forceFetch(key, { context: load });
+    const get = (key: string, load: () => Promise<number>) =>
+      cache.forceFetch(key, { context: load });
 
-    await expect(get("a", () => Promise.reject(new Error("failed")))).rejects.toThrow();
-    expect(await Promise.all([get("a", async () => 1), get("a", async () => 2)])).toEqual([1, 1]);
+    await expect(
+      get("a", () => Promise.reject(new Error("failed"))),
+    ).rejects.toThrow();
+    expect(
+      await Promise.all([get("a", async () => 1), get("a", async () => 2)]),
+    ).toEqual([1, 1]);
     expect(await get("a", async () => 3)).toBe(1);
 
-    await Promise.all(Array.from({ length: CACHE_LIMIT - 1 }, (_, key) => get(`${key + 1}`, async () => key)));
+    await Promise.all(
+      Array.from({ length: CACHE_LIMIT - 1 }, (_, key) =>
+        get(`${key + 1}`, async () => key),
+      ),
+    );
     expect(await get("a", async () => 4)).toBe(1);
 
     await get("b", async () => 0);

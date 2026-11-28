@@ -63,7 +63,8 @@ const COLORS: Record<string, number> = {
 const CODE_COLORS = Object.values(COLORS);
 
 // 1.8 brightens gold's red after working out its shadow, so gold's shadow isn't a quarter of it
-const shadowColor = (color: number) => (color === COLORS.gold ? 0x2a_2a_00 : (color & 0xfc_fc_fc) >> 2);
+const shadowColor = (color: number) =>
+  color === COLORS.gold ? 0x2a_2a_00 : (color & 0xfc_fc_fc) >> 2;
 
 const FORMATS: Record<string, keyof Omit<TextStyle, "color">> = {
   k: "obfuscated",
@@ -119,9 +120,13 @@ function componentColor(color: string | undefined, fallback: number) {
 }
 
 /** Flattens a JSON text component into runs, children inheriting their parent's style */
-function parseComponent(component: TextComponent, inherited: TextStyle = plainStyle()): TextRun[] {
+function parseComponent(
+  component: TextComponent,
+  inherited: TextStyle = plainStyle(),
+): TextRun[] {
   if (typeof component === "string") return parseLegacy(component, inherited);
-  if (Array.isArray(component)) return component.flatMap((child) => parseComponent(child, inherited));
+  if (Array.isArray(component))
+    return component.flatMap((child) => parseComponent(child, inherited));
 
   const style: TextStyle = {
     color: componentColor(component.color, inherited.color),
@@ -157,11 +162,22 @@ interface Glyph {
 type Provider = { filter?: Record<string, boolean> } & (
   | { type: "minecraft:reference"; id: string }
   | { type: "minecraft:space"; advances: Record<string, number> }
-  | { type: "minecraft:bitmap"; file: string; ascent: number; height?: number; chars: string[] }
+  | {
+      type: "minecraft:bitmap";
+      file: string;
+      ascent: number;
+      height?: number;
+      chars: string[];
+    }
   | {
       type: "minecraft:unihex";
       hex_file: string;
-      size_overrides?: { from: string; to: string; left: number; right: number }[];
+      size_overrides?: {
+        from: string;
+        to: string;
+        left: number;
+        right: number;
+      }[];
     }
 );
 
@@ -188,7 +204,11 @@ function readUnihex(zip: Uint8Array) {
   for (const file of Object.values(files)) {
     for (const line of decoder.decode(file).split("\n")) {
       const colon = line.indexOf(":");
-      if (colon > 0) rows.set(Number.parseInt(line.slice(0, colon), 16), line.slice(colon + 1).trim());
+      if (colon > 0)
+        rows.set(
+          Number.parseInt(line.slice(0, colon), 16),
+          line.slice(colon + 1).trim(),
+        );
     }
   }
 
@@ -196,11 +216,17 @@ function readUnihex(zip: Uint8Array) {
 }
 
 // Draws a unifont glyph from its 16 hex rows, each a quarter as many digits as the glyph is wide
-function unihexGlyph(glyphHex: string, override?: { left: number; right: number }): Glyph {
+function unihexGlyph(
+  glyphHex: string,
+  override?: { left: number; right: number },
+): Glyph {
   const columns = glyphHex.length / 4;
   const digits = columns / 4;
-  const bits = Array.from({ length: 16 }, (_, row) => Number.parseInt(glyphHex.slice(row * digits, (row + 1) * digits), 16));
-  const lit = (line: number, column: number) => ((line >>> (columns - 1 - column)) & 1) === 1;
+  const bits = Array.from({ length: 16 }, (_, row) =>
+    Number.parseInt(glyphHex.slice(row * digits, (row + 1) * digits), 16),
+  );
+  const lit = (line: number, column: number) =>
+    ((line >>> (columns - 1 - column)) & 1) === 1;
 
   // A glyph spans its lit columns, unless the font fixes the width for its range
   const any = bits.reduce((all, row) => all | row, 0);
@@ -246,10 +272,17 @@ function unihexGlyph(glyphHex: string, override?: { left: number; right: number 
 }
 
 // The width a bitmap glyph takes: up to its rightmost column with any pixel in it
-function glyphWidth(pixels: ImageData, x: number, y: number, width: number, height: number) {
+function glyphWidth(
+  pixels: ImageData,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+) {
   for (let column = width - 1; column >= 0; column--) {
     for (let row = 0; row < height; row++) {
-      if (pixels.data[((y + row) * pixels.width + x + column) * 4 + 3] > 0) return column + 1;
+      if (pixels.data[((y + row) * pixels.width + x + column) * 4 + 3] > 0)
+        return column + 1;
     }
   }
 
@@ -282,10 +315,15 @@ export class TextRenderer {
     const providers: Provider[] = [];
 
     const collect = (id: string) => {
-      const font = stack.json<{ providers: Provider[] }>(assetPath(id, "font", ".json"), namespaceIds);
+      const font = stack.json<{ providers: Provider[] }>(
+        assetPath(id, "font", ".json"),
+        namespaceIds,
+      );
 
       for (const provider of font?.providers ?? []) {
-        const wanted = Object.entries(provider.filter ?? {}).every(([option, value]) => FONT_OPTIONS[option] === value);
+        const wanted = Object.entries(provider.filter ?? {}).every(
+          ([option, value]) => FONT_OPTIONS[option] === value,
+        );
         if (!wanted) continue;
 
         if (provider.type === "minecraft:reference") collect(provider.id);
@@ -308,7 +346,16 @@ export class TextRenderer {
       if (provider.type === "minecraft:space") {
         for (const [char, advance] of Object.entries(provider.advances)) {
           if (!glyphs.has(char)) {
-            glyphs.set(char, { x: 0, y: 0, width: 0, height: 0, scale: 1, top: 0, advance, offset: 1 });
+            glyphs.set(char, {
+              x: 0,
+              y: 0,
+              width: 0,
+              height: 0,
+              scale: 1,
+              top: 0,
+              advance,
+              offset: 1,
+            });
           }
         }
       }
@@ -321,7 +368,12 @@ export class TextRenderer {
       const cellWidth = sheet.canvas.width / rows[0].length;
       const cellHeight = sheet.canvas.height / rows.length;
       const scale = height / cellHeight;
-      const pixels = sheet.getImageData(0, 0, sheet.canvas.width, sheet.canvas.height);
+      const pixels = sheet.getImageData(
+        0,
+        0,
+        sheet.canvas.width,
+        sheet.canvas.height,
+      );
 
       for (const [row, line] of rows.entries()) {
         for (const [column, char] of line.entries()) {
@@ -379,7 +431,9 @@ export class TextRenderer {
     const font = this.unihex.find(({ rows }) => rows.has(codepoint));
     if (!font) return undefined;
 
-    const override = font.overrides.find(({ from, to }) => codepoint >= from && codepoint <= to);
+    const override = font.overrides.find(
+      ({ from, to }) => codepoint >= from && codepoint <= to,
+    );
     glyph = unihexGlyph(font.rows.get(codepoint)!, override);
     this.glyphs.set(char, glyph);
     return glyph;
@@ -444,17 +498,42 @@ export class TextRenderer {
         const offset = (glyph?.offset ?? 1) * scale;
         const shift = shadow ? offset : 0;
 
-        this.drawGlyph(ctx, glyph, char, cursor + shift, y + shift, color, style.italic, scale);
+        this.drawGlyph(
+          ctx,
+          glyph,
+          char,
+          cursor + shift,
+          y + shift,
+          color,
+          style.italic,
+          scale,
+        );
         if (style.bold) {
-          this.drawGlyph(ctx, glyph, char, cursor + shift + offset, y + shift, color, style.italic, scale);
+          this.drawGlyph(
+            ctx,
+            glyph,
+            char,
+            cursor + shift + offset,
+            y + shift,
+            color,
+            style.italic,
+            scale,
+          );
         }
 
         // Lines move a whole pixel for the shadow, whatever the glyph
         const width = this.advance(char, style.bold, glyph) * scale;
         const line = shadow ? scale : 0;
         ctx.fillStyle = hex(color);
-        if (style.strikethrough) ctx.fillRect(cursor + line, y + 3 * scale + line, width, scale);
-        if (style.underlined) ctx.fillRect(cursor - scale + line, y + 8 * scale + line, width + scale, scale);
+        if (style.strikethrough)
+          ctx.fillRect(cursor + line, y + 3 * scale + line, width, scale);
+        if (style.underlined)
+          ctx.fillRect(
+            cursor - scale + line,
+            y + 8 * scale + line,
+            width + scale,
+            scale,
+          );
 
         cursor += width;
       }
@@ -487,13 +566,24 @@ export class TextRenderer {
     const top = y + glyph.top * scale;
 
     if (!italic) {
-      ctx.drawImage(sheet, glyph.x, glyph.y, glyph.width, glyph.height, x, top, glyph.width * size, glyph.height * size);
+      ctx.drawImage(
+        sheet,
+        glyph.x,
+        glyph.y,
+        glyph.width,
+        glyph.height,
+        x,
+        top,
+        glyph.width * size,
+        glyph.height * size,
+      );
       return;
     }
 
     // Italics lean each row right by a quarter pixel per pixel above the bottom, as vanilla does
     for (let row = 0; row < glyph.height; row++) {
-      const shift = (1 - 0.25 * (glyph.top + (row + 0.5) * glyph.scale)) * scale;
+      const shift =
+        (1 - 0.25 * (glyph.top + (row + 0.5) * glyph.scale)) * scale;
       ctx.drawImage(
         sheet,
         glyph.x,
@@ -534,11 +624,12 @@ export class TextRenderer {
     let chars = this.obfuscated.get(advance);
 
     if (!chars) {
-      chars = [...this.glyphs].filter(([, glyph]) => glyph.image && glyph.advance === advance).map(([char]) => char);
+      chars = [...this.glyphs]
+        .filter(([, glyph]) => glyph.image && glyph.advance === advance)
+        .map(([char]) => char);
       this.obfuscated.set(advance, chars);
     }
 
     return chars;
   }
 }
-

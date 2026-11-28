@@ -20,35 +20,58 @@ const decoder = new TextDecoder();
 
 /** The stack's English names, for items without a custom name, merged across its packs as the game merges them */
 export function loadNames(stack: PackStack) {
-  const files = stack.packs.map(({ files }) => files.get(NAMES)).filter((file) => file !== undefined);
+  const files = stack.packs
+    .map(({ files }) => files.get(NAMES))
+    .filter((file) => file !== undefined);
   if (files.length === 0) throw new Error(`${NAMES} isn't in the pack`);
-  return Object.assign({}, ...files.map((file) => JSON.parse(decoder.decode(file)))) as Record<string, string>;
+  return Object.assign(
+    {},
+    ...files.map((file) => JSON.parse(decoder.decode(file))),
+  ) as Record<string, string>;
 }
 
 // Legacy text takes the default style as § codes; a component gets it as a parent to inherit
-const prefixed = (text: TextComponent, codes: string, style: { color?: string; italic?: boolean }): TextComponent =>
-  typeof text === "string" ? `${codes}${text}` : { text: "", ...style, extra: [text] };
+const prefixed = (
+  text: TextComponent,
+  codes: string,
+  style: { color?: string; italic?: boolean },
+): TextComponent =>
+  typeof text === "string"
+    ? `${codes}${text}`
+    : { text: "", ...style, extra: [text] };
 
 /** 1.8 names take priority because those are the names Hypixel players see */
 function plainName(item: ItemStack, names: Record<string, string>) {
   const legacy = legacyName(item.id);
   // 1.8 makes only common items aqua when enchanted
-  if (legacy) return item.enchanted && legacy.startsWith("§f") ? `§b${legacy.slice(2)}` : legacy;
+  if (legacy)
+    return item.enchanted && legacy.startsWith("§f")
+      ? `§b${legacy.slice(2)}`
+      : legacy;
 
   const path = withoutNamespace(item.id);
-  const name = names[`item.minecraft.${path}`] ?? names[`block.minecraft.${path}`];
-  if (name === undefined) throw new Error(`The pack has no English name for ${item.id}`);
+  const name =
+    names[`item.minecraft.${path}`] ?? names[`block.minecraft.${path}`];
+  if (name === undefined)
+    throw new Error(`The pack has no English name for ${item.id}`);
   return `${item.enchanted ? "§b" : ""}${name}`;
 }
 
 /** An item's tooltip lines in 1.8's order. Renamed items start italic, which a color code at the start of the name clears */
-export function tooltipLines(item: ItemStack, names: Record<string, string>): TextComponent[] {
+export function tooltipLines(
+  item: ItemStack,
+  names: Record<string, string>,
+): TextComponent[] {
   const lines: TextComponent[] = [
-    item.name === undefined ? plainName(item, names) : prefixed(item.name, "§o", { italic: true }),
+    item.name === undefined
+      ? plainName(item, names)
+      : prefixed(item.name, "§o", { italic: true }),
   ];
 
-  for (const line of item.lore ?? []) lines.push(prefixed(line, "§5§o", { color: "dark_purple", italic: true }));
-  if (item.unbreakable && !((item.hideFlags ?? 0) & HIDE_UNBREAKABLE)) lines.push("§9Unbreakable");
+  for (const line of item.lore ?? [])
+    lines.push(prefixed(line, "§5§o", { color: "dark_purple", italic: true }));
+  if (item.unbreakable && !((item.hideFlags ?? 0) & HIDE_UNBREAKABLE))
+    lines.push("§9Unbreakable");
 
   return lines;
 }
@@ -61,18 +84,33 @@ const BORDER_BOTTOM = "rgba(40, 0, 127, 0.314)";
 const TOOLTIP_PADDING = 4;
 
 /** Draws a tooltip the way 1.8 does */
-export function drawTooltip(text: TextRenderer, lines: TextComponent[], scale: number, tick: number) {
+export function drawTooltip(
+  text: TextRenderer,
+  lines: TextComponent[],
+  scale: number,
+  tick: number,
+) {
   const width = Math.max(...lines.map((line) => text.width(line)));
   const height = 8 + (lines.length > 1 ? 2 + (lines.length - 1) * 10 : 0);
 
-  const canvas = createCanvas((width + 2 * TOOLTIP_PADDING) * scale, (height + 2 * TOOLTIP_PADDING) * scale);
+  const canvas = createCanvas(
+    (width + 2 * TOOLTIP_PADDING) * scale,
+    (height + 2 * TOOLTIP_PADDING) * scale,
+  );
   const ctx = context(canvas);
 
   // Rectangles from x1, y1 to x2, y2 around the text's top left, in GUI pixels
   const x = TOOLTIP_PADDING;
   const y = TOOLTIP_PADDING;
 
-  const rect = (x1: number, y1: number, x2: number, y2: number, top: string, bottom = top) => {
+  const rect = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    top: string,
+    bottom = top,
+  ) => {
     const gradient = ctx.createLinearGradient(0, y1 * scale, 0, y2 * scale);
     gradient.addColorStop(0, top);
     gradient.addColorStop(1, bottom);
@@ -87,7 +125,14 @@ export function drawTooltip(text: TextRenderer, lines: TextComponent[], scale: n
   rect(x + width + 3, y - 3, x + width + 4, y + height + 3, BACKGROUND);
 
   rect(x - 3, y - 2, x - 2, y + height + 2, BORDER_TOP, BORDER_BOTTOM);
-  rect(x + width + 2, y - 2, x + width + 3, y + height + 2, BORDER_TOP, BORDER_BOTTOM);
+  rect(
+    x + width + 2,
+    y - 2,
+    x + width + 3,
+    y + height + 2,
+    BORDER_TOP,
+    BORDER_BOTTOM,
+  );
   rect(x - 3, y - 3, x + width + 3, y - 2, BORDER_TOP);
   rect(x - 3, y + height + 2, x + width + 3, y + height + 3, BORDER_BOTTOM);
 
