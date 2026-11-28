@@ -26,8 +26,7 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "prismarine-nbt": "2.8.0",
-    "skyhelper-networth": "2.11.1",
-    "zod": "^4.1.5"
+    "skyhelper-networth": "2.11.1"
   },
   "imports": {
     "#types": {
@@ -54,10 +53,6 @@
       "types": "./src/nbt.ts",
       "default": "./dist/nbt.js"
     },
-    "#auctions": {
-      "types": "./src/auctions.ts",
-      "default": "./dist/auctions.js"
-    },
     "#prices": {
       "types": "./src/prices.ts",
       "default": "./dist/prices.js"
@@ -65,7 +60,6 @@
     "#textures": {
       "types": "./src/textures.ts",
       "default": "./dist/textures.js"
-    },
-    "#fixtures": "./fixtures/load.ts"
+    }
   }
 }

@@ -7,18 +7,38 @@
  */
 
 import { LEVELING } from "#data";
-import { SLAYER_BOSSES, type SlayersSection } from "#types";
 import { add } from "@statsify/math";
 import { getLevel, toLevelCosts } from "#leveling";
 import type { RawMember } from "#raw";
+import type { SlayersSection } from "#types";
+
+export const SLAYER_BOSSES = [
+  "zombie",
+  "spider",
+  "wolf",
+  "enderman",
+  "blaze",
+  "vampire",
+] as const;
+
+export type SlayerBoss = (typeof SLAYER_BOSSES)[number];
 
 export function getSlayers(member: RawMember): SlayersSection {
   const bosses = SLAYER_BOSSES.map((boss) => {
     const thresholds = LEVELING.slayer_xp[boss];
     const raw = member.slayer?.slayer_bosses?.[boss];
     const xp = raw?.xp ?? 0;
-    const kills = Array.from({ length: LEVELING.slayer_to_highest_tier[boss] }, (_, i) => raw?.[`boss_kills_tier_${i}`] ?? 0);
-    return [boss, { level: getLevel(xp, toLevelCosts(thresholds), thresholds.length), kills }] as const;
+    const kills = Array.from(
+      { length: LEVELING.slayer_to_highest_tier[boss] },
+      (_, i) => raw?.[`boss_kills_tier_${i}`] ?? 0,
+    );
+    return [
+      boss,
+      {
+        level: getLevel(xp, toLevelCosts(thresholds), thresholds.length),
+        kills,
+      },
+    ] as const;
   });
 
   return {
