@@ -10,24 +10,20 @@ import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/turbo-kart-racers.json" with { type: "json" };
 
 export interface KartPart {
-  /** As PartRarity names it, like AWESOME */
   rarity: string;
-  /** Each attribute's level, as KartAttributeType names it, like { TOP_SPEED: 5 } */
   attributes: Record<string, number>;
   item: ItemStack;
 }
 
-// Built by scripts/import-dump.ts from the Kart Customizer's part selectors, by PartType
+// Built by scripts/import-dump.ts from the Kart Customizer's part selectors
 const PARTS = dumped as Record<string, KartPart[]>;
 
-// In the Kart Customizer's order: engine, turbocharger, frame
 const KART = ["engine_active", "booster_active", "frame_active"] as const;
 
 const sameAttributes = (a: Record<string, number>, b: Record<string, number>) =>
   Object.keys(a).length === Object.keys(b).length &&
   Object.entries(a).every(([type, level]) => b[type] === level);
 
-/** A stored part, like {GingerbreadPart:{PartType:ENGINE,PartRarity:AWESOME,Attributes:[…]}}, as its selector's item */
 function kartPart(stored: string) {
   const type = /PartType:(\w+)/.exec(stored)?.[1];
   const rarity = /PartRarity:(\w+)/.exec(stored)?.[1];
@@ -52,10 +48,6 @@ function kartPart(stored: string) {
   return parts.find(matches)?.item;
 }
 
-/**
- * A Turbo Kart Racers kart from the GingerBread stats as its engine, turbocharger and frame. A part no
- * selector showed with its rarity and attribute levels leaves its slot empty
- */
 export function fromTurboKartRacersKart(
   stats: Readonly<Partial<Record<(typeof KART)[number], string | null>>>,
 ): (ItemStack | undefined)[] {

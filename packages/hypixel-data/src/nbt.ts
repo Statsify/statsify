@@ -19,13 +19,11 @@ export interface Compound {
   [name: string]: Tag;
 }
 
-/** Reads uncompressed Java NBT, the format inventories are stored in */
 export function readNbt(data: Uint8Array): Compound {
   const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
   const decoder = new TextDecoder();
   let offset = 0;
 
-  // Takes a value just read at offset and moves offset past its bytes
   const advance = <T>(bytes: number, value: T) => {
     offset += bytes;
     return value;

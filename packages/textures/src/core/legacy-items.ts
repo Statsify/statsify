@@ -19,7 +19,7 @@ const names: Record<string, string | undefined> = data.legacyNames;
 const MINECRAFT_DATA =
   "https://raw.githubusercontent.com/PrismarineJS/minecraft-data/3.117.0/data/pc";
 
-/** A file from the minecraft-data release these tables are built from, like "1.8/items.json" */
+// Paths are inside the pinned release, like "1.8/items.json"
 export async function fetchMinecraftData<T>(path: string): Promise<T> {
   const response = await fetch(`${MINECRAFT_DATA}/${path}`, {
     signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
@@ -62,7 +62,6 @@ export function legacyItem(id: number, damage = 0): ItemStack | undefined {
   };
 }
 
-/** The 1.8 numeric id of a Bukkit material name, like GOLD_CHESTPLATE */
 export const legacyMaterialId = (name: string) => materials[name];
 
 export const maxDamage = (id: string) => durability[withoutNamespace(id)];

@@ -23,8 +23,7 @@ type ArenaSlot = (typeof LOADOUT)[number];
 // Built by scripts/import-dump.ts from the Arena Shop's skill and rune menus
 const MENUS = dumped as Record<ArenaSlot, Record<string, ItemStack>>;
 
-// Hypixel stores berserk as bersek, Petrify as polymorph, the Rune of Defence as tank (as its
-// rune_level_tank key does), and some skills by shorter names than the shop's
+// Hypixel stores some skills and runes by other names than the shop's
 const RENAMED: Record<string, string | undefined> = {
   arachnid: "broodmother",
   bersek: "berserk",
@@ -35,7 +34,6 @@ const RENAMED: Record<string, string | undefined> = {
   tank: "defence",
 };
 
-/** An Arena loadout ({ offensive: "falcon_punch", active_rune: "damage" }) as the shop's items in LOADOUT's order */
 export function fromArenaLoadout(
   arena: Readonly<Partial<Record<ArenaSlot, string | null>>>,
 ): (ItemStack | undefined)[] {
