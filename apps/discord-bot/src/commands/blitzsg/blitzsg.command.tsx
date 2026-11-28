@@ -6,7 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiModeFromGameModes, BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameModeWithSubModes, Player } from "@statsify/schemas";
+import {
+  ApiModeFromGameModes,
+  BLITZSG_MODES,
+  BlitzSGKit,
+  BlitzSGModes,
+  GameModeWithSubModes,
+  Player,
+} from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
