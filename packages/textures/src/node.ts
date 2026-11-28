@@ -10,10 +10,10 @@ import { Canvas, loadImage } from "skia-canvas";
 import type { CanvasBackend } from "./core/canvas.js";
 
 // skia-canvas has the same 2D API as OffscreenCanvas, but not its DOM types
-const offscreen = (canvas: Canvas) => canvas as unknown as OffscreenCanvas;
+const toOffscreenCanvas = (canvas: Canvas) =>
+  canvas as unknown as OffscreenCanvas;
 
-// skia-canvas applies a PNG's gamma and color profile (75 of the 1.8.9 jar's textures have gAMA), but the game
-// and the browser backend's colorSpaceConversion "none" draw the raw values
+// The game draws a PNG's raw values, but skia-canvas applies its gamma
 const COLOR_CHUNKS = new Set(["gAMA", "cHRM", "sRGB", "iCCP"]);
 
 function withoutColorChunks(png: Buffer) {
@@ -28,9 +28,8 @@ function withoutColorChunks(png: Buffer) {
   return Buffer.concat(kept);
 }
 
-/** Draws with skia-canvas, for Node, where OffscreenCanvas and createImageBitmap don't exist */
 export const skiaCanvas: CanvasBackend = {
-  createCanvas: (width, height) => offscreen(new Canvas(width, height)),
+  createCanvas: (width, height) => toOffscreenCanvas(new Canvas(width, height)),
   async decodePng(file) {
     const image = await loadImage(
       withoutColorChunks(
@@ -39,6 +38,6 @@ export const skiaCanvas: CanvasBackend = {
     );
     const canvas = new Canvas(image.width, image.height);
     canvas.getContext("2d").drawImage(image, 0, 0);
-    return offscreen(canvas);
+    return toOffscreenCanvas(canvas);
   },
 };

@@ -23,7 +23,6 @@ export const LAYOUTS = {
 
 export type InventoryLayout = keyof typeof LAYOUTS;
 
-/** Where an inventory's icons come from, like an ItemRenderer over a pack stack */
 export interface IconSource {
   render(
     item: ItemStack,
@@ -37,12 +36,10 @@ export interface IconSource {
 export interface InventorySize {
   rows: number;
   cols: number;
-  /** Screen pixels per GUI pixel */
   scale: number;
   title?: string;
 }
 
-// Container geometry in GUI pixels, from the vanilla chest screen
 const SLOT = 18;
 const EDGE = 7;
 const TITLE_HEIGHT = 17;
@@ -52,12 +49,10 @@ export const CHEST_SCREEN = "minecraft:gui/container/generic_54";
 // GUI pixels across the chest screen texture, which HD packs draw larger
 const CHEST_SCREEN_SIZE = 256;
 
-// Where the chest screen's bottom edge starts, below its player inventory
 const CHEST_SCREEN_BOTTOM = 215;
 
 const slotsTop = (title?: string) => (title ? TITLE_HEIGHT : EDGE);
 
-/** A slot's top left, in GUI pixels */
 export const slotOrigin = ({ cols, title }: InventorySize, slot: number) =>
   [
     EDGE + (slot % cols) * SLOT,
@@ -86,7 +81,6 @@ export function slotAt(
     : -1;
 }
 
-/** Fills a rectangle given in GUI pixels */
 function fill(
   ctx: OffscreenCanvasRenderingContext2D,
   scale: number,
@@ -100,7 +94,6 @@ function fill(
   ctx.fillRect(x * scale, y * scale, w * scale, h * scale);
 }
 
-/** Draws containers the way Minecraft draws them, from a resource pack */
 export class InventoryRenderer {
   public constructor(
     private icons: IconSource,
@@ -164,7 +157,6 @@ export class InventoryRenderer {
     return this.icons.render(item, scale, tick);
   }
 
-  /** A slot's icon, count and durability bar */
   public drawSlot(
     ctx: OffscreenCanvasRenderingContext2D,
     size: InventorySize,
@@ -216,7 +208,6 @@ export class InventoryRenderer {
     }
   }
 
-  /** The panel, its slots and the title */
   private background(size: InventorySize) {
     const { rows, cols, scale, title } = size;
     const top = slotsTop(title);
@@ -228,8 +219,7 @@ export class InventoryRenderer {
     const panel = this.chestScreen;
 
     if (panel && cols === 9 && rows <= 6) {
-      // The game cuts every chest height from one screen: its top, as many rows as it needs,
-      // then the bottom edge, so a pack that restyles chests restyles this too
+      // The game cuts every chest height from the one chest screen texture
       const texel = panel.width / CHEST_SCREEN_SIZE;
       const strip = (from: number, rowsHigh: number, to: number) =>
         ctx.drawImage(
@@ -248,7 +238,6 @@ export class InventoryRenderer {
       strip(TITLE_HEIGHT, SLOT * rows, top);
       strip(CHEST_SCREEN_BOTTOM, EDGE, top + SLOT * rows);
     } else {
-      // A black outline with cut corners, a white top left and a gray bottom right
       fill(ctx, scale, 1, 0, width - 2, height, "#000000");
       fill(ctx, scale, 0, 1, width, height - 2, "#000000");
       fill(ctx, scale, 1, 1, width - 2, height - 2, "#555555");
