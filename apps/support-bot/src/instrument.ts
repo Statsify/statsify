@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { config } from "@statsify/util";
 import {
   redactInteractionTokens,
   sentryOptions,
@@ -16,4 +17,5 @@ import {
 Sentry.init({
   ...(await sentryOptions("sentry.supportBotDsn")),
   ...redactInteractionTokens,
+  tracePropagationTargets: [await config("apiClient.route")],
 });

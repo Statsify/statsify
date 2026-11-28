@@ -12,7 +12,7 @@ import { AppModule } from "./app.module.js";
 import { BadRequestException } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger } from "@statsify/logger";
+import { Logger, setRequestAttributes } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
@@ -48,6 +48,18 @@ adapter
   .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
     done(null, body)
   );
+
+adapter.getInstance().addHook("onRequest", (request, _reply, done) => {
+  const { player, uuid, guild } = request.query as Record<string, string | undefined>;
+
+  setRequestAttributes({
+    "statsify.api.route": request.routeOptions.url,
+    "statsify.player.tag": player ?? uuid,
+    "statsify.guild.tag": guild,
+  });
+
+  done();
+});
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
   logger: new Logger(),

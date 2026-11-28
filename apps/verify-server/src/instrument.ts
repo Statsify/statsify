@@ -10,4 +10,7 @@ import * as Sentry from "@sentry/node";
 import { sentryOptions } from "@statsify/logger/sentry";
 
 // Init even without a DSN: nothing gets sent, but withIsolationScope then forks instead of sharing one scope
-Sentry.init(await sentryOptions("sentry.verifyServerDsn"));
+Sentry.init({
+  ...(await sentryOptions("sentry.verifyServerDsn")),
+  tracePropagationTargets: [],
+});

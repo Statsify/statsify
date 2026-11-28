@@ -22,4 +22,6 @@ Sentry.init({
     ...options.dataCollection,
     httpHeaders: { request: { deny: ["ip", "forwarded"] } },
   },
+  tracePropagationTargets: [],
+  strictTraceContinuation: true,
 });

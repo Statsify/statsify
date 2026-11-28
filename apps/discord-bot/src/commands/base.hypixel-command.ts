@@ -24,6 +24,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
+import { setRequestAttributes } from "@statsify/logger";
 import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
@@ -71,6 +72,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const user = context.getUser();
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
+    setRequestAttributes({ "statsify.player": player.uuid });
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
@@ -102,6 +104,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         return {
           ...pageInput,
           generator: async (t) => {
+            setRequestAttributes({ "statsify.mode": mode.api });
             const background = await getBackground(...mapBackground(this.modes, mode.api));
 
             const profile = this.getProfile(
@@ -127,6 +130,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         label: submode.formatted,
         emoji: submodeEmojis[index],
         generator: async (t) => {
+          setRequestAttributes({ "statsify.mode": mode.api, "statsify.submode": submode.api });
           const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
           const gameMode = {
