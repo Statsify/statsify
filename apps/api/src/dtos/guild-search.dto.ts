@@ -11,5 +11,5 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 
 export class GuildSearchDto extends createZodDto(
-  z.object({ query: z.string().max(MAX_AUTOCOMPLETE_NAME_LENGTH) })
+  z.object({ query: z.string().max(MAX_AUTOCOMPLETE_NAME_LENGTH) }),
 ) {}
