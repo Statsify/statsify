@@ -150,7 +150,11 @@ if (import.meta.vitest) {
     it("measures progress from the current requirement to the next", () => {
       expect(createPrefixProgression(prefixes, 0)).toEqual({ current: 0, max: 100, percent: 0 });
       expect(createPrefixProgression(prefixes, 100)).toEqual({ current: 0, max: 900, percent: 0 });
-      expect(createPrefixProgression(prefixes, 550)).toEqual({ current: 450, max: 900, percent: 0.5 });
+      expect(createPrefixProgression(prefixes, 550)).toEqual({
+        current: 450,
+        max: 900,
+        percent: 0.5,
+      });
       expect(createPrefixProgression(prefixes, 10_000)).toEqual({ current: 0, percent: 1 });
       expect(createPrefixProgression(prefixes, 12_345)).toEqual({ current: 2345, percent: 1 });
     });
@@ -165,15 +169,21 @@ if (import.meta.vitest) {
       expect(getFormattedPrefix({ prefixes, score: 12_345, skip: true })).toBe("§6[10K]");
 
       expect(getFormattedPrefix({ prefixes, score: 12_345, trueScore: true })).toBe("§6[12K]");
-      expect(getFormattedPrefix({ prefixes, score: 12_345, abbreviation: false })).toBe("§6[10000]");
-      expect(getFormattedPrefix({ prefixes, score: 12_345.7, abbreviation: false, trueScore: true })).toBe("§6[12345]");
+      expect(
+        getFormattedPrefix({ prefixes, score: 12_345, abbreviation: false })
+      ).toBe("§6[10000]");
+      expect(
+        getFormattedPrefix({ prefixes, score: 12_345.7, abbreviation: false, trueScore: true })
+      ).toBe("§6[12345]");
 
       const titles: GameTitle<[string]>[] = [
         { fmt: (n, icon) => `§7${icon} ${n}`, req: 0, title: "Rookie" },
         { fmt: (n, icon) => `§f${icon} ${n}`, req: 100, title: "Iron" },
       ];
 
-      expect(getFormattedPrefix({ prefixes: titles, score: 150, prefixParams: ["✫"] })).toBe("§f✫ Iron");
+      expect(
+        getFormattedPrefix({ prefixes: titles, score: 150, prefixParams: ["✫"] })
+      ).toBe("§f✫ Iron");
     });
   });
 }

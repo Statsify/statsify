@@ -161,9 +161,15 @@ if (import.meta.vitest) {
       expect(getPlayerRank({ packageRank: "VIP", newPackageRank: "MVP_PLUS" })).toBe("MVP+");
       expect(getPlayerRank({ monthlyPackageRank: "NONE", newPackageRank: "MVP" })).toBe("MVP");
 
-      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", newPackageRank: "MVP_PLUS" })).toBe("MVP++");
-      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "GOLD" })).toBe("MVP++");
-      expect(getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "AQUA" })).toBe("bMVP++");
+      expect(
+        getPlayerRank({ monthlyPackageRank: "SUPERSTAR", newPackageRank: "MVP_PLUS" })
+      ).toBe("MVP++");
+      expect(
+        getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "GOLD" })
+      ).toBe("MVP++");
+      expect(
+        getPlayerRank({ monthlyPackageRank: "SUPERSTAR", monthlyRankColor: "AQUA" })
+      ).toBe("bMVP++");
 
       expect(getPlayerRank({ rank: "NORMAL", newPackageRank: "MVP_PLUS" })).toBe("MVP+");
       expect(getPlayerRank({ rank: "YOUTUBER", monthlyPackageRank: "SUPERSTAR" })).toBe("YOUTUBE");
