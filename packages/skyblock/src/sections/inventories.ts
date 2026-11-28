@@ -24,7 +24,8 @@ const BAGS = {
   sacksBag: "sacks_bag",
 } as const satisfies Partial<Record<InventoryId, string>>;
 
-const paged = <T>(slots: T[]) => (slots.length > 0 ? arrayGroup(slots, PAGE) : [[]]);
+const paged = <T>(slots: T[]) =>
+  slots.length > 0 ? arrayGroup(slots, PAGE) : [[]];
 
 /** A map's blobs in their numeric key's order, as the game numbers backpacks. */
 export const byKey = (blobs: Record<string, RawNbt> = {}) =>
@@ -39,14 +40,22 @@ const hotbarLast = <T>(slots: T[]) => [...slots.slice(9), ...slots.slice(0, 9)];
  * A toolkit holds a tool unless it's taken out into an inventory or the toolkit isn't unlocked. IN_USE, IS_UNLOCKED and
  * HUNTING_TOOLKIT (used up to unlock the menu, the wiki's Hunting Toolkit page) aren't tools; an emptied slot is null.
  */
-const toolkitPage = <T>(toolkit: RawToolkit, tool: (blob: RawNbt, held: boolean) => T | null): T[] => {
-  const inUse = toolkit.IN_USE as Record<string, Record<string, boolean>> | undefined;
-  const held = (kind: string, slot: number) => Boolean(toolkit.IS_UNLOCKED) && inUse?.[kind]?.[slot] !== true;
+const toolkitPage = <T>(
+  toolkit: RawToolkit,
+  tool: (blob: RawNbt, held: boolean) => T | null,
+): T[] => {
+  const inUse = toolkit.IN_USE as
+    | Record<string, Record<string, boolean>>
+    | undefined;
+  const held = (kind: string, slot: number) =>
+    Boolean(toolkit.IS_UNLOCKED) && inUse?.[kind]?.[slot] !== true;
   return Object.entries(toolkit)
     .flatMap(([kind, tools]) =>
-      Array.isArray(tools) && kind !== "HUNTING_TOOLKIT" ?
-        (tools as (RawNbt | null)[]).map((blob, slot) => blob && tool(blob, held(kind, slot))) :
-        []
+      Array.isArray(tools) && kind !== "HUNTING_TOOLKIT"
+        ? (tools as (RawNbt | null)[]).map(
+            (blob, slot) => blob && tool(blob, held(kind, slot)),
+          )
+        : [],
     )
     .filter((item) => item !== null);
 };
@@ -57,7 +66,7 @@ type Pages<T> = Partial<Record<InventoryId, (T | null)[][]>>;
 export async function inventoryPages<T>(
   member: RawMember,
   slots: (blob: RawNbt) => (T | null)[],
-  tool: (blob: RawNbt, held: boolean) => T | null
+  tool: (blob: RawNbt, held: boolean) => T | null,
 ): Promise<Pages<T> | null> {
   const inventory = member.inventory;
   if (!inventory?.inv_contents) return null;
@@ -68,11 +77,18 @@ export async function inventoryPages<T>(
     return slots(blob);
   };
 
-  const pages: Pages<T> = { inventory: [hotbarLast(await decode(inventory.inv_contents))] };
+  const pages: Pages<T> = {
+    inventory: [hotbarLast(await decode(inventory.inv_contents))],
+  };
 
-  if (inventory.ender_chest_contents) pages.enderChest = paged(await decode(inventory.ender_chest_contents));
-  pages.backpacks = await Array.fromAsync(byKey(inventory.backpack_contents), decode);
-  if (inventory.personal_vault_contents) pages.personalVault = [await decode(inventory.personal_vault_contents)];
+  if (inventory.ender_chest_contents)
+    pages.enderChest = paged(await decode(inventory.ender_chest_contents));
+  pages.backpacks = await Array.fromAsync(
+    byKey(inventory.backpack_contents),
+    decode,
+  );
+  if (inventory.personal_vault_contents)
+    pages.personalVault = [await decode(inventory.personal_vault_contents)];
 
   for (const id of Object.keys(BAGS) as (keyof typeof BAGS)[]) {
     const blob = inventory.bag_contents?.[BAGS[id]];
@@ -86,16 +102,23 @@ export async function inventoryPages<T>(
   if (hunting) pages.huntingToolkit = [toolkitPage(hunting, tool)];
 
   const rift = member.rift?.inventory;
-  if (rift?.inv_contents) pages.riftInventory = [hotbarLast(await decode(rift.inv_contents))];
-  if (rift?.ender_chest_contents) pages.riftEnderChest = paged(await decode(rift.ender_chest_contents));
+  if (rift?.inv_contents)
+    pages.riftInventory = [hotbarLast(await decode(rift.inv_contents))];
+  if (rift?.ender_chest_contents)
+    pages.riftEnderChest = paged(await decode(rift.ender_chest_contents));
 
   return pages;
 }
 
 /** Every inventory as the game pages it, and the sacks. */
-export async function getInventories(member: RawMember, items: ItemsResource): Promise<InventoriesSection | null> {
+export async function getInventories(
+  member: RawMember,
+  items: ItemsResource,
+): Promise<InventoriesSection | null> {
   const inventory = member.inventory;
-  const pages = await inventoryPages(member, decodeSlots, (blob) => toolkitItemView(blob, items));
+  const pages = await inventoryPages(member, decodeSlots, (blob) =>
+    toolkitItemView(blob, items),
+  );
   if (!inventory || !pages) return null;
 
   const sacks = Object.entries(inventory.sacks_counts ?? {})
@@ -114,7 +137,9 @@ export async function getInventories(member: RawMember, items: ItemsResource): P
 
   return {
     pages,
-    backpackIcons: byKey(inventory.backpack_icons).map((blob) => decodeSlots(blob)[0] ?? null),
+    backpackIcons: byKey(inventory.backpack_icons).map(
+      (blob) => decodeSlots(blob)[0] ?? null,
+    ),
     sacks,
   };
 }

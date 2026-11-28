@@ -29,17 +29,26 @@ const RARITY_NAMES = new Map<string, Rarity>([
   ["LEGENJERRY", "LEGENDARY"],
 ]);
 
-const RARITY_LINE = new RegExp(`^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`);
+const RARITY_LINE = new RegExp(
+  `^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`,
+);
 
 function rarityOf(lore: readonly string[]): Rarity | undefined {
-  const name = RARITY_LINE.exec(removeFormatting(lore.at(-1) ?? "").trim())?.[1];
+  const name = RARITY_LINE.exec(
+    removeFormatting(lore.at(-1) ?? "").trim(),
+  )?.[1];
   return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
 /** An NBT long, which the decode leaves as `[high, low]` (low signed), as a number; an int as it is. */
 export function nbtNumber(value: unknown): number | undefined {
   if (typeof value === "number") return value;
-  if (Array.isArray(value) && value.length === 2 && value.every(Number.isInteger)) return value[0] * 2 ** 32 + (value[1] >>> 0);
+  if (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    value.every(Number.isInteger)
+  )
+    return value[0] * 2 ** 32 + (value[1] >>> 0);
   return undefined;
 }
 
@@ -63,7 +72,11 @@ const COUNTERS = [
   "zombie_kills",
 ] as const;
 
-const DRILL_PARTS = ["drill_part_engine", "drill_part_fuel_tank", "drill_part_upgrade_module"] as const;
+const DRILL_PARTS = [
+  "drill_part_engine",
+  "drill_part_fuel_tank",
+  "drill_part_upgrade_module",
+] as const;
 
 const nonEmpty = <T>(list: T[]) => (list.length > 0 ? list : undefined);
 
@@ -78,12 +91,15 @@ function gemsOf(raw: unknown): ItemView["gems"] {
   return nonEmpty(
     Object.entries(gems).flatMap(([key, value]) => {
       if (key === "unlocked_slots" || key.endsWith("_gem")) return [];
-      const quality = typeof value === "string" ? value : (value as { quality?: unknown } | null)?.quality;
+      const quality =
+        typeof value === "string"
+          ? value
+          : (value as { quality?: unknown } | null)?.quality;
       if (typeof quality !== "string") return [];
       const slot = key.replace(/_\d+$/, "");
       const named = gems[`${key}_gem`];
       return [{ slot, gem: typeof named === "string" ? named : slot, quality }];
-    })
+    }),
   );
 }
 
@@ -113,7 +129,7 @@ function attributeDetails(attributes: ItemAttributes) {
       DRILL_PARTS.flatMap((part) => {
         const id = attributes[part];
         return typeof id === "string" ? [id.toUpperCase()] : [];
-      })
+      }),
     ),
   };
 }
@@ -139,11 +155,18 @@ export function toItemView(item: RawItem): ItemView {
  * A toolkit's tool, which has only its ExtraAttributes: named and drawn from the items resource, with no lore. null for
  * an id the resource can't draw.
  */
-export function toolkitView(attributes: ItemAttributes, items: ItemsResource): ItemView | null {
+export function toolkitView(
+  attributes: ItemAttributes,
+  items: ItemsResource,
+): ItemView | null {
   const resource = attributes.id ? items.items[attributes.id] : undefined;
   const texture = resource && resourceTexture(resource);
   if (!attributes.id || !resource || !texture) return null;
-  const rarity = resource.tier && RARITIES[RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)];
+  const rarity =
+    resource.tier &&
+    RARITIES[
+      RARITIES.indexOf(resource.tier) + (attributes.rarity_upgrades ? 1 : 0)
+    ];
 
   return {
     id: attributes.id,
@@ -151,15 +174,19 @@ export function toolkitView(attributes: ItemAttributes, items: ItemsResource): I
     lore: [],
     rarity,
     count: 1,
-    glint: Object.keys(attributes.enchantments ?? {}).length > 0 || Boolean(resource.glowing),
+    glint:
+      Object.keys(attributes.enchantments ?? {}).length > 0 ||
+      Boolean(resource.glowing),
     texture,
     ...attributeDetails(attributes),
   };
 }
 
-export const toolkitItemView = (blob: RawNbt, items: ItemsResource) => toolkitView(decodeAttributes(blob), items);
+export const toolkitItemView = (blob: RawNbt, items: ItemsResource) =>
+  toolkitView(decodeAttributes(blob), items);
 
-export const decodeSlots = (blob: RawNbt): Slots => decodeInventory(blob).map((item) => item && toItemView(item));
+export const decodeSlots = (blob: RawNbt): Slots =>
+  decodeInventory(blob).map((item) => item && toItemView(item));
 
 const RawResourceItem = z.object({
   id: z.string(),
@@ -186,11 +213,15 @@ const RawResourceItem = z.object({
 });
 
 /** /v2/resources/skyblock/items */
-export const RawItemsResource = z.object({ lastUpdated: z.number(), items: z.array(RawResourceItem) });
+export const RawItemsResource = z.object({
+  lastUpdated: z.number(),
+  items: z.array(RawResourceItem),
+});
 export type RawItemsResource = z.infer<typeof RawItemsResource>;
 
 // The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
-const tierOf = (tier = "COMMON") => (tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier));
+const tierOf = (tier = "COMMON") =>
+  tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier);
 
 export function parseItemsResource(raw: RawItemsResource): ItemsResource {
   // The museum keeps an armor set under the set's key, which each of its pieces names
@@ -198,7 +229,8 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
   for (const { id, museum_data: data } of raw.items) {
     if (!data?.category) continue;
     if (data.donation_xp !== undefined) museum[id] = data.category;
-    for (const set of Object.keys(data.armor_set_donation_xp ?? {})) museum[set] = data.category;
+    for (const set of Object.keys(data.armor_set_donation_xp ?? {}))
+      museum[set] = data.category;
   }
 
   return {
@@ -206,23 +238,41 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
     raw: raw.items,
     museum,
     items: Object.fromEntries(
-      raw.items.map(({ id, name, material, durability, tier, category, color, skin, origin, rift_transferrable, npc_sell_price, glowing, generator, generator_tier }) => [
-        id,
-        {
+      raw.items.map(
+        ({
+          id,
           name,
           material,
           durability,
-          tier: tierOf(tier),
+          tier,
           category,
           color,
-          skin: skin && skinHash(skin.value),
-          riftOnly: origin === "RIFT" && !rift_transferrable ? true : undefined,
-          npcPrice: npc_sell_price,
+          skin,
+          origin,
+          rift_transferrable,
+          npc_sell_price,
           glowing,
           generator,
-          generatorTier: generator_tier,
-        },
-      ])
+          generator_tier,
+        }) => [
+          id,
+          {
+            name,
+            material,
+            durability,
+            tier: tierOf(tier),
+            category,
+            color,
+            skin: skin && skinHash(skin.value),
+            riftOnly:
+              origin === "RIFT" && !rift_transferrable ? true : undefined,
+            npcPrice: npc_sell_price,
+            glowing,
+            generator,
+            generatorTier: generator_tier,
+          },
+        ],
+      ),
     ),
   };
 }
@@ -231,10 +281,14 @@ if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
   test("rarityOf reads the last lore line", () => {
-    expect(rarityOf(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe("LEGENDARY");
+    expect(rarityOf(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe(
+      "LEGENDARY",
+    );
     expect(rarityOf(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe("MYTHIC");
     expect(rarityOf(["§c§lVERY SPECIAL HATCESSORY"])).toBe("VERY_SPECIAL");
-    expect(rarityOf(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"])).toBe("MYTHIC");
+    expect(rarityOf(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"])).toBe(
+      "MYTHIC",
+    );
     expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
     expect(rarityOf(["§7A rare find"])).toBeUndefined();
     expect(rarityOf([])).toBeUndefined();
@@ -248,7 +302,7 @@ if (import.meta.vitest) {
         JADE_0: { uuid: "x", quality: "PERFECT" },
         COMBAT_0: "FLAWLESS",
         COMBAT_0_gem: "SAPPHIRE",
-      })
+      }),
     ).toEqual([
       { slot: "RUBY", gem: "RUBY", quality: "FINE" },
       { slot: "JADE", gem: "JADE", quality: "PERFECT" },
