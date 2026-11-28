@@ -6,9 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Builds every data/*.json from StatsifyDump exports, given the last export of each dump session:
-//   pnpm --filter @statsify/hypixel-data build
-//   node scripts/import-dump.ts <dump.json> [<dump.json> …]
+// node scripts/import-dump.ts <each dump session's last export>…
 
 import {
   ARMOR,
@@ -34,8 +32,7 @@ import {
 import { readFile, writeFile } from "node:fs/promises";
 import data from "@statsify/textures/data/minecraft-data.json" with { type: "json" };
 
-// Each single-kit editor's mode, as its layout_<mode>_layout key names it, and its tokens
-// without copy numbers (wood_1 is wood) by the slot the editor shows the default layout in
+// Tokens drop copy numbers (wood_1 is wood), by their default layout slot
 const SINGLE_KIT_EDITORS = {
   "UHC Duel": {
     mode: "uhc_duel",
@@ -116,7 +113,6 @@ const SINGLE_KIT_EDITORS = {
   },
 } as const;
 
-// TNT Games' editors, by the key each layout is stored under in TNTGames, and their tokens
 const TNT_GAMES_EDITORS = {
   "TNT Run": {
     mode: "tntrun",
@@ -142,22 +138,19 @@ const TNT_GAMES_EDITORS = {
   "TNT Tag": { mode: "tnttag", tokens: { tnt: 0, locate_compass: 1 } },
 } as const;
 
-// Editors with a layout per kit, whose kit is the one the picker shows as selected afterwards
+// A per-kit editor's kit is the one the next picker shows as selected
 const KIT_EDITORS = {
   "Layout Editor - Blitz Duel": "blitz_duel",
   "Layout Editor - Mega Walls Duel": "mw_duel",
   "Layout Editor - SkyWars Duel": "sw_duel",
 } as const;
 
-// SkyWars Duel has a Mini and an Insane kit picker, with some kits in both (Scout, Healer). The
-// Mini page is the one with Champion, a kit only Mini has
+// SkyWars Duel's Mini page is the one with Champion, a kit only Mini has
 const SKYWARS_MINI_KIT = "Champion";
 
-// Blitz's and Mega Walls' "Edit <Kit> Layout" editors share titles (both have a Pigman), so the
-// page their Go Back button returns to tells them apart
+// Blitz and Mega Walls editors share titles, so Go Back's page tells them apart
 const LEGACY_KIT_PAGES = { Upgrades: "blitz", Class: "megawalls" } as const;
 
-// Kits whose editor showed a layout the dumping account had saved, not the default
 const SAVED_LAYOUTS = { blitz: ["Pigman"], megawalls: [] as string[] };
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
@@ -221,8 +214,7 @@ const materials = new Map(
   Object.entries(data.materials).map(([name, id]) => [id, name.toLowerCase()]),
 );
 
-// 1.8's names, Damage variants included (Blue Wool), for menus that list items by name. minecraft-data
-// gives some block items their item's name (Nether Quartz), so blocks count; a name two share matches neither
+// A name two items share matches neither
 const legacyNames = new Map<
   string,
   { id: number; damage: number } | undefined
@@ -250,44 +242,54 @@ function namedItem(name: string) {
   );
 }
 
-const plain = (text: string) => text.replaceAll(/§./g, "");
-const blank = (line: string) => plain(line).trim() === "";
+const withoutCodes = (text: string) => text.replaceAll(/§./g, "");
+const isBlank = (line: string) => withoutCodes(line).trim() === "";
 
 // The editor's chest: the main rows in 0 to 26, the hotbar in 36 to 44
-const storedSlot = (slot: number) =>
-  slot >= 36 && slot <= 44 ? slot - 36 : slot <= 26 ? slot + 9 : undefined;
+function storedSlot(slot: number) {
+  if (slot >= 36 && slot <= 44) return slot - 36;
+  return slot <= 26 ? slot + 9 : undefined;
+}
 
 const untypedEgg = (item: DumpItem) =>
   item.id === "minecraft:spawn_egg" &&
   isUntypedEgg(legacyId(item), item.damage);
 
-const editorItems = (screen: Screen) =>
-  screen.slots.flatMap(({ slot, item }) => {
-    const stored = storedSlot(slot);
-    return item && stored !== undefined && !untypedEgg(item)
-      ? [{ slot: stored, item }]
-      : [];
-  });
+function editorItems(screen: Screen) {
+  const stored: { slot: number; item: DumpItem }[] = [];
 
-/** A single-kit editor's items by stored slot, from its first screen (the default) or, in older dumps, where each was seen */
+  for (const { slot, item } of screen.slots) {
+    const storedAt = storedSlot(slot);
+    if (item && storedAt !== undefined && !untypedEgg(item))
+      stored.push({ slot: storedAt, item });
+  }
+
+  return stored;
+}
+
+// Older dumps have no editor screens, only the slots each item was seen in
 function editor(title: string) {
   const screen = screens.find(
-    (shown) => plain(shown.title) === `Layout Editor - ${title}`,
+    (shown) => withoutCodes(shown.title) === `Layout Editor - ${title}`,
   );
-  // Wizards fills the main rows with blank panes, since its kit only fits the hotbar
+  // Wizards fills the main rows with blank panes, as its kit fits the hotbar
   if (screen)
     return editorItems(screen).filter(
-      ({ item }) => plain(item.name).trim() !== "",
+      ({ item }) => withoutCodes(item.name).trim() !== "",
     );
 
-  return items.flatMap((item) =>
-    item.seen.flatMap((seen) => {
+  const seenItems: { slot: number; item: DumpItem }[] = [];
+
+  for (const item of items) {
+    for (const seen of item.seen) {
       const match = /^Layout Editor - (.+) #(\d+) of 90$/.exec(seen);
       const slot =
         match?.[1] === title ? storedSlot(Number(match[2])) : undefined;
-      return slot === undefined ? [] : [{ slot, item }];
-    }),
-  );
+      if (slot !== undefined) seenItems.push({ slot, item });
+    }
+  }
+
+  return seenItems;
 }
 
 function legacyId({ id }: DumpItem) {
@@ -306,7 +308,6 @@ function kitItem(dumped: DumpItem, numeric = legacyId(dumped)): ItemStack {
     ...item,
     count: count > 1 ? count : undefined,
     color: color === undefined ? undefined : Number(color),
-    // Only a custom name: the rest take the pack's name, as other items do
     name: /display:\{[^}]*Name:"/.test(nbt) ? name : undefined,
     tooltip: lore.length > 0 ? lore : undefined,
     enchanted: nbt.includes("ench:[") || undefined,
@@ -322,9 +323,7 @@ const sameItemKey = ({ material, item }: KitItem) =>
 
 const output = {
   modes: {} as Record<string, Tokens>,
-  // Each single-kit mode's default layout, as Hypixel would store it
   defaults: {} as Record<string, Record<string, string>>,
-  // Each kit's editor items in their default slots, and the armor its picker lists
   kits: {} as Record<string, Record<string, Kit>>,
 };
 
@@ -332,7 +331,6 @@ const missing: string[] = [];
 const unnamed = new Set<string>();
 const unmatched: string[] = [];
 
-/** A single-kit editor's item for each token, and its default layout as Hypixel would store it */
 function singleKit(title: string, tokens: Readonly<Record<string, number>>) {
   const shown = editor(title);
 
@@ -356,8 +354,7 @@ function singleKit(title: string, tokens: Readonly<Record<string, number>>) {
       .map(([token, item]) => [JSON.stringify(item), token]),
   );
 
-  // Only a player who never saved a layout sees the default, so dump with an account that hasn't
-  // saved this mode. A slot the token list skips holds a copy (UHC's second lava bucket)
+  // Only a player who never saved this mode's layout sees the default
   const layout: Record<string, string> = {};
   for (const { slot, item } of shown) {
     const token =
@@ -390,15 +387,18 @@ for (const [name, { mode, tokens }] of Object.entries(TNT_GAMES_EDITORS)) {
     tntGames[mode] = { name, tokens: found.kit, default: found.layout };
 }
 
-const pickerEntries = (screen: Screen) =>
-  screen.slots.flatMap(({ slot, item }) =>
-    item && slot < screen.size - 36 ? [item] : [],
-  );
+function pickerEntries(screen: Screen) {
+  const entries: DumpItem[] = [];
+  for (const { slot, item } of screen.slots)
+    if (item && slot < screen.size - 36) entries.push(item);
+  return entries;
+}
 
-/** The kit a picker shows as selected, its lore and its icon */
 function selected(screen: Screen) {
   for (const item of pickerEntries(screen)) {
-    const name = /^Currently Selected - (.+)$/.exec(plain(item.name))?.[1];
+    const name = /^Currently Selected - (.+)$/.exec(
+      withoutCodes(item.name),
+    )?.[1];
     if (name) return { name, lore: item.lore, icon: item };
   }
 
@@ -407,24 +407,24 @@ function selected(screen: Screen) {
 
 const SKULL = 397;
 
-// A skull a picker lists, worn as a helmet; Shark's "Skull Item" takes Blitz's dumped "Shark's Head" skin
+// Shark's "Skull Item" takes the skin of Blitz's dumped "Shark's Head"
 function pickerSkull(text: string, kit: string) {
   if (text === "Wither Skeleton Skull") return legacyItem(SKULL, 1);
   if (text !== "Skull Item") return undefined;
 
-  const head = items.find((item) => plain(item.name) === `${kit}'s Head`);
+  const head = items.find(
+    (item) => withoutCodes(item.name) === `${kit}'s Head`,
+  );
   if (!head)
     unmatched.push(`${kit}'s Skull Item, as no ${kit}'s Head was dumped`);
   return head && { ...legacyItem(SKULL, 3)!, skin: kitItem(head).skin };
 }
 
-/** The armor a picker's item list names, in its armor slots */
 function pickerArmor(lore: string[], kit: string) {
-  const lines = lore.map(plain);
+  const lines = lore.map(withoutCodes);
   const armor: Record<number, ItemStack> = {};
 
   for (const [index, line] of lines.entries()) {
-    // Blitz lists " ▪ Iron Helmet" with enchantments indented under it; SkyWars drops the bullet
     if (/^\s{2,}/.test(line)) continue;
     const text = line.replace(/^ ▪ /, "").replace(/ x\d+$/, "");
     const enchanted = /^\s{2,}[∙▪]/.test(lines[index + 1] ?? "") || undefined;
@@ -446,7 +446,6 @@ function pickerArmor(lore: string[], kit: string) {
   return Object.keys(armor).length > 0 ? armor : undefined;
 }
 
-/** Dyes the listed leather piece a picker's icon shows, when the list names no dye for it (Batguy's helmet) */
 function iconDye(icon: DumpItem, pieces: ItemStack[]) {
   if (!icon.id.startsWith("minecraft:leather_")) return;
   const { id, color } = kitItem(icon);
@@ -456,24 +455,23 @@ function iconDye(icon: DumpItem, pieces: ItemStack[]) {
   if (piece && color !== undefined) piece.color = color;
 }
 
-// SkyWars kit pages, each kit's lore with whether its page is Mini's
 const skyWarsPages = screens
   .filter((screen) => /Choose Your Kit/.test(screen.title))
   .map((screen) => {
     const entries = pickerEntries(screen).filter((item) =>
-      item.lore.some((line) => /Click to select/.test(plain(line))),
+      item.lore.some((line) => /Click to select/.test(withoutCodes(line))),
     );
     return {
       mini: entries.some((item) =>
-        plain(item.name).startsWith(SKYWARS_MINI_KIT),
+        withoutCodes(item.name).startsWith(SKYWARS_MINI_KIT),
       ),
       entries,
     };
   });
 
-// A kit's item list: its lore up to the first blank line, which the selected kit's copy lacks
+// The selected kit's copy of the lore lacks the blank line ending the list
 function itemList(lore: string[]) {
-  const end = lore.findIndex((line) => plain(line) === "");
+  const end = lore.findIndex((line) => withoutCodes(line) === "");
   return JSON.stringify(end === -1 ? lore : lore.slice(0, end));
 }
 
@@ -481,7 +479,7 @@ function skyWarsGroup(name: string, lore: string[]) {
   const page = skyWarsPages.find(({ entries }) =>
     entries.some(
       (item) =>
-        plain(item.name).replace(/ - .+$/, "") === name &&
+        withoutCodes(item.name).replace(/ - .+$/, "") === name &&
         itemList(item.lore) === itemList(lore),
     ),
   );
@@ -489,7 +487,6 @@ function skyWarsGroup(name: string, lore: string[]) {
   return page.mini ? "Mini" : "Insane";
 }
 
-// SkyWars Duel's editors with their picker's lore, whose item list the lobby's kit menus share
 const skyWarsDuelEditors: { key: string; lore: string[]; shown: DumpItem[] }[] =
   [];
 
@@ -497,12 +494,12 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
   const kits: Record<string, Kit> = {};
 
   for (const [index, screen] of screens.entries()) {
-    if (plain(screen.title) !== title) continue;
+    if (withoutCodes(screen.title) !== title) continue;
     const kit = screens
       .slice(index + 1)
       .map(selected)
       .find(Boolean);
-    // Only a picker after the editor names its kit, so a dump's last editor can't be placed
+    // Only the next picker names an editor's kit, so a last editor is skipped
     if (!kit) {
       unnamed.add(title);
       continue;
@@ -513,7 +510,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
     const key = group
       ? `${group.toLowerCase()}_${kitKey(kit.name)}`
       : kitKey(kit.name);
-    // The first screen is the default; later ones may show items the player moved
+    // The first screen is the default, since the player may move items later
     if (kits[key]) continue;
 
     const shown = editorItems(screen).toSorted((a, b) => a.slot - b.slot);
@@ -543,7 +540,6 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
     continue;
   }
 
-  // An item most kits show, like SkyWars' iron sword, is shared: its token has no kit prefix
   const counts = new Map<string, number>();
   for (const { items: kitItems } of Object.values(kits)) {
     for (const key of new Set(kitItems.map(sameItemKey)))
@@ -573,7 +569,6 @@ const enchantmentIds = new Map(
 const POTION = 373;
 const SPLASH = 0x40_00;
 
-// An enchanted book's are its StoredEnchantments, which kit layouts list too
 const dumpedEnchantments = ({ nbt }: DumpItem) =>
   [
     ...(/(?:ench|StoredEnchantments):\[([^\]]*)\]/
@@ -584,7 +579,6 @@ const dumpedEnchantments = ({ nbt }: DumpItem) =>
 const sameIds = (a: number[], b: number[]) =>
   a.toSorted().join() === b.toSorted().join();
 
-/** An item as a SkyWars kit layout names it, like DIAMOND_AXE:0:16: potions drop their splash and drinkable bits */
 function skyWarsToken(id: number, damage: number, enchantments: number[]) {
   const material = materials.get(id);
   if (!material) throw new Error(`No Bukkit material for ${id}`);
@@ -597,28 +591,27 @@ function skyWarsToken(id: number, damage: number, enchantments: number[]) {
 }
 
 const backTo = (screen: Screen) =>
-  plain(
-    screen.slots.find(({ item }) => item && plain(item.name) === "Go Back")
-      ?.item?.lore[0] ?? "",
+  withoutCodes(
+    screen.slots.find(
+      ({ item }) => item && withoutCodes(item.name) === "Go Back",
+    )?.item?.lore[0] ?? "",
   ).replace(/^To /, "");
 
-// The SkyWars lobby's kit menus, Normal and Insane, Mini and Mega
 const SKYWARS_MENU = /^(Normal|Insane|Mini|Mega) Kits$/;
 
-// Each Kit Customizer by its menu and kit, from the kit's page, which goes back to its menu
 const skyWarsCustomizers = new Map<
   string,
   { slot: number; item: DumpItem }[]
 >();
 
 for (const [index, screen] of screens.entries()) {
-  const kit = /^(.+) Kit Customizer$/.exec(plain(screen.title))?.[1];
+  const kit = /^(.+) Kit Customizer$/.exec(withoutCodes(screen.title))?.[1];
   // A screen without its buttons was captured before it finished loading
   if (!kit || backTo(screen) !== `${kit} Kit`) continue;
 
   const page = screens
     .slice(0, index)
-    .findLast((shown) => plain(shown.title) === `${kit} Kit`);
+    .findLast((shown) => withoutCodes(shown.title) === `${kit} Kit`);
   const menu = page && SKYWARS_MENU.exec(backTo(page))?.[1];
   if (!menu) throw new Error(`No SkyWars kit menu before ${screen.title}`);
 
@@ -633,26 +626,22 @@ interface Listed {
   enchantments: string[];
 }
 
-/**
- * A kit menu item's list: its §7§7 lore lines up to the first blank one, with the enchantments under each.
- * Lines without §5§o are the client's (a potion's effects, "Dyed"), and a note's single §7 isn't listed
- */
+// Lines without §5§o are the client's, like a potion's effects or "Dyed"
 function listedItems(lore: string[]) {
   const listed: Listed[] = [];
   let wrapped = false;
 
   for (const line of lore.filter((shown) => shown.startsWith("§5§o"))) {
-    if (blank(line)) break;
+    if (isBlank(line)) break;
     const enchantment = /^§5§o§7 {3}∙ (.+?)(?: x(\d+))?$/.exec(line);
     const text = /^§5§o§7§7([^§].*)$/.exec(line)?.[1];
     const last = listed.at(-1);
 
     if (enchantment && last) {
-      last.enchantments.push(plain(enchantment[1]));
-      // An enchanted book's count follows its enchantment
+      last.enchantments.push(withoutCodes(enchantment[1]));
       if (enchantment[2]) last.count = Number(enchantment[2]);
     } else if (text) {
-      // A §7§7 note that wraps ends its first line with a comma ("You spawn with a tamed wolf (20HP,")
+      // A §7§7 note that wraps ends its first line with a comma
       const note = wrapped || text.endsWith(",");
       wrapped = text.endsWith(",");
       if (note) continue;
@@ -676,7 +665,6 @@ const listedEnchantments = ({ enchantments }: Listed) =>
     enchantmentIds.get(/^(.+) [IVXLC]+$/.exec(line)?.[1] ?? ""),
   );
 
-/** Dumped items with a listed item's count and enchantments */
 const fitting = (listed: Listed, pool: Pooled[]) =>
   pool.filter(
     ({ item }) =>
@@ -684,7 +672,6 @@ const fitting = (listed: Listed, pool: Pooled[]) =>
       sameIds(dumpedEnchantments(item), listedEnchantments(listed) as number[]),
   );
 
-/** 1.8's item a listed name gives, which has no potions and none of Hypixel's own items */
 function namedListed({ text }: Listed) {
   const armor = ARMOR_PIECE.exec(text);
   const egg = /^(.+) Egg$/.exec(text)?.[1];
@@ -694,7 +681,6 @@ function namedListed({ text }: Listed) {
     : (namedItem(text) ?? (egg ? namedItem(`Spawn ${egg}`) : undefined));
 }
 
-/** The dumped item a listed one is: of its fitting ones, the one of its name or material, or for potions the only one of its kind */
 function dumpedListed(listed: Listed, pool: Pooled[]) {
   const fits = fitting(listed, pool);
   const named = namedListed(listed);
@@ -707,19 +693,17 @@ function dumpedListed(listed: Listed, pool: Pooled[]) {
   );
   const described = potions.filter(({ item }) =>
     [item.name, ...item.lore].some(
-      (line) => potion && plain(line).includes(potion[2]),
+      (line) => potion && withoutCodes(line).includes(potion[2]),
     ),
   );
 
-  return (
-    fits.find(({ item }) => plain(item.name) === listed.text) ??
-    (named && fits.find(({ item }) => legacyId(item) === named.id)) ??
-    (potions.length === 1
-      ? potions[0]
-      : described.length === 1
-        ? described[0]
-        : undefined)
-  );
+  const match =
+    fits.find(({ item }) => withoutCodes(item.name) === listed.text) ??
+    (named && fits.find(({ item }) => legacyId(item) === named.id));
+  if (match) return match;
+
+  if (potions.length === 1) return potions[0];
+  return described.length === 1 ? described[0] : undefined;
 }
 
 function lobbyItem(listed: Listed, dumped?: Pooled) {
@@ -755,21 +739,20 @@ function lobbyItem(listed: Listed, dumped?: Pooled) {
 const skyWarsKits: Record<string, SkyWarsKit> = {};
 
 for (const screen of screens) {
-  const menu = SKYWARS_MENU.exec(plain(screen.title))?.[1];
+  const menu = SKYWARS_MENU.exec(withoutCodes(screen.title))?.[1];
   if (!menu) continue;
 
   for (const entry of pickerEntries(screen)) {
     if (
       !entry.lore.some(
-        (line) => plain(line) === "Right-click to open breakdown!",
+        (line) => withoutCodes(line) === "Right-click to open breakdown!",
       )
     )
       continue;
-    const name = `${menu} ${plain(entry.name)}`;
-    const key = `${menu.toLowerCase()}_${kitKey(plain(entry.name))}`;
+    const name = `${menu} ${withoutCodes(entry.name)}`;
+    const key = `${menu.toLowerCase()}_${kitKey(withoutCodes(entry.name))}`;
     if (skyWarsKits[key]) continue;
 
-    // A SkyWars Duel kit whose picker lists the same items holds them, with the mode's shared ones added
     const listed = listedItems(entry.lore);
     const duel = skyWarsDuelEditors.find(
       ({ lore }) =>
@@ -791,9 +774,9 @@ for (const screen of screens) {
       return match;
     });
 
-    // The last dumped item left is the last listed one no name matched (Hypixel's Bookcase is a bookshelf)
-    const left = listed.flatMap((item, index) =>
-      dumped[index] || lobbyItem(item) ? [] : [index],
+    // The last item left is the last listed one no name matched, like Bookcase
+    const left = [...listed.keys()].filter(
+      (index) => !dumped[index] && !lobbyItem(listed[index]),
     );
     if (
       left.length === 1 &&
@@ -802,8 +785,6 @@ for (const screen of screens) {
     )
       dumped[left[0]] = pool.pop();
 
-    // A player who never saved a layout gets the list in order, armor put on and the rest from
-    // slot 0, as every Kit Customizer dumped shows
     const items: SkyWarsKit["items"] = [];
     let next = 0;
     let known = true;
@@ -853,20 +834,21 @@ const legacyKits = {
   megawalls: {} as Record<string, LegacyKit>,
 };
 
-// Blitz names its kit items "<Kit>'s <Material> (<level>)", which a renamed item replaces with
-// its new name and an Owner line
+// A renamed Blitz kit item gets a new name and an Owner line
 const BLITZ_ITEM_NAME = /^§f.+'s (.+) §7\([IVX]+\)$/;
-const blitzMaterialNames = new Map(
-  screens.flatMap((screen) =>
-    screen.slots.flatMap(({ item }) => {
-      const material = item && BLITZ_ITEM_NAME.exec(item.name)?.[1];
-      return material ? [[item.id, material] as const] : [];
-    }),
-  ),
-);
+const blitzMaterialNames = new Map<string, string>();
+
+for (const screen of screens) {
+  for (const { item } of screen.slots) {
+    const material = item && BLITZ_ITEM_NAME.exec(item.name)?.[1];
+    if (item && material) blitzMaterialNames.set(item.id, material);
+  }
+}
 
 function withoutRename(item: DumpItem, kit: string, level: number): DumpItem {
-  const lore = item.lore.filter((line) => !plain(line).startsWith("Owner: "));
+  const lore = item.lore.filter(
+    (line) => !withoutCodes(line).startsWith("Owner: "),
+  );
   if (lore.length === item.lore.length) return item;
 
   const material = blitzMaterialNames.get(item.id);
@@ -881,7 +863,6 @@ function withoutRename(item: DumpItem, kit: string, level: number): DumpItem {
   };
 }
 
-/** The Blitz level an Upgrades page shows unlocked, or the Kit upgrade a Mega Walls class page shows */
 function legacyKitLevel(
   page: Screen,
   game: keyof typeof legacyKits,
@@ -890,23 +871,30 @@ function legacyKitLevel(
   const entries = pickerEntries(page);
 
   if (game === "blitz") {
-    const unlocked = entries.flatMap((item) => {
+    const unlocked: number[] = [];
+
+    for (const item of entries) {
       const level =
         ROMAN.indexOf(
-          new RegExp(`^${kit} ([IVX]+)$`).exec(plain(item.name))?.[1] ?? "",
+          new RegExp(`^${kit} ([IVX]+)$`).exec(withoutCodes(item.name))?.[1] ??
+            "",
         ) + 1;
-      return level > 0 && item.lore.some((line) => plain(line) === "UNLOCKED")
-        ? [level]
-        : [];
-    });
+      if (
+        level > 0 &&
+        item.lore.some((line) => withoutCodes(line) === "UNLOCKED")
+      )
+        unlocked.push(level);
+    }
     if (unlocked.length === 0)
       throw new Error(`${page.title} shows no unlocked level`);
     return { level: Math.max(...unlocked) };
   }
 
-  const upgrade = entries.find((item) => plain(item.name) === `Kit - ${kit}`);
+  const upgrade = entries.find(
+    (item) => withoutCodes(item.name) === `Kit - ${kit}`,
+  );
   const tier = upgrade?.lore
-    .map((line) => /^Tier: ([IVX]+)$/.exec(plain(line))?.[1])
+    .map((line) => /^Tier: ([IVX]+)$/.exec(withoutCodes(line))?.[1])
     .find(Boolean);
   if (!upgrade || !tier) throw new Error(`${page.title} shows no Kit tier`);
   return {
@@ -916,20 +904,20 @@ function legacyKitLevel(
 }
 
 for (const [index, screen] of screens.entries()) {
-  const kit = /^Edit (.+) Layout$/.exec(plain(screen.title))?.[1];
+  const kit = /^Edit (.+) Layout$/.exec(withoutCodes(screen.title))?.[1];
   const page = /^(.+) (Upgrades|Class)$/.exec(backTo(screen));
   // A screen without its buttons was captured before it finished loading
   if (!kit || !page || page[1] !== kit) continue;
 
   const game = LEGACY_KIT_PAGES[page[2] as keyof typeof LEGACY_KIT_PAGES];
   const key = kitKey(kit);
-  // The first screen is the default; later ones may show items the player moved
+  // The first screen is the default, since the player may move items later
   if (legacyKits[game][key]) continue;
 
   const pageTitle = `${kit} ${page[2]}`;
   const shownPage = screens
     .slice(0, index)
-    .findLast((shown) => plain(shown.title) === pageTitle);
+    .findLast((shown) => withoutCodes(shown.title) === pageTitle);
   if (!shownPage)
     throw new Error(`No ${pageTitle} page before ${screen.title}`);
   const { level, armor } = legacyKitLevel(shownPage, game, kit);
@@ -946,7 +934,6 @@ for (const [index, screen] of screens.entries()) {
     })
     .toSorted((a, b) => a.slot - b.slot);
 
-  // Stored layouts name items only by token
   const tokens = items.map(({ token }) => token);
   if (new Set(tokens).size < tokens.length)
     throw new Error(`${screen.title} shows two items of one token`);
@@ -960,18 +947,17 @@ for (const [index, screen] of screens.entries()) {
   };
 }
 
-// Each Blitz kit's armor at levels I to X, from its Upgrades page. The page names few dyes, so
-// leather takes the color its editor shows on that piece, where one was dumped
+// The Upgrades page names few dyes, so leather takes its editor's color
 const blitzArmor: Record<string, Record<number, ItemStack>[]> = {};
 
 for (const screen of screens) {
-  const kit = /^(.+) Upgrades$/.exec(plain(screen.title))?.[1];
+  const kit = /^(.+) Upgrades$/.exec(withoutCodes(screen.title))?.[1];
   if (!kit) continue;
   const key = kitKey(kit);
 
   for (const entry of pickerEntries(screen)) {
     const tier = ROMAN.indexOf(
-      new RegExp(`^${kit} ([IVX]+)$`).exec(plain(entry.name))?.[1] ?? "",
+      new RegExp(`^${kit} ([IVX]+)$`).exec(withoutCodes(entry.name))?.[1] ?? "",
     );
     if (tier === -1 || blitzArmor[key]?.[tier]) continue;
 
@@ -990,24 +976,21 @@ for (const [kit, levels] of Object.entries(blitzArmor)) {
     throw new Error(`${kit}'s Upgrades page misses a level`);
 }
 
-/** Whether a screen is a menu that finished loading (it shows Go Back), by its title and the page it goes back to */
 const isMenu = (shown: Screen, title: string, back?: string) =>
-  plain(shown.title) === title &&
+  withoutCodes(shown.title) === title &&
   shown.slots.some(
     ({ item }) =>
       item &&
-      plain(item.name) === "Go Back" &&
-      (back === undefined || plain(item.lore[0] ?? "") === `To ${back}`),
+      withoutCodes(item.name) === "Go Back" &&
+      (back === undefined || withoutCodes(item.lore[0] ?? "") === `To ${back}`),
   );
 
-/** A menu's first screen that finished loading */
 function menuScreen(title: string, back?: string) {
   const index = screens.findIndex((shown) => isMenu(shown, title, back));
   if (index === -1) missing.push(back ? `${back} > ${title}` : title);
   return index;
 }
 
-/** A menu's items without its buttons */
 function menu(title: string, back?: string) {
   const screen = screens[menuScreen(title, back)];
   if (!screen) return [];
@@ -1015,37 +998,32 @@ function menu(title: string, back?: string) {
   return pickerEntries(screen).filter(
     (item) =>
       !/^(Go Back|Close|Reset .+|Left-click for (next|previous) page!|.+ Coins: .+)$/.test(
-        plain(item.name),
+        withoutCodes(item.name),
       ),
   );
 }
 
-// What a menu shows about the dumping account rather than the item: how to get it, whether it's
-// selected, and the menu's prompt. Requirements continue on indented lines
 const MENU_STATUS =
   /^(Click to (select|purchase|view)!|> Click to activate! <|>>> ACTIVE <<<|SELECTED!|Equipped!|Missing parts!|Cost: .+|Unlocked in .+|[✖✔] .+|Choose an? .+!|Collect all the hats!)$/;
 
-/**
- * A menu item without the account's status lines, `recolor`ed in the selected item's green where the menu
- * colors names by ownership. Only real enchantments glint, since the menu glints the selected item
- */
+// Only real enchantments glint, since the menu glints the selected item
 function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
   const item = kitItem(dumped);
   const tooltip: string[] = [];
   let dropping = false;
 
   for (const line of dumped.lore) {
-    const text = plain(line).trim();
+    const text = withoutCodes(line).trim();
     const continuesStatus: boolean =
-      dropping && /^\s/.test(plain(line)) && text !== "";
+      dropping && /^\s/.test(withoutCodes(line)) && text !== "";
     dropping = MENU_STATUS.test(text) || continuesStatus;
 
     const extraBlank =
-      blank(line) && (tooltip.length === 0 || blank(tooltip.at(-1)!));
+      isBlank(line) && (tooltip.length === 0 || isBlank(tooltip.at(-1)!));
     if (dropping || extraBlank) continue;
     tooltip.push(line);
   }
-  while (tooltip.length > 0 && blank(tooltip.at(-1)!)) tooltip.pop();
+  while (tooltip.length > 0 && isBlank(tooltip.at(-1)!)) tooltip.pop();
 
   return {
     ...item,
@@ -1055,7 +1033,6 @@ function menuItem(dumped: DumpItem, recolor: boolean): ItemStack {
   };
 }
 
-/** Items by key, throwing if two share one */
 function byKey(entries: [string, ItemStack][], where: string) {
   const keyed: Record<string, ItemStack> = {};
   for (const [key, item] of entries) {
@@ -1065,8 +1042,6 @@ function byKey(entries: [string, ItemStack][], where: string) {
   return keyed;
 }
 
-// Quake's shop menus, by the stats key each one's pick is stored under. The Laser is "sight"
-// and the Kits menu's chestplates "armor"; the hat is worn as the helmet
 const QUAKE_MENUS = [
   ["case", "Case", "Quakecraft Shop"],
   ["barrel", "Barrel", "Quakecraft Shop"],
@@ -1093,9 +1068,8 @@ const DIGITS = [
   "nine",
 ];
 
-/** The key a Quake part's stored id gives once fromQuakeLoadout trims it */
 function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
-  const name = plain(item.name);
+  const name = withoutCodes(item.name);
 
   // Triggers are stored spelled out: 0.85s is ZERO_POINT_EIGHT_FIVE
   if (part === "trigger") {
@@ -1106,7 +1080,6 @@ function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
       .join("");
   }
 
-  // Cases are stored by Bukkit material, with SHINY_ for the Power X ones (SHINY_DIAMOND_HOE)
   if (part === "case") {
     const material = materials.get(legacyId(item));
     if (!material) throw new Error(`No Bukkit material for ${item.id}`);
@@ -1119,19 +1092,19 @@ function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
 const quake: Record<string, Record<string, ItemStack>> = {};
 
 for (const [part, title, back] of QUAKE_MENUS) {
-  const entries = menu(title, back).flatMap((item): [string, ItemStack][] =>
-    // The axe cases' ids aren't their Bukkit material (packages hold case.wooden_axe), so they can't be matched
-    part === "case" && item.id.endsWith("_axe")
-      ? []
-      : [[quakeKey(part, item), menuItem(item, true)]],
-  );
+  // The axe cases' ids aren't their Bukkit material, so they can't be matched
+  const entries = menu(title, back)
+    .filter((item) => part !== "case" || !item.id.endsWith("_axe"))
+    .map((item): [string, ItemStack] => [
+      quakeKey(part, item),
+      menuItem(item, true),
+    ]);
   quake[part] = byKey(
     [...Object.entries(quake[part] ?? {}), ...entries],
     `Quake ${title}`,
   );
 }
 
-// Arena's skill menus by the stats key of each slot
 const ARENA_SKILLS = {
   offensive: "Offensive Skills",
   utility: "Utility Skills",
@@ -1143,24 +1116,28 @@ const arena: Record<string, Record<string, ItemStack>> = {};
 
 for (const [slot, title] of Object.entries(ARENA_SKILLS)) {
   arena[slot] = byKey(
-    menu(title).map((item) => [kitKey(plain(item.name)), menuItem(item, true)]),
+    menu(title).map((item) => [
+      kitKey(withoutCodes(item.name)),
+      menuItem(item, true),
+    ]),
     `Arena ${title}`,
   );
 }
 
-// Each rune's row starts with the rune, then its upgrades (Rune of Speed II). Its tooltip gives the first
-// level's chance, which the stored rune_level_<rune> may not count from, so the rune keeps only its name
-arena.active_rune = byKey(
-  menu("Runes").flatMap((item): [string, ItemStack][] => {
-    const rune = /^Rune of ([A-Za-z]+)$/.exec(plain(item.name))?.[1];
-    return rune
-      ? [[kitKey(rune), { ...menuItem(item, false), tooltip: undefined }]]
-      : [];
-  }),
-  "Arena Runes",
-);
+// Runes keep only their name, since the stored level may count differently
+const runes: [string, ItemStack][] = [];
 
-// TKR's part selectors by the PartType their parts are stored with
+for (const item of menu("Runes")) {
+  const rune = /^Rune of ([A-Za-z]+)$/.exec(withoutCodes(item.name))?.[1];
+  if (rune)
+    runes.push([
+      kitKey(rune),
+      { ...menuItem(item, false), tooltip: undefined },
+    ]);
+}
+
+arena.active_rune = byKey(runes, "Arena Runes");
+
 const KART_SELECTORS = {
   ENGINE: "Engine Selector",
   TURBOCHARGER: "Turbocharger Selector",
@@ -1173,29 +1150,22 @@ for (const [type, title] of Object.entries(KART_SELECTORS)) {
   const parts: KartPart[] = [];
   const suffix = title.replace(/^(\w+) Selector$/, " $1");
 
-  // A selector lists only the parts the dumping account owns, so a later screen can show more
+  // A selector lists only the owned parts, so a later screen can show more
   const shown = screens
     .filter((screen) => isMenu(screen, title))
     .flatMap(pickerEntries);
   for (const item of shown.filter((item) =>
-    plain(item.name).endsWith(suffix),
+    withoutCodes(item.name).endsWith(suffix),
   )) {
-    // Named <name> <rarity> <type>, like Eternal Awesome Engine
-    const rarity = plain(item.name).split(" ").at(-2)!.toUpperCase();
-    // Each attribute's bar is five >, green up to its level: §a>§a>§4>§4>§4>§r  Top speed
-    const attributes = Object.fromEntries(
-      item.lore.flatMap((line) => {
-        const name = /^>+\s+(.+)$/.exec(plain(line))?.[1];
-        return name
-          ? [
-              [
-                name.toUpperCase().replaceAll(" ", "_"),
-                line.match(/§a>/g)?.length ?? 0,
-              ],
-            ]
-          : [];
-      }),
-    );
+    const rarity = withoutCodes(item.name).split(" ").at(-2)!.toUpperCase();
+    const attributes: Record<string, number> = {};
+
+    for (const line of item.lore) {
+      const name = /^>+\s+(.+)$/.exec(withoutCodes(line))?.[1];
+      if (name)
+        attributes[name.toUpperCase().replaceAll(" ", "_")] =
+          line.match(/§a>/g)?.length ?? 0;
+    }
 
     const part = { rarity, attributes, item: kitItem(item) };
     if (!parts.some((shown) => JSON.stringify(shown) === JSON.stringify(part)))
@@ -1206,21 +1176,16 @@ for (const [type, title] of Object.entries(KART_SELECTORS)) {
   else missing.push(title);
 }
 
-// The Speed UHC Shop's Kits page lists each kit's items by name, like "Stick x2", with
-// enchantments on indented lines under them
 const speedUhc: Record<string, Record<string, (ItemStack | null)[]>> = {};
 
-/** A Speed UHC kit's items, null where a name can't be matched */
 function speedUhcKit(kit: DumpItem) {
   const items: (ItemStack | null)[] = [];
 
-  // The client adds the icon's own enchantments above the lore, whose lines start with §5§o.
-  // The list ends at the first blank line
   const lines = kit.lore.filter((line) => line.startsWith("§5§o"));
-  const end = lines.findIndex(blank);
+  const end = lines.findIndex(isBlank);
 
   for (const line of lines.slice(0, end === -1 ? undefined : end)) {
-    const enchantment = /^\s+∙ (.+)$/.exec(plain(line))?.[1];
+    const enchantment = /^\s+∙ (.+)$/.exec(withoutCodes(line))?.[1];
     const last = items.at(-1);
     if (enchantment) {
       if (last)
@@ -1231,10 +1196,10 @@ function speedUhcKit(kit: DumpItem) {
       continue;
     }
 
-    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(plain(line))!;
+    const [, name, count] = /^(.+?)(?: x(\d+))?$/.exec(withoutCodes(line))!;
     const named = namedItem(name);
     const item = named && legacyItem(named.id, named.damage);
-    if (!item) unmatched.push(`Speed UHC ${plain(kit.name)}'s ${name}`);
+    if (!item) unmatched.push(`Speed UHC ${withoutCodes(kit.name)}'s ${name}`);
     items.push(
       item ? { ...item, count: count ? Number(count) : undefined } : null,
     );
@@ -1246,13 +1211,12 @@ function speedUhcKit(kit: DumpItem) {
 const kitsPage = menuScreen("Kits", "Speed UHC Shop");
 
 if (kitsPage !== -1) {
-  // The shop's Kits item names the mode its page is for: "Selection of unique kits for Normal Mode."
   const mode = screens
     .slice(0, kitsPage)
-    .filter((screen) => plain(screen.title) === "Speed UHC Shop")
+    .filter((screen) => withoutCodes(screen.title) === "Speed UHC Shop")
     .flatMap(pickerEntries)
-    .findLast((item) => plain(item.name) === "Kits")
-    ?.lore.map(plain)
+    .findLast((item) => withoutCodes(item.name) === "Kits")
+    ?.lore.map(withoutCodes)
     .join(" ")
     .match(/kits for (\w+) Mode/)?.[1];
   if (!mode)
@@ -1260,20 +1224,21 @@ if (kitsPage !== -1) {
 
   speedUhc[mode.toLowerCase()] = Object.fromEntries(
     menu("Kits", "Speed UHC Shop").map((kit) => [
-      kitKey(plain(kit.name)),
+      kitKey(withoutCodes(kit.name)),
       speedUhcKit(kit),
     ]),
   );
 }
 
-// The shop leaves out the free Default kit, which only the Gear Selector in a game lists (Speed UHC
-// only has Normal games)
+// Only a game's Gear Selector lists the free Default kit
 const gearSelector = screens.find(
-  (screen) => plain(screen.title) === "Gear Selector",
+  (screen) => withoutCodes(screen.title) === "Gear Selector",
 );
 const defaultKit =
   gearSelector &&
-  pickerEntries(gearSelector).find((item) => plain(item.name) === "Default");
+  pickerEntries(gearSelector).find(
+    (item) => withoutCodes(item.name) === "Default",
+  );
 if (defaultKit && speedUhc.normal)
   speedUhc.normal.default = speedUhcKit(defaultKit);
 
@@ -1283,7 +1248,6 @@ const count = (menus: Record<string, object>) =>
     0,
   );
 
-/** Writes a data file, unless these dumps had nothing for it */
 async function writeData(file: string, found: boolean, value: unknown) {
   if (found)
     await writeFile(

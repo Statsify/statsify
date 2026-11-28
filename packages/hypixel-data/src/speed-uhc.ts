@@ -10,14 +10,10 @@ import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/speed-uhc.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
-// Built by scripts/import-dump.ts from the Speed UHC Shop's Kits page and the Gear Selector's
-// Default kit, by mode and kit
+// Built by scripts/import-dump.ts from the Speed UHC Shop and Gear Selector
 const KITS = dumped as Record<string, Record<string, (ItemStack | null)[]>>;
 
-/**
- * A Speed UHC activeKit_<MODE> kit (kit_basic_normal_logger) as its items in the Kits page's order, undefined for
- * a kit the dump lacks. An item the page names in Hypixel's words (Pig Egg, Awkward Potion) leaves its slot empty
- */
+// An item named in Hypixel's words, like Pig Egg, leaves its slot empty
 export function fromSpeedUhcKit(
   id: string,
 ): (ItemStack | undefined)[] | undefined {

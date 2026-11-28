@@ -19,15 +19,10 @@ export interface TntGamesMode {
 // Built by scripts/import-dump.ts from the game's layout editors
 const MODES = dumped as Record<string, TntGamesMode>;
 
-/** TNT Games' modes as the TNTGames stats key each layout (tntrun, spleef), and their names */
 export const TNT_GAMES_LAYOUTS = Object.entries(MODES).map(
   ([key, { name }]) => ({ key, name }),
 );
 
-/**
- * A TNT Games layout, like TNTGames.tntrun ({ "0": "double_jump", "1": "speed_potion" }), as 36
- * player inventory slots. Without one, it's the layout a player who never saved one sees.
- */
 export function fromTntGamesLayout(
   stored: Readonly<Record<string, string>> | null | undefined,
   key: string,
