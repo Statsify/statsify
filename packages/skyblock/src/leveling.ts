@@ -14,7 +14,7 @@ export const SKYBLOCK_XP_PER_LEVEL = 100;
 
 export const PET_RARITIES = RARITIES.slice(0, 6);
 
-export interface LevelOptions {
+interface LevelOptions {
   overflow?: boolean;
 }
 
