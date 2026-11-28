@@ -29,7 +29,7 @@ const MISSING_SHOWN = 12;
 const INACTIVE_SHOWN = 12;
 
 // In-place steps have no price, so they get a grid of their own.
-const topMissing = ({ accessories }: MemberView) =>
+const getTopMissing = ({ accessories }: MemberView) =>
   accessories?.missing
     .filter(({ nextTier }) => !nextTier)
     .slice(0, MISSING_SHOWN) ?? [];
@@ -69,11 +69,11 @@ interface SkyBlockAccessoriesProfileProps extends SkyBlockProfileProps {
   page: "missing" | "inactive";
 }
 
-export const accessoryIcons =
+export const getAccessoryIcons =
   (page: SkyBlockAccessoriesProfileProps["page"]) => (member: MemberView) => {
     const shown =
       page === "missing"
-        ? [...getNextTiers(member), ...topMissing(member)]
+        ? [...getNextTiers(member), ...getTopMissing(member)]
         : topInactive(member);
     return shown.map(({ texture }) => texture);
   };
@@ -156,7 +156,7 @@ export const SkyBlockAccessoriesProfile = ({
     );
   }
 
-  const shown = topMissing(profile.member);
+  const shown = getTopMissing(profile.member);
   // A price or the outside-bag note would widen the card beside the name.
   const stacked =
     accessories.market || shown.some(({ outsideBag }) => outsideBag);

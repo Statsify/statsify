@@ -14,7 +14,7 @@ import {
   MEDAL_COLORS,
   TROPHY_TIERS,
 } from "@statsify/skyblock/display";
-import { gridRows } from "./components/ItemGrid.js";
+import { getGridRows } from "./components/ItemGrid.js";
 import { prettify } from "@statsify/util";
 import type { FishingSection } from "@statsify/skyblock";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -123,7 +123,7 @@ const TrophyFishTable = ({ fishing, t }: FishingTableProps) => {
         </Table.tr>
       </Table.ts>
       <Table.ts title={`§6${t("skyblock.trophyFish")} §8(${legend}§8)`}>
-        {gridRows(fish, 3)}
+        {getGridRows(fish, 3)}
       </Table.ts>
     </Table.table>
   );
@@ -153,7 +153,7 @@ const TrophyFrogTable = ({ fishing, t }: FishingTableProps) => {
         </Table.tr>
       )}
       <Table.ts title={`§a${t("skyblock.trophyFrogs")}`}>
-        {gridRows(frogs, 3)}
+        {getGridRows(frogs, 3)}
       </Table.ts>
     </Table.table>
   );
@@ -169,7 +169,7 @@ const SeaCreatureTable = ({ fishing, t }: FishingTableProps) => {
   if (creatures.length === 0)
     return <Empty text={t("skyblock.noSeaCreatures")} />;
 
-  return <Table.table>{gridRows(creatures, 3)}</Table.table>;
+  return <Table.table>{getGridRows(creatures, 3)}</Table.table>;
 };
 
 const TABLES = {

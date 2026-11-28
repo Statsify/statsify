@@ -10,7 +10,11 @@ import { AUCTION_STATS, RIFT_TOTALS } from "@statsify/skyblock/display";
 import { Card } from "./components/Card.js";
 import { type SidebarItem, Table } from "#components";
 import { Empty } from "./components/Empty.js";
-import { ItemGrid, gridRows, formatProgress } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  getGridRows,
+  formatProgress,
+} from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import { formatTime } from "@statsify/util";
 import type { MemberView } from "@statsify/skyblock";
@@ -18,7 +22,7 @@ import type { SkyBlockProfileProps } from "./skyblock.command.js";
 
 const TOP = 9;
 
-export const consumableIcons = ({ misc }: MemberView) =>
+export const getConsumableIcons = ({ misc }: MemberView) =>
   misc?.consumables
     .map(({ texture }) => texture)
     .filter((texture) => texture !== undefined) ?? [];
@@ -93,16 +97,16 @@ export const SkyBlockMiscProfile = ({
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       <Table.table>
         <Table.ts title={`§a${t("skyblock.topKills")}`}>
-          {gridRows(top(misc.topKills, "§a"), 3, { spreadLastRow: true })}
+          {getGridRows(top(misc.topKills, "§a"), 3, { spreadLastRow: true })}
         </Table.ts>
         <Table.ts title={`§c${t("skyblock.topDeaths")}`}>
-          {gridRows(top(misc.topDeaths, "§c"), 3, { spreadLastRow: true })}
+          {getGridRows(top(misc.topDeaths, "§c"), 3, { spreadLastRow: true })}
         </Table.ts>
         <Table.ts title={`§6${t("skyblock.auctionHouse")}`}>
-          {gridRows(auctions, 4)}
+          {getGridRows(auctions, 4)}
         </Table.ts>
         <Table.ts title={`§5${t("skyblock.dragons")}`}>
-          {gridRows(dragonCells, 4)}
+          {getGridRows(dragonCells, 4)}
         </Table.ts>
       </Table.table>
       {misc.consumables.length > 0 ? (

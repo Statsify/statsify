@@ -13,7 +13,7 @@ import {
   toSkyBlockDate,
 } from "@statsify/skyblock/display";
 import { formatTime } from "@statsify/util";
-import { gridRows } from "./components/ItemGrid.js";
+import { getGridRows } from "./components/ItemGrid.js";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { MayorView } from "@statsify/skyblock";
@@ -68,7 +68,7 @@ export const SkyBlockCalendarProfile = ({
       </box>
       <Table.table>
         <Table.ts title={`§b${t("skyblock.upcomingEvents")}`}>
-          {gridRows(events, 3)}
+          {getGridRows(events, 3)}
         </Table.ts>
         <Table.ts title={`§6${t("skyblock.mayorPerks")}`}>
           {perks.map(({ name, holder }) => (

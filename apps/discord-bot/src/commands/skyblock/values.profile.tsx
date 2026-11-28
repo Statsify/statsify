@@ -14,7 +14,11 @@ import {
   RARITY_COLORS,
   formatProfileName,
 } from "@statsify/skyblock/display";
-import { ItemGrid, gridRows, formatPriceAge } from "./components/ItemGrid.js";
+import {
+  ItemGrid,
+  getGridRows,
+  formatPriceAge,
+} from "./components/ItemGrid.js";
 import { add } from "@statsify/math";
 import { removeFormatting } from "@statsify/util";
 import type { Image } from "skia-canvas";
@@ -31,7 +35,7 @@ const SKYBLOCK_PREFIX = new RegExp(
   `^${removeFormatting(FormattedGame.SKYBLOCK)} `,
 );
 
-export const missingPetIcons = ({ values }: MemberView) =>
+export const getMissingPetIcons = ({ values }: MemberView) =>
   values?.missingPets.slice(0, MISSING_PETS).map(({ texture }) => texture) ??
   [];
 
@@ -82,7 +86,9 @@ export const SkyBlockValuesProfile = ({
   return (
     <Card {...card} name={profile.displayName} sidebar={sidebar}>
       {cells.length > 0 ? (
-        <Table.table>{gridRows(cells, 4, { spreadLastRow: true })}</Table.table>
+        <Table.table>
+          {getGridRows(cells, 4, { spreadLastRow: true })}
+        </Table.table>
       ) : (
         <></>
       )}
@@ -154,7 +160,7 @@ export const SkyBlockRanksProfile = ({
   return (
     <Card {...card} name={displayName}>
       {cells.length > 0 ? (
-        <Table.table>{gridRows(cells, 2)}</Table.table>
+        <Table.table>{getGridRows(cells, 2)}</Table.table>
       ) : (
         <Empty text={t("skyblock.noRanks")} />
       )}

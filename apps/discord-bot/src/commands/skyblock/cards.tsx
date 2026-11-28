@@ -9,7 +9,7 @@
 import { FormattedGame } from "@statsify/schemas";
 import {
   SkyBlockAccessoriesProfile,
-  accessoryIcons,
+  getAccessoryIcons,
 } from "./accessories.profile.js";
 import {
   STAT_PAGES,
@@ -20,11 +20,11 @@ import {
   SkyBlockBestiaryProfile,
   SkyBlockCollectionsProfile,
   SkyBlockMinionsProfile,
-  collectionIcons,
-  minionIcons,
+  getCollectionIcons,
+  getMinionIcons,
 } from "./collections.profile.js";
 import { SkyBlockChocolateProfile } from "./chocolate.profile.js";
-import { SkyBlockCrimsonProfile, crimsonIcons } from "./crimson.profile.js";
+import { SkyBlockCrimsonProfile, getCrimsonIcons } from "./crimson.profile.js";
 import {
   SkyBlockDungeonsProfile,
   SkyBlockEssenceProfile,
@@ -33,22 +33,25 @@ import {
   SkyBlockExperimentsProfile,
   SkyBlockMiscProfile,
   SkyBlockRiftProfile,
-  consumableIcons,
+  getConsumableIcons,
 } from "./misc.profile.js";
 import { SkyBlockFishingProfile } from "./fishing.profile.js";
 import {
   SkyBlockGearProfile,
   SkyBlockMuseumProfile,
-  gearIcons,
+  getGearIcons,
 } from "./gear.profile.js";
-import { SkyBlockGardenProfile, gardenIcons } from "./garden.profile.js";
+import { SkyBlockGardenProfile, getGardenIcons } from "./garden.profile.js";
 import { SkyBlockHotfProfile } from "./hotf.profile.js";
 import { SkyBlockHotmProfile } from "./hotm.profile.js";
-import { SkyBlockJacobProfile, jacobIcons } from "./jacob.profile.js";
-import { SkyBlockLevelProfile, levelIcons } from "./level.profile.js";
-import { SkyBlockNetworthProfile, networthIcons } from "./networth.profile.js";
-import { SkyBlockPetsProfile, petIcons } from "./pets.profile.js";
-import { SkyBlockValuesProfile, missingPetIcons } from "./values.profile.js";
+import { SkyBlockJacobProfile, getJacobIcons } from "./jacob.profile.js";
+import { SkyBlockLevelProfile, getLevelIcons } from "./level.profile.js";
+import {
+  SkyBlockNetworthProfile,
+  getNetworthIcons,
+} from "./networth.profile.js";
+import { SkyBlockPetsProfile, getPetIcons } from "./pets.profile.js";
+import { SkyBlockValuesProfile, getMissingPetIcons } from "./values.profile.js";
 import { SkyBlockSkillsProfile } from "./skills.profile.js";
 import { SkyBlockSlayersProfile } from "./slayers.profile.js";
 import { SkyBlockSummaryProfile } from "./summary.profile.js";
@@ -93,7 +96,7 @@ export const SKYBLOCK_CARDS = {
   networth: {
     sections: ["networth"],
     settings: ["inventory", "personalVault", "banking"],
-    icons: networthIcons,
+    icons: getNetworthIcons,
     profile: SkyBlockNetworthProfile,
   },
   skills: {
@@ -104,7 +107,7 @@ export const SKYBLOCK_CARDS = {
   pets: {
     sections: ["pets"],
     settings: [],
-    icons: petIcons,
+    icons: getPetIcons,
     profile: SkyBlockPetsProfile,
   },
   hotm: {
@@ -145,27 +148,27 @@ export const SKYBLOCK_CARDS = {
         profile: (props) => (
           <SkyBlockAccessoriesProfile {...props} page="missing" />
         ),
-        icons: accessoryIcons("missing"),
+        icons: getAccessoryIcons("missing"),
       },
       {
         label: (t) => t("skyblock.inactive"),
         profile: (props) => (
           <SkyBlockAccessoriesProfile {...props} page="inactive" />
         ),
-        icons: accessoryIcons("inactive"),
+        icons: getAccessoryIcons("inactive"),
       },
     ],
   },
   level: {
     sections: ["level"],
     settings: ["inventory"],
-    icons: levelIcons,
+    icons: getLevelIcons,
     profile: SkyBlockLevelProfile,
   },
   crimson: {
     sections: ["crimson"],
     settings: [],
-    icons: crimsonIcons,
+    icons: getCrimsonIcons,
     profile: SkyBlockCrimsonProfile,
   },
   fishing: {
@@ -195,13 +198,13 @@ export const SKYBLOCK_CARDS = {
   jacob: {
     sections: ["jacob"],
     settings: [],
-    icons: jacobIcons,
+    icons: getJacobIcons,
     profile: SkyBlockJacobProfile,
   },
   garden: {
     sections: ["garden"],
     settings: [],
-    icons: gardenIcons,
+    icons: getGardenIcons,
     profile: SkyBlockGardenProfile,
   },
   chocolate: {
@@ -222,13 +225,13 @@ export const SKYBLOCK_CARDS = {
       profile: (props: SkyBlockProfileProps) => (
         <SkyBlockCollectionsProfile {...props} category={category} />
       ),
-      icons: collectionIcons(category),
+      icons: getCollectionIcons(category),
     })),
   },
   minions: {
     sections: ["minions"],
     settings: [],
-    icons: minionIcons,
+    icons: getMinionIcons,
     profile: SkyBlockMinionsProfile,
   },
   bestiary: {
@@ -254,7 +257,7 @@ export const SKYBLOCK_CARDS = {
   gear: {
     sections: ["gear"],
     settings: ["inventory"],
-    icons: gearIcons,
+    icons: getGearIcons,
     profile: SkyBlockGearProfile,
   },
   museum: {
@@ -275,13 +278,13 @@ export const SKYBLOCK_CARDS = {
   misc: {
     sections: ["misc"],
     settings: [],
-    icons: consumableIcons,
+    icons: getConsumableIcons,
     profile: SkyBlockMiscProfile,
   },
   values: {
     sections: ["values"],
     settings: ["inventory"],
-    icons: missingPetIcons,
+    icons: getMissingPetIcons,
     profile: SkyBlockValuesProfile,
   },
 } satisfies Record<string, SkyBlockCard>;
@@ -293,7 +296,7 @@ export const getSkyBlockHeading = (
   name: SkyBlockCardName | "bingo" | "calendar" | "ranks",
 ) => `§l${FormattedGame.SKYBLOCK} §f${t(`skyblock.titles.${name}`)}`;
 
-export function skyBlockTitle(
+export function getSkyBlockTitle(
   t: LocalizeFunction,
   profile: SkyBlockProfileView,
   name: SkyBlockCardName,
