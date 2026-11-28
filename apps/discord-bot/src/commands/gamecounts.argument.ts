@@ -11,24 +11,37 @@ import {
   type APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, type CommandContext, type LocalizationString } from "@statsify/discord";
+import {
+  AbstractArgument,
+  type CommandContext,
+  type LocalizationString,
+} from "@statsify/discord";
 import { FUSE_OPTIONS } from "#constants";
-import { type ClassMetadata, FormattedGame, GameCounts, METADATA_KEY } from "@statsify/schemas";
+import {
+  type ClassMetadata,
+  FormattedGame,
+  GameCounts,
+  METADATA_KEY,
+} from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
 const GAME_CHOICES = (
   Object.keys(
-    Reflect.getMetadata(METADATA_KEY, GameCounts.prototype) as ClassMetadata
+    Reflect.getMetadata(METADATA_KEY, GameCounts.prototype) as ClassMetadata,
   ) as (keyof GameCounts)[]
 ).map((id) => ({ name: removeFormatting(FormattedGame[id]), value: id }));
 
-const GAME_FUSE = new Fuse(GAME_CHOICES, { ...FUSE_OPTIONS, keys: ["name", "value"] });
+const GAME_FUSE = new Fuse(GAME_CHOICES, {
+  ...FUSE_OPTIONS,
+  keys: ["name", "value"],
+});
 
 export const findGameId = (input: string) => {
   const query = input.toLowerCase();
 
   return GAME_CHOICES.find(
-    ({ name, value }) => value.toLowerCase() === query || name.toLowerCase() === query
+    ({ name, value }) =>
+      value.toLowerCase() === query || name.toLowerCase() === query,
   )?.value;
 };
 
@@ -45,14 +58,13 @@ export class GameArgument extends AbstractArgument {
   }
 
   public autocompleteHandler(
-    context: CommandContext
+    context: CommandContext,
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     if (!currentValue) return GAME_CHOICES.slice(0, 25);
 
-    return GAME_FUSE
-      .search(currentValue)
+    return GAME_FUSE.search(currentValue)
       .map((result) => result.item)
       .slice(0, 25);
   }
