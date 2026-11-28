@@ -275,6 +275,7 @@ export class ModelResolver {
         return this.layers(next, item);
       }
 
+      // Compasses, clocks and bows sit at their first frame
       case "minecraft:range_dispatch": {
         const next =
           model.entries.findLast(({ threshold }) => threshold <= 0)?.model ??

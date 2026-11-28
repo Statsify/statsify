@@ -55,7 +55,7 @@ SkyWars' Mystery Egg) has no 26.3 item, so it's left out.
 
 ## Armor
 
-For a skin render, `armorOf(items)` turns items (Pit's `inv_armor`, slots 36 to 39) into
+For a skin render, `findArmor(items)` turns items (Pit's `inv_armor`, slots 36 to 39) into
 `{ helmet, chestplate, leggings, boots }`, each `{ material, color, enchanted }`, a player head's
 `{ head, enchanted }` texture hash or a mob skull's `{ skull }`; other things on the head are left
 out. `duelsKitArmor(mode, kit)`, `skyWarsKitArmor(kit)`, `blitzKitArmor(kit, level)` and

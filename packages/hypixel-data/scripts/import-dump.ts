@@ -425,6 +425,7 @@ function pickerArmor(lore: string[], kit: string) {
   const armor: Record<number, ItemStack> = {};
 
   for (const [index, line] of lines.entries()) {
+    // Blitz indents enchantments under each item, and SkyWars drops the bullet
     if (/^\s{2,}/.test(line)) continue;
     const text = line.replace(/^ ▪ /, "").replace(/ x\d+$/, "");
     const enchanted = /^\s{2,}[∙▪]/.test(lines[index + 1] ?? "") || undefined;
@@ -540,6 +541,7 @@ for (const [title, mode] of Object.entries(KIT_EDITORS)) {
     continue;
   }
 
+  // An item most kits show is shared, so its token has no kit prefix
   const counts = new Map<string, number>();
   for (const { items: kitItems } of Object.values(kits)) {
     for (const key of new Set(kitItems.map(sameItemKey)))
@@ -569,6 +571,7 @@ const enchantmentIds = new Map(
 const POTION = 373;
 const SPLASH = 0x40_00;
 
+// An enchanted book keeps its enchantments in StoredEnchantments
 const dumpedEnchantments = ({ nbt }: DumpItem) =>
   [
     ...(/(?:ench|StoredEnchantments):\[([^\]]*)\]/
@@ -786,6 +789,8 @@ for (const screen of screens) {
       dumped[left[0]] = pool.pop();
 
     const items: SkyWarsKit["items"] = [];
+    // A player who never saved a layout gets the list in order from slot 0,
+    // with the armor put on, as every Kit Customizer dumped shows
     let next = 0;
     let known = true;
 
@@ -1045,6 +1050,7 @@ function byKey(entries: [string, ItemStack][], where: string) {
   return keyed;
 }
 
+// The stats keys call the Laser sight and the Kits menu's chestplates armor
 const QUAKE_MENUS = [
   ["case", "Case", "Quakecraft Shop"],
   ["barrel", "Barrel", "Quakecraft Shop"],
@@ -1083,6 +1089,7 @@ function quakeKey(part: (typeof QUAKE_MENUS)[number][0], item: DumpItem) {
       .join("");
   }
 
+  // Cases are stored by Bukkit material, with SHINY_ for the Power X ones
   if (part === "case") {
     const material = materials.get(legacyId(item));
     if (!material) throw new Error(`No Bukkit material for ${item.id}`);
@@ -1184,6 +1191,7 @@ const speedUhc: Record<string, Record<string, (ItemStack | null)[]>> = {};
 function speedUhcKit(kit: DumpItem) {
   const items: (ItemStack | null)[] = [];
 
+  // The client puts the icon's enchantments above lore lines, which start §5§o
   const lines = kit.lore.filter((line) => line.startsWith("§5§o"));
   const end = lines.findIndex(isBlank);
 

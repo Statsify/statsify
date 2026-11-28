@@ -10,6 +10,7 @@ import type { ItemStack } from "@statsify/textures";
 import dumped from "../data/quake.json" with { type: "json" };
 import { kitKey } from "./kits.js";
 
+// The Quake stats keys call the gun's laser its sight
 const LOADOUT = [
   "case",
   "barrel",

@@ -31,6 +31,7 @@ const BOTTOM_ROW = (SHOP_ROWS - 1) * SHOP_COLUMNS;
 // Older quick buys store Wood as wood
 const RENAMED: Record<string, string | undefined> = { wood: "oak_wood_planks" };
 
+// Quick buy is rows 3 to 5 of the shop, less their first and last columns
 const QUICK_BUY_SLOTS = [2, 3, 4].flatMap((row) =>
   Array.from(
     { length: SHOP_COLUMNS - 2 },
