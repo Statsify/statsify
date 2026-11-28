@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "node --enable-source-maps .",
+    "start": "node --enable-source-maps --import ./dist/instrument.js .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
@@ -20,7 +20,7 @@
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-fastify": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
-    "@sentry/node": "^7.118.0",
+    "@sentry/nestjs": "^11.8.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",

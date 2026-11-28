@@ -1,9 +1,18 @@
 {
   "name": "@statsify/logger",
   "version": "0.0.0",
-  "main": "dist/index.js",
-  "types": "src/index.ts",
+  "types": "./src/index.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./sentry": {
+      "types": "./src/sentry.ts",
+      "default": "./dist/sentry.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "typecheck": "tsc --noEmit",
@@ -11,7 +20,7 @@
     "lint:ci": "oxlint --format=github"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^11.8.0",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "chalk": "5.6.0",
