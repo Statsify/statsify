@@ -17,17 +17,15 @@ interface Animation {
   frames?: (number | { index: number; time?: number })[];
 }
 
-/** The frame an animated texture shows at a game tick, and how far it has blended into the next */
 interface Frame {
   index: number;
   next: number;
   blend: number;
-  /** The ticks this frame starts at and the next one starts at */
   start: number;
   end: number;
 }
 
-// Frames are sized the way Minecraft sizes them: square unless the animation says otherwise
+// Frames are square unless the animation gives their size
 function frameSize(width: number, height: number, animation: Animation) {
   return {
     width:
@@ -55,7 +53,6 @@ function frameRect(
   };
 }
 
-/** Plays the animation forward to a game tick */
 function frameAt(
   width: number,
   height: number,
@@ -100,21 +97,18 @@ function frameAt(
   };
 }
 
-/** Mixes next into pixels value by value, by an amount from 0 to 1 */
 export function mixPixels(pixels: ImageData, next: ImageData, amount: number) {
   for (let i = 0; i < pixels.data.length; i++) {
     pixels.data[i] = pixels.data[i] * (1 - amount) + next.data[i] * amount;
   }
 }
 
-/** Sprites from a pack stack as pixels, decoded once each */
 export class TextureLoader {
   private textures = new Map<string, Promise<ImageData>>();
   private animations = new Map<string, Animation | undefined>();
 
   public constructor(private stack: PackStack) {}
 
-  /** The frame a texture shows at a game tick, or undefined when it doesn't animate */
   public frame(id: string, tick: number): Frame | undefined {
     const path = assetPath(id, "textures", ".png");
 
@@ -133,7 +127,6 @@ export class TextureLoader {
     return frameAt(width, height, animation, tick);
   }
 
-  /** A texture's pixels at a game tick, 20 to a second */
   public get(id: string, tick = 0): Promise<ImageData> {
     const frame = this.frame(id, tick);
 

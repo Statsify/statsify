@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/** Where canvases come from: OffscreenCanvas in browsers, or another 2D canvas such as skia-canvas in Node */
 export interface CanvasBackend {
   createCanvas(width: number, height: number): OffscreenCanvas;
   decodePng(file: Uint8Array): Promise<OffscreenCanvas>;
@@ -38,7 +37,6 @@ export const createCanvas = (width: number, height: number) =>
 
 export const decodePng = (file: Uint8Array) => backend.decodePng(file);
 
-// A PNG's size sits in its IHDR chunk, so it's known without decoding
 export function pngSize(file: Uint8Array) {
   const view = new DataView(file.buffer, file.byteOffset, file.byteLength);
   return { width: view.getUint32(16), height: view.getUint32(20) };
@@ -54,6 +52,6 @@ export function context(canvas: OffscreenCanvas) {
 
 export const hex = (color: number) => `#${color.toString(16).padStart(6, "0")}`;
 
-// From a context, since Node has no global ImageData
+// Node has no global ImageData, so it comes from a context
 export const createImageData = (width: number, height: number) =>
   context(createCanvas(1, 1)).createImageData(width, height);
