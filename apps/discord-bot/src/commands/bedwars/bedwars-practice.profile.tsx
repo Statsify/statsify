@@ -6,8 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem, Table } from "#components";
-import { type BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import {
+  Container,
+  Footer,
+  Header,
+  type SidebarItem,
+  Table,
+} from "#components";
+import {
+  type BedWarsModes,
+  FormattedGame,
+  type GameMode,
+} from "@statsify/schemas";
 import { formatBestTime } from "#lib/format-best-time";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 

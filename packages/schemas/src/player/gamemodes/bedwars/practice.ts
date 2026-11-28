@@ -58,12 +58,18 @@ export class BedWarsPracticeBridgingRecords {
   public diagonalLong: number;
 
   public constructor(data: APIData = {}) {
-    this.straightShort = data["bridging_distance_30:elevation_NONE:angle_STRAIGHT:"];
-    this.straightMedium = data["bridging_distance_50:elevation_NONE:angle_STRAIGHT:"];
-    this.straightLong = data["bridging_distance_100:elevation_NONE:angle_STRAIGHT:"];
-    this.diagonalShort = data["bridging_distance_30:elevation_NONE:angle_DIAGONAL:"];
-    this.diagonalMedium = data["bridging_distance_50:elevation_NONE:angle_DIAGONAL:"];
-    this.diagonalLong = data["bridging_distance_100:elevation_NONE:angle_DIAGONAL:"];
+    this.straightShort =
+      data["bridging_distance_30:elevation_NONE:angle_STRAIGHT:"];
+    this.straightMedium =
+      data["bridging_distance_50:elevation_NONE:angle_STRAIGHT:"];
+    this.straightLong =
+      data["bridging_distance_100:elevation_NONE:angle_STRAIGHT:"];
+    this.diagonalShort =
+      data["bridging_distance_30:elevation_NONE:angle_DIAGONAL:"];
+    this.diagonalMedium =
+      data["bridging_distance_50:elevation_NONE:angle_DIAGONAL:"];
+    this.diagonalLong =
+      data["bridging_distance_100:elevation_NONE:angle_DIAGONAL:"];
   }
 }
 
