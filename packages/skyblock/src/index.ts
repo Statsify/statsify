@@ -20,9 +20,16 @@ export { getLevel } from "./leveling.js";
 export {
   findProfile,
   getGameMode,
+  isMember,
   toProfileSummary,
   toProfilesView,
 } from "./profiles.js";
+export {
+  MEMBER_STATS_SECTIONS,
+  type MemberStat,
+  type MemberStats,
+  toMemberStats,
+} from "./sections/member-stats.js";
 export { parseItemsResource, toItemView } from "./items.js";
 export { getItemTexture, resourceTexture } from "./textures.js";
 export {

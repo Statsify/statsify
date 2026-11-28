@@ -57,7 +57,7 @@ function isNew(member: RawMember) {
 }
 
 // A member who left keeps a deletion_notice, and an invitee is unconfirmed.
-function isMember(profile: RawProfile, uuid: string) {
+export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
   return (

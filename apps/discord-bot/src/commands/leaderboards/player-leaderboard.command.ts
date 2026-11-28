@@ -50,6 +50,8 @@ import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand.js";
 import {
   PlayerLeaderboardArgument,
 } from "./player-leaderboard.argument.js";
+import { SkyBlockLeaderboardArgument } from "./skyblock-leaderboard.argument.js";
+import { SkyBlockLeaderboardSubCommand } from "./skyblock-leaderboard.subcommand.js";
 import { getBackground } from "@statsify/assets";
 
 @Command({
@@ -281,6 +283,14 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   })
   public async guild(context: CommandContext) {
     return Container.get(GuildLeaderboardSubCommand).leaderboard(context);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-leaderboard"),
+    args: [SkyBlockLeaderboardArgument],
+  })
+  public async skyblock(context: CommandContext) {
+    return Container.get(SkyBlockLeaderboardSubCommand).leaderboard(context);
   }
 
   private async run<T extends GamesWithBackgrounds>(

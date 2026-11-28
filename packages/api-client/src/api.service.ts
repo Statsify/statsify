@@ -163,6 +163,19 @@ export class ApiService {
     );
   }
 
+  public getSkyBlockLeaderboard(
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostLeaderboardResponse | null> {
+    return this.request<PostLeaderboardResponse>("/skyblock/leaderboards", {}, "POST", {
+      body: {
+        field,
+        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
+      },
+    });
+  }
+
   public getGuild(tag: string, type: GuildQuery) {
     return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
       guild: tag,

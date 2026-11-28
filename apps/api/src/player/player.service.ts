@@ -27,6 +27,7 @@ import {
   PlayerSearchService,
   RedisPlayer,
 } from "./search/player-search.service.js";
+import { SkyBlockService } from "#skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -38,6 +39,8 @@ export class PlayerService {
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
+    @Inject(forwardRef(() => SkyBlockService))
+    private readonly skyblockService: Circular<SkyBlockService>,
     @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
 
@@ -165,6 +168,7 @@ export class PlayerService {
         "uuid",
         true
       ),
+      this.skyblockService.deletePlayer(player.uuid),
     ]);
 
     return true;
@@ -194,7 +198,7 @@ export class PlayerService {
     return flatPlayer;
   }
 
-  private async findMongoDocument(
+  public async findMongoDocument(
     tag: string,
     selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {

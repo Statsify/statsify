@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export * from "./leaderboards/skyblock-leaderboard.service.js";
 export * from "./skyblock.module.js";
 export * from "./skyblock-prices.service.js";
 export * from "./skyblock.service.js";

@@ -19,6 +19,7 @@ import {
   SubCommand,
   paginate,
 } from "@statsify/discord";
+import { Container } from "typedi";
 import {
   SKYBLOCK_CARDS,
   type SkyBlockCard,
@@ -30,6 +31,8 @@ import {
 import { ItemArgument } from "./item.argument.js";
 import { type ItemIcons, loadItemIcons } from "./components/ItemSlot.js";
 import { PRICE_ICON_SIZE, SkyBlockPriceProfile } from "./price.profile.js";
+import { SkyBlockLeaderboardArgument } from "#commands/leaderboards/skyblock-leaderboard.argument";
+import { SkyBlockLeaderboardSubCommand } from "#commands/leaderboards/skyblock-leaderboard.subcommand";
 import { hasMuseum } from "@statsify/skyblock/display";
 import { getItemIcon } from "@statsify/skyblock/icons";
 import { getLogo } from "@statsify/assets";
@@ -228,6 +231,14 @@ export class SkyBlockCommand {
   })
   public hotf(context: CommandContext) {
     return this.run(context, "hotf");
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.skyblock-leaderboard"),
+    args: [SkyBlockLeaderboardArgument],
+  })
+  public leaderboard(context: CommandContext) {
+    return Container.get(SkyBlockLeaderboardSubCommand).leaderboard(context);
   }
 
   @SubCommand({

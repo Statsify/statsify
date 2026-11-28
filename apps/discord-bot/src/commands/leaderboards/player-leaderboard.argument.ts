@@ -24,7 +24,7 @@ const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
 
-const FUSE_OPTIONS = {
+export const FUSE_OPTIONS = {
   keys: ["name", "key"],
   includeScore: false,
   shouldSort: true,

@@ -8,8 +8,11 @@
 
 import { CachedPlayerDto } from "./cached-player.dto.js";
 import { ICON_SIZES } from "@statsify/skyblock/icon-key";
+import { PlayerDto } from "./player.dto.js";
 import { SKYBLOCK_SECTIONS } from "@statsify/skyblock";
+import { SkyBlockStats } from "@statsify/schemas";
 import { createZodDto } from "nestjs-zod";
+import { leaderboardField } from "./leaderboard-field.js";
 import { z } from "zod";
 
 export class SkyBlockProfileDto extends createZodDto(
@@ -56,5 +59,14 @@ export class SkyBlockIconDto extends createZodDto(
 export class SkyBlockItemsDto extends createZodDto(
   z.object({
     query: z.string().max(100).meta({ example: "hyperion" }),
+  }),
+) {}
+
+export class SkyBlockLeaderboardDto extends createZodDto(
+  z.object({
+    player: PlayerDto.schema.shape.player.nullish(),
+    field: leaderboardField(SkyBlockStats),
+    page: z.coerce.number().int().min(0).default(0),
+    position: z.coerce.number().int().min(1).optional(),
   }),
 ) {}

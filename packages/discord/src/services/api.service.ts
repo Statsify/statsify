@@ -46,6 +46,15 @@ function skyBlockNotFound(message: string, tag: string) {
   return new ErrorMessage((t) => t(`${key}.title`), (t) => t(`${key}.description`, { tag }));
 }
 
+// A 404 is a player or guild the board doesn't rank, which shows as null.
+const leaderboardOrNull = <T>(request: Promise<T>) =>
+  request.catch((err: AxiosError) => {
+    if (!err.response) throw err;
+    const error = err.response.data as PlayerNotFoundException | GuildNotFoundException;
+    if (error.statusCode === 404) return null;
+    throw new ErrorMessage("errors.leaderboardNotFound");
+  });
+
 const apiClientRoute = await config("apiClient.route");
 const apiClientKey = await config("apiClient.key");
 
@@ -207,10 +216,7 @@ export class ApiService extends StatsifyApiService {
     input: string | number,
     type: LeaderboardQuery
   ) {
-    return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
-      if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
-      throw new ErrorMessage("errors.leaderboardNotFound");
-    });
+    return leaderboardOrNull(super.getPlayerLeaderboard(field, input, type));
   }
 
   public override getGuildLeaderboard(
@@ -218,10 +224,15 @@ export class ApiService extends StatsifyApiService {
     input: string | number,
     type: LeaderboardQuery
   ) {
-    return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
-      if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
-      throw new ErrorMessage("errors.leaderboardNotFound");
-    });
+    return leaderboardOrNull(super.getGuildLeaderboard(field, input, type));
+  }
+
+  public override getSkyBlockLeaderboard(
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ) {
+    return leaderboardOrNull(super.getSkyBlockLeaderboard(field, input, type));
   }
 
   /**

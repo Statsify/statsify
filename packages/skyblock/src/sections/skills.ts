@@ -30,14 +30,14 @@ export const SKILLS = [
 export type Skill = (typeof SKILLS)[number];
 
 // Runecrafting and Social are cosmetic, so the average leaves them out.
-const AVERAGED = SKILLS.filter(
+export const AVERAGED = SKILLS.filter(
   (skill) => skill !== "runecrafting" && skill !== "social",
 );
 
 // Past 50 and the three log unlocks, the cap rests on the shop perks.
 const FORAGING_VERIFIED = 53;
 
-const getSkillXp = (member: RawMember, skill: Skill) =>
+export const getSkillXp = (member: RawMember, skill: Skill) =>
   member.player_data?.experience?.[`SKILL_${skill.toUpperCase()}`] ?? 0;
 
 function getXpTable(skill: Skill) {
