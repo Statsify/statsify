@@ -168,7 +168,7 @@ function getConsumables(member: RawMember, items: ItemsResource): Consumable[] {
 }
 
 // The profile keeps an entry for each tier bought.
-function getUpgrades(profile: RawProfile): MiscSection["upgrades"] {
+function getCommunityUpgrades(profile: RawProfile): MiscSection["upgrades"] {
   const states = profile.community_upgrades?.upgrade_states ?? [];
   const tiers = new Map<string, number>();
   for (const { upgrade, tier } of states) {
@@ -241,7 +241,7 @@ export function getMisc(
       starlyn: foraging?.starlyn?.personal_bests ?? {},
     },
     consumables: getConsumables(member, items),
-    upgrades: getUpgrades(profile),
+    upgrades: getCommunityUpgrades(profile),
   };
 }
 

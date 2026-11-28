@@ -69,7 +69,9 @@ export function getJacob(
   const medalsEarned = Object.fromEntries(
     JACOB_BRACKETS.map((bracket) => [bracket, 0]),
   ) as JacobSection["medalsEarned"];
-  for (const { medal } of history) if (medal) medalsEarned[medal]++;
+  for (const { medal } of history) {
+    if (medal) medalsEarned[medal]++;
+  }
 
   const cropViews = [...crops]
     .map((id) => ({

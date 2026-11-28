@@ -80,10 +80,10 @@ export const PLAYER_CLAIMS = [
   "freeCookie",
 ] as const;
 
-export type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
+type PlayerClaim = (typeof PLAYER_CLAIMS)[number];
 
 export interface PlayerExtras {
-  highestSkills: Partial<Record<Skill, number>>; // the best on any profile
+  highestSkills: Partial<Record<Skill, number>>;
   commissions: number; // over every profile
   claimed: Partial<Record<PlayerClaim, number>>; // when each was claimed
 }
@@ -253,7 +253,7 @@ export interface SlayersSection {
   bosses: Record<SlayerBoss, SlayerBossView>;
 }
 
-export interface SlayerBossView {
+interface SlayerBossView {
   level: Level;
   kills: number[]; // kills[tier - 1]
   attempts: number[]; // as kills
@@ -383,7 +383,7 @@ export interface CrimsonSection {
 }
 
 // Hypixel keeps a test's best points and best time apart.
-export interface DojoTest {
+interface DojoTest {
   test: string;
   points: number;
   grade?: DojoGrade; // missing before the test is taken

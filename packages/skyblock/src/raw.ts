@@ -114,7 +114,7 @@ export interface RawContest {
   claimed_medal?: string;
 }
 
-// Each kind's tools are bare ExtraAttributes blobs, beside IN_USE and IS_UNLOCKED.
+// Each kind lists bare ExtraAttributes blobs, beside flags like IN_USE.
 export type RawToolkit = Record<string, unknown>;
 
 export interface RawMember {
