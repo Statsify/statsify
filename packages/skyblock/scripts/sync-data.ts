@@ -688,7 +688,7 @@ try {
     crop_upgrades: number[];
     composter_upgrades: Record<string, Record<string, unknown>>;
   }>("constants/garden.json");
-  // The wiki's Garden pages correct NEU's milestones and two visitors' rarities.
+  // The wiki's Garden pages fix NEU's milestones and two visitors' rarities.
   const wheatTiers = { 21: 325_000, 23: 500_000 };
   const caneTiers = { 21: 650_000, 23: 1_000_000 };
   const cocoaTiers = {

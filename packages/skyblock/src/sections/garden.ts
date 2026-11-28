@@ -212,6 +212,7 @@ if (import.meta.vitest) {
 
   suite("getGarden", () => {
     it("should level the Garden from level 1", () => {
+      // The table's first level costs 0, so a new Garden is level 1.
       expect(getView(0, 0).level).toMatchObject({
         level: 1,
         xpCurrent: 0,
