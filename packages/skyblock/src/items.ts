@@ -104,6 +104,8 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           rift_transferrable,
           npc_sell_price,
           glowing,
+          generator,
+          generator_tier,
         }) => [
           id,
           {
@@ -121,6 +123,8 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
               origin === "RIFT" && !rift_transferrable ? true : undefined,
             npcPrice: npc_sell_price,
             glowing,
+            generator,
+            generatorTier: generator_tier,
           },
         ],
       ),

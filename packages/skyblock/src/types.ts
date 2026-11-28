@@ -103,6 +103,10 @@ export interface MemberView {
   rift?: RiftSection | null;
   misc?: MiscSection;
   stats?: StatsSection;
+  collections?: CollectionsSection | null;
+  minions?: MinionsSection;
+  bestiary?: BestiarySection;
+  attributes?: AttributesSection;
 }
 
 // An inventory's slots, in the game's order.
@@ -115,7 +119,22 @@ export interface GearSection {
   equipment: Slots;
   wardrobe: { slot: number; armor: Slots }[];
   wardrobeSlot?: number;
+  equipmentSets: { slot: number; equipment: Slots }[];
+  equipmentSlot?: number;
   weapons: ItemView[];
+  loadouts: Loadout[];
+}
+
+export interface Loadout {
+  id: number;
+  name: string;
+  // The armor set is a wardrobe slot.
+  armorSet?: number;
+  equipmentSet?: number;
+  // The pet is named by its uniqueId.
+  pet?: string;
+  power?: string;
+  tuning?: Record<string, number>;
 }
 
 // The display entry lists these and can't import the NBT-decoding section.
@@ -351,6 +370,84 @@ export interface JacobCrop {
   // The bracket is the best one reached.
   bracket?: JacobBracket;
   personalBest?: number;
+}
+
+export interface CollectionsSection {
+  categories: { id: string; name: string; items: CollectionView[] }[];
+  maxed: number;
+  total: number;
+  // Members Hypixel sends no collection for, so their part isn't counted.
+  hidden: string[];
+}
+
+// A collection's amount is the co-op's, ex-members included.
+export interface CollectionView {
+  id: string;
+  name: string;
+  texture?: ItemTexture;
+  amount: number;
+  tier: number;
+  maxTier: number;
+  // next is the amount the next tier needs.
+  next?: number;
+  // Members are sorted most first.
+  members: { uuid: string; amount: number }[];
+}
+
+export interface MinionsSection {
+  minions: {
+    id: string;
+    name: string;
+    texture?: ItemTexture;
+    tiers: number[];
+    maxTier: number;
+  }[];
+  // unique counts each tier crafted once.
+  unique: number;
+  // total counts every tier of every minion.
+  total: number;
+  // next is the unique crafts the next slot needs.
+  slots: { total: number; crafts: number; community: number; next?: number };
+  // Members are sorted by unique crafts, most first.
+  members: { uuid: string; amount: number }[];
+}
+
+export interface BestiarySection {
+  milestone: number;
+  tiers: number;
+  maxTiers: number;
+  maxed: number;
+  total: number;
+  pages: { category?: string; name: string; families: BestiaryFamilyView[] }[];
+}
+
+export interface BestiaryFamilyView {
+  name: string;
+  kills: number;
+  tier: number;
+  maxTier: number;
+  // next is the kills the next tier needs.
+  next?: number;
+}
+
+export interface AttributesSection {
+  attributes: {
+    id: string;
+    name: string;
+    attribute: string;
+    rarity: Rarity;
+    families: string[];
+    level: number;
+    // A shard that can't be syphoned has a maxLevel of 0.
+    maxLevel: number;
+    owned: number;
+  }[];
+  unlocked: number;
+  maxed: number;
+  // total counts the attributes with levels.
+  total: number;
+  // owned counts the shards held.
+  owned: number;
 }
 
 export interface GardenSection {
@@ -613,6 +710,8 @@ export interface StatTotal {
   stat: PlayerStat;
   total: number;
   bySource: Partial<Record<StatSource, number>>;
+  // byAttribute is keyed by the Hunting attribute's name.
+  byAttribute?: Record<string, number>;
 }
 
 export interface StatsSection {
@@ -625,10 +724,9 @@ export interface StatsSection {
 export interface MiscSection {
   kills: number;
   deaths: number;
-  // Top kills are the 20 most, by mob id.
-  topKills: { id: string; count: number }[];
-  // Top deaths are by cause.
-  topDeaths: { id: string; count: number }[];
+  // topKills holds the 20 mobs with the most kills.
+  topKills: { name: string; count: number }[];
+  topDeaths: { name: string; count: number }[];
   highestDamage?: number;
   highestCriticalDamage?: number;
   auctions: Record<AuctionStat, number>;
@@ -650,6 +748,7 @@ export interface PetsSection {
 
 export interface PetView {
   uuid?: string;
+  uniqueId?: string;
   type: string;
   name: string;
   rarity: Rarity;
@@ -836,6 +935,9 @@ export interface ItemsResource {
       riftOnly?: boolean;
       npcPrice?: number;
       glowing?: boolean;
+      // Each of a minion's tiers carries the minion's type.
+      generator?: string;
+      generatorTier?: number;
     }
   >;
 }

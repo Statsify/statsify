@@ -7,6 +7,7 @@
  */
 
 import {
+  ATTRIBUTE_SHARDS,
   HOTF_LAYOUT,
   HOTM_LAYOUT,
   PET_ITEMS,
@@ -32,6 +33,7 @@ import { SLAYER_BOSSES, type SlayerBoss, getSlayers } from "./slayers.js";
 import { SKILLS, getSkills } from "./skills.js";
 import { add, roundTo } from "@statsify/math";
 import {
+  TUNING,
   getHeldAccessories,
   getHighestTiers,
   getPowerScale,
@@ -40,6 +42,7 @@ import {
 } from "./accessories.js";
 import { parsePieceBonuses, parseStatLine, parseStatName } from "#lore";
 import { decodeSlots } from "#items";
+import { getAttributeLevel } from "./attributes.js";
 import { getDungeons } from "./dungeons.js";
 import { getHotf } from "./hotf.js";
 import { getHotm } from "./hotm.js";
@@ -75,6 +78,8 @@ export const STAT_SOURCES = [
   "catacombs",
   "level",
   "peppers",
+  // Attribute stats are in byAttribute, so this is only for unverified.
+  "attributes",
 ] as const;
 
 export type StatSource = (typeof STAT_SOURCES)[number];
@@ -224,17 +229,6 @@ function getSelectedPowerStats(
   const learned = LEARNED_POWERS[power];
   return learned && scaleStats(learned, getPowerScale(accessoryPower));
 }
-
-const TUNING: Record<string, [PlayerStat, number]> = {
-  health: ["health", 5],
-  defense: ["defense", 1],
-  walk_speed: ["speed", 1.5],
-  strength: ["strength", 1],
-  critical_damage: ["crit_damage", 1],
-  critical_chance: ["crit_chance", 0.2],
-  attack_speed: ["attack_speed", 0.3],
-  intelligence: ["intelligence", 2],
-};
 
 const getTuningStats = (points: Record<string, number>) =>
   sumStats(
@@ -412,8 +406,36 @@ const getPetScoreMagicFind = (score: number) =>
       .map(([, magicFind]) => magicFind),
   );
 
+interface AttributeStat {
+  stat: PlayerStat;
+  name: string;
+  value: number;
+}
+
+// The wiki scales level I's stats by the level.
+function getAttributeStats(member: RawMember): AttributeStat[] {
+  const stats: AttributeStat[] = [];
+
+  for (const shard of ATTRIBUTE_SHARDS.shards) {
+    const { attributeName, grants = [] } = shard;
+    if (grants.length === 0) continue;
+
+    const level = getAttributeLevel(shard, member);
+    if (level === 0) continue;
+
+    for (const { stat, value } of grants) {
+      stats.push({ stat, name: attributeName, value: value * level });
+    }
+  }
+
+  return stats;
+}
+
 // Lore shows stats to two places, so each value rounds the same way.
-function toTotals(sources: Partial<Record<StatSource, Stats>>): StatTotal[] {
+function toTotals(
+  sources: Partial<Record<StatSource, Stats>>,
+  attributes: AttributeStat[],
+): StatTotal[] {
   const totals: StatTotal[] = [];
 
   for (const { id: stat } of PLAYER_STATS) {
@@ -424,10 +446,17 @@ function toTotals(sources: Partial<Record<StatSource, Stats>>): StatTotal[] {
       if (value !== 0) bySource[source] = value;
     }
 
-    const values = Object.values(bySource);
+    const byAttribute: Record<string, number> = {};
+    for (const { stat: granted, name, value } of attributes) {
+      if (granted === stat) byAttribute[name] = roundTo(value);
+    }
+
+    const values = [...Object.values(bySource), ...Object.values(byAttribute)];
     if (values.length === 0) continue;
 
-    totals.push({ stat, total: roundTo(add(...values)), bySource });
+    const total: StatTotal = { stat, total: roundTo(add(...values)), bySource };
+    if (Object.keys(byAttribute).length > 0) total.byAttribute = byAttribute;
+    totals.push(total);
   }
 
   return totals;
@@ -550,6 +579,12 @@ export function getStats(
   if (Object.values(fortuneUpgrades).some((value) => value > 0)) {
     unverified.push("fortuneUpgrades");
   }
+  const attributes = getAttributeStats(member);
+  if (attributes.length > 0) unverified.push("attributes");
 
-  return { stats: toTotals(sources), weapon: weapon?.name, unverified };
+  return {
+    stats: toTotals(sources, attributes),
+    weapon: weapon?.name,
+    unverified,
+  };
 }

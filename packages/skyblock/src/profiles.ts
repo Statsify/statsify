@@ -56,14 +56,18 @@ function isNew(member: RawMember) {
   );
 }
 
-// A member who left keeps a deletion_notice, and an invitee is unconfirmed.
+const isPending = (member: RawMember) =>
+  member.profile?.coop_invitation?.confirmed === false;
+
+// Co-op sums count ex-members too, so this keeps everyone who accepted.
+export const getCoopMembers = (profile: RawProfile) =>
+  Object.entries(profile.members).filter(([, member]) => !isPending(member));
+
+// A member who left keeps a deletion_notice.
 export function isMember(profile: RawProfile, uuid: string) {
   const member = profile.members[uuid];
   if (!member) return false;
-  return (
-    member.profile?.deletion_notice === undefined &&
-    member.profile?.coop_invitation?.confirmed !== false
-  );
+  return member.profile?.deletion_notice === undefined && !isPending(member);
 }
 
 function getLevelColor(level: number) {
@@ -85,7 +89,7 @@ export function toProfileSummary(
     cuteName: profile.cute_name,
     gameMode: getGameMode(profile),
     selected: profile.selected ?? false,
-    members: Object.entries(profile.members).map(([id, other]) => ({
+    members: getCoopMembers(profile).map(([id, other]) => ({
       uuid: id,
       removed: other.profile?.deletion_notice !== undefined,
     })),

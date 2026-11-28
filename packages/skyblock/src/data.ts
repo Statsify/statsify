@@ -8,6 +8,9 @@
 
 // scripts/sync-data.ts generates these from the sources in NOTICE.md.
 import accessories from "./generated/accessories.json" with { type: "json" };
+import attributeShards from "./generated/attribute-shards.json" with { type: "json" };
+import bestiary from "./generated/bestiary.json" with { type: "json" };
+import collections from "./generated/collections.json" with { type: "json" };
 import essenceShops from "./generated/essenceshops.json" with { type: "json" };
 import garden from "./generated/garden.json" with { type: "json" };
 import hoppity from "./generated/hoppity.json" with { type: "json" };
@@ -21,12 +24,11 @@ import petTextures from "./generated/pet-textures.json" with { type: "json" };
 import pets from "./generated/pets.json" with { type: "json" };
 import powers from "./generated/powers.json" with { type: "json" };
 import sblevels from "./generated/sblevels.json" with { type: "json" };
-import seaCreatures from "./generated/sea-creatures.json" with { type: "json" };
 import stats from "./generated/stats.json" with { type: "json" };
 import textures from "./generated/textures-1.8.json" with { type: "json" };
 import trophyFish from "./generated/trophyfish.json" with { type: "json" };
 import { prettify } from "@statsify/util";
-import type { PowerStat, Rarity, Stats, TreeLayout } from "#types";
+import type { PlayerStat, PowerStat, Rarity, Stats, TreeLayout } from "#types";
 import type { Skill } from "./sections/skills.js";
 import type { SlayerBoss } from "./sections/slayers.js";
 
@@ -110,8 +112,82 @@ export const KUUDRA_KEYS = kuudraKeys as Record<string, string>;
 // Trophy fish names by the API's id, uppercased.
 export const TROPHY_FISH = trophyFish as Record<string, string>;
 
-// Each bestiary id is one level the sea creature spawns at.
-export const SEA_CREATURES = seaCreatures as { name: string; ids: string[] }[];
+interface BestiaryFamily {
+  name: string;
+  // Each level the mob spawns at has its own id.
+  ids: string[];
+  // Kills past the cap don't count.
+  cap: number;
+  bracket: string;
+}
+
+// A page with a category, like Fishing, is a subpage of it.
+export const BESTIARY = bestiary as {
+  // Each bracket lists the kills every tier needs.
+  brackets: Record<string, number[]>;
+  pages: { category?: string; name: string; families: BestiaryFamily[] }[];
+};
+
+// NEU files these sea creatures under their island's page.
+const ISLAND_SEA_CREATURES: Record<string, string[]> = {
+  "Lotus Atoll": [
+    "Atoll Croaker",
+    "Drowned Captain",
+    "Frog Prince",
+    "Lotus Guardian",
+    "Puddle Jumper",
+    "gorF",
+  ],
+  "Moonglade Marsh": [
+    "Bogged",
+    "Ent",
+    "Nessie",
+    "Stridersurfer",
+    "Tadgang",
+    "The Loch Emperor",
+    "Wetwing",
+  ],
+  "Torrhus Canyon": [
+    "Brineling",
+    "Giant Isopod",
+    "Haggard",
+    "Silkbreeze",
+    "Sprawl",
+    "Torrid",
+  ],
+};
+
+export const SEA_CREATURES = BESTIARY.pages.flatMap(
+  ({ name, category, families }) =>
+    category === "Fishing"
+      ? families
+      : families.filter((family) =>
+          ISLAND_SEA_CREATURES[name]?.includes(family.name),
+        ),
+);
+
+// Each item's tiers are the amounts they need, in the resource's order.
+export const COLLECTIONS = collections as {
+  id: string;
+  name: string;
+  items: { id: string; name: string; tiers: number[] }[];
+}[];
+
+// An attribute's levels cost its rarity's `levels`, in shards per level.
+export const ATTRIBUTE_SHARDS = attributeShards as {
+  levels: Record<Rarity, number[]>;
+  shards: {
+    id: string;
+    name: string;
+    attribute: string;
+    attributeName: string;
+    rarity: Rarity;
+    // The grants are level I's stats.
+    grants?: { stat: PlayerStat; value: number }[];
+    families?: string[];
+    unconsumable?: boolean;
+  }[];
+};
 
 // Crop milestones are keyed by the API's crop id, upgrades by level count.
 export const GARDEN = garden as {

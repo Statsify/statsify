@@ -27,6 +27,8 @@ import { toLevelCosts } from "#leveling";
 
 const REPO = "NotEnoughUpdates/NotEnoughUpdates-REPO";
 const HYPIXEL_SKILLS = "https://api.hypixel.net/v2/resources/skyblock/skills";
+const HYPIXEL_COLLECTIONS =
+  "https://api.hypixel.net/v2/resources/skyblock/collections";
 const SYNC_TIMEOUT = 60_000;
 
 const MINECRAFT_DATA = "PrismarineJS/minecraft-data";
@@ -500,6 +502,19 @@ interface HypixelSkill {
   levels: { totalExpRequired: number; unlocks?: string[] }[];
 }
 
+interface HypixelCollections {
+  name: string;
+  items: Record<string, { name: string; tiers: { amountRequired: number }[] }>;
+}
+
+async function fetchHypixelResource<T>(url: string) {
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(SYNC_TIMEOUT),
+  });
+  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
+  return (await response.json()) as T & { version: string };
+}
+
 interface NeuPerk {
   name: string;
   x: number;
@@ -665,6 +680,35 @@ interface NeuItem {
   nbttag: string;
 }
 
+const GRANT_TERM =
+  /^(?:([+-][\d,.]+)[^\s\w%]? )?(?:[^\s\w] )?([A-Z][\w']*(?: [A-Z][\w']*)*)$/;
+
+// An attribute's level I lore can grant stats, as in "Grants +0.5 Magic Find."
+function readAttributeGrants(lore: string[]) {
+  const lines = lore
+    .slice(1)
+    .map((line) => removeFormatting(normalizeItemText(line)).trim());
+  const end = lines.findIndex((line) => line.endsWith(".")) + 1;
+  const sentence = lines.slice(0, end).join(" ").replaceAll(/\s+/g, " ");
+  // A "which" clause only describes the stat.
+  const list = /^Grants (.+?)(?: which [^.]+)?\.$/.exec(sentence)?.[1];
+  if (!list) return;
+
+  const grants: { stat: PlayerStat; value: number }[] = [];
+  // One amount covers the stats after it, as in "+1 ☘ Mining, ☘ Farming".
+  let value: number | undefined;
+  for (const term of list.split(/,? and |, /)) {
+    const [, amount, name] = GRANT_TERM.exec(term) ?? [];
+    if (amount) value = Number(amount.replaceAll(",", ""));
+    const stat = name && parseStatName(name);
+    // A conditional grant, like one against some mobs, gives no stats.
+    if (!stat || value === undefined) return;
+    grants.push({ stat, value });
+  }
+
+  return grants;
+}
+
 const readJson = async <T>(path: string): Promise<T> =>
   JSON.parse(await readFile(join(dir, path), "utf8")) as T;
 
@@ -725,13 +769,232 @@ function readPowerStone(lore: string[]) {
   return [name.toLowerCase().replaceAll(" ", "_"), power] as const;
 }
 
+interface NeuFamily {
+  name: string;
+  mobs: string[];
+  cap: number;
+  bracket: number;
+  bracketType?: string;
+}
+
+interface NeuBestiaryPage {
+  name: string;
+  mobs?: NeuFamily[];
+  hasSubcategories?: boolean;
+  [subpage: string]: unknown;
+}
+
+interface NeuBestiary {
+  brackets: Record<string, number[]>;
+  bracketSets: Record<string, Record<string, number[]>>;
+}
+
+// The wiki gives these families a bracket and cap of their own.
+const WIKI_FAMILIES: Record<string, { bracket: string; cap: number }> = {
+  Beeheemoth: { bracket: "CRITTERS_4", cap: 50 },
+  Bogged: { bracket: "4", cap: 1000 },
+  "Cretan Bull": { bracket: "5", cap: 1000 },
+  Flipflopper: { bracket: "CRITTERS_2", cap: 100 },
+  "Grizzly Bear": { bracket: "CRITTERS_5", cap: 25 },
+  Honeyhog: { bracket: "CRITTERS_2", cap: 100 },
+  Lotum: { bracket: "CRITTERS_2", cap: 100 },
+  "Mithril Grubber": { bracket: "3", cap: 300 },
+  "Oasis Rabbit": { bracket: "3", cap: 300 },
+  "Oasis Sheep": { bracket: "3", cap: 300 },
+  "Queen Ant": { bracket: "2", cap: 50 },
+  "Stranded Nymph": { bracket: "5", cap: 1000 },
+  Tidetot: { bracket: "CRITTERS_4", cap: 50 },
+};
+
+// NEU's families leave out these kill ids, which the saves have.
+const MISSING_KILL_IDS: Record<string, string[]> = {
+  "Cretan Bull": ["cretan_bull_40", "cretan_bull_70", "cretan_bull_95"],
+  "Emerald Slime": ["emerald_slime_15"],
+  "Minos Hunter": ["minos_hunter_25", "minos_hunter_80"],
+  "Rain Slime": ["slimey_slime_50"],
+  "Siamese Lynx": ["siamese_lynx_55"],
+  "Stranded Nymph": [
+    "stranded_nymph_40",
+    "stranded_nymph_70",
+    "stranded_nymph_95",
+  ],
+  Zealot: ["zealot_special_enderman_55"],
+};
+
+function getBestiaryBrackets({ brackets, bracketSets }: NeuBestiary) {
+  const all: Record<string, number[]> = {
+    ...brackets,
+    // The wiki has 12, 16 and 20 kills for bracket 6's tiers 7 to 9.
+    6: [...brackets[6].slice(0, 6), 12, 16, 20, ...brackets[6].slice(9)],
+  };
+
+  for (const [set, tiers] of Object.entries(bracketSets)) {
+    for (const [n, kills] of Object.entries(tiers)) all[`${set}_${n}`] = kills;
+  }
+
+  return all;
+}
+
+// A family whose NEU bracket never reaches its cap ranks on the critter
+// bracket that ends at it.
+function getFamilyBracket(
+  brackets: Record<string, number[]>,
+  { name, cap }: { name: string; cap: number },
+  given: string,
+) {
+  if (brackets[given].includes(cap)) return given;
+
+  const ending = Object.keys(brackets).filter(
+    (key) => key.startsWith("CRITTERS_") && brackets[key].at(-1) === cap,
+  );
+  if (ending.length !== 1) {
+    throw new Error(
+      `bestiary: ${name}'s cap ${cap} isn't a step of ${given} or the end of one critter bracket`,
+    );
+  }
+
+  return ending[0];
+}
+
+function getBestiaryFamilies(
+  brackets: Record<string, number[]>,
+  { mobs = [] }: NeuBestiaryPage,
+) {
+  return mobs.map(
+    ({ name: formatted, mobs: ids, cap, bracket, bracketType }) => {
+      const name = removeFormatting(formatted);
+      const wiki = WIKI_FAMILIES[name];
+      const given = bracketType ? `${bracketType}_${bracket}` : String(bracket);
+      return {
+        name,
+        ids: [...ids, ...(MISSING_KILL_IDS[name] ?? [])],
+        cap: wiki?.cap ?? cap,
+        bracket:
+          wiki?.bracket ?? getFamilyBracket(brackets, { name, cap }, given),
+      };
+    },
+  );
+}
+
+const isBestiaryPage = (value: unknown): value is NeuBestiaryPage =>
+  typeof value === "object" && value !== null && "mobs" in value;
+
+// The Fishing and Critter Safari pages list their subpages under a category.
+async function readBestiary() {
+  const { brackets, bracketSets, ...islands } = await readJson<
+    NeuBestiary & Record<string, NeuBestiaryPage>
+  >("constants/bestiary.json");
+  const all = getBestiaryBrackets({ brackets, bracketSets });
+
+  const pages: { category?: string; name: string; families: unknown[] }[] = [];
+  for (const page of Object.values(islands)) {
+    if (!page.hasSubcategories) {
+      pages.push({ name: page.name, families: getBestiaryFamilies(all, page) });
+      continue;
+    }
+
+    for (const sub of Object.values(page).filter(isBestiaryPage)) {
+      pages.push({
+        category: page.name,
+        name: sub.name,
+        families: getBestiaryFamilies(all, sub),
+      });
+    }
+  }
+
+  return { brackets: all, pages };
+}
+
+interface NeuAttributeShards {
+  attribute_levelling: Record<string, number[]>;
+  unconsumable_attributes: string[];
+  attributes: {
+    bazaarName: string;
+    displayName: string;
+    rarity: string;
+    internalName: string;
+    abilityName: string;
+    family?: string[];
+  }[];
+}
+
+// NEU still has the old names of these three attributes.
+const ATTRIBUTE_NAMES: Record<string, string> = {
+  almighty: "Almighty",
+  pretty_clothes: "Pretty Clothes",
+  visitor_bait: "Visitor Bait",
+};
+
+// NEU's families predate the 2026-08-24 change, which also dropped Elusive.
+const SHARD_FAMILIES: Record<string, string[]> = {
+  CHOCOBUN: ["Crime"],
+  GOLDOLOT: ["Amphibian", "Axolotl"],
+  PACKRAT_SKULL: ["Cave Dweller"],
+  QUEEN_SNAKE: ["Reptile", "Scaled", "Serpent"],
+  SEA_SERPENT: ["Amphibian", "Eel", "Serpent"],
+  SEPIALOT: ["Amphibian", "Axolotl"],
+  TITANOBOA: ["Reptile", "Scaled", "Serpent"],
+  WATER_SNAKE: ["Reptile", "Scaled", "Serpent"],
+  WOODLOUSE: ["Bug", "Crustacean", "Trash Lover"],
+};
+
+// shards.owned keys a shard by its bazaar name, and attributes.stacks keys an
+// attribute by the internal name.
+async function readAttributeShards() {
+  const shards = await readJson<NeuAttributeShards>(
+    "constants/attribute_shards.json",
+  );
+
+  const read = shards.attributes.map(async (shard) => {
+    const { bazaarName, displayName, internalName, family = [] } = shard;
+    const { lore = [] } = await readJson<NeuItem>(
+      join("items", `${internalName}.json`),
+    );
+    // Rainbug's bazaar name is empty, so its shard id is its name.
+    const id = bazaarName
+      ? bazaarName.replace(/^SHARD_/, "")
+      : displayName.toUpperCase();
+    const attribute = /^ATTRIBUTE_SHARD_(\w+);\d+$/
+      .exec(internalName)![1]
+      .toLowerCase();
+    const families =
+      SHARD_FAMILIES[id] ?? family.filter((name) => name !== "Elusive");
+    const unconsumable = shards.unconsumable_attributes.includes(bazaarName);
+
+    return {
+      id,
+      name: displayName,
+      attribute,
+      attributeName: ATTRIBUTE_NAMES[attribute] ?? shard.abilityName,
+      rarity: shard.rarity,
+      grants: readAttributeGrants(lore),
+      families: families.length > 0 ? families : undefined,
+      unconsumable: unconsumable || undefined,
+    };
+  });
+
+  return {
+    levels: shards.attribute_levelling,
+    shards: await Promise.all(read),
+  };
+}
+
 try {
   // NEU's Runecrafting table is wrong at five levels, so skills use Hypixel's.
-  const [response, skillsResponse] = await Promise.all([
+  const [
+    response,
+    { skills, version: skillsVersion },
+    { collections, version: collectionsVersion },
+  ] = await Promise.all([
     fetch(`https://codeload.github.com/${REPO}/tar.gz/${sha}`, {
       signal: AbortSignal.timeout(SYNC_TIMEOUT),
     }),
-    fetch(HYPIXEL_SKILLS, { signal: AbortSignal.timeout(SYNC_TIMEOUT) }),
+    fetchHypixelResource<{ skills: Record<string, HypixelSkill> }>(
+      HYPIXEL_SKILLS,
+    ),
+    fetchHypixelResource<{ collections: Record<string, HypixelCollections> }>(
+      HYPIXEL_COLLECTIONS,
+    ),
   ]);
   if (!response.ok) throw new Error(`codeload answered ${response.status}`);
   await writeFile(
@@ -742,16 +1005,23 @@ try {
     cwd: dir,
   });
 
-  if (!skillsResponse.ok)
-    throw new Error(`${HYPIXEL_SKILLS} answered ${skillsResponse.status}`);
-  const { skills, version: skillsVersion } = (await skillsResponse.json()) as {
-    skills: Record<string, HypixelSkill>;
-    version: string;
-  };
   const xpTable = (skill: string) =>
     toLevelCosts(
       skills[skill].levels.map(({ totalExpRequired }) => totalExpRequired),
     );
+
+  await write(
+    "collections.json",
+    Object.entries(collections).map(([category, { name, items }]) => ({
+      id: category,
+      name,
+      items: Object.entries(items).map(([id, item]) => ({
+        id,
+        name: item.name,
+        tiers: item.tiers.map(({ amountRequired }) => amountRequired),
+      })),
+    })),
+  );
 
   const leveling = await readJson<Record<string, unknown>>(
     "constants/leveling.json",
@@ -812,15 +1082,8 @@ try {
     ),
   );
 
-  const bestiary = await readJson<{
-    fishing: Record<string, { mobs?: { name: string; mobs: string[] }[] }>;
-  }>("constants/bestiary.json");
-  await write(
-    "sea-creatures.json",
-    Object.values(bestiary.fishing)
-      .flatMap((page) => page.mobs ?? [])
-      .map(({ name, mobs }) => ({ name: removeFormatting(name), ids: mobs })),
-  );
+  await write("bestiary.json", await readBestiary());
+  await write("attribute-shards.json", await readAttributeShards());
 
   // player_data.perks spells NEU's eagle_advantage as eagles_advantage.
   const apiPerkIds: Record<string, string> = {
@@ -1225,12 +1488,13 @@ try {
     repo: `https://github.com/${REPO}`,
     sha,
     skills: { url: HYPIXEL_SKILLS, version: skillsVersion },
+    collections: { url: HYPIXEL_COLLECTIONS, version: collectionsVersion },
     syncedAt: new Date().toISOString(),
   });
   const license = await readFile(join(dir, "LICENSE"), "utf8");
   await writeFile(
     new URL("NOTICE.md", out),
-    `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (https://github.com/${MINECRAFT_DATA}) at ${MINECRAFT_DATA_SHA}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${HYPIXEL_SKILLS}), version ${skillsVersion}.\n\nThe other JSON files here, and the base, slayer and pet score tables in stats.json, are derived from NEU-REPO (https://github.com/${REPO}) at ${sha}, under its MIT license:\n\n${license}`,
+    `textures-1.8.json takes 1.8's block and item ids, names and variants from minecraft-data (https://github.com/${MINECRAFT_DATA}) at ${MINECRAFT_DATA_SHA}, which its README licenses as MIT.\n\nThe skill XP tables in leveling.json and the skill stats in stats.json come from Hypixel's SkyBlock skills resource (${HYPIXEL_SKILLS}), version ${skillsVersion}. collections.json comes from Hypixel's SkyBlock collections resource (${HYPIXEL_COLLECTIONS}), version ${collectionsVersion}.\n\nThe other JSON files here, and the base, slayer and pet score tables in stats.json, are derived from NEU-REPO (https://github.com/${REPO}) at ${sha}, under its MIT license:\n\n${license}`,
   );
 
   console.log(

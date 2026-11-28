@@ -9,6 +9,7 @@
 import { LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { fractionalLevel, getLevel } from "#leveling";
+import { getCoopMembers } from "../profiles.js";
 import type { RawMember, RawProfile } from "#raw";
 import type { SkillLevel, SkillsSection } from "#types";
 
@@ -81,15 +82,13 @@ export function getSkills(
   if (!member.player_data?.experience) return null;
 
   // Social XP is shared, so it sums every member who accepted the invite.
-  const accepted = Object.values(profile.members).filter(
-    (other) => other.profile?.coop_invitation?.confirmed !== false,
-  );
+  const accepted = getCoopMembers(profile);
 
   const skills = Object.fromEntries(
     SKILLS.map((skill): [string, SkillLevel] => {
       const xp =
         skill === "social"
-          ? add(...accepted.map((other) => getSkillXp(other, skill)))
+          ? add(...accepted.map(([, other]) => getSkillXp(other, skill)))
           : getSkillXp(member, skill);
       const level = getLevel(xp, getXpTable(skill), getLevelCap(skill, member));
       return [

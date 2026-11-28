@@ -1,4 +1,8 @@
 {
+  "collections": {
+    "url": "https://api.hypixel.net/v2/resources/skyblock/collections",
+    "version": "0.27.2.25"
+  },
   "minecraftData": {
     "repo": "https://github.com/PrismarineJS/minecraft-data",
     "sha": "15411f050f040e4c5df09352a75a9912ad8c3eeb"
@@ -9,5 +13,5 @@
     "url": "https://api.hypixel.net/v2/resources/skyblock/skills",
     "version": "0.27.2.25"
   },
-  "syncedAt": "2026-11-07T20:58:48.369Z"
+  "syncedAt": "2026-11-08T02:13:34.930Z"
 }

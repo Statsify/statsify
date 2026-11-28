@@ -67,6 +67,9 @@ export const fractionalLevel = ({ level, progress, xpForNext }: Level) =>
 export const toLevelCosts = (thresholds: number[]) =>
   thresholds.map((threshold, i) => threshold - (thresholds[i - 1] ?? 0));
 
+export const countTiersReached = (amount: number, thresholds: number[]) =>
+  thresholds.filter((needed) => amount >= needed).length;
+
 // SkyBlock levels have no cap, so maxLevel is always the next one.
 export function toSkyBlockLevel(xp: number): Level {
   const level = Math.floor(xp / SKYBLOCK_XP_PER_LEVEL);
@@ -236,6 +239,15 @@ if (import.meta.vitest) {
         active: false,
       };
       expect(getPetLevel(bingo).level).toBe(100);
+    });
+  });
+
+  suite("countTiersReached", () => {
+    it("should count the thresholds an amount reaches", () => {
+      expect(countTiersReached(0, [50, 100, 250])).toBe(0);
+      expect(countTiersReached(99, [50, 100, 250])).toBe(1);
+      expect(countTiersReached(100, [50, 100, 250])).toBe(2);
+      expect(countTiersReached(1e9, [50, 100, 250])).toBe(3);
     });
   });
 }

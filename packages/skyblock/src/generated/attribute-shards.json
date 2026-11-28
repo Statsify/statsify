@@ -1,0 +1,3454 @@
+{
+  "levels": {
+    "COMMON": [
+      1,
+      3,
+      5,
+      6,
+      7,
+      8,
+      10,
+      14,
+      18,
+      24
+    ],
+    "EPIC": [
+      1,
+      1,
+      2,
+      2,
+      3,
+      3,
+      4,
+      4,
+      5,
+      7
+    ],
+    "LEGENDARY": [
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      5
+    ],
+    "RARE": [
+      1,
+      2,
+      3,
+      3,
+      4,
+      4,
+      5,
+      6,
+      8,
+      12
+    ],
+    "UNCOMMON": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      12,
+      16
+    ]
+  },
+  "shards": [
+    {
+      "attribute": "nature_elemental",
+      "attributeName": "Nature Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "health",
+          "value": 2
+        }
+      ],
+      "id": "GROVE",
+      "name": "Grove",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "fog_elemental",
+      "attributeName": "Fog Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "intelligence",
+          "value": 1
+        }
+      ],
+      "id": "MIST",
+      "name": "Mist",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "light_elemental",
+      "attributeName": "Light Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "strength",
+          "value": 1
+        }
+      ],
+      "id": "FLASH",
+      "name": "Flash",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "nocturnal_animal",
+      "attributeName": "Nocturnal Animal",
+      "families": [
+        "Phantom"
+      ],
+      "id": "PHANPYRE",
+      "name": "Phanpyre",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "cheapstake",
+      "attributeName": "Cheapstake",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "COD",
+      "name": "Cod",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "animal_resistance",
+      "attributeName": "Animal Resistance",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "HOWLING_SPIRIT",
+      "name": "Howling Spirit",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "moonglade_mastery",
+      "attributeName": "Moonglade Mastery",
+      "families": [
+        "Phantom"
+      ],
+      "grants": [
+        {
+          "stat": "fig_fortune",
+          "value": 10
+        },
+        {
+          "stat": "mangrove_fortune",
+          "value": 10
+        }
+      ],
+      "id": "PHANFLARE",
+      "name": "Phanflare",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "aquatic_resistance",
+      "attributeName": "Aquatic Resistance",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "DUMPSTER_DIVER",
+      "name": "Dumpster Diver",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "experience",
+      "attributeName": "Experience",
+      "families": [
+        "Lapis"
+      ],
+      "id": "LAPIS_ZOMBIE",
+      "name": "Lapis Zombie",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "mossy_box",
+      "attributeName": "Mossy Box",
+      "families": [
+        "Shulker"
+      ],
+      "grants": [
+        {
+          "stat": "block_fortune",
+          "value": 5
+        }
+      ],
+      "id": "HIDEONLEAF",
+      "name": "Hideonleaf",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "forest_fishing",
+      "attributeName": "Forest Fishing",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "VERDANT",
+      "name": "Verdant",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "skeletal_ruler",
+      "attributeName": "Skeletal Ruler",
+      "id": "CHILL",
+      "name": "Chill",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "fortunate_farmer",
+      "attributeName": "Fortunate Farmer",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "grants": [
+        {
+          "stat": "farming_fortune",
+          "value": 2.5
+        }
+      ],
+      "id": "FLY",
+      "name": "Fly",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "hunter",
+      "attributeName": "Creature Fisher",
+      "grants": [
+        {
+          "stat": "sea_creature_chance",
+          "value": 0.5
+        }
+      ],
+      "id": "SEA_ARCHER",
+      "name": "Bogged",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "arachno_resistance",
+      "attributeName": "Arthropod Resistance",
+      "families": [
+        "Spider"
+      ],
+      "id": "VORACIOUS_SPIDER",
+      "name": "Voracious Spider",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "happy_box",
+      "attributeName": "Happy Box",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONGIFT",
+      "name": "Hideongift",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "yummy",
+      "attributeName": "Yummy",
+      "id": "BIRRIES",
+      "name": "Birries",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "undead_resistance",
+      "attributeName": "Undead Resistance",
+      "id": "TANK_ZOMBIE",
+      "name": "Tank Zombie",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "fig_sharpening",
+      "attributeName": "Fig Sharpening",
+      "families": [
+        "Bird",
+        "Trash Lover"
+      ],
+      "id": "CROW",
+      "name": "Crow",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "unity_is_strength",
+      "attributeName": "Unity is Strength",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "TADGANG",
+      "name": "Tadgang",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "ender_resistance",
+      "attributeName": "Ender Resistance",
+      "id": "ZEALOT",
+      "name": "Zealot",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "hitman_cooldown",
+      "attributeName": "Hitman Cooldown",
+      "families": [
+        "Crime"
+      ],
+      "id": "RABBIT_MAFIOSO",
+      "name": "Rabbit Mafioso",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "bucket_lover",
+      "attributeName": "Bucket Lover",
+      "families": [
+        "Axolotl",
+        "Amphibian"
+      ],
+      "id": "CORALOT",
+      "name": "Coralot",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "tree_lurker",
+      "attributeName": "Tree Lurker",
+      "families": [
+        "Bird"
+      ],
+      "id": "HARPY",
+      "name": "Harpy",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "visitor_bait",
+      "attributeName": "Visitor Bait",
+      "id": "MUDWORM",
+      "name": "Mudworm",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "lotus_trophy",
+      "attributeName": "Lotus Trophy",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "LOTUS_FISH",
+      "name": "Lotusfish",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "midas_touch",
+      "attributeName": "Midas Touch",
+      "id": "GOLDEN_GHOUL",
+      "name": "Golden Ghoul",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "crop_speed",
+      "attributeName": "Crop Speed",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "LOCUST",
+      "name": "Locust",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "forest_strength",
+      "attributeName": "Forest Strength",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "AZURE",
+      "name": "Azure",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "blazing_resistance",
+      "attributeName": "Blazing Resistance",
+      "id": "BEZAL",
+      "name": "Bezal",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "woodland_resistance",
+      "attributeName": "Woodland Resistance",
+      "families": [
+        "Bug"
+      ],
+      "id": "STAG_BEETLE",
+      "name": "Stag Beetle",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "fisherman",
+      "attributeName": "Fisherman",
+      "families": [
+        "Squid"
+      ],
+      "id": "NIGHT_SQUID",
+      "name": "Inkling",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "yog_membrane",
+      "attributeName": "Yog Membrane",
+      "grants": [
+        {
+          "stat": "heat_resistance",
+          "value": 1
+        }
+      ],
+      "id": "YOG",
+      "name": "Yog",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "owl_friend",
+      "attributeName": "Owl Friend",
+      "families": [
+        "Bird"
+      ],
+      "id": "BOREAL_OWL",
+      "name": "Boreal Owl",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "decent_karma",
+      "attributeName": "Decent Karma",
+      "families": [
+        "Reptile",
+        "Lizard"
+      ],
+      "id": "NEWT",
+      "name": "Newt",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "rotten_pickaxe",
+      "attributeName": "Rotten Pickaxe",
+      "families": [
+        "Cave Dweller"
+      ],
+      "grants": [
+        {
+          "stat": "mining_speed",
+          "value": 3
+        }
+      ],
+      "id": "MINER_ZOMBIE",
+      "name": "Miner Zombie",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "fortunate_miner",
+      "attributeName": "Fortunate Miner",
+      "families": [
+        "Cave Dweller"
+      ],
+      "grants": [
+        {
+          "stat": "mining_fortune",
+          "value": 2.5
+        }
+      ],
+      "id": "FLITTER",
+      "name": "Flitter",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "lake_fishing",
+      "attributeName": "Lake Fishing",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "TEPID",
+      "name": "Tepid",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "mythological_resistance",
+      "attributeName": "Mythological Resistance",
+      "id": "CRETAN_BULL",
+      "name": "Cretan Bull",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "queen_tracker",
+      "attributeName": "Queen Tracker",
+      "families": [
+        "Bug"
+      ],
+      "id": "ANT",
+      "name": "Ant",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "cave_fishing",
+      "attributeName": "Cave Fishing",
+      "families": [
+        "Tropical Fish",
+        "Cave Dweller"
+      ],
+      "id": "CAVERNFISH",
+      "name": "Cavernfish",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "frozen_resistance",
+      "attributeName": "Frozen Resistance",
+      "families": [
+        "Arctic"
+      ],
+      "id": "STRONGARM",
+      "name": "Strongarm",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "gold_box",
+      "attributeName": "Gold Box",
+      "families": [
+        "Shulker"
+      ],
+      "grants": [
+        {
+          "stat": "ore_fortune",
+          "value": 5
+        }
+      ],
+      "id": "HIDEONSUN",
+      "name": "Hideonsun",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "skeletal_resistance",
+      "attributeName": "Skeletal Resistance",
+      "id": "HAGGARD",
+      "name": "Haggard",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "honey_speed",
+      "attributeName": "Honey Speed",
+      "id": "HONEYHOG",
+      "name": "Honeyhog",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "subterranean_resistance",
+      "attributeName": "Subterranean Resistance",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "SHYWORM",
+      "name": "Shyworm",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "arcane_resistance",
+      "attributeName": "Arcane Resistance",
+      "id": "BRINELING",
+      "name": "Brineling",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "rabbit_youth",
+      "attributeName": "Rabbit Youth",
+      "families": [
+        "Crime"
+      ],
+      "id": "CHOCOBUN",
+      "name": "Chocobun",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "foraging_speed",
+      "attributeName": "Foraging Speed",
+      "id": "FOXTROT",
+      "name": "Foxtrot",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "torrhus_mastery",
+      "attributeName": "Torrhus Mastery",
+      "grants": [
+        {
+          "stat": "helix_fortune",
+          "value": 10
+        }
+      ],
+      "id": "FIREFOX",
+      "name": "Firefox",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "diurnal_animal",
+      "attributeName": "Diurnal Animal",
+      "id": "GROUNDHOG",
+      "name": "Groundhog",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "torrhus_diver",
+      "attributeName": "Torrhus Diver",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "TIMIL",
+      "name": "Timil",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "airborne_resistance",
+      "attributeName": "Airborne Resistance",
+      "families": [
+        "Bird"
+      ],
+      "id": "BLUE_JAY",
+      "name": "Blue Jay",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "chocolate_speed",
+      "attributeName": "Chocolate Speed",
+      "id": "BUNBUN",
+      "name": "Bunbun",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "honey_haul",
+      "attributeName": "Honey Haul",
+      "families": [
+        "Bug"
+      ],
+      "id": "HONEYBUZZ",
+      "name": "Honeybuzz",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "honey_luck",
+      "attributeName": "Honey Luck",
+      "families": [
+        "Bug"
+      ],
+      "id": "POLLENDART",
+      "name": "Pollendart",
+      "rarity": "COMMON"
+    },
+    {
+      "attribute": "earth_elemental",
+      "attributeName": "Earth Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "health",
+          "value": 2
+        }
+      ],
+      "id": "TERRA",
+      "name": "Terra",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "frost_elemental",
+      "attributeName": "Frost Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "intelligence",
+          "value": 1
+        }
+      ],
+      "id": "CRYO",
+      "name": "Cryo",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "wind_elemental",
+      "attributeName": "Wind Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "strength",
+          "value": 1
+        }
+      ],
+      "id": "AERO",
+      "name": "Aero",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "foraging_wisdom",
+      "attributeName": "Foraging Wisdom",
+      "families": [
+        "Panda"
+      ],
+      "grants": [
+        {
+          "stat": "foraging_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "PANDARAI",
+      "name": "Pandarai",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "excellent_karma",
+      "attributeName": "Excellent Karma",
+      "families": [
+        "Reptile",
+        "Lizard"
+      ],
+      "id": "LEVIATHAN",
+      "name": "Leviathan",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "echo_of_resistance",
+      "attributeName": "Echo of Resistance",
+      "families": [
+        "Reptile",
+        "Croco"
+      ],
+      "id": "ALLIGATOR",
+      "name": "Alligator",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "berry_mogul",
+      "attributeName": "Berry Mogul",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "FENLORD",
+      "name": "Fenlord",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "pickaxe_cooldown",
+      "attributeName": "Pickaxe Cooldown",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "ABYSSAL_MINER",
+      "name": "Abyssal Miner",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "hunters_suppress",
+      "attributeName": "Hunter's Suppress",
+      "families": [
+        "Reptile",
+        "Serpent"
+      ],
+      "id": "BASILISK",
+      "name": "Basilisk",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "echo_of_atomized",
+      "attributeName": "Echo of Atomized",
+      "families": [
+        "Reptile",
+        "Scaled"
+      ],
+      "id": "IGUANA",
+      "name": "Iguana",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "lucky_rod",
+      "attributeName": "Lucky Rod",
+      "families": [
+        "Eel",
+        "Amphibian"
+      ],
+      "id": "MORAY_EEL",
+      "name": "Moray Eel",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "special_upgrades",
+      "attributeName": "Special Upgrades",
+      "id": "SPECIAL_ZEALOT",
+      "name": "Special Zealot",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "lunar_power",
+      "attributeName": "Lunar Power",
+      "families": [
+        "Bug"
+      ],
+      "id": "LUNAR_MOTH",
+      "name": "Lunar Moth",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "trophy_hunter",
+      "attributeName": "Trophy Hunter",
+      "families": [
+        "Eel",
+        "Amphibian"
+      ],
+      "grants": [
+        {
+          "stat": "trophy_chance",
+          "value": 2
+        }
+      ],
+      "id": "FIRE_EEL",
+      "name": "Fire Eel",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "deep_technique",
+      "attributeName": "Deep Technique",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "BAL",
+      "name": "Bal",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "sack_size",
+      "attributeName": "Sack Size",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONSACK",
+      "name": "Hideonsack",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "fishing_speed",
+      "attributeName": "Fishing Speed",
+      "grants": [
+        {
+          "stat": "fishing_speed",
+          "value": 3
+        }
+      ],
+      "id": "WATER_HYDRA",
+      "name": "Water Hydra",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "blazing",
+      "attributeName": "Infernal Ruler",
+      "id": "FLARE",
+      "name": "Flare",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "sky_high",
+      "attributeName": "Sky High",
+      "families": [
+        "Phantom"
+      ],
+      "id": "MURDERWING",
+      "name": "Murderwing",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "fishing_experience",
+      "attributeName": "Sea Wisdom",
+      "grants": [
+        {
+          "stat": "fishing_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "SEA_EMPEROR",
+      "name": "Loch Emperor",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "reborn",
+      "attributeName": "Reborn",
+      "id": "PRINCE",
+      "name": "Prince",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "echo_of_essence",
+      "attributeName": "Echo of Essence",
+      "families": [
+        "Reptile",
+        "Scaled"
+      ],
+      "id": "KOMODO_DRAGON",
+      "name": "Komodo Dragon",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "outstanding_fisher",
+      "attributeName": "Outstanding Fisher",
+      "families": [
+        "Crustacean"
+      ],
+      "id": "BLUE_CRAB",
+      "name": "Blue Crab",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "faker",
+      "attributeName": "Faker",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "MIMIC",
+      "name": "Mimic",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "slayer_progress",
+      "attributeName": "Slayer Progress",
+      "id": "WOLVERINE",
+      "name": "Wolverine",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "shell",
+      "attributeName": "Shell",
+      "families": [
+        "Reptile",
+        "Turtle"
+      ],
+      "id": "SHELLWISE",
+      "name": "Shellwise",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "warrior",
+      "attributeName": "Warrior",
+      "id": "BARBARIAN_DUKE_X",
+      "name": "Barbarian Duke X",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "why_not_more",
+      "attributeName": "Why Not More",
+      "families": [
+        "Bird"
+      ],
+      "id": "TOUCAN",
+      "name": "Toucan",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "echo_of_ruler",
+      "attributeName": "Echo of Ruler",
+      "families": [
+        "Reptile",
+        "Croco"
+      ],
+      "id": "CAIMAN",
+      "name": "Caiman",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "solar_power",
+      "attributeName": "Solar Power",
+      "families": [
+        "Bug"
+      ],
+      "id": "FIREFLY",
+      "name": "Firefly",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "echo_of_hunter",
+      "attributeName": "Echo of Hunter",
+      "families": [
+        "Amphibian",
+        "Eel",
+        "Serpent"
+      ],
+      "id": "SEA_SERPENT",
+      "name": "Sea Serpent",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "veil",
+      "attributeName": "Veil",
+      "families": [
+        "Cave Dweller"
+      ],
+      "grants": [
+        {
+          "stat": "true_defense",
+          "value": 1
+        }
+      ],
+      "id": "GHOST",
+      "name": "Ghost",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "mana_regeneration",
+      "attributeName": "Mana Regeneration",
+      "id": "XYZ",
+      "name": "XYZ",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "hunt_wisdom",
+      "attributeName": "Hunt Wisdom",
+      "families": [
+        "Reptile",
+        "Turtle"
+      ],
+      "grants": [
+        {
+          "stat": "hunting_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "LEATHERBACK",
+      "name": "Leatherback",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "cavern_wisdom",
+      "attributeName": "Cavern Wisdom",
+      "families": [
+        "Cave Dweller"
+      ],
+      "grants": [
+        {
+          "stat": "mining_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "CAVERNSHADE",
+      "name": "Cavernshade",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "garden_wisdom",
+      "attributeName": "Garden Wisdom",
+      "families": [
+        "Bug"
+      ],
+      "grants": [
+        {
+          "stat": "farming_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "DRAGONFLY",
+      "name": "Dragonfly",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "big_game_hunter",
+      "attributeName": "Mythological Tracker",
+      "id": "SPHINX",
+      "name": "Sphinx",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "king_of_greed",
+      "attributeName": "King of Greed",
+      "id": "KING_MINOS",
+      "name": "King Minos",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "ghastly_distraction",
+      "attributeName": "Ghastly Distraction",
+      "id": "DIVE_GHAST",
+      "name": "Dive Ghast",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "foragers_fortune",
+      "attributeName": "Forager's Fortune",
+      "id": "SILKBREEZE",
+      "name": "Silkbreeze",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "devouring_spread",
+      "attributeName": "Devouring Spread",
+      "families": [
+        "Cave Dweller"
+      ],
+      "grants": [
+        {
+          "stat": "gemstone_spread",
+          "value": 0.25
+        }
+      ],
+      "id": "GEMZIE",
+      "name": "Gemzie",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "divine_rabbit_luck",
+      "attributeName": "Divine Rabbit Luck",
+      "families": [
+        "Crime"
+      ],
+      "id": "RABBIT_GODMOTHER",
+      "name": "Rabbit Godmother",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "fishers_fortune",
+      "attributeName": "Fisher's Fortune",
+      "families": [
+        "Crustacean"
+      ],
+      "id": "GIANT_ISOPOD",
+      "name": "Giant Isopod",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "attack_speed",
+      "attributeName": "Attack Speed",
+      "families": [
+        "Demon"
+      ],
+      "grants": [
+        {
+          "stat": "attack_speed",
+          "value": 1
+        }
+      ],
+      "id": "BURNINGSOUL",
+      "name": "Inferno Demonlord",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "honey_refill",
+      "attributeName": "Honey Refill",
+      "families": [
+        "Bug"
+      ],
+      "id": "QUEEN_BEE",
+      "name": "Queen Bee",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "catacombs_explorer",
+      "attributeName": "Catacombs Explorer",
+      "families": [
+        "Demon"
+      ],
+      "id": "BONZO",
+      "name": "Bonzo",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "lathering_greed",
+      "attributeName": "Lathering Greed",
+      "families": [
+        "Bug"
+      ],
+      "id": "BEEHEEMOTH",
+      "name": "Beeheemoth",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "catacombs_graduate",
+      "attributeName": "Catacombs Graduate",
+      "id": "SCARF",
+      "name": "Scarf",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "dominance",
+      "attributeName": "Dominance",
+      "id": "THORN",
+      "name": "Thorn",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "social_wisdom",
+      "attributeName": "Social Wisdom",
+      "grants": [
+        {
+          "stat": "social_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "MOUNTAIN_GOAT",
+      "name": "Mountain Goat",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "glossy_fortune",
+      "attributeName": "Glossy Fortune",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "SCATHA",
+      "name": "Scatha",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "royal_riches",
+      "attributeName": "Royal Riches",
+      "families": [
+        "Poltergeist",
+        "Cave Dweller"
+      ],
+      "id": "NILBOG",
+      "name": "Nilbog",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "freezing_spread",
+      "attributeName": "Freezing Spread",
+      "families": [
+        "Arctic"
+      ],
+      "id": "LITTLEFOOT",
+      "name": "Littlefoot",
+      "rarity": "EPIC"
+    },
+    {
+      "attribute": "shadow_elemental",
+      "attributeName": "Shadow Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "health",
+          "value": 2
+        }
+      ],
+      "id": "TENEBRIS",
+      "name": "Tenebris",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "snow_elemental",
+      "attributeName": "Snow Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "intelligence",
+          "value": 1
+        }
+      ],
+      "id": "BLIZZARD",
+      "name": "Blizzard",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "storm_elemental",
+      "attributeName": "Storm Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "strength",
+          "value": 1
+        }
+      ],
+      "id": "TEMPEST",
+      "name": "Tempest",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "reptiloid",
+      "attributeName": "Reptiloid",
+      "families": [
+        "Reptile"
+      ],
+      "id": "CHAMELEON",
+      "name": "Chameleon",
+      "rarity": "LEGENDARY",
+      "unconsumable": true
+    },
+    {
+      "attribute": "loch_hook",
+      "attributeName": "Loch Hook",
+      "families": [
+        "Reptile"
+      ],
+      "id": "NESSIE",
+      "name": "Nessie",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "echo_of_echoes",
+      "attributeName": "Echo of Echoes",
+      "families": [
+        "Reptile",
+        "Croco"
+      ],
+      "id": "TIAMAT",
+      "name": "Tiamat",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "echo_of_wisdom",
+      "attributeName": "Echo of Wisdom",
+      "families": [
+        "Reptile",
+        "Scaled"
+      ],
+      "id": "WYVERN",
+      "name": "Wyvern",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "cloak_improvement",
+      "attributeName": "Cloak Improvement",
+      "families": [
+        "Reptile",
+        "Turtle"
+      ],
+      "id": "TORTOISE",
+      "name": "Tortoise",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "fortitude",
+      "attributeName": "Unlimited Fortitude",
+      "id": "ENDSTONE_PROTECTOR",
+      "name": "End Stone Protector",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "egg_finder",
+      "attributeName": "Egg Finder",
+      "families": [
+        "Crime"
+      ],
+      "id": "RABBIT_GODFATHER",
+      "name": "Rabbit Godfather",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "charmed",
+      "attributeName": "Charmed",
+      "families": [
+        "Eel",
+        "Amphibian"
+      ],
+      "grants": [
+        {
+          "stat": "charm_chance",
+          "value": 0.05
+        }
+      ],
+      "id": "NAGA",
+      "name": "Naga",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "book_wisdom",
+      "attributeName": "Book Wisdom",
+      "families": [
+        "Lapis"
+      ],
+      "grants": [
+        {
+          "stat": "enchanting_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "LAPIS_CREEPER",
+      "name": "Lapis Creeper",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "wart_eater",
+      "attributeName": "Wart Eater",
+      "families": [
+        "Bug"
+      ],
+      "id": "WARTYBUG",
+      "name": "Wartybug",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "payback",
+      "attributeName": "Payback",
+      "id": "SPIKE",
+      "name": "Spike",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "mending",
+      "attributeName": "Vitality",
+      "families": [
+        "Demon"
+      ],
+      "grants": [
+        {
+          "stat": "vitality",
+          "value": 1
+        }
+      ],
+      "id": "KRAKEN",
+      "name": "Kraken",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "maximal_torment",
+      "attributeName": "Unlimited Torment",
+      "id": "TAURUS",
+      "name": "Taurus",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "pity",
+      "attributeName": "Pity",
+      "families": [
+        "Demon"
+      ],
+      "id": "DAEMON",
+      "name": "Daemon",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "star_bait",
+      "attributeName": "Star Bait",
+      "families": [
+        "Demon"
+      ],
+      "id": "MOLTENFISH",
+      "name": "Moltenfish",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "echo_of_tracking",
+      "attributeName": "Echo of Tracking",
+      "families": [
+        "Demon",
+        "Elemental"
+      ],
+      "id": "DOOMSPIRAL",
+      "name": "Doomspiral",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "splendor",
+      "attributeName": "Splendor",
+      "families": [
+        "Bird"
+      ],
+      "id": "MACAW",
+      "name": "Macaw",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "life_regeneration",
+      "attributeName": "Help From Above",
+      "grants": [
+        {
+          "stat": "health_regen",
+          "value": 1.25
+        }
+      ],
+      "id": "SHINYFISH",
+      "name": "Shinyfish",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "wings_of_destiny",
+      "attributeName": "Wings of Destiny",
+      "families": [
+        "Demon",
+        "Bird"
+      ],
+      "id": "ANANKE",
+      "name": "Ananke",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "tuning_box",
+      "attributeName": "Tuning Box",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONBOX",
+      "name": "Hideonbox",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "double_hook",
+      "attributeName": "Crimson Hook",
+      "families": [
+        "Creation"
+      ],
+      "id": "LORD_JAWBUS",
+      "name": "Lord Jawbus",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "matriarch_cubs",
+      "attributeName": "Matriarch Cubs",
+      "families": [
+        "Demon"
+      ],
+      "id": "HELLWISP",
+      "name": "Hellwisp",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "magic_find",
+      "attributeName": "Magic Find",
+      "grants": [
+        {
+          "stat": "magic_find",
+          "value": 0.5
+        }
+      ],
+      "id": "CINDER_BAT",
+      "name": "Cinderbat",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "hunter_karma",
+      "attributeName": "Hunter's Karma",
+      "families": [
+        "Reptile",
+        "Turtle"
+      ],
+      "grants": [
+        {
+          "stat": "hunting_fortune",
+          "value": 1
+        }
+      ],
+      "id": "MEGALITH",
+      "name": "Megalith",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "elite",
+      "attributeName": "Elite",
+      "families": [
+        "Dragon"
+      ],
+      "id": "POWER_DRAGON",
+      "name": "Power Dragon",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "pet_wisdom",
+      "attributeName": "Pet Wisdom",
+      "families": [
+        "Bird"
+      ],
+      "grants": [
+        {
+          "stat": "taming_wisdom",
+          "value": 0.5
+        }
+      ],
+      "id": "CONDOR",
+      "name": "Condor",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "starborn",
+      "attributeName": "Starborn",
+      "id": "SUN_FISH",
+      "name": "Sun Fish",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "veteran",
+      "attributeName": "Veteran",
+      "families": [
+        "Dragon"
+      ],
+      "grants": [
+        {
+          "stat": "combat_wisdom",
+          "value": 1
+        }
+      ],
+      "id": "APEX_DRAGON",
+      "name": "Apex Dragon",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "rare_bird",
+      "attributeName": "Tracking",
+      "families": [
+        "Bird"
+      ],
+      "grants": [
+        {
+          "stat": "tracking",
+          "value": 0.5
+        }
+      ],
+      "id": "DODO",
+      "name": "Dodo",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "queenly_echo",
+      "attributeName": "Queenly Echo",
+      "families": [
+        "Reptile",
+        "Scaled",
+        "Serpent"
+      ],
+      "id": "QUEEN_SNAKE",
+      "name": "Queen Snake",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "unlimited_power",
+      "attributeName": "Unlimited Power",
+      "families": [
+        "Demon",
+        "Dragon"
+      ],
+      "id": "JORMUNG",
+      "name": "Jormung",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "treasure_fisher",
+      "attributeName": "Treasure Fisher",
+      "families": [
+        "Crustacean"
+      ],
+      "grants": [
+        {
+          "stat": "treasure_chance",
+          "value": 0.1
+        }
+      ],
+      "id": "GHOST_CRAB",
+      "name": "Ghost Crab",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "unlimited_energy",
+      "attributeName": "Unlimited Energy",
+      "families": [
+        "Demon",
+        "Dragon"
+      ],
+      "id": "ETHERDRAKE",
+      "name": "Etherdrake",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "tough_claws",
+      "attributeName": "Tough Claws",
+      "id": "GRIZZLY_BEAR",
+      "name": "Grizzly Bear",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "ultimate_dna",
+      "attributeName": "Ultimate DNA",
+      "grants": [
+        {
+          "stat": "mining_fortune",
+          "value": 1
+        },
+        {
+          "stat": "farming_fortune",
+          "value": 1
+        },
+        {
+          "stat": "foraging_fortune",
+          "value": 1
+        }
+      ],
+      "id": "GALAXY_FISH",
+      "name": "Galaxy Fish",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "almighty",
+      "attributeName": "Almighty",
+      "families": [
+        "Demon",
+        "Dragon"
+      ],
+      "id": "MOLTHORN",
+      "name": "Molthorn",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "echo_of_elemental",
+      "attributeName": "Echo of Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "id": "STARBORN",
+      "name": "Starborn",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "cocoon_chance",
+      "attributeName": "Cocoon Chance",
+      "families": [
+        "Spider"
+      ],
+      "id": "PRIMORDIAL",
+      "name": "Primordial",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "groovy_radar",
+      "attributeName": "Groovy Radar",
+      "families": [
+        "Bug"
+      ],
+      "id": "COCOALEECH",
+      "name": "Cocoaleech",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "bayou_biter",
+      "attributeName": "Bayou Hook",
+      "families": [
+        "Reptile",
+        "Scaled",
+        "Serpent"
+      ],
+      "id": "TITANOBOA",
+      "name": "Titanoboa",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "miracle_chance",
+      "attributeName": "Miracle Chance",
+      "families": [
+        "Miracle",
+        "Bug"
+      ],
+      "id": "RAINBUG",
+      "name": "Rainbug",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "flora",
+      "attributeName": "Unique Bonus",
+      "id": "FLORA",
+      "name": "Flora",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "slayer_discount",
+      "attributeName": "Slayer Discount",
+      "id": "PARAGON",
+      "name": "Paragon",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "greenhouse_speed",
+      "attributeName": "Greenhouse Speed",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "TIMESTALK_CLONE",
+      "name": "Timestalk Clone",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "cold_resistance",
+      "attributeName": "Cold Resistance",
+      "families": [
+        "Arctic"
+      ],
+      "grants": [
+        {
+          "stat": "cold_resistance",
+          "value": 0.5
+        }
+      ],
+      "id": "WUMPA",
+      "name": "Wumpa",
+      "rarity": "LEGENDARY"
+    },
+    {
+      "attribute": "forest_elemental",
+      "attributeName": "Forest Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "health",
+          "value": 2
+        }
+      ],
+      "id": "SYLVAN",
+      "name": "Sylvan",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "torrent_elemental",
+      "attributeName": "Torrent Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "intelligence",
+          "value": 1
+        }
+      ],
+      "id": "CASCADE",
+      "name": "Cascade",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "lightning_elemental",
+      "attributeName": "Lightning Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "strength",
+          "value": 1
+        }
+      ],
+      "id": "BOLT",
+      "name": "Bolt",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "animal_expertise",
+      "attributeName": "Animal Expertise",
+      "families": [
+        "Panda"
+      ],
+      "grants": [
+        {
+          "stat": "foraging_fortune",
+          "value": 10
+        }
+      ],
+      "id": "BAMBLOOM",
+      "name": "Bambloom",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "frog_legs",
+      "attributeName": "Frog Legs",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "TOAD",
+      "name": "Toad",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "ice_essence",
+      "attributeName": "Essence of Ice",
+      "id": "GLACITE_WALKER",
+      "name": "Glacite Walker",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "beacon_zealot",
+      "attributeName": "Beacon Zealot",
+      "families": [
+        "Bug"
+      ],
+      "id": "BEACONMITE",
+      "name": "Beaconmite",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "great_karma",
+      "attributeName": "Great Karma",
+      "families": [
+        "Reptile",
+        "Lizard"
+      ],
+      "id": "LIZARD_KING",
+      "name": "Lizard King",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "hunters_pressure",
+      "attributeName": "Hunter's Pressure",
+      "families": [
+        "Reptile",
+        "Serpent"
+      ],
+      "id": "PYTHON",
+      "name": "Python",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "fancy_visit",
+      "attributeName": "Fancy Visit",
+      "families": [
+        "Bug"
+      ],
+      "id": "INVISIBUG",
+      "name": "Invisibug",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "moonglade_serendipity",
+      "attributeName": "Moonglade Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "PIRANHA",
+      "name": "Piranha",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "catacomb_box",
+      "attributeName": "Catacombs Box",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONGEON",
+      "name": "Hideongeon",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "bone_font",
+      "attributeName": "Bone Font",
+      "families": [
+        "Lapis"
+      ],
+      "id": "LAPIS_SKELETON",
+      "name": "Lapis Skeleton",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "crop_bug",
+      "attributeName": "Crop Bug",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "grants": [
+        {
+          "stat": "overbloom",
+          "value": 1
+        }
+      ],
+      "id": "CROPEETLE",
+      "name": "Beetle",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "humanoid_ruler",
+      "attributeName": "Undead Fortune",
+      "families": [
+        "Drowned"
+      ],
+      "id": "DROWNED",
+      "name": "Drowned",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "helix_sharpening",
+      "attributeName": "Helix Sharpening",
+      "families": [
+        "Bird"
+      ],
+      "id": "VULTURE",
+      "name": "Vulture",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "atomized_mithril",
+      "attributeName": "Atomized Mithril",
+      "id": "STAR_SENTRY",
+      "name": "Star Sentry",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "kuudra_box",
+      "attributeName": "Kuudra's Box",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONDRA",
+      "name": "Hideondra",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "dwarven_serendipity",
+      "attributeName": "Dwarven Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "ABYSSAL_LANTERN",
+      "name": "Abyssal Lanternfish",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "spider_essence",
+      "attributeName": "Essence of Arthropods",
+      "families": [
+        "Spider"
+      ],
+      "id": "ARACHNE",
+      "name": "Arachne",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "cookie_eater",
+      "attributeName": "Cookie Eater",
+      "families": [
+        "Bug"
+      ],
+      "id": "BITBUG",
+      "name": "Bitbug",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "crimson_essence",
+      "attributeName": "Essence of Crimson",
+      "id": "LAVA_LEECH",
+      "name": "Lava Leech",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "undead_essence",
+      "attributeName": "Essence of Unliving",
+      "id": "REVENANT",
+      "name": "Revenant",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "catacombs_cap",
+      "attributeName": "Catacombs Cap",
+      "id": "FOLF",
+      "name": "Folf",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "crystal_serendipity",
+      "attributeName": "Crystal Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "SILENTDEPTH",
+      "name": "Silentdepth",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "deadeye",
+      "attributeName": "Deadeye",
+      "id": "SKELETOR",
+      "name": "Skeletor",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "atomized_crystals",
+      "attributeName": "Atomized Crystals",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "THYST",
+      "name": "Thyst",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "diamond_frog",
+      "attributeName": "Diamond Frog",
+      "families": [
+        "Squid"
+      ],
+      "id": "SEA_SHINE",
+      "name": "Seashine",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "quartz_speed",
+      "attributeName": "Quartz Speed",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "QUARTZFANG",
+      "name": "Quartzfang",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "accessory_size",
+      "attributeName": "Accessory Size",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONRING",
+      "name": "Hideonring",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "winter_serendipity",
+      "attributeName": "Winter's Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "SNOWFIN",
+      "name": "Snowfin",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "lifeline",
+      "attributeName": "Lifeline",
+      "id": "KADA_KNIGHT",
+      "name": "Kada Knight",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "chop",
+      "attributeName": "Chop",
+      "families": [
+        "Bird"
+      ],
+      "id": "HUMMINGBIRD",
+      "name": "Hummingbird",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "rabbit_crew",
+      "attributeName": "Rabbit Crew",
+      "id": "CARROT_KING",
+      "name": "Carrot King",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "breeze",
+      "attributeName": "Breeze",
+      "id": "WITHER_SPECTER",
+      "name": "Wither Spectre",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "battle_tracker",
+      "attributeName": "Battle Tracker",
+      "id": "BADGER",
+      "name": "Badger",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "ignition",
+      "attributeName": "Ignition",
+      "id": "MATCHO",
+      "name": "Matcho",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "pretty_clothes",
+      "attributeName": "Pretty Clothes",
+      "families": [
+        "Bug"
+      ],
+      "id": "LADYBUG",
+      "name": "Ladybug",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "extreme_pressure",
+      "attributeName": "Extreme Pressure",
+      "families": [
+        "Squid"
+      ],
+      "grants": [
+        {
+          "stat": "pressure_resistance",
+          "value": 1
+        }
+      ],
+      "id": "LUMISQUID",
+      "name": "Lumisquid",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "pure_reptile",
+      "attributeName": "Pure Reptile",
+      "families": [
+        "Reptile",
+        "Croco"
+      ],
+      "id": "CROCODILE",
+      "name": "Crocodile",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "animal_fortune",
+      "attributeName": "Animal Fortune",
+      "id": "WILD_HOG",
+      "name": "Wild Hog",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "berry_enjoyer",
+      "attributeName": "Berry Enjoyer",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "BULLFROG",
+      "name": "Bullfrog",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "forest_essence",
+      "attributeName": "Essence of the Forest",
+      "families": [
+        "Phantom"
+      ],
+      "id": "DREADWING",
+      "name": "Dreadwing",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "deep_diving",
+      "attributeName": "Deep Diving",
+      "grants": [
+        {
+          "stat": "respiration",
+          "value": 1
+        }
+      ],
+      "id": "JOYDIVE",
+      "name": "Joydive",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "atomized_glacite",
+      "attributeName": "Atomized Glacite",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "STALAGMIGHT",
+      "name": "Stalagmight",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "fungy_luck",
+      "attributeName": "Fungy Luck",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "FUNGLOOM",
+      "name": "Fungloom",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "eelastic",
+      "attributeName": "Eelastic",
+      "families": [
+        "Eel",
+        "Amphibian"
+      ],
+      "id": "EEL",
+      "name": "Eel",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "hunters_grasp",
+      "attributeName": "Hunter's Grasp",
+      "families": [
+        "Reptile",
+        "Serpent"
+      ],
+      "id": "KING_COBRA",
+      "name": "King Cobra",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "critter_fortune",
+      "attributeName": "Critter Fortune",
+      "id": "HEWVER",
+      "name": "Hewver",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "blazing_fortune",
+      "attributeName": "Blazing Fortune",
+      "id": "LAVA_FLAME",
+      "name": "Lava Flame",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "dragon_essence",
+      "attributeName": "Essence of Dragons",
+      "families": [
+        "Dragon"
+      ],
+      "id": "DRACONIC",
+      "name": "Draconic",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "battle_experience",
+      "attributeName": "Battle Experience",
+      "families": [
+        "Bird"
+      ],
+      "id": "FALCON",
+      "name": "Falcon",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "crimson_serendipity",
+      "attributeName": "Crimson Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "INFERNO_KOI",
+      "name": "Inferno Koi",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "wither_essence",
+      "attributeName": "Essence of Wither",
+      "id": "WITHER",
+      "name": "Wither",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "echo_of_sharpening",
+      "attributeName": "Echo of Sharpening",
+      "families": [
+        "Reptile",
+        "Scaled"
+      ],
+      "id": "GECKO",
+      "name": "Gecko",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "construct_fortune",
+      "attributeName": "Construct Fortune",
+      "families": [
+        "Creation"
+      ],
+      "id": "WIKI_TIKI",
+      "name": "Wiki Tiki",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "mythological_fortune",
+      "attributeName": "Mythological Fortune",
+      "id": "MINOTAUR",
+      "name": "Minotaur",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "cubic_fortune",
+      "attributeName": "Cubic Fortune",
+      "id": "HIVETHIEF",
+      "name": "Hivethief",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "boot_fisher",
+      "attributeName": "Boot Fisher",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "MAGGOT",
+      "name": "Maggot",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "sleepy_spread",
+      "attributeName": "Sleepy Spread",
+      "grants": [
+        {
+          "stat": "mining_spread",
+          "value": 1
+        }
+      ],
+      "id": "SNOOZLE",
+      "name": "Snoozle",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "flying_fortune",
+      "attributeName": "Flying Fortune",
+      "families": [
+        "Bird"
+      ],
+      "id": "PARAKEET",
+      "name": "Parakeet",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "thunder_speed",
+      "attributeName": "Thunder Speed",
+      "id": "THUNDER",
+      "name": "Thunder",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "cavernous_tracker",
+      "attributeName": "Cavernous Tracker",
+      "families": [
+        "Bug",
+        "Cave Dweller"
+      ],
+      "id": "ROCKMITE",
+      "name": "Rockmite",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "floor_fortune",
+      "attributeName": "Floor Fortune",
+      "id": "ANTEATER",
+      "name": "Anteater",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "scrap_chance",
+      "attributeName": "Scrap Chance",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "SCRAPPY",
+      "name": "Scrappy",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "elusive_fortune",
+      "attributeName": "Elusive Fortune",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "HIDEYHO",
+      "name": "Hideyho",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "great_treasure",
+      "attributeName": "Great Treasure",
+      "families": [
+        "Crustacean"
+      ],
+      "id": "MANTIS_SHRIMP",
+      "name": "Mantis Shrimp",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "subterranean_fortune",
+      "attributeName": "Subterranean Fortune",
+      "families": [
+        "Reptile",
+        "Lizard"
+      ],
+      "id": "CHUCKWALLA",
+      "name": "Chuckwalla",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "woodland_fortune",
+      "attributeName": "Woodland Fortune",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONFLOOR",
+      "name": "Hideonfloor",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "greedy_goblin",
+      "attributeName": "Greedy Goblin",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "GIMMIEGOLD",
+      "name": "Gimmiegold",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "frozen_fortune",
+      "attributeName": "Frozen Fortune",
+      "families": [
+        "Arctic"
+      ],
+      "id": "BILLYGOAT",
+      "name": "Billygoat",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "arcane_fortune",
+      "attributeName": "Arcane Fortune",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONWALL",
+      "name": "Hideonwall",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "underwater_tracker",
+      "attributeName": "Underwater Tracker",
+      "id": "NOZZLENOSE",
+      "name": "Nozzlenose",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "refined_luck",
+      "attributeName": "Refined Luck",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "STONEWORM",
+      "name": "Stoneworm",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "foraging_tracker",
+      "attributeName": "Foraging Tracker",
+      "families": [
+        "Panda"
+      ],
+      "id": "FLUFFLING",
+      "name": "Fluffling",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "torrhus_serendipity",
+      "attributeName": "Torrhus Serendipity",
+      "families": [
+        "Treasure Fish"
+      ],
+      "id": "STINGRAY",
+      "name": "Stingray",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "mutation_serendipity",
+      "attributeName": "Mutation Serendipity",
+      "id": "ZOMBUDDY",
+      "name": "Zombuddy",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "forest_serendipity",
+      "attributeName": "Forest Serendipity",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "PUCK",
+      "name": "Puck",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "essence_of_fossils",
+      "attributeName": "Essence of Fossils",
+      "families": [
+        "Dinosaur"
+      ],
+      "id": "TROODON",
+      "name": "Troodon",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "arthropod_fortune",
+      "attributeName": "Arthropod Fortune",
+      "families": [
+        "Spider"
+      ],
+      "id": "BLACK_WIDOW",
+      "name": "Black Widow",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "atomized_whispers",
+      "attributeName": "Atomized Whispers",
+      "id": "PANGOLIN",
+      "name": "Pangolin",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "aquatic_fortune",
+      "attributeName": "Aquatic Fortune",
+      "families": [
+        "Bug"
+      ],
+      "id": "GIANT_WATER_BUG",
+      "name": "Giant Water Bug",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "rekindle",
+      "attributeName": "Rekindle",
+      "id": "MURKBAT",
+      "name": "Murkbat",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "echo_of_buckets",
+      "attributeName": "Echo of Buckets",
+      "families": [
+        "Amphibian",
+        "Axolotl"
+      ],
+      "id": "GOLDOLOT",
+      "name": "Goldolot",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "mythic_rabbit_luck",
+      "attributeName": "Mythic Rabbit Luck",
+      "families": [
+        "Crime"
+      ],
+      "id": "RABBIT_NEIGHBOR",
+      "name": "Rabbit Neighbor",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "first_sweep",
+      "attributeName": "First Sweep",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "TORRID",
+      "name": "Torrid",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "axe_cooldown",
+      "attributeName": "Axe Cooldown",
+      "id": "DRYBARK",
+      "name": "Drybark",
+      "rarity": "RARE"
+    },
+    {
+      "attribute": "wood_elemental",
+      "attributeName": "Wood Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "health",
+          "value": 2
+        }
+      ],
+      "id": "BRAMBLE",
+      "name": "Bramble",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "pest_cooldown",
+      "attributeName": "Pest Cooldown",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "MOTH",
+      "name": "Moth",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "enchanted_farmer",
+      "attributeName": "Enchanted Farmer",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "MOSQUITO",
+      "name": "Mosquito",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "legendary_rabbit_luck",
+      "attributeName": "Legendary Rabbit Luck",
+      "families": [
+        "Crime"
+      ],
+      "id": "RABBIT_CAT",
+      "name": "Rabbit Cat",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "water_elemental",
+      "attributeName": "Water Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "intelligence",
+          "value": 1
+        }
+      ],
+      "id": "TIDE",
+      "name": "Tide",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "stone_elemental",
+      "attributeName": "Stone Elemental",
+      "families": [
+        "Elemental"
+      ],
+      "grants": [
+        {
+          "stat": "strength",
+          "value": 1
+        }
+      ],
+      "id": "QUAKE",
+      "name": "Quake",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "fig_collector",
+      "attributeName": "Fig Collector",
+      "families": [
+        "Bird"
+      ],
+      "id": "SPARROW",
+      "name": "Sparrow",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "gold_bait",
+      "attributeName": "Gold Bait",
+      "id": "GOLDFIN",
+      "name": "Goldfin",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mountain_climber",
+      "attributeName": "Mountain Climber",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "TROGLOBYTE",
+      "name": "Troglobyte",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "bigger_box",
+      "attributeName": "Bigger Box",
+      "families": [
+        "Shulker"
+      ],
+      "id": "HIDEONCAVE",
+      "name": "Hideoncave",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "good_karma",
+      "attributeName": "Good Karma",
+      "families": [
+        "Reptile",
+        "Lizard"
+      ],
+      "id": "SALAMANDER",
+      "name": "Salamander",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "echo_of_boxes",
+      "attributeName": "Echo of Boxes",
+      "families": [
+        "Reptile",
+        "Serpent"
+      ],
+      "id": "CUBOA",
+      "name": "Cuboa",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "pest_luck",
+      "attributeName": "Pest Luck",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "PEST",
+      "name": "Field Mouse",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "forest_trap",
+      "attributeName": "Forest Trap",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "MOSSYBIT",
+      "name": "Mossybit",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mana_steal",
+      "attributeName": "Mana Steal",
+      "id": "RAIN_SLIME",
+      "name": "Rain Slime",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "humanoid_ruler_new",
+      "attributeName": "Humanoid Ruler",
+      "families": [
+        "Drowned"
+      ],
+      "id": "WETWING",
+      "name": "Wetwing",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "dragon_shortbow_improvement",
+      "attributeName": "Dragon Shortbow Improvement",
+      "id": "SEER",
+      "name": "Seer",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mangrove_sharpening",
+      "attributeName": "Mangrove Sharpening",
+      "families": [
+        "Bird"
+      ],
+      "id": "HERON",
+      "name": "Heron",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "witchs_fortune",
+      "attributeName": "Witch's Fortune",
+      "id": "SEA_WITCH",
+      "name": "Sea Witch",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "speed",
+      "attributeName": "Speed",
+      "grants": [
+        {
+          "stat": "speed",
+          "value": 1
+        }
+      ],
+      "id": "OBSIDIAN_DEFENDER",
+      "name": "Obsidian Defender",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "pest_fortune",
+      "attributeName": "Pest Fortune",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "CRICKET",
+      "name": "Cricket",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "lost_and_found",
+      "attributeName": "Lost and Found",
+      "id": "SALMON",
+      "name": "Salmon",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "hunters_fangs",
+      "attributeName": "Hunter's Fang",
+      "families": [
+        "Reptile",
+        "Serpent"
+      ],
+      "id": "VIPER",
+      "name": "Viper",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "insect_power",
+      "attributeName": "Pest Ruler",
+      "families": [
+        "Bug"
+      ],
+      "id": "PRAYING_MANTIS",
+      "name": "Praying Mantis",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "lily_tracker",
+      "attributeName": "Lily Tracker",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "LOTUM",
+      "name": "Lotum",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "undead",
+      "attributeName": "Undead Ruler",
+      "id": "ZOMBIE_SOLDIER",
+      "name": "Zombie Soldier",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "strong_arms",
+      "attributeName": "Strong Arms",
+      "families": [
+        "Panda"
+      ],
+      "id": "BAMBULEAF",
+      "name": "Bambuleaf",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "dwarven_training",
+      "attributeName": "Dwarven Training",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "TREASURE_HOARDER",
+      "name": "Treasure Hoarder",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "life_recovery",
+      "attributeName": "Life Recovery",
+      "id": "SYCOPHANT",
+      "name": "Sycophant",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mangrove_collector",
+      "attributeName": "Mangrove Collector",
+      "families": [
+        "Bird",
+        "Trash Lover"
+      ],
+      "id": "SEAGULL",
+      "name": "Seagull",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "spirit_axe",
+      "attributeName": "Woodland Ruler",
+      "id": "ENT",
+      "name": "Ent",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "combo",
+      "attributeName": "Combo",
+      "id": "SOUL_OF_THE_ALPHA",
+      "name": "Soul of the Alpha",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "strong_legs",
+      "attributeName": "Strong Legs",
+      "families": [
+        "Panda"
+      ],
+      "id": "MOCHIBEAR",
+      "name": "Mochibear",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "infection",
+      "attributeName": "Infection",
+      "id": "MAGMA_SLUG",
+      "name": "Magma Slug",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "arachno",
+      "attributeName": "Arthropod Ruler",
+      "families": [
+        "Spider"
+      ],
+      "id": "FLAMING_SPIDER",
+      "name": "Flaming Spider",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "kat_favorite",
+      "attributeName": "Kat's Favorite",
+      "families": [
+        "Bird"
+      ],
+      "id": "KIWI",
+      "name": "Kiwi",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "ender",
+      "attributeName": "Ender Ruler",
+      "id": "BRUISER",
+      "name": "Zealot Bruiser",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "magmatic_ruler",
+      "attributeName": "Magmatic Ruler",
+      "families": [
+        "Drowned"
+      ],
+      "id": "STRIDER_SURFER",
+      "name": "Stridersurfer",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "battle_frog",
+      "attributeName": "Battle Frog",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "RANA",
+      "name": "Rana",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "infiltration",
+      "attributeName": "Infiltration",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "TERMITE",
+      "name": "Earthworm",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "golden_frog",
+      "attributeName": "Golden Frog",
+      "id": "FLIP_FLOPPER",
+      "name": "Flipflopper",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "frozen_ruler",
+      "attributeName": "Frozen Ruler",
+      "families": [
+        "Arctic"
+      ],
+      "id": "POLARIS",
+      "name": "Polaris",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "foraging_frog",
+      "attributeName": "Foraging Frog",
+      "families": [
+        "Frog",
+        "Amphibian"
+      ],
+      "id": "TREEFROG",
+      "name": "Treefrog",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "compost_speed",
+      "attributeName": "Compost Speed",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "BAYOU_SLUDGE",
+      "name": "Bayou Sludge",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "battle_arachnid",
+      "attributeName": "Battle Arachnid",
+      "families": [
+        "Spider"
+      ],
+      "id": "AREITA",
+      "name": "Areita",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "airborne_ruler",
+      "attributeName": "Airborne Ruler",
+      "families": [
+        "Bird"
+      ],
+      "id": "BLUEBIRD",
+      "name": "Bluebird",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "flexible_fisher",
+      "attributeName": "Flexible Fisher",
+      "id": "OSEDAX",
+      "name": "Osedax",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "arcane_ruler",
+      "attributeName": "Arcane Ruler",
+      "families": [
+        "Poltergeist"
+      ],
+      "id": "DUPLICO",
+      "name": "Duplico",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "buckle_fisher",
+      "attributeName": "Buckle Fisher",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "LITTERBUG",
+      "name": "Litterbug",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "titanoboa_tracker",
+      "attributeName": "Titanoboa Tracker",
+      "families": [
+        "Reptile",
+        "Scaled",
+        "Serpent"
+      ],
+      "id": "WATER_SNAKE",
+      "name": "Water Snake",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "zealot_tracker",
+      "attributeName": "Zealot Tracker",
+      "families": [
+        "Demon"
+      ],
+      "id": "GAZER",
+      "name": "Gazer",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "visitor_honey",
+      "attributeName": "Visitor Honey",
+      "families": [
+        "Bug"
+      ],
+      "id": "HONEYBUG",
+      "name": "Honeybug",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "yeti_tracker",
+      "attributeName": "Yeti Tracker",
+      "families": [
+        "Squid"
+      ],
+      "id": "SHUDDERSQUID",
+      "name": "Shuddersquid",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "soul_snatcher",
+      "attributeName": "Soul Snatcher",
+      "families": [
+        "Phantom"
+      ],
+      "id": "SOLSNATCHER",
+      "name": "Solsnatcher",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "bucket_greed",
+      "attributeName": "Bucket Greed",
+      "families": [
+        "Amphibian",
+        "Axolotl"
+      ],
+      "id": "SEPIALOT",
+      "name": "Sepialot",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "honey_serendipity",
+      "attributeName": "Honey Serendipity",
+      "id": "HONEY_BADGER",
+      "name": "Honey Badger",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "subterranean_ruler",
+      "attributeName": "Subterranean Ruler",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "DRIFTLING",
+      "name": "Driftling",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "lily_puncher",
+      "attributeName": "Lily Puncher",
+      "families": [
+        "Reptile",
+        "Turtle"
+      ],
+      "id": "TEWTIL",
+      "name": "Tewtil",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mythological_ruler",
+      "attributeName": "Mythological Ruler",
+      "id": "MINOS_HUNTER",
+      "name": "Minos Hunter",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "builder_discount",
+      "attributeName": "Builder Discount",
+      "id": "WOODCHUCKER",
+      "name": "Woodchucker",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "starlyn_training",
+      "attributeName": "Starlyn Training",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "SOLAR",
+      "name": "Solar",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "visitor_compost",
+      "attributeName": "Visitor Compost",
+      "id": "PARCHED",
+      "name": "Parched",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "bartender_discount",
+      "attributeName": "Bartender Discount",
+      "id": "BLOODBAT",
+      "name": "Bloodbat",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "combat_trap",
+      "attributeName": "Combat Trap",
+      "families": [
+        "Frog"
+      ],
+      "id": "DUSTYBIT",
+      "name": "Dustybit",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "visitor_cheese",
+      "attributeName": "Visitor Cheese",
+      "families": [
+        "Bug",
+        "Crustacean",
+        "Trash Lover"
+      ],
+      "id": "WOODLOUSE",
+      "name": "Woodlouse",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "galatea_training",
+      "attributeName": "Galatea Training",
+      "families": [
+        "Tropical Fish"
+      ],
+      "id": "EMBER",
+      "name": "Ember",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "bayou_treasure",
+      "attributeName": "Bayou Treasure",
+      "families": [
+        "Creation"
+      ],
+      "id": "CHEEKY_TIKI",
+      "name": "Cheeky Tiki",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "visitor_plant",
+      "attributeName": "Visitor Plant",
+      "families": [
+        "Panda"
+      ],
+      "id": "RED_PANDA",
+      "name": "Red Panda",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "animal_ruler",
+      "attributeName": "Animal Ruler",
+      "id": "SPRAWL",
+      "name": "Sprawl",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "tiki_tracker",
+      "attributeName": "Tiki Tracker",
+      "families": [
+        "Creation"
+      ],
+      "id": "SNEAKY_TIKI",
+      "name": "Sneaky Tiki",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "fiesta_fortune",
+      "attributeName": "Fiesta Fortune",
+      "families": [
+        "Cave Dweller"
+      ],
+      "id": "PACKRAT_SKULL",
+      "name": "Packrat",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "construct_ruler",
+      "attributeName": "Construct Ruler",
+      "families": [
+        "Creation"
+      ],
+      "id": "SHRIEKY_TIKI",
+      "name": "Shrieky Tiki",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "forest_felling",
+      "attributeName": "Helix Timber",
+      "families": [
+        "Bird"
+      ],
+      "id": "WOODPECKER",
+      "name": "Woodpecker",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "mite_spawner",
+      "attributeName": "Mite Spawner",
+      "id": "HONEYMITE",
+      "name": "Honeymite",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "elusive_ruler",
+      "attributeName": "Elusive Ruler",
+      "families": [
+        "Bug"
+      ],
+      "id": "QUEEN_ANT",
+      "name": "Queen Ant",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "helix_collector",
+      "attributeName": "Helix Collector",
+      "families": [
+        "Bird"
+      ],
+      "id": "HAWK",
+      "name": "Hawk",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "ticket_discount",
+      "attributeName": "Ticket Discount",
+      "families": [
+        "Bug"
+      ],
+      "id": "JUNE_BUG",
+      "name": "June Bug",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "visitor_dung",
+      "attributeName": "Visitor Dung",
+      "families": [
+        "Bug",
+        "Trash Lover"
+      ],
+      "id": "DUNG_BEETLE",
+      "name": "Dung Beetle",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "sprayonator_serendipity",
+      "attributeName": "Sprayonator Serendipity",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "RAT",
+      "name": "Rat",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "bonus_pest_chance",
+      "attributeName": "Bonus Pest Chance",
+      "families": [
+        "Trash Lover"
+      ],
+      "grants": [
+        {
+          "stat": "bonus_pest_chance",
+          "value": 1
+        }
+      ],
+      "id": "KEELED_SLUG",
+      "name": "Keeled Slug",
+      "rarity": "UNCOMMON"
+    },
+    {
+      "attribute": "filter_upgrade",
+      "attributeName": "Filter Upgrade",
+      "families": [
+        "Trash Lover"
+      ],
+      "id": "MITE",
+      "name": "Mite",
+      "rarity": "UNCOMMON"
+    }
+  ]
+}

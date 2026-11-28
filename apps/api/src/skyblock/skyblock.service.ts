@@ -30,7 +30,11 @@ import {
   SkyBlockProfiles,
 } from "./skyblock.model.js";
 import { SkyBlockLeaderboardService } from "./leaderboards/skyblock-leaderboard.service.js";
-import { SkyBlockPricesService } from "./skyblock-prices.service.js";
+import {
+  FAILURE_BACKOFF_MS,
+  SkyBlockPricesService,
+  getFailureKey,
+} from "./skyblock-prices.service.js";
 import {
   MEMBER_STATS_SECTIONS,
   findProfile,
@@ -62,10 +66,9 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 export const STORED_FRESH_MS = 300_000;
 const LIVE_REUSE_MS = 60_000;
-export const FAILURE_BACKOFF_MS = 60_000;
 const SECTION_CACHE_SECONDS = 300;
 // Bump it when a section's shape changes, so a deploy never serves old ones.
-const SECTION_VERSION = 4;
+const SECTION_VERSION = 5;
 // Mongo caps a document at 16 MB, so a bigger response isn't stored.
 const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 const STORED_COPIES = ["museum", "garden"] as const;
@@ -121,8 +124,6 @@ const readGarden = async ({ data, fetchedAt }: SkyBlockGarden) => ({
   garden: await gunzipJson<RawGarden | null>(data),
   fetchedAt,
 });
-
-const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 @Injectable()
 export class SkyBlockService {

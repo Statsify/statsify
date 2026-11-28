@@ -63,6 +63,25 @@ interface RawArmorSet {
   BOOTS?: RawNbt;
 }
 
+interface RawEquipmentSet {
+  id?: number;
+  EQUIPMENT_SLOT_1?: RawNbt;
+  EQUIPMENT_SLOT_2?: RawNbt;
+  EQUIPMENT_SLOT_3?: RawNbt;
+  EQUIPMENT_SLOT_4?: RawNbt;
+}
+
+// A saved loadout names its pet by the pet's uniqueId, not its uuid.
+interface RawLoadout {
+  id: number;
+  name: string;
+  armor_set_id?: number;
+  equipment_set_id?: number;
+  pet?: string;
+  power_stone?: string;
+  tuning_points_slot?: number;
+}
+
 export interface RawSlayerBoss {
   xp?: number;
   [kills: `boss_kills_tier_${number}`]: number | undefined;
@@ -116,6 +135,7 @@ export interface RawMember {
       last_killed_mob?: string;
       [mob: string]: number | string | undefined;
     };
+    deaths?: Record<string, number>;
     milestone?: { last_claimed_milestone?: number };
   };
   // Each fish's count by tier, beside total_caught and lists like rewards
@@ -123,9 +143,16 @@ export interface RawMember {
   player_data?: {
     experience?: Record<string, number>;
     perks?: Record<string, number | boolean>;
+    // A collection found at no tier yet is listed at tier -1.
+    unlocked_coll_tiers?: string[];
     reaper_peppers_eaten?: number;
+    // Each entry is a minion and tier, like "WHEAT_11".
+    crafted_generators?: string[];
   };
   collection?: Record<string, number>;
+  // Each attribute counts the shards syphoned into it.
+  attributes?: { stacks?: Record<string, number> };
+  shards?: { owned?: { type: string; amount_owned?: number }[] };
   inventory?: {
     inv_contents?: RawNbt;
     inv_armor?: RawNbt;
@@ -148,6 +175,8 @@ export interface RawMember {
   // The wardrobe moved here from inventory.wardrobe_contents, one set per slot.
   loadout?: {
     armor?: { equipped_set?: number; [slot: `${number}`]: RawArmorSet };
+    equipment?: { equipped_set?: number; [slot: `${number}`]: RawEquipmentSet };
+    loadouts?: Record<string, RawLoadout>;
   };
   garden_player_data?: {
     copper?: number;
@@ -248,6 +277,8 @@ export interface RawProfile {
   selected?: boolean;
   game_mode?: string;
   banking?: { balance?: number };
+  // One entry per tier bought
+  community_upgrades?: { upgrade_states?: { upgrade: string; tier: number }[] };
   members: Record<string, RawMember>;
 }
 
@@ -323,6 +354,8 @@ export interface RawResourceItem {
   rift_transferrable?: boolean;
   npc_sell_price?: number;
   glowing?: boolean;
+  generator?: string;
+  generator_tier?: number;
   museum_data?: {
     category?: string;
     donation_xp?: number;

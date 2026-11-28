@@ -46,6 +46,7 @@ const ITEMS_KEY = "skyblock:resource:items";
 const PRICES_REFRESH_MS = 15 * 60_000;
 const BAZAAR_REFRESH_MS = 60_000;
 const ITEMS_REFRESH_MS = 12 * 60 * 60_000;
+export const FAILURE_BACKOFF_MS = 60_000;
 // The lock spaces rebuilds out too, for when the feed's lastUpdated stops.
 const LOCK_MS = 300_000;
 
@@ -61,15 +62,12 @@ function isCurrent<T>(copy: Copy<T> | undefined, maxAge: number) {
   return copy !== undefined && Date.now() - copy.fetchedAt <= maxAge;
 }
 
+export const getFailureKey = (key: string) => `skyblock:failed:${key}`;
+
 interface LoadedItems {
   raw: RawItemsResource;
   parsed: ItemsResource;
 }
-
-const loadItems = ({ value, fetchedAt }: Copy<RawItemsResource>) => ({
-  value: { raw: value, parsed: parseItemsResource(value) },
-  fetchedAt,
-});
 
 interface MarketReads {
   bazaar?: Promise<Bazaar | undefined>;
@@ -82,7 +80,8 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   // A process keeps what it unzipped, since unzipping per request is slow.
   private map?: PriceMap;
   private bazaar?: Copy<Bazaar>;
-  private items?: Copy<LoadedItems>;
+  private items?: Copy<RawItemsResource>;
+  private loadedItems?: LoadedItems;
   private worker?: Worker;
 
   public constructor(
@@ -113,27 +112,19 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   public async getItems(): Promise<LoadedItems | undefined> {
-    if (!isCurrent(this.items, ITEMS_REFRESH_MS)) {
-      const stored = await this.readStored<RawItemsResource>(
-        ITEMS_KEY,
-        this.items?.fetchedAt,
-      );
-      if (stored) this.items = loadItems(stored);
+    this.items = await this.getCopy(
+      ITEMS_KEY,
+      ITEMS_REFRESH_MS,
+      () => this.fetchItems(),
+      this.items,
+    );
+
+    const raw = this.items?.value;
+    if (raw && raw !== this.loadedItems?.raw) {
+      this.loadedItems = { raw, parsed: parseItemsResource(raw) };
     }
 
-    if (this.items && isCurrent(this.items, ITEMS_REFRESH_MS)) {
-      return this.items.value;
-    }
-
-    const refetch = this.hypixelService.getSkyBlockItems().then(async (raw) => {
-      const copy = { value: raw, fetchedAt: Date.now() };
-      const loaded = loadItems(copy);
-      await this.store(ITEMS_KEY, copy);
-      this.items = loaded;
-      return loaded.value;
-    });
-
-    return this.staleOrRefetch(this.items, refetch);
+    return this.loadedItems;
   }
 
   public async getPrice(id: string): Promise<PriceView> {
@@ -158,28 +149,21 @@ export class SkyBlockPricesService implements OnModuleDestroy {
   }
 
   private async getBazaar(): Promise<Bazaar | undefined> {
-    if (!isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
-      const stored = await this.readStored<Bazaar>(
-        BAZAAR_KEY,
-        this.bazaar?.fetchedAt,
-      );
-      if (stored) this.bazaar = stored;
-    }
+    this.bazaar = await this.getCopy(
+      BAZAAR_KEY,
+      BAZAAR_REFRESH_MS,
+      () => this.hypixelService.getSkyBlockBazaar().then(parseBazaar),
+      this.bazaar,
+    );
 
-    if (this.bazaar && isCurrent(this.bazaar, BAZAAR_REFRESH_MS)) {
-      return this.bazaar.value;
-    }
+    return this.bazaar?.value;
+  }
 
-    const refetch = this.hypixelService
-      .getSkyBlockBazaar()
-      .then(async (raw) => {
-        const copy = { value: parseBazaar(raw), fetchedAt: Date.now() };
-        await this.store(BAZAAR_KEY, copy);
-        this.bazaar = copy;
-        return copy.value;
-      });
-
-    return this.staleOrRefetch(this.bazaar, refetch);
+  // A response that doesn't parse is never stored, so the last good one stays.
+  private async fetchItems() {
+    const raw = await this.hypixelService.getSkyBlockItems();
+    parseItemsResource(raw);
+    return raw;
   }
 
   private async rebuild(reads: MarketReads) {
@@ -268,14 +252,37 @@ export class SkyBlockPricesService implements OnModuleDestroy {
     await this.redis.hset(key, { data: await gzipJson(value), fetchedAt });
   }
 
-  // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
-  private async staleOrRefetch<T>(
-    stale: Copy<T> | undefined,
-    refetch: Promise<T>,
-  ): Promise<T | undefined> {
-    if (stale) {
+  private async getCopy<T>(
+    key: string,
+    maxAgeMs: number,
+    fetch: () => Promise<T>,
+    last?: Copy<T>,
+  ): Promise<Copy<T> | undefined> {
+    let copy = last;
+    if (!isCurrent(copy, maxAgeMs)) {
+      copy = (await this.readStored<T>(key, copy?.fetchedAt)) ?? copy;
+    }
+
+    if (isCurrent(copy, maxAgeMs)) return copy;
+    if (await this.redis.exists(getFailureKey(key))) return copy;
+
+    // Only a failed request backs off, not a failed write to Redis.
+    const refetch = fetch().then(
+      async (value) => {
+        const fetched = { value, fetchedAt: Date.now() };
+        await this.store(key, fetched);
+        return fetched;
+      },
+      async (error) => {
+        await this.redis.set(getFailureKey(key), "1", "PX", FAILURE_BACKOFF_MS);
+        throw error;
+      },
+    );
+
+    // A stale copy answers at once, since a Hypixel timeout outlasts the bot's.
+    if (copy) {
       void refetch.catch((error) => this.logger.error(error));
-      return stale.value;
+      return copy;
     }
 
     try {
