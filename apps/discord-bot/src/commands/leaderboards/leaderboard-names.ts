@@ -17,8 +17,13 @@ let statKeysByEnglishName: Map<string, string> | undefined;
 export function translateStat(t: LocalizeFunction, name: string) {
   statKeysByEnglishName ??= new Map(
     Object.entries(
-      flatten(getLocalizeFunction("en-US")("stats", { returnObjects: true }) as unknown as object, "stats")
-    ).map(([key, text]) => [text, key])
+      flatten(
+        getLocalizeFunction("en-US")("stats", {
+          returnObjects: true,
+        }) as unknown as object,
+        "stats",
+      ),
+    ).map(([key, text]) => [text, key]),
   );
 
   const key = statKeysByEnglishName.get(name);
@@ -27,12 +32,14 @@ export function translateStat(t: LocalizeFunction, name: string) {
 
 export function translateLeaderboardName(
   t: LocalizeFunction,
-  { name, fieldName = "" }: Pick<LeaderboardMetadata, "name" | "fieldName">
+  { name, fieldName = "" }: Pick<LeaderboardMetadata, "name" | "fieldName">,
 ) {
   const translated = translateStat(t, name);
   if (translated !== name || !name.endsWith(fieldName)) return translated;
 
-  return name.slice(0, name.length - fieldName.length) + translateStat(t, fieldName);
+  return (
+    name.slice(0, name.length - fieldName.length) + translateStat(t, fieldName)
+  );
 }
 
 type Choice = APIApplicationCommandOptionChoice<string>;
@@ -52,7 +59,9 @@ export class LeaderboardChoices {
 
     if (!query) return list.slice(0, 25);
 
-    const choices = new Set(fuse.search(query).map((result) => result.item.choice));
+    const choices = new Set(
+      fuse.search(query).map((result) => result.item.choice),
+    );
     return [...choices].slice(0, 25);
   }
 
@@ -68,7 +77,10 @@ export class LeaderboardChoices {
     // One entry per language, since Fuse ranks a match on two keys above a match on one
     const names = list.flatMap((choice, index) => [
       { name: choice.name, choice },
-      { name: removeFormatting(this.fields[index][1].leaderboard.name), choice },
+      {
+        name: removeFormatting(this.fields[index][1].leaderboard.name),
+        choice,
+      },
     ]);
 
     search = [
