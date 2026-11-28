@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type {
-  AbstractCommandListener,
-  ComponentRoute,
+import {
+  type AbstractCommandListener,
+  type CommandContext,
+  type ComponentRoute,
+  createCustomId,
 } from "@statsify/discord";
 
 /** Guild buttons re-run `/guild <subcommand>`: `g:<user id>:<subcommand>:<guild id>:...` */
@@ -19,4 +21,15 @@ export function guildRoute(listener: AbstractCommandListener): ComponentRoute {
     listener.rerunCommand(interaction, ownerId, ["guild", subcommand], {
       query: guildId,
     });
+}
+
+export function getGuildCustomId(context: CommandContext, guildId: string) {
+  return (...values: (string | number)[]) =>
+    createCustomId(
+      GUILD_ROUTE,
+      context.getInteraction().getUserId(),
+      context.getCommandName(),
+      guildId,
+      ...values,
+    );
 }

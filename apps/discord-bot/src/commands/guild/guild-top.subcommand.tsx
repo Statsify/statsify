@@ -15,13 +15,12 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
   SubCommand,
-  createCustomId,
   getScrollTargets,
   getScrolledPage,
   parseCustomId,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
-import { GUILD_ROUTE } from "./guild.route.js";
+import { getGuildCustomId } from "./guild.route.js";
 import {
   GUILD_TOP_PAGE_SIZE,
   GuildTopMember,
@@ -78,8 +77,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const [modeIndex, page] = this.getRequestedPage(interaction, pageCount);
     const [key, title] = GUILD_TOP_MODES[modeIndex];
 
-    const getCustomId = (...values: (string | number)[]) =>
-      createCustomId(GUILD_ROUTE, interaction.getUserId(), context.getCommandName(), guild.id, ...values);
+    const getCustomId = getGuildCustomId(context, guild.id);
 
     const dropdown = new SelectMenuBuilder().customId(getCustomId("menu", page));
 
