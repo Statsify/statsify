@@ -8,7 +8,10 @@
 
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
-import { redactInteractionTokens, sentryOptions } from "@statsify/logger/sentry";
+import {
+  redactInteractionTokens,
+  sentryOptions,
+} from "@statsify/logger/sentry";
 
 // Init even without a DSN: nothing gets sent, but withIsolationScope then forks instead of sharing one scope
 Sentry.init({

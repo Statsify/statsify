@@ -24,5 +24,8 @@ Sentry.init({
   profileLifecycle: "trace",
   profileSessionSampleRate: 1,
   // userInfo doesn't cover the client IP headers
-  dataCollection: { ...options.dataCollection, httpHeaders: { request: { deny: ["ip", "forwarded"] } } },
+  dataCollection: {
+    ...options.dataCollection,
+    httpHeaders: { request: { deny: ["ip", "forwarded"] } },
+  },
 });
