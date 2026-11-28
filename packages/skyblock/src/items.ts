@@ -11,19 +11,17 @@ import {
   type ItemView,
   type ItemsResource,
   type Rarity,
-  type RawItem,
   type Slots,
 } from "#types";
+import { getItemTexture, skinHash } from "#textures";
 import { decodeInventory } from "#nbt";
-import { normalizeItemText } from "./lore.js";
+import { normalizeItemText } from "#lore";
 import { removeFormatting } from "@statsify/util";
-import { skinHash, textureOf } from "#textures";
-import type { RawNbt } from "#raw";
-import { z } from "zod";
+import type { RawItem, RawItemsResource, RawNbt } from "#raw";
 
 const RARITY_NAMES = new Map<string, Rarity>([
   ...RARITIES.map((rarity) => [rarity.replace("_", " "), rarity] as const),
-  // How Jerry's cosmetics name Legendary (the wiki's Rarity page)
+  // Jerry's cosmetics call Legendary "LEGENJERRY".
   ["LEGENJERRY", "LEGENDARY"],
 ]);
 
@@ -31,15 +29,15 @@ const RARITY_LINE = new RegExp(
   `^(?:SHINY )?(${[...RARITY_NAMES.keys()].join("|")})\\b`,
 );
 
-function rarityOf(lore: readonly string[]): Rarity | undefined {
+function getLoreRarity(lore: string[]): Rarity | undefined {
   const name = RARITY_LINE.exec(
     removeFormatting(lore.at(-1) ?? "").trim(),
   )?.[1];
   return name === undefined ? undefined : RARITY_NAMES.get(name);
 }
 
-/** An NBT long, which the decode leaves as `[high, low]` (low signed), as a number; an int as it is. */
-export function nbtNumber(value: unknown): number | undefined {
+// The decode leaves an NBT long as [high, low], with the low half signed.
+function nbtNumber(value: unknown): number | undefined {
   if (typeof value === "number") return value;
   if (
     Array.isArray(value) &&
@@ -59,10 +57,10 @@ export function toItemView(item: RawItem): ItemView {
     id,
     name: normalizeItemText(item.tag?.display?.Name ?? id),
     lore,
-    rarity: rarityOf(lore),
+    rarity: getLoreRarity(lore),
     count: item.Count,
     glint: item.tag?.ench !== undefined,
-    texture: textureOf(item),
+    texture: getItemTexture(item),
     reforge: attributes.modifier,
     stars: nbtNumber(attributes.upgrade_level ?? attributes.dungeon_item_level),
     recombobulated: Boolean(attributes.rarity_upgrades),
@@ -73,44 +71,12 @@ export function toItemView(item: RawItem): ItemView {
   };
 }
 
-export const decodeSlots = (blob: RawNbt): Slots =>
-  decodeInventory(blob).map((item) => item && toItemView(item));
-
-const RawResourceItem = z.object({
-  id: z.string(),
-  name: z.string(),
-  material: z.string(),
-  durability: z.number().optional(),
-  tier: z.string().optional(),
-  category: z.string().optional(),
-  color: z.string().optional(),
-  skin: z.object({ value: z.string() }).optional(),
-  origin: z.string().optional(),
-  rift_transferrable: z.boolean().optional(),
-  npc_sell_price: z.number().optional(),
-  glowing: z.boolean().optional(),
-  museum_data: z
-    .object({
-      category: z.string().optional(),
-      donation_xp: z.number().optional(),
-      armor_set_donation_xp: z.record(z.string(), z.number()).optional(),
-    })
-    .optional(),
-});
-
-/** /v2/resources/skyblock/items */
-export const RawItemsResource = z.object({
-  lastUpdated: z.number(),
-  items: z.array(RawResourceItem),
-});
-export type RawItemsResource = z.infer<typeof RawItemsResource>;
-
-// The resource leaves COMMON out and still calls DIVINE by its old name. UNOBTAINABLE isn't a rarity.
-const tierOf = (tier = "COMMON") =>
-  tier === "SUPREME" ? "DIVINE" : RARITIES.find((rarity) => rarity === tier);
+export function decodeSlots(blob: RawNbt): Slots {
+  return decodeInventory(blob).map((item) => item && toItemView(item));
+}
 
 export function parseItemsResource(raw: RawItemsResource): ItemsResource {
-  // The museum keeps an armor set under the set's key, which each of its pieces names
+  // The museum keeps an armor set under the set's key, which its pieces name.
   const museum: Record<string, string> = {};
   for (const { id, museum_data: data } of raw.items) {
     if (!data?.category) continue;
@@ -121,7 +87,6 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
 
   return {
     lastUpdated: raw.lastUpdated,
-    raw: raw.items,
     museum,
     items: Object.fromEntries(
       raw.items.map(
@@ -130,7 +95,8 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
           name,
           material,
           durability,
-          tier,
+          // The resource leaves COMMON out and still calls DIVINE SUPREME.
+          tier = "COMMON",
           category,
           color,
           skin,
@@ -144,7 +110,10 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
             name,
             material,
             durability,
-            tier: tierOf(tier),
+            tier:
+              tier === "SUPREME"
+                ? "DIVINE"
+                : RARITIES.find((rarity) => rarity === tier),
             category,
             color,
             skin: skin && skinHash(skin.value),
@@ -160,27 +129,44 @@ export function parseItemsResource(raw: RawItemsResource): ItemsResource {
 }
 
 if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("rarityOf reads the last lore line", () => {
-    expect(rarityOf(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe(
-      "LEGENDARY",
-    );
-    expect(rarityOf(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe("MYTHIC");
-    expect(rarityOf(["§c§lVERY SPECIAL HATCESSORY"])).toBe("VERY_SPECIAL");
-    expect(rarityOf(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"])).toBe(
-      "MYTHIC",
-    );
-    expect(rarityOf(["§a§lUNCOMMON"])).toBe("UNCOMMON");
-    expect(rarityOf(["§7A rare find"])).toBeUndefined();
-    expect(rarityOf([])).toBeUndefined();
+  suite("getLoreRarity", () => {
+    it("should read the last lore line", () => {
+      expect(getLoreRarity(["§7Stuff", "§6§lLEGENDARY DUNGEON BOOTS"])).toBe(
+        "LEGENDARY",
+      );
+      expect(getLoreRarity(["§a§lUNCOMMON"])).toBe("UNCOMMON");
+      expect(getLoreRarity(["§c§lVERY SPECIAL HATCESSORY"])).toBe(
+        "VERY_SPECIAL",
+      );
+    });
+
+    it("should read a recombobulated or shiny line", () => {
+      expect(getLoreRarity(["§d§l§r §d§lMYTHIC ACCESSORY §r§d§l"])).toBe(
+        "MYTHIC",
+      );
+      expect(
+        getLoreRarity(["§d§l§r §d§lSHINY MYTHIC DUNGEON SWORD §r§d§l"]),
+      ).toBe("MYTHIC");
+    });
+
+    it("should skip lore with no rarity", () => {
+      expect(getLoreRarity(["§7A rare find"])).toBeUndefined();
+      expect(getLoreRarity([])).toBeUndefined();
+    });
   });
 
-  test("nbtNumber joins a long's halves", () => {
-    expect(nbtNumber(5)).toBe(5);
-    expect(nbtNumber([0, 7])).toBe(7);
-    expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
-    expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
-    expect(nbtNumber("5")).toBeUndefined();
+  suite("nbtNumber", () => {
+    it("should join a long's halves", () => {
+      expect(nbtNumber([0, 7])).toBe(7);
+      expect(nbtNumber([0, -1])).toBe(2 ** 32 - 1);
+      expect(nbtNumber([406, -2_051_689_472])).toBe(1_746_000_000_000);
+    });
+
+    it("should keep an int and skip anything else", () => {
+      expect(nbtNumber(5)).toBe(5);
+      expect(nbtNumber("5")).toBeUndefined();
+    });
   });
 }

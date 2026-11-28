@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { EXPERIMENTS, type ExperimentsSection } from "#types";
+import type { ExperimentsSection } from "#types";
 import type { RawMember } from "#raw";
+
+// The API's names for Superpairs, Chronomatron and Ultrasequencer.
+export const EXPERIMENTS = ["pairings", "simon", "numbers"] as const;
+
+export type Experiment = (typeof EXPERIMENTS)[number];
 
 const TIERS = 6;
 
-/** null before the member's first experiment. A tier shows once it was tried or claimed. */
 export function getExperiments(member: RawMember): ExperimentsSection | null {
   const raw = member.experimentation;
   if (!raw) return null;

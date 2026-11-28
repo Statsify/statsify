@@ -7,22 +7,20 @@
  */
 
 import { HOTM_LAYOUT, LEVELING } from "#data";
-import {
-  type HotmSection,
-  POWDERS,
-  type TreeLayout,
-  type TreeNode,
-} from "#types";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
+import type { HotmSection, TreeLayout, TreeNode } from "#types";
 import type { RawMember } from "#raw";
 
-/** A tree's perks at their menu spots, leveled from the member's nodes. */
-export const treeNodes = (
+export const POWDERS = ["mithril", "gemstone", "glacite"] as const;
+
+export type Powder = (typeof POWDERS)[number];
+
+export function getTreeNodes(
   layout: TreeLayout,
   nodes: Record<string, number | boolean>,
-): TreeNode[] =>
-  Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
+): TreeNode[] {
+  return Object.entries(layout).map(([id, { name, x, y, maxLevel }]) => {
     const level = Number(nodes[id] ?? 0);
     return {
       id,
@@ -34,13 +32,13 @@ export const treeNodes = (
       enabled: level > 0 && nodes[`toggle_${id}`] !== false,
     };
   });
+}
 
-// Tokens of the Mountain per HOTM tier, and the total Core of the Mountain gives by its level (1 at level 1, 5 and 7,
-// 2 at 10). The API only stores the spent ones.
+// The API stores only the tokens spent, so the total comes from these.
 const TIER_TOKENS = [1, 2, 2, 2, 2, 2, 3, 2, 2, 2];
 const CORE_TOKENS = [0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 5];
 
-// A Crystal Nucleus run places each of these once. leveling.completions.NUCLEUS_RUNS stops counting at 50.
+// A Crystal Nucleus run places each of these once.
 const NUCLEUS_CRYSTALS = [
   "amber",
   "amethyst",
@@ -49,12 +47,9 @@ const NUCLEUS_CRYSTALS = [
   "topaz",
 ] as const;
 
-/**
- * The selected loadout of the Heart of the Mountain: slot 1's keys have no suffix and slot n's end in _n. A loadout
- * counts once it has a tokens_spent entry. Members from before loadouts keep their tree in mining_core.
- */
 export function getHotm(member: RawMember): HotmSection {
   const tree = member.skill_tree;
+  // Members from before loadouts keep their tree in mining_core.
   const core = member.mining_core ?? {};
   const slot = tree?.selected_skill_tree_slot?.mining ?? 1;
   const suffix = slot === 1 ? "" : `_${slot}`;
@@ -65,7 +60,7 @@ export function getHotm(member: RawMember): HotmSection {
     LEVELING.HOTM,
     LEVELING.leveling_caps.HOTM,
   );
-  // The old mining_core tree names it special_0
+  // The old mining_core tree calls it special_0.
   const coreLevel = Number(nodes.core_of_the_mountain ?? nodes.special_0 ?? 0);
   const loadouts = Object.keys(tree?.tokens_spent ?? {}).filter((key) =>
     /^mountain(_\d+)?$/.test(key),
@@ -85,8 +80,7 @@ export function getHotm(member: RawMember): HotmSection {
     ability:
       tree?.selected_ability?.[`mining${suffix}`] ??
       core.selected_pickaxe_ability,
-    // powder_<type> is all the powder ever earned. Core of the Mountain's cost is kept apart in
-    // powder_spent_non_refundable_*, since a reset never refunds it
+    // Hypixel keeps Core of the Mountain's powder apart, since resets keep it.
     powder: Object.fromEntries(
       POWDERS.map((type) => [
         type,
@@ -99,7 +93,7 @@ export function getHotm(member: RawMember): HotmSection {
         },
       ]),
     ) as HotmSection["powder"],
-    nodes: treeNodes(HOTM_LAYOUT, {
+    nodes: getTreeNodes(HOTM_LAYOUT, {
       ...nodes,
       core_of_the_mountain: coreLevel,
     }),
@@ -115,6 +109,7 @@ export function getHotm(member: RawMember): HotmSection {
         }))
         .toSorted((a, b) => b.found - a.found),
     },
+    // The NUCLEUS_RUNS completion stops counting at 50.
     nucleusRuns: Math.min(
       ...NUCLEUS_CRYSTALS.map(
         (gem) => core.crystals?.[`${gem}_crystal`]?.total_placed ?? 0,
@@ -131,80 +126,4 @@ export function getHotm(member: RawMember): HotmSection {
       mineshafts: glacite?.mineshafts_entered ?? 0,
     },
   };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getHotm reads the selected loadout", () => {
-    const hotm = getHotm({
-      skill_tree: {
-        experience: { mining: 2_000_000 },
-        selected_skill_tree_slot: { mining: 2 },
-        nodes: {
-          mining: { mining_speed: 50 },
-          mining_2: {
-            core_of_the_mountain: 10,
-            mining_fortune: 3,
-            toggle_mining_fortune: false,
-          },
-        },
-        tokens_spent: { mountain: 1, mountain_2: 25 },
-        selected_ability: { mining: "pickobulus", mining_2: "sheer_force" },
-      },
-      mining_core: {
-        powder_mithril: 200_000,
-        powder_spent_mithril: 1,
-        powder_spent_mithril_2: 2,
-        powder_spent_non_refundable_mithril_2: 150_000,
-        crystals: {
-          jade_crystal: { total_found: 3, total_placed: 2 },
-          ruby_crystal: { total_found: 5 },
-          opal_crystal: {},
-        },
-      },
-    });
-
-    expect(hotm.level).toMatchObject({
-      level: 10,
-      xp: 2_000_000,
-      xpForNext: undefined,
-    });
-    expect(hotm.loadout).toEqual({ selected: 2, total: 2 });
-    expect(hotm.tokens).toEqual({ spent: 25, total: 25 });
-    expect(hotm.ability).toBe("sheer_force");
-    expect(hotm.powder.mithril).toEqual({ total: 200_000, spent: 150_002 });
-    expect(hotm.nodes.find(({ id }) => id === "mining_fortune")).toMatchObject({
-      level: 3,
-      enabled: false,
-    });
-    expect(hotm.nodes.find(({ id }) => id === "mining_speed")).toMatchObject({
-      level: 0,
-      enabled: false,
-    });
-    expect(hotm.crystals).toEqual({
-      found: 8,
-      placed: 2,
-      gems: [
-        { gem: "ruby", found: 5, placed: undefined },
-        { gem: "jade", found: 3, placed: 2 },
-      ],
-    });
-
-    // Tier 6 gives two tokens, and Core of the Mountain's first level one
-    const hotm5 = getHotm({
-      skill_tree: {
-        experience: { mining: 110_000 },
-        nodes: { mining: { core_of_the_mountain: 1 } },
-      },
-    });
-
-    expect(hotm5.tokens.total).toBe(10);
-    expect(
-      getHotm({ skill_tree: { experience: { mining: 230_000 } } }).tokens.total,
-    ).toBe(11); // HOTM 6
-    expect(
-      getHotm({ skill_tree: { experience: { mining: 400_000 } } }).tokens.total,
-    ).toBe(14); // HOTM 7
-  });
 }

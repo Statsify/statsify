@@ -22,11 +22,12 @@ export const SkyBlockSummaryProfile = ({
       ? { value: t(0), color }
       : { value: t("skyblock.apiOff"), color: "§c" };
   const notReady = { value: t("skyblock.notReady"), color: "§7" };
-  const accessoryPower = profile.marketDown?.includes("accessories")
-    ? notReady
-    : accessories
-      ? { value: t(accessories.accessoryPower), color: "§d" }
-      : missing("§d");
+
+  const getAccessoryPower = () => {
+    if (profile.marketDown?.includes("accessories")) return notReady;
+    if (!accessories) return missing("§d");
+    return { value: t(accessories.accessoryPower), color: "§d" };
+  };
   const bank =
     profile.bank === undefined
       ? missing("§6")
@@ -89,7 +90,10 @@ export const SkyBlockSummaryProfile = ({
             value={t(slayers!.xp)}
             color="§5"
           />
-          <Table.td title={t("skyblock.accessoryPower")} {...accessoryPower} />
+          <Table.td
+            title={t("skyblock.accessoryPower")}
+            {...getAccessoryPower()}
+          />
           <Table.td
             title={t("skyblock.fairySouls")}
             value={t(profile.fairySouls)}

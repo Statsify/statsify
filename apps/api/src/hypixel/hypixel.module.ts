@@ -16,6 +16,7 @@ import { config } from "@statsify/util";
     HttpModule.register({
       baseURL: "https://api.hypixel.net/",
       headers: {
+        "API-Key": await config("hypixelApi.key"),
         "accept-encoding": "*",
       },
       timeout: await config("hypixelApi.timeout", { default: 5000 }),

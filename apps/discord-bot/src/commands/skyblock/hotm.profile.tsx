@@ -7,10 +7,10 @@
  */
 
 import { Card } from "./components/Card.js";
+import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { type SidebarItem, Table } from "#components";
 import { LevelBar } from "./components/LevelBar.js";
 import { POWDERS, POWDER_COLORS } from "@statsify/skyblock/display";
-import { PerkCurrency, PerkTree } from "./components/PerkTree.js";
 import { prettify } from "@statsify/util";
 import type { SkyBlockProfileProps } from "./skyblock.command.js";
 

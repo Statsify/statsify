@@ -7,29 +7,26 @@
  */
 
 // Its own entry, so importing @statsify/skyblock doesn't load skia-canvas.
-import textures from "../generated/textures-1.8.json" with { type: "json" };
 import { LRUCache } from "lru-cache";
+import { TEXTURE_PATHS } from "#data";
 import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import type { Canvas, CanvasRenderingContext2D, Image } from "skia-canvas";
 import type { ItemTexture } from "#types";
 
-export interface IconOptions {
-  /** Width and height in pixels; 16 is the game's own size. */
+interface IconOptions {
   size?: number;
-  /** The enchantment glint, as 1.8 draws it in an inventory at its first frame. */
+  // The glint is drawn at its first frame, as a still inventory shows it.
   glint?: boolean;
 }
 
-/** A head's skin, or its PNG, by its texture hash; undefined when it has none. */
-export type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
+type HeadSource = (hash: string) => Promise<Buffer | Image | undefined>;
 
 export const SKIN_URL = "https://textures.minecraft.net/texture/";
 
-const TEXTURES: Record<string, string | undefined> = textures.textures;
 const BASE_SIZE = 16;
 const GLINT = "misc/enchanted_item_glint";
-// 1.8 tints its gray glint 0x8040CC and draws it twice, at -50° and 10°, each pass an eighth of the texture per icon
+// 1.8 tints the glint 0x8040CC and draws it at -50° and 10°, at 1/8 scale.
 const GLINT_TINT = [0x80 / 255, 0x40 / 255, 0xcc / 255];
 const GLINT_ANGLES = [(-5 * Math.PI) / 18, Math.PI / 18];
 const CACHE_SIZE = 2000;
@@ -49,8 +46,6 @@ const FIREWORK_CHARGE = 402;
 const BANNER = 425;
 const CHESTS = new Set([54, 130, 146]);
 
-// 1.8's colors for undyed leather, a water bottle, a firework star with no colors, and the item colors of the blocks
-// that don't read the colormaps.
 const LEATHER_COLOR = 0xa0_65_40;
 const WATER_COLOR = 0x38_5d_c6;
 const FIREWORK_COLOR = 0x8a_8a_8a;
@@ -87,13 +82,12 @@ interface Layer {
   tint?: Tint;
 }
 
-/** What one texture draws: pack textures bottom first, a crop of an entity texture, or a head's skin. */
 type Plan =
   | { kind: "layers"; layers: Layer[] }
   | { kind: "chest" | "banner" | "face"; path: string }
   | { kind: "head"; skin: string };
 
-const blockTint = (id: number, damage: number): Tint | undefined => {
+const getBlockTint = (id: number, damage: number): Tint | undefined => {
   if (id === LEAVES)
     return [undefined, PINE_COLOR, BIRCH_COLOR][damage & 3] ?? "foliage";
   if (id === LEAVES_2) return "foliage";
@@ -107,11 +101,11 @@ const blockTint = (id: number, damage: number): Tint | undefined => {
   return undefined;
 };
 
-function planOf(texture: ItemTexture): Plan | undefined {
+function getPlan(texture: ItemTexture): Plan | undefined {
   if (texture.kind === "head") return { kind: "head", skin: texture.skin };
 
   const { id, damage, color } = texture;
-  const path = TEXTURES[`${id}:${damage}`] ?? TEXTURES[id];
+  const path = TEXTURE_PATHS[`${id}:${damage}`] ?? TEXTURE_PATHS[id];
   if (!path) return undefined;
 
   if (LEATHER.has(id))
@@ -145,7 +139,7 @@ function planOf(texture: ItemTexture): Plan | undefined {
     };
   }
 
-  // Without 1.8's egg colors, eggs draw white, as the game draws one for an entity it has no colors for.
+  // Eggs draw white, as the game does for an entity with no egg colors.
   if (id === SPAWN_EGG)
     return {
       kind: "layers",
@@ -165,24 +159,26 @@ function planOf(texture: ItemTexture): Plan | undefined {
       layers: [{ path }, { path: "blocks/grass_side_overlay", tint: "grass" }],
     };
 
-  return { kind: "layers", layers: [{ path, tint: blockTint(id, damage) }] };
+  return {
+    kind: "layers",
+    layers: [{ path, tint: getBlockTint(id, damage) }],
+  };
 }
 
 const images = new Map<string, Promise<Image>>();
 const loadTexture = (path: string) => {
   let image = images.get(path);
-  if (!image)
-    images.set(
-      path,
-      (image = loadImage(getMinecraftTexturePath(`textures/${path}.png`))),
-    );
+  if (!image) {
+    image = loadImage(getMinecraftTexturePath(`textures/${path}.png`));
+    images.set(path, image);
+  }
   return image;
 };
 
 const colormaps = new Map<string, Promise<number>>();
 
-/** The colormap's color at temperature 0.5 and rainfall 1.0, where 1.8 colors grass and leaves in inventories. */
-const colormapColor = (name: "grass" | "foliage") => {
+// 1.8 colors inventory grass and leaves at temperature 0.5 and rainfall 1.0.
+const getColormapColor = (name: "grass" | "foliage") => {
   let color = colormaps.get(name);
   if (!color) {
     color = loadTexture(`colormap/${name}`).then((image) => {
@@ -197,14 +193,12 @@ const colormapColor = (name: "grass" | "foliage") => {
   return color;
 };
 
-const hex = (color: number) => `#${color.toString(16).padStart(6, "0")}`;
-
-/** One 16 px layer: the texture's first animation frame, multiplied by its tint. */
 async function drawLayer({ path, tint }: Layer) {
   const image = await loadTexture(path);
   const layer = createCanvas(BASE_SIZE, BASE_SIZE);
   const ctx = layer.getContext("2d");
   ctx.imageSmoothingEnabled = false;
+  // An animated texture stacks its frames, so this draws only the first.
   ctx.drawImage(
     image,
     0,
@@ -218,10 +212,10 @@ async function drawLayer({ path, tint }: Layer) {
   );
 
   if (tint !== undefined) {
+    const color =
+      typeof tint === "number" ? tint : await getColormapColor(tint);
     ctx.globalCompositeOperation = "multiply";
-    ctx.fillStyle = hex(
-      typeof tint === "number" ? tint : await colormapColor(tint),
-    );
+    ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
     ctx.fillRect(0, 0, BASE_SIZE, BASE_SIZE);
     ctx.globalCompositeOperation = "destination-in";
     ctx.drawImage(
@@ -240,13 +234,12 @@ async function drawLayer({ path, tint }: Layer) {
   return layer;
 }
 
-/** A head's face with its hat layer, from a skin or a 64 × 32 mob texture. */
 const drawFace = (ctx: CanvasRenderingContext2D, skin: Image, hat = true) => {
   ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, BASE_SIZE, BASE_SIZE);
   if (hat) ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, BASE_SIZE, BASE_SIZE);
 };
 
-/** 1.8 drops the hat layer when the skin's top-right 32 × 32 has no transparent pixel, as on old skins that filled it. */
+// 1.8 drops the hat when the skin's top-right corner has no transparency.
 const hasHat = (skin: Image) => {
   const corner = createCanvas(32, 32);
   const ctx = corner.getContext("2d");
@@ -258,13 +251,11 @@ const hasHat = (skin: Image) => {
 
 let headSource: HeadSource = (hash) => loadImage(`${SKIN_URL}${hash}`);
 
-/** Offline previews pass saved skins instead of fetching them. */
 export function setHeadSource(source: HeadSource) {
   headSource = source;
   icons.clear();
 }
 
-/** The 16 px icon. A head whose skin didn't load draws Steve, as the game does, and isn't cached. */
 async function drawBase(plan: Plan, key: string) {
   const canvas = createCanvas(BASE_SIZE, BASE_SIZE);
   const ctx = canvas.getContext("2d");
@@ -281,6 +272,7 @@ async function drawBase(plan: Plan, key: string) {
       const skin = await headSource(plan.skin)
         .then((data) => (Buffer.isBuffer(data) ? loadImage(data) : data))
         .catch(() => undefined);
+      // A skin that fails draws Steve, as the game does, and isn't cached.
       if (!skin) icons.delete(key);
       const image = skin ?? (await loadTexture("entity/steve"));
       drawFace(ctx, image, hasHat(image));
@@ -292,7 +284,7 @@ async function drawBase(plan: Plan, key: string) {
       break;
     }
 
-    // The chest's front: the base, then the lid and its latch, from the 64 × 64 entity texture.
+    // The chest's front is its base, lid and latch from the entity texture.
     case "chest": {
       const image = await loadTexture(plan.path);
       ctx.drawImage(image, 14, 33, 14, 10, 1, 5, 14, 10);
@@ -301,7 +293,7 @@ async function drawBase(plan: Plan, key: string) {
       break;
     }
 
-    // The cloth's front, untinted: a banner's base color and patterns aren't drawn.
+    // Banners draw untinted, without their base color or patterns.
     case "banner": {
       ctx.drawImage(await loadTexture(plan.path), 1, 1, 20, 40, 4, 0, 8, 16);
       break;
@@ -311,10 +303,11 @@ async function drawBase(plan: Plan, key: string) {
   return canvas;
 }
 
-/** The glint texture tinted and squared, so adding it with "lighter" is the game's src² + dst. */
 let glintTexture: Promise<Canvas> | undefined;
-const squaredGlint = () =>
-  (glintTexture ??= loadTexture(GLINT).then((image) => {
+
+// Squared, so adding it with "lighter" gives the game's src² + dst.
+const getGlintTexture = () => {
+  glintTexture ??= loadTexture(GLINT).then((image) => {
     const canvas = createCanvas(image.width, image.height);
     const ctx = canvas.getContext("2d");
     ctx.drawImage(image, 0, 0);
@@ -330,18 +323,19 @@ const squaredGlint = () =>
 
     ctx.putImageData(pixels, 0, 0);
     return canvas;
-  }));
+  });
+  return glintTexture;
+};
 
-/** Adds the glint over the icon, masked by the icon's own pixels. */
 async function drawGlint(icon: Canvas) {
-  const glint = await squaredGlint();
+  const glint = await getGlintTexture();
   const { width, height } = icon;
   const layer = createCanvas(width, height);
   const ctx = layer.getContext("2d");
   ctx.globalCompositeOperation = "lighter";
 
   for (const angle of GLINT_ANGLES) {
-    // A pixel samples the texel at A·pixel; the pattern's transform is A's inverse
+    // The pattern's transform is the inverse of the pixel-to-texel matrix.
     const a11 = (glint.width * Math.cos(angle)) / (8 * width);
     const a12 = (-glint.width * Math.sin(angle)) / (8 * height);
     const a21 = (glint.height * Math.sin(angle)) / (8 * width);
@@ -373,8 +367,11 @@ const icons = new LRUCache<string, Promise<Canvas | undefined>>({
   max: CACHE_SIZE,
 });
 
-const cacheKey = (texture: ItemTexture, size: number, glint: boolean) =>
-  `${texture.kind === "head" ? texture.skin : `${texture.id}:${texture.damage}:${texture.color ?? ""}`}:${size}:${glint}`;
+const getCacheKey = (texture: ItemTexture, size: number, glint: boolean) => {
+  if (texture.kind === "head") return `${texture.skin}:${size}:${glint}`;
+  const { id, damage, color = "" } = texture;
+  return `${id}:${damage}:${color}:${size}:${glint}`;
+};
 
 async function drawIcon(
   texture: ItemTexture,
@@ -382,7 +379,7 @@ async function drawIcon(
   glint: boolean,
   key: string,
 ) {
-  const plan = planOf(texture);
+  const plan = getPlan(texture);
   if (!plan) return undefined;
 
   const base = await drawBase(plan, key);
@@ -390,18 +387,17 @@ async function drawIcon(
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(base, 0, 0, size, size);
-  // 1.8 draws heads, chests and banners with their block entity renderer, which never glints
+  // 1.8 never draws the glint on heads, chests or banners.
   if (glint && plan.kind === "layers") await drawGlint(canvas);
 
   return canvas;
 }
 
-/** undefined when the 1.8 pack has no texture for the item (a barrier). */
 export function getItemIcon(
   texture: ItemTexture,
   { size = BASE_SIZE, glint = false }: IconOptions = {},
 ): Promise<Canvas | undefined> {
-  const key = cacheKey(texture, size, glint);
+  const key = getCacheKey(texture, size, glint);
   let icon = icons.get(key);
 
   if (!icon) {

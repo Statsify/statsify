@@ -6,34 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// Its own entry, with no data, so the bot's cards and the site's pages draw names and rarities alike.
-import type {
-  DungeonClass,
-  DungeonGrade,
-  Faction,
-  GameMode,
-  JacobBracket,
-  Powder,
-  Rarity,
-  Skill,
-  SlayerBoss,
-  Whisper,
-} from "#types";
+import type { DungeonClass } from "./sections/dungeons.js";
+import type { DungeonGrade, GameMode, Rarity } from "#types";
+import type { Faction } from "./sections/crimson.js";
+import type { JacobBracket } from "./sections/jacob.js";
+import type { Powder } from "./sections/hotm.js";
+import type { Skill } from "./sections/skills.js";
+import type { SlayerBoss } from "./sections/slayers.js";
+import type { Whisper } from "./sections/hotf.js";
 
-// The registries a page lists, from here rather than the root, whose NBT decoding would ride along into the browser.
-export {
-  AUCTION_STATS,
-  CATCHES,
-  DUNGEON_CLASSES,
-  INVENTORIES,
-  JACOB_MEDALS,
-  POWDERS,
-  RARITIES,
-  SKILLS,
-  SLAYER_BOSSES,
-  TROPHY_TIERS,
-  WHISPERS,
-} from "#types";
+// Pages take registries from here, since the root pulls NBT decoding along.
+export { AUCTION_STATS } from "./sections/misc.js";
+export { CATCHES, TROPHY_TIERS } from "./sections/fishing.js";
+export { DUNGEON_CLASSES } from "./sections/dungeons.js";
+export { JACOB_MEDALS } from "./sections/jacob.js";
+export { POWDERS } from "./sections/hotm.js";
+export { INVENTORIES, RARITIES } from "#types";
+export { SKILLS } from "./sections/skills.js";
+export { SLAYER_BOSSES } from "./sections/slayers.js";
+export { WHISPERS } from "./sections/hotf.js";
 
 export const RARITY_COLORS: Record<Rarity, string> = {
   COMMON: "§f",
@@ -92,7 +83,7 @@ export const FACTION_COLORS: Record<Faction, string> = {
   barbarians: "§c",
 };
 
-/** Jacob's contest brackets and medals, and the trophy fish tiers, which share four of them. */
+// Trophy fish tiers share four of these colors.
 export const MEDAL_COLORS: Record<JacobBracket, string> = {
   bronze: "§c",
   silver: "§f",
@@ -115,7 +106,6 @@ export const BOSS_COLORS: Record<SlayerBoss, string> = {
   vampire: "§b",
 };
 
-/** The symbol after a profile's name in game; a normal profile has none. */
 export const GAME_MODE_BADGES: Record<GameMode, string> = {
   normal: "",
   ironman: "§7♲",
@@ -150,7 +140,6 @@ const FORMATTED_PROFILES: Record<string, string | undefined> = {
   Zucchini: "§2Zucchini",
 };
 
-/** A profile's cute name in its fruit's colors, then its mode's badge after a space. */
 export function formatProfileName({
   cuteName,
   gameMode,

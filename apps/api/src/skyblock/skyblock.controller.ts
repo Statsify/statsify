@@ -28,13 +28,11 @@ import {
 import {
   CachedPlayerDto,
   SkyBlockIconDto,
-  SkyBlockItemsDto,
   SkyBlockPriceDto,
   SkyBlockProfileDto,
 } from "#dtos";
 import {
   ErrorResponse,
-  GetSkyBlockItemsResponse,
   GetSkyBlockPriceResponse,
   GetSkyBlockProfileResponse,
   GetSkyBlockProfilesResponse,
@@ -74,11 +72,9 @@ export class SkyBlockController {
   @Auth({ role: AuthRole.WORKER, weight: 2 })
   @Get("/profiles")
   public async getProfiles(@Query() { player, cache }: CachedPlayerDto) {
-    const profiles = await this.skyblockService.getProfiles(player, cache);
-
     return {
       success: true,
-      profiles,
+      player: await this.skyblockService.getProfiles(player, cache),
     };
   }
 
@@ -112,6 +108,29 @@ export class SkyBlockController {
     };
   }
 
+  @Get("/icons")
+  @Auth({ role: AuthRole.WORKER, weight: 0 })
+  @ApiExcludeEndpoint()
+  public async getIcon(
+    @Query() { texture: key, size, glint }: SkyBlockIconDto,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
+    const texture = parseIconKey(key);
+    if (!texture) throw new BadRequestException("texture must be an icon key");
+
+    const icon = await this.iconsService.getIcon(texture, size, glint === 1);
+    if (!icon) throw new NotFoundException("no texture");
+
+    // A Steve stand-in is cached only while its head's failure is remembered.
+    reply.header(
+      "Cache-Control",
+      icon.standIn
+        ? `public, max-age=${FAILED_HEAD_SECONDS}`
+        : "public, max-age=31536000, immutable",
+    );
+    return new StreamableFile(icon.png, { type: "image/png" });
+  }
+
   @ApiOperation({ summary: "Get What a SkyBlock Item is Worth" })
   @ApiOkResponse({ type: GetSkyBlockPriceResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
@@ -131,51 +150,6 @@ export class SkyBlockController {
     return {
       success: true,
       price,
-    };
-  }
-
-  /**
-   * The site's item icons, which it proxies with a year's edge cache. A Steve stand-in for a head whose skin didn't load
-   * is cached only as long as the failure is remembered, so the real head shows once it loads.
-   */
-  @Get("/icons")
-  @Auth({ role: AuthRole.WORKER, weight: 0 })
-  @ApiExcludeEndpoint()
-  public async getIcon(
-    @Query() { texture: key, size, glint }: SkyBlockIconDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
-  ) {
-    const texture = parseIconKey(key);
-    if (!texture) throw new BadRequestException("texture must be an icon key");
-
-    const icon = await this.iconsService.getIcon(texture, size, glint === 1);
-    if (!icon) throw new NotFoundException("no texture");
-
-    reply.header(
-      "Cache-Control",
-      icon.standIn
-        ? `public, max-age=${FAILED_HEAD_SECONDS}`
-        : "public, max-age=31536000, immutable",
-    );
-    return new StreamableFile(icon.png, { type: "image/png" });
-  }
-
-  @ApiOperation({
-    summary: "Get a Fuzzy Searched List of Priced SkyBlock Items",
-  })
-  @ApiOkResponse({ type: GetSkyBlockItemsResponse })
-  @ApiServiceUnavailableResponse({
-    type: SkyBlockUnavailableException,
-    description: "market",
-  })
-  @Auth({ role: AuthRole.WORKER, weight: 0 })
-  @Get("/items")
-  public async getItems(@Query() { query }: SkyBlockItemsDto) {
-    const items = await this.pricesService.searchItems(query);
-
-    return {
-      success: true,
-      items,
     };
   }
 }

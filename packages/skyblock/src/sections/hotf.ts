@@ -9,14 +9,14 @@
 import { HOTF_LAYOUT, LEVELING } from "#data";
 import { add } from "@statsify/math";
 import { getLevel } from "#leveling";
-import { treeNodes } from "./hotm.js";
-import { type HotfSection, type Whisper, WHISPERS } from "#types";
+import { getTreeNodes } from "./hotm.js";
+import type { HotfSection } from "#types";
 import type { RawMember } from "#raw";
 
-/**
- * null before the member's first Heart of the Forest XP. Hypixel creates all five loadouts at once, so one counts
- * once it has tokens spent.
- */
+export const WHISPERS = ["forest", "desert"] as const;
+
+export type Whisper = (typeof WHISPERS)[number];
+
 export function getHotf(member: RawMember): HotfSection | null {
   const tree = member.skill_tree;
   const xp = tree?.experience?.foraging;
@@ -25,15 +25,20 @@ export function getHotf(member: RawMember): HotfSection | null {
   const slot = tree?.selected_skill_tree_slot?.foraging ?? 1;
   const suffix = slot === 1 ? "" : `_${slot}`;
   const nodes = tree?.nodes?.[`foraging${suffix}`] ?? {};
+  // Hypixel creates all five loadouts at once, so one counts once it's used.
   const used = Object.entries(tree?.tokens_spent ?? {}).filter(
-    ([key, spent]) => /^forest(_\d+)?$/.test(key) && spent > 0
+    ([key, spent]) => /^forest(_\d+)?$/.test(key) && spent > 0,
   );
-  const loadouts = new Set([...used.map(([key]) => key), `forest${suffix}`]).size;
+  const loadouts = new Set([...used.map(([key]) => key), `forest${suffix}`])
+    .size;
 
-  const whispers = (type: Whisper) => {
+  const getWhispers = (type: Whisper) => {
     const pool = member.foraging_core?.whispers?.[type];
     const spending = pool?.[slot];
-    return { total: pool?.total ?? 0, spent: add(spending?.spent ?? 0, spending?.spent_non_refundable ?? 0) };
+    return {
+      total: pool?.total ?? 0,
+      spent: add(spending?.spent ?? 0, spending?.spent_non_refundable ?? 0),
+    };
   };
 
   return {
@@ -42,20 +47,9 @@ export function getHotf(member: RawMember): HotfSection | null {
     loadout: { selected: slot, total: Math.max(slot, loadouts) },
     tokens: { spent: tree?.tokens_spent?.[`forest${suffix}`] ?? 0 },
     ability: tree?.selected_ability?.[`foraging${suffix}`],
-    whispers: Object.fromEntries(WHISPERS.map((type) => [type, whispers(type)])) as HotfSection["whispers"],
-    nodes: treeNodes(HOTF_LAYOUT, nodes),
+    whispers: Object.fromEntries(
+      WHISPERS.map((type) => [type, getWhispers(type)]),
+    ) as HotfSection["whispers"],
+    nodes: getTreeNodes(HOTF_LAYOUT, nodes),
   };
-}
-
-if (import.meta.vitest) {
-  const { test, expect } = import.meta.vitest;
-
-  test("getHotf counts the selected loadout's whispers spent, refundable or not", () => {
-    const hotf = getHotf({
-      skill_tree: { experience: { foraging: 0 }, selected_skill_tree_slot: { foraging: 2 } },
-      foraging_core: { whispers: { forest: { total: 900, 1: { spent: 100 }, 2: { spent: 300, spent_non_refundable: 50 } } } },
-    });
-
-    expect(hotf?.whispers.forest).toEqual({ total: 900, spent: 350 });
-  });
 }

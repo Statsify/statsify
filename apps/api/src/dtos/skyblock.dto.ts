@@ -32,13 +32,10 @@ export class SkyBlockProfileDto extends createZodDto(
 
 export class SkyBlockPriceDto extends createZodDto(
   z.object({
-    item: z
-      .string()
-      .max(100)
-      .meta({
-        example: "HYPERION",
-        description: "A price key from /skyblock/items",
-      }),
+    item: z.string().max(100).meta({
+      example: "HYPERION",
+      description: "A price key from /skyblock/items",
+    }),
   }),
 ) {}
 

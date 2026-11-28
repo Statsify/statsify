@@ -9,17 +9,28 @@
 import type { MiscSection } from "#types";
 import type { RawMember } from "#raw";
 
+export const AUCTION_STATS = [
+  "created",
+  "completed",
+  "won",
+  "bids",
+  "highestBid",
+  "goldSpent",
+  "goldEarned",
+  "fees",
+] as const;
+
+export type AuctionStat = (typeof AUCTION_STATS)[number];
+
 const TOP = 20;
 
-/** The most counted, without Hypixel's own "total" entry. */
-const topOf = (counts: Record<string, number> = {}) =>
+const getTopCounts = (counts: Record<string, number> = {}) =>
   Object.entries(counts)
     .filter(([id]) => id !== "total")
     .toSorted((a, b) => b[1] - a[1])
     .slice(0, TOP)
     .map(([id, count]) => ({ id, count }));
 
-/** The member's lifetime counters from `player_stats`, and their soulflow. */
 export function getMisc(member: RawMember): MiscSection {
   const stats = member.player_stats ?? {};
   const auctions = stats.auctions ?? {};
@@ -27,8 +38,8 @@ export function getMisc(member: RawMember): MiscSection {
   return {
     kills: stats.kills?.total ?? 0,
     deaths: stats.deaths?.total ?? 0,
-    topKills: topOf(stats.kills),
-    topDeaths: topOf(stats.deaths),
+    topKills: getTopCounts(stats.kills),
+    topDeaths: getTopCounts(stats.deaths),
     highestDamage: stats.highest_damage,
     highestCriticalDamage: stats.highest_critical_damage,
     auctions: {

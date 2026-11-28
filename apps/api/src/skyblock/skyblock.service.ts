@@ -13,124 +13,90 @@ import {
   SkyBlockUnavailableException,
 } from "@statsify/api-client";
 import {
-  BudgetError,
-  SkyBlockBudgetService,
-} from "./skyblock-budget.service.js";
-import {
   HypixelService,
   HypixelThrottledError,
   HypixelUnavailableError,
 } from "#hypixel";
+import { ALL_SECTIONS } from "@statsify/skyblock/networth";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Logger } from "@statsify/logger";
-import { NETWORTH } from "@statsify/skyblock/networth";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
+import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
+import { SkyBlockPricesService } from "./skyblock-prices.service.js";
 import {
-  SECTIONS,
-  type SectionInput,
   findProfile,
-  toMemberView,
+  getApiSettings,
   toProfileSummary,
   toProfilesView,
 } from "@statsify/skyblock";
-import { Singleflight } from "./singleflight.js";
-import { SkyBlockMuseum, SkyBlockProfiles } from "./skyblock.model.js";
-import { SkyBlockPricesService } from "./skyblock-prices.service.js";
-import { unzip, zip } from "./zip.js";
+import { gunzipJson, gzipJson } from "./zip.js";
 import type {
   MemberView,
   PlayerRef,
   RawMuseum,
   RawProfile,
-  SectionNeed,
+  SectionInput,
   SkyBlockProfileView,
   SkyBlockProfilesView,
   SkyBlockSection,
 } from "@statsify/skyblock";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-/** How long a stored copy is new enough that a lookup at `CACHE` doesn't fetch it again. */
-export const SKYBLOCK_FRESH_FOR = 300_000;
-const LIVE_FLOOR = 60_000;
-/** How long a failed refetch serves the stored copy before Hypixel is tried again. */
-export const SKYBLOCK_FAILED_FOR = 60_000;
-const SECTION_SECONDS = 300;
-// Bump it when a section's shape changes, so a deploy never serves a section that older code cached
+export const STORED_FRESH_MS = 300_000;
+const LIVE_REUSE_MS = 60_000;
+export const FAILURE_BACKOFF_MS = 60_000;
+const SECTION_CACHE_SECONDS = 300;
+// Bump it when a section's shape changes, so a deploy never serves old ones.
 const SECTION_VERSION = 4;
-const MAX_DOCUMENT = 15 * 1024 * 1024;
-
-const DEFINITIONS = { ...SECTIONS, networth: NETWORTH } satisfies Record<
-  SkyBlockSection,
-  { needs: readonly SectionNeed[] }
->;
-
-interface Stored<T> {
-  value: T;
-  fetchedAt: number;
-  stale: boolean;
-}
-
-/** A copy in Mongo, gunzipped only when it's served. */
-interface StoredCopy<T> {
-  fetchedAt: number;
-  read: () => Promise<T>;
-}
-
-const serve = async <T>(
-  { fetchedAt, read }: StoredCopy<T>,
-  stale: boolean,
-): Promise<Stored<T>> => ({
-  value: await read(),
-  fetchedAt,
-  stale,
-});
+// Mongo caps a document at 16 MB, so a bigger response isn't stored.
+const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;
 
 const isFresh = (fetchedAt: number, cache: CacheLevel) =>
   cache === CacheLevel.CACHE_ONLY ||
   Date.now() - fetchedAt <
-    (cache === CacheLevel.LIVE ? LIVE_FLOOR : SKYBLOCK_FRESH_FOR);
+    (cache === CacheLevel.LIVE ? LIVE_REUSE_MS : STORED_FRESH_MS);
 
-type Unavailable =
-  | HypixelThrottledError
-  | HypixelUnavailableError
-  | BudgetError;
-
-const isUnavailable = (error: unknown): error is Unavailable =>
-  error instanceof HypixelThrottledError ||
-  error instanceof HypixelUnavailableError ||
-  error instanceof BudgetError;
-
-function toUnavailable(error: Unavailable) {
-  if (error instanceof HypixelThrottledError)
+function toUnavailable(error: HypixelUnavailableError) {
+  if (error instanceof HypixelThrottledError) {
     return new SkyBlockUnavailableException("throttled", error.retryAfter);
-  if (error instanceof BudgetError)
-    return new SkyBlockUnavailableException("budget", error.retryAfter);
+  }
+
   return new SkyBlockUnavailableException("hypixel");
 }
 
-const timeOf = ({ fetchedAt }: { fetchedAt: number }) =>
-  new Date(fetchedAt).toISOString();
+const toIsoTime = (fetchedAt: number) => new Date(fetchedAt).toISOString();
 
-const failedKey = (key: string) => `skyblock:failed:${key}`;
+const readProfiles = async (
+  { data, fetchedAt }: SkyBlockProfiles,
+  stale: boolean,
+) => ({
+  profiles: await gunzipJson<RawProfile[] | null>(data),
+  fetchedAt,
+  stale,
+});
+
+const readMuseum = async ({ data, fetchedAt }: SkyBlockMuseum) => ({
+  museum: { members: await gunzipJson<RawMuseum["members"]>(data) },
+  fetchedAt,
+});
+
+const getFailureKey = (key: string) => `skyblock:failed:${key}`;
 
 @Injectable()
 export class SkyBlockService {
   private readonly logger = new Logger("SkyBlockService");
-  private readonly singleflight = new Singleflight();
 
   public constructor(
     private readonly playerService: PlayerService,
     private readonly hypixelService: HypixelService,
-    private readonly budgetService: SkyBlockBudgetService,
     private readonly pricesService: SkyBlockPricesService,
     @InjectModel(SkyBlockProfiles)
     private readonly profilesModel: ReturnModelType<typeof SkyBlockProfiles>,
-    @InjectModel(SkyBlockMuseum) private readonly museumModel: ReturnModelType<
-      typeof SkyBlockMuseum
-    >,
+    @InjectModel(SkyBlockMuseum)
+    private readonly museumModel: ReturnModelType<typeof SkyBlockMuseum>,
     @InjectRedis() private readonly redis: Redis,
   ) {}
 
@@ -138,11 +104,11 @@ export class SkyBlockService {
     tag: string,
     cache: CacheLevel,
   ): Promise<SkyBlockProfilesView> {
-    return this.getProfilesOf(await this.getPlayer(tag), cache);
+    return this.getProfilesFor(await this.getPlayer(tag), cache);
   }
 
-  /** For a caller that already knows the player, so the lookup never costs an identity call. */
-  public async getProfilesOf(
+  // A caller that already has the player skips the player lookup.
+  public async getProfilesFor(
     player: PlayerRef,
     cache: CacheLevel,
   ): Promise<SkyBlockProfilesView> {
@@ -150,6 +116,7 @@ export class SkyBlockService {
       player,
       cache,
     );
+
     return toProfilesView(player, profiles, { fetchedAt, stale });
   }
 
@@ -159,25 +126,24 @@ export class SkyBlockService {
     cache: CacheLevel,
     profileName?: string,
   ): Promise<SkyBlockProfileView> {
-    return this.getProfileOf(
-      await this.getPlayer(tag),
-      sections,
-      cache,
-      profileName,
-    );
+    const player = await this.getPlayer(tag);
+    return this.getProfileFor(player, sections, cache, profileName);
   }
 
-  public async getProfileOf(
+  public async getProfileFor(
     player: PlayerRef,
     sections: SkyBlockSection[],
     cache: CacheLevel,
     profileName?: string,
   ): Promise<SkyBlockProfileView> {
-    const needs = new Set(sections.flatMap((name) => DEFINITIONS[name].needs));
+    const needs = new Set(sections.flatMap((name) => ALL_SECTIONS[name].needs));
+    const reads = {
+      items: needs.has("items") ? this.pricesService.getItems() : undefined,
+    };
     const [{ profiles, fetchedAt, stale }, prices, items] = await Promise.all([
       this.getPlayerProfiles(player, cache),
-      needs.has("prices") ? this.pricesService.getPriceMap() : undefined,
-      needs.has("items") ? this.pricesService.getItems() : undefined,
+      needs.has("prices") ? this.pricesService.getPriceMap(reads) : undefined,
+      reads.items,
     ]);
 
     const profile = findProfile(profiles, player.uuid, profileName);
@@ -186,188 +152,187 @@ export class SkyBlockService {
 
     const built = { museum: true, prices: !!prices, items: !!items };
     const ready = sections.filter((name) =>
-      DEFINITIONS[name].needs.every((need) => built[need]),
+      ALL_SECTIONS[name].needs.every((need) => built[need]),
     );
     const marketDown = sections.filter((name) => !ready.includes(name));
-    if (ready.length === 0 && marketDown.length > 0)
+    if (ready.length === 0 && marketDown.length > 0) {
       throw new SkyBlockUnavailableException("market");
+    }
 
     const museum = needs.has("museum")
-      ? await this.getStoredMuseum(profile.profile_id, cache)
+      ? await this.getMuseum(profile.profile_id, cache)
       : undefined;
 
     const input: SectionInput = {
       uuid: player.uuid,
       profile,
       member,
-      museum: museum?.value.members?.[player.uuid],
+      museum: museum?.museum.members?.[player.uuid],
       prices,
-      items,
+      items: items?.parsed,
+      rawItems: items?.raw,
     };
+
+    const computed = await Promise.all(
+      ready.map(async (name) => {
+        const section = await this.getSection(
+          name,
+          input,
+          fetchedAt,
+          museum?.fetchedAt,
+        );
+
+        return [name, section] as const;
+      }),
+    );
 
     return {
       ...player,
       fetchedAt,
       stale,
       ...toProfileSummary(profile, player.uuid),
-      member: await toMemberView(
-        input,
-        ready,
-        (name) => this.getSection(name, input, fetchedAt, museum?.fetchedAt),
-        museum?.value,
-      ),
+      member: {
+        apiSettings: getApiSettings(profile, member, museum?.museum),
+        ...Object.fromEntries(computed),
+      },
       museumFetchedAt: museum?.fetchedAt,
       ...(marketDown.length > 0 && { marketDown }),
     };
   }
 
-  /** When a lookup at `CACHE` can next call Hypixel for the player's profiles, or undefined when it would now. */
-  public async nextRefetchAt(uuid: string): Promise<number | undefined> {
-    const [document, failedFor] = await Promise.all([
+  public async getNextRefetchAt(uuid: string): Promise<number | undefined> {
+    const [stored, failedFor] = await Promise.all([
       this.profilesModel.findOne({ uuid }, { fetchedAt: true }).exec(),
-      this.redis.pttl(failedKey(`profiles:${uuid}`)),
+      this.redis.pttl(getFailureKey(`profiles:${uuid}`)),
     ]);
 
-    if (!document) return undefined;
-    if (isFresh(document.fetchedAt, CacheLevel.CACHE))
-      return document.fetchedAt + SKYBLOCK_FRESH_FOR;
+    if (!stored) return undefined;
+    if (isFresh(stored.fetchedAt, CacheLevel.CACHE)) {
+      return stored.fetchedAt + STORED_FRESH_MS;
+    }
 
     return failedFor > 0 ? Date.now() + failedFor : undefined;
   }
 
   private async getPlayerProfiles(player: PlayerRef, cache: CacheLevel) {
-    const {
-      value: profiles,
-      fetchedAt,
-      stale,
-    } = await this.getStoredProfiles(player.uuid, cache);
+    const { profiles, fetchedAt, stale } = await this.getStoredProfiles(
+      player.uuid,
+      cache,
+    );
     if (!profiles) throw new SkyBlockNotFoundException("skyblock");
 
     return { profiles, fetchedAt, stale };
   }
 
   private async getPlayer(tag: string): Promise<PlayerRef> {
-    const selector = { uuid: true, username: true, displayName: true };
-    const player = await this.playerService.get(
-      tag,
-      CacheLevel.CACHE_ONLY,
-      selector,
-      () =>
-        this.budgetService.take().catch((error) => {
-          if (!(error instanceof BudgetError)) throw error;
-          this.logger.warn(`Couldn't look up ${tag}: ${error.message}`);
-          throw toUnavailable(error);
-        }),
-    );
-
+    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
+      uuid: true,
+      username: true,
+      displayName: true,
+    });
     if (!player) throw new PlayerNotFoundException();
-    return {
-      uuid: player.uuid,
-      username: player.username,
-      displayName: player.displayName,
-    };
+
+    const { uuid, username, displayName } = player;
+    return { uuid, username, displayName };
   }
 
-  private async getStoredProfiles(
-    uuid: string,
-    cache: CacheLevel,
-  ): Promise<Stored<RawProfile[] | null>> {
-    const document = await this.profilesModel.findOne({ uuid }).exec();
-    const stored = document && {
-      fetchedAt: document.fetchedAt,
-      read: () => unzip<RawProfile[] | null>(document.data),
-    };
+  private async getStoredProfiles(uuid: string, cache: CacheLevel) {
+    const key = `profiles:${uuid}`;
+    const stored = await this.profilesModel.findOne({ uuid }).exec();
 
-    if (stored && isFresh(stored.fetchedAt, cache)) return serve(stored, false);
-    if (cache === CacheLevel.CACHE_ONLY)
+    if (stored && isFresh(stored.fetchedAt, cache)) {
+      return readProfiles(stored, false);
+    }
+
+    if (cache === CacheLevel.CACHE_ONLY) {
       throw new SkyBlockNotFoundException("not_fetched");
+    }
 
-    return this.refetch(`profiles:${uuid}`, stored, async () => {
+    if (stored && (await this.failedRecently(key, stored.fetchedAt))) {
+      return readProfiles(stored, true);
+    }
+
+    try {
       const profiles = await this.hypixelService.getSkyBlockProfiles(uuid);
       const fetchedAt = Date.now();
 
       const data = await this.compress(profiles, uuid);
-      if (data)
+      if (data) {
         await this.profilesModel.replaceOne(
           { uuid },
           { uuid, fetchedAt, data },
           { upsert: true },
         );
+      }
 
-      return { value: profiles, fetchedAt };
-    });
+      return { profiles, fetchedAt, stale: false };
+    } catch (error) {
+      if (!(error instanceof HypixelUnavailableError)) throw error;
+
+      await this.recordFailure(key, error, stored?.fetchedAt);
+      if (!stored) throw toUnavailable(error);
+      return readProfiles(stored, true);
+    }
   }
 
-  /** The museum is optional, so a lookup goes on without it when Hypixel or the budget refuses. */
-  private async getStoredMuseum(
-    profileId: string,
-    cache: CacheLevel,
-  ): Promise<Stored<RawMuseum> | undefined> {
-    const document = await this.museumModel.findOne({ profileId }).exec();
-    const stored = document && {
-      fetchedAt: document.fetchedAt,
-      read: async (): Promise<RawMuseum> => ({
-        members: await unzip<RawMuseum["members"]>(document.data),
-      }),
-    };
+  // The museum is optional, so a lookup goes on without it when Hypixel fails.
+  private async getMuseum(profileId: string, cache: CacheLevel) {
+    const key = `museum:${profileId}`;
+    const stored = await this.museumModel.findOne({ profileId }).exec();
 
-    if (stored && isFresh(stored.fetchedAt, cache)) return serve(stored, false);
-    if (cache === CacheLevel.CACHE_ONLY) return undefined;
+    if (stored && isFresh(stored.fetchedAt, cache)) return readMuseum(stored);
+    if (cache === CacheLevel.CACHE_ONLY) return;
 
-    return this.refetch(`museum:${profileId}`, stored, async () => {
+    if (stored && (await this.failedRecently(key, stored.fetchedAt))) {
+      return readMuseum(stored);
+    }
+
+    try {
       const museum = await this.hypixelService.getSkyBlockMuseum(profileId);
       const fetchedAt = Date.now();
 
       const data = await this.compress(museum.members, profileId);
-      if (data)
+      if (data) {
         await this.museumModel.replaceOne(
           { profileId },
           { profileId, fetchedAt, data },
           { upsert: true },
         );
+      }
 
-      return { value: museum, fetchedAt };
-    }).catch((error) => {
-      if (error instanceof SkyBlockUnavailableException) return undefined;
-      throw error;
-    });
-  }
-
-  private async refetch<T>(
-    key: string,
-    stored: StoredCopy<T> | null,
-    fetch: () => Promise<{ value: T; fetchedAt: number }>,
-  ): Promise<Stored<T>> {
-    const failed = failedKey(key);
-    if (stored && (await this.redis.exists(failed))) {
-      this.logger.warn(
-        `Serving ${key} from ${timeOf(stored)}: a refetch failed under a minute ago`,
-      );
-      return serve(stored, true);
-    }
-
-    try {
-      return await this.singleflight.run(key, async () => {
-        await this.budgetService.take();
-        return { ...(await fetch()), stale: false };
-      });
+      return { museum, fetchedAt };
     } catch (error) {
-      if (!isUnavailable(error)) throw error;
+      if (!(error instanceof HypixelUnavailableError)) throw error;
 
-      await this.redis.set(failed, "1", "PX", SKYBLOCK_FAILED_FOR);
-      this.logger.warn(
-        `Couldn't refetch ${key}: ${error.message}; ${stored ? `serving the copy from ${timeOf(stored)}` : "no stored copy"}`,
-      );
-
-      if (stored) return serve(stored, true);
-      throw toUnavailable(error);
+      await this.recordFailure(key, error, stored?.fetchedAt);
+      return stored ? readMuseum(stored) : undefined;
     }
   }
 
-  /** Mongo caps a document at 16 MB, so a bigger response isn't stored and the next miss refetches. */
+  private async failedRecently(key: string, storedAt: number) {
+    const failed = await this.redis.exists(getFailureKey(key));
+    if (failed) {
+      this.logger.warn(
+        `Serving ${key} from ${toIsoTime(storedAt)}: a refetch failed under a minute ago`,
+      );
+    }
+
+    return failed > 0;
+  }
+
+  private async recordFailure(key: string, error: Error, storedAt?: number) {
+    await this.redis.set(getFailureKey(key), "1", "PX", FAILURE_BACKOFF_MS);
+
+    const fallback =
+      storedAt === undefined
+        ? "no stored copy"
+        : `serving the copy from ${toIsoTime(storedAt)}`;
+    this.logger.warn(`Couldn't refetch ${key}: ${error.message}; ${fallback}`);
+  }
+
   private async compress(response: unknown, id: string) {
-    const data = await zip(response);
-    if (data.length > MAX_DOCUMENT) {
+    const data = await gzipJson(response);
+    if (data.length > MAX_DOCUMENT_BYTES) {
       this.logger.warn(
         `Not storing ${id}'s SkyBlock response: ${data.length} bytes gzipped`,
       );
@@ -377,23 +342,29 @@ export class SkyBlockService {
     return data;
   }
 
-  /** A museum section is also keyed by the museum's copy, so one computed without it isn't served once it loads. */
+  // Keying on the museum's time stops a section made without it being reused.
   private async getSection(
     name: SkyBlockSection,
     input: SectionInput,
     fetchedAt: number,
     museumFetchedAt = 0,
   ) {
-    const definition = DEFINITIONS[name];
-    const version = definition.needs.includes("museum")
+    const section = ALL_SECTIONS[name];
+    const version = section.needs.includes("museum")
       ? `${fetchedAt}:${museumFetchedAt}`
       : fetchedAt;
     const key = `skyblock:section:v${SECTION_VERSION}:${input.uuid}:${input.profile.profile_id}:${name}:${version}`;
-    const cached = await this.redis.getBuffer(key);
-    if (cached) return unzip<MemberView[SkyBlockSection]>(cached);
 
-    const section = await definition.compute(input);
-    await this.redis.set(key, await zip(section), "EX", SECTION_SECONDS);
-    return section;
+    const cached = await this.redis.getBuffer(key);
+    if (cached) return gunzipJson<MemberView[SkyBlockSection]>(cached);
+
+    const computed = await section.compute(input);
+    await this.redis.set(
+      key,
+      await gzipJson(computed),
+      "EX",
+      SECTION_CACHE_SECONDS,
+    );
+    return computed;
   }
 }
