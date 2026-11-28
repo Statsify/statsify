@@ -667,7 +667,7 @@ if (import.meta.vitest) {
       ).toEqual(["Salmon Helmet (Rare)", "Salmon Helmet (Epic)"]);
     });
 
-    it("should tell keys of one rarity apart by the words their ids don't share", () => {
+    it("should tell keys apart by the words their ids don't share", () => {
       expect(
         getNames("Melon", [
           { id: "MELON_BLOCK", rarity: "COMMON" },

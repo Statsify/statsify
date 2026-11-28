@@ -70,7 +70,8 @@ export interface SkyBlockProfileView
   extends PlayerRef, Freshness, ProfileSummary {
   member: MemberView;
   museumFetchedAt?: number;
-  marketDown?: Exclude<keyof MemberView, "apiSettings">[]; // asked for, but left out until the price map and items resource are built
+  // Sections asked for but left out until the price map and items are built.
+  marketDown?: Exclude<keyof MemberView, "apiSettings">[];
 }
 
 // A null section is one the player's API settings hide.
@@ -91,22 +92,21 @@ export interface MemberView {
   hotf?: HotfSection | null;
   gear?: GearSection | null;
   inventories?: InventoriesSection | null;
-  museum?: MuseumView | null; // null: nothing to show (the profile's museumFetchedAt says whether it was fetched)
+  museum?: MuseumView | null; // null with no museum fetched or nothing donated
   experiments?: ExperimentsSection | null;
   rift?: RiftSection | null;
   misc?: MiscSection;
 }
 
-/** An inventory's slots in the game's order; an empty slot is null. */
+// An inventory's slots, in the game's order.
 export type Slots = (ItemView | null)[];
 
-/** Worn and saved gear. null with the inventory API off. */
 export interface GearSection {
   armor: Slots; // helmet to boots
   equipment: Slots; // necklace, cloak, belt, gloves
-  wardrobe: { slot: number; armor: Slots }[]; // sets with anything in them, helmet to boots
-  wardrobeSlot?: number; // the set being worn
-  weapons: ItemView[]; // swords, bows, gauntlets and wands in the inventory, in its order
+  wardrobe: { slot: number; armor: Slots }[];
+  wardrobeSlot?: number;
+  weapons: ItemView[];
 }
 
 // The display entry lists these and can't import the NBT-decoding section.
@@ -124,10 +124,10 @@ export const INVENTORIES = [
 
 export type InventoryId = (typeof INVENTORIES)[number];
 
-/** Every inventory as pages of slots (the ender chest's pages, one per backpack), and the sacks. null with the inventory API off. */
 export interface InventoriesSection {
-  pages: Partial<Record<InventoryId, Slots[]>>; // personalVault is missing with its own setting off
-  backpackIcons: (ItemView | null)[]; // by backpack, as `pages.backpacks`
+  // personalVault is missing with its own API setting off.
+  pages: Partial<Record<InventoryId, Slots[]>>;
+  backpackIcons: (ItemView | null)[]; // in the order of pages.backpacks
   sacks: {
     id: string;
     name: string;
@@ -141,9 +141,10 @@ export interface InventoriesSection {
 export interface MuseumView {
   value: number;
   appraisal: boolean;
-  items: { id: string; category?: string; donatedAt?: number; items: Slots }[]; // id: the museum's key (an item, or an armor set)
+  // An id is an item or an armor set.
+  items: { id: string; category?: string; donatedAt?: number; items: Slots }[];
   special: { donatedAt?: number; items: Slots }[];
-  donated: { category: string; count: number }[]; // keys donated per museum_data category, most first
+  donated: { category: string; count: number }[]; // most first
 }
 
 export interface ApiSettings {
@@ -198,10 +199,10 @@ export interface DungeonsSection {
   catacombs: Level;
   classes: Record<DungeonClass, Level>;
   classAverage: number;
-  classXp: number; // the five classes' XP summed
+  classXp: number;
   selectedClass?: string;
   secrets: number;
-  secretsPerRun: number; // over every completion in both modes
+  secretsPerRun: number;
   floors: Record<"normal" | "master", DungeonFloor[]>;
   highestFloor: Partial<Record<"normal" | "master", number>>;
   mostDamage: Record<"normal" | "master", Record<DungeonClass, number>>;
@@ -222,7 +223,8 @@ export interface HotmSection {
   loadout: { selected: number; total: number };
   tokens: { spent: number; total: number };
   ability?: string;
-  powder: Record<Powder, { total: number; spent: number }>; // total: ever earned
+  // The total is all ever earned, not what's left.
+  powder: Record<Powder, { total: number; spent: number }>;
   nodes: TreeNode[];
   crystals: { found: number; placed: number; gems: Crystal[] };
   nucleusRuns: number;
@@ -339,7 +341,7 @@ export interface ExperimentsSection {
 }
 
 export interface ExperimentTier {
-  tier: number; // the API's index, which each game numbers its own way (Ultrasequencer's start at 1)
+  tier: number; // the API's index, which starts at 1 for Ultrasequencer
   attempts?: number; // not kept for every game
   claims: number;
   bestScore?: number;
@@ -349,8 +351,8 @@ export interface RiftSection {
   motes: number;
   lifetimeMotes: number;
   visits: number;
-  enigmaSouls: number; // found
-  timecharms: number; // secured
+  enigmaSouls: number;
+  timecharms: number;
   catsFound: number;
 }
 
@@ -364,7 +366,7 @@ export interface MiscSection {
   auctions: Record<AuctionStat, number>;
   gifts: { given: number; received: number };
   mythological: { kills: number; chains: number }; // burrow chains completed
-  candy: number; // collected at Spooky Festivals
+  candy: number;
   soulflow: number;
 }
 
@@ -479,7 +481,7 @@ export interface NetworthSection {
     string,
     { total: number; unsoulbound: number; top: NetworthItem[] }
   >;
-  petPrices: Record<string, number>; // by the pet's uuid, for every pet the pets category priced
+  petPrices: Record<string, number>; // by pet uuid
   unpriced: { key: string; name: string; count: number }[];
   unpricedCount: number;
 }
@@ -492,8 +494,8 @@ export interface NetworthItem {
   soulbound: boolean;
   cosmetic: boolean;
   texture?: ItemTexture;
-  basePrice: number; // the item's (or the whole stack's) before what's applied to it
-  modifiers: { type: string; price: number }[]; // a single item's, summed per kind (ENCHANTMENT, REFORGE…), priciest first; pet candy is negative
+  basePrice: number; // the whole stack's, before modifiers
+  modifiers: { type: string; price: number }[]; // per kind, priciest first
 }
 
 export interface SkyBlockLevelSection {
@@ -512,7 +514,7 @@ export interface SkyBlockLevelSection {
   }[];
 }
 
-// No item uuid: nothing reads it, and its random bytes were a fifth of a full inventories payload gzipped
+// No uuid: its random bytes were a fifth of a gzipped inventories payload.
 export interface ItemView {
   id: string; // vanilla items: "minecraft:<id>:<damage>"
   name: string;
@@ -526,7 +528,7 @@ export interface ItemView {
   recombobulated: boolean;
   enchantments?: Record<string, number>;
   enrichment?: string; // an accessory's, as its stat id
-  hotPotato?: number; // hot potato books applied
+  hotPotato?: number;
   obtainedAt?: number; // ms
 }
 
@@ -537,7 +539,7 @@ export type ItemTexture =
 // The API keeps this to itself and never sends it to clients.
 export interface ItemsResource {
   lastUpdated: number;
-  museum: Record<string, string>; // museum key (an item or an armor set) → category
+  museum: Record<string, string>; // item or armor set → category
   items: Record<
     string,
     {
@@ -561,7 +563,8 @@ export interface PriceView {
   name: string;
   rarity?: Rarity;
   texture?: ItemTexture;
-  current?: { coins: number; source: PriceEntry["source"] }; // the price map's, which networth counts
+  // The price map's, which networth counts.
+  current?: { coins: number; source: PriceEntry["source"] };
   bazaar?: BazaarProduct;
   lowestBin?: { coins: number; listings: number };
   npc?: number;

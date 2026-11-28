@@ -115,7 +115,7 @@ const toNetworthItem = (
   cosmetic: priced.cosmetic ?? false,
   texture: getPricedTexture(priced, items),
   basePrice: priced.basePrice,
-  // A stack's base doesn't scale like its price, so only single items get these.
+  // A stack's base doesn't scale like its price, so only single items get them.
   modifiers: (priced.count ?? 1) > 1 ? [] : getModifiers(priced.calculation),
 });
 

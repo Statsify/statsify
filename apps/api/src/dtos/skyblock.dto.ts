@@ -41,13 +41,10 @@ export class SkyBlockPriceDto extends createZodDto(
 
 export class SkyBlockIconDto extends createZodDto(
   z.object({
-    texture: z
-      .string()
-      .max(70)
-      .meta({
-        example: "item-276-0",
-        description: "item-<id>-<damage>[-<color hex>] or head-<skin hash>",
-      }),
+    texture: z.string().max(70).meta({
+      example: "item-276-0",
+      description: "item-<id>-<damage>[-<color hex>] or head-<skin hash>",
+    }),
     size: z.coerce.number().pipe(z.literal(ICON_SIZES)),
     glint: z.coerce
       .number()

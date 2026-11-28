@@ -13,10 +13,6 @@ import type { RawMuseumMember } from "#raw";
 
 const DONATIONS_PER_TURN = 50;
 
-/**
- * The member's donations; null when there are none to show: the museum wasn't fetched (the profile's `museumFetchedAt`
- * tells), its API is off, or nothing is donated.
- */
 export async function getMuseum(
   museum: RawMuseumMember | undefined,
   items: ItemsResource,
@@ -27,7 +23,7 @@ export async function getMuseum(
   for (const [index, [id, { donated_time, items: blob }]] of Object.entries(
     museum.items ?? {},
   ).entries()) {
-    // oxlint-disable-next-line no-await-in-loop -- each donation is a synchronous gunzip and NBT parse, so other requests run between batches
+    // oxlint-disable-next-line no-await-in-loop -- yields to other requests
     if (index > 0 && index % DONATIONS_PER_TURN === 0) await setImmediate();
     donations.push({
       id,

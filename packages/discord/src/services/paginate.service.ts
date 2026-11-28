@@ -34,7 +34,7 @@ type PaginateInteractionContentGenerator = (
 ) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
 
 export type Page = PageInput & {
-  /** The page's own rows under the pickers, such as a link that names what the page shows */
+  // The page's own rows, shown under the pickers.
   rows?: ActionRowBuilder[];
 } & (
     | { subPages: SubPage[] }
