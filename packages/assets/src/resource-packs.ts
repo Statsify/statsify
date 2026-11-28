@@ -6,12 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DOWNLOAD_TIMEOUT, ItemRenderer, PackStack, loadPack, setCanvasBackend } from "@statsify/textures";
+import {
+  DOWNLOAD_TIMEOUT,
+  ItemRenderer,
+  PackStack,
+  loadPack,
+  setCanvasBackend,
+} from "@statsify/textures";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
 import { getAssetPath } from "./index.js";
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { skiaCanvas } from "@statsify/textures/node";
 import { unzipSync } from "fflate";
 import lockfile from "proper-lockfile";
@@ -19,7 +33,8 @@ import lockfile from "proper-lockfile";
 const ROOT = getAssetPath("resource-packs", "public");
 
 const HYPIXEL_PACKS = "https://api.hypixel.net/v2/resources/packs";
-const VERSION_MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
+const VERSION_MANIFEST =
+  "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
 // The client and pack format @statsify/textures draws
 const MINECRAFT_VERSION = "26.3";
@@ -29,7 +44,8 @@ const HYPIXEL_PACK = "SkyBlock";
 
 // Hypixel's pack LICENSE (v1.0, 2026-07-07) by sha256. A pack under any other license is held
 // until someone reviews it and updates this
-const REVIEWED_LICENSE = "22d27db6dc242dbdfdb0bac60ee16a488a8791d724be1734eedc23d85ad8068c";
+const REVIEWED_LICENSE =
+  "22d27db6dc242dbdfdb0bac60ee16a488a8791d724be1734eedc23d85ad8068c";
 
 const ACTIVE = "active.json";
 const PREVIOUS = "previous.json";
@@ -68,7 +84,8 @@ export type PackUpdate =
   | { status: "unchanged" | "running" }
   | { status: "held"; license: string };
 
-const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) => createHash(algorithm).update(data).digest("hex");
+const hash = (algorithm: "sha1" | "sha256", data: Uint8Array) =>
+  createHash(algorithm).update(data).digest("hex");
 
 const generationId = ({ packs }: Generation) => packs.join(" ");
 
@@ -83,12 +100,16 @@ async function settle<T>(promises: Promise<T>[]) {
 }
 
 async function get(url: string) {
-  const response = await fetch(url, { signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT) });
-  if (!response.ok) throw new Error(`${url}: ${response.status} ${response.statusText}`);
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT),
+  });
+  if (!response.ok)
+    throw new Error(`${url}: ${response.status} ${response.statusText}`);
   return new Uint8Array(await response.arrayBuffer());
 }
 
-const parseJson = <T>(data: Uint8Array) => JSON.parse(Buffer.from(data).toString()) as T;
+const parseJson = <T>(data: Uint8Array) =>
+  JSON.parse(Buffer.from(data).toString()) as T;
 
 const getJson = async <T>(url: string) => parseJson<T>(await get(url));
 
@@ -103,11 +124,18 @@ async function download(url: string, sha1: string) {
 }
 
 /** Renames a staged folder into place whole, so a pack folder that exists is complete */
-async function store(folder: string, files: Record<string, Uint8Array | string>) {
+async function store(
+  folder: string,
+  files: Record<string, Uint8Array | string>,
+) {
   const staging = await mkdtemp(join(ROOT, STAGING));
 
   try {
-    await settle(Object.entries(files).map(([name, data]) => writeFile(join(staging, name), data)));
+    await settle(
+      Object.entries(files).map(([name, data]) =>
+        writeFile(join(staging, name), data),
+      ),
+    );
     await mkdir(dirname(join(ROOT, folder)), { recursive: true });
     await rename(staging, join(ROOT, folder));
   } catch (error) {
@@ -118,14 +146,17 @@ async function store(folder: string, files: Record<string, Uint8Array | string>)
 
 async function minecraftClient(version: string) {
   const cached = existsSync(join(ROOT, "minecraft"))
-    ? (await readdir(join(ROOT, "minecraft"))).find((folder) => folder.startsWith(`${version}-`))
+    ? (await readdir(join(ROOT, "minecraft"))).find((folder) =>
+        folder.startsWith(`${version}-`),
+      )
     : undefined;
 
   if (cached) return `minecraft/${cached}/client.jar`;
 
   const manifest = await getJson<VersionManifest>(VERSION_MANIFEST);
   const listed = manifest.versions.find(({ id }) => id === version);
-  if (!listed) throw new Error(`${version} isn't in Minecraft's version manifest`);
+  if (!listed)
+    throw new Error(`${version} isn't in Minecraft's version manifest`);
 
   const metadata = await download(listed.url, listed.sha1);
   const { client } = parseJson<VersionMetadata>(metadata).downloads;
@@ -140,18 +171,32 @@ async function minecraftClient(version: string) {
 async function hypixelPack() {
   const { packs } = await getJson<HypixelPacks>(HYPIXEL_PACKS);
   const pack = packs.find(({ id }) => id === HYPIXEL_PACK);
-  const version = pack?.versions.find(({ packFormat }) => packFormat === PACK_FORMAT);
-  if (!pack || !version) throw new Error(`Hypixel lists no ${HYPIXEL_PACK} pack in format ${PACK_FORMAT}`);
+  const version = pack?.versions.find(
+    ({ packFormat }) => packFormat === PACK_FORMAT,
+  );
+  if (!pack || !version)
+    throw new Error(
+      `Hypixel lists no ${HYPIXEL_PACK} pack in format ${PACK_FORMAT}`,
+    );
 
   const folder = `hypixel/${pack.id.toLowerCase()}-${pack.deployId}-${PACK_FORMAT}-${version.hash}`;
 
   if (!existsSync(join(ROOT, folder))) {
     const zip = await download(version.url, version.hash);
-    const { LICENSE: license } = unzipSync(zip, { filter: ({ name }) => name === "LICENSE" });
+    const { LICENSE: license } = unzipSync(zip, {
+      filter: ({ name }) => name === "LICENSE",
+    });
     if (!license) throw new Error(`${version.url} has no LICENSE`);
 
-    const listing = JSON.stringify({ ...pack, fetchedAt: new Date().toISOString() });
-    await store(folder, { "pack.zip": zip, LICENSE: license, "listing.json": listing });
+    const listing = JSON.stringify({
+      ...pack,
+      fetchedAt: new Date().toISOString(),
+    });
+    await store(folder, {
+      "pack.zip": zip,
+      LICENSE: license,
+      "listing.json": listing,
+    });
   }
 
   return `${folder}/pack.zip`;
@@ -159,7 +204,9 @@ async function hypixelPack() {
 
 async function readGeneration(name: string): Promise<Generation | undefined> {
   const path = join(ROOT, name);
-  return existsSync(path) ? JSON.parse(await readFile(path, "utf8")) : undefined;
+  return existsSync(path)
+    ? JSON.parse(await readFile(path, "utf8"))
+    : undefined;
 }
 
 async function writeGeneration(name: string, generation: Generation) {
@@ -169,7 +216,13 @@ async function writeGeneration(name: string, generation: Generation) {
 }
 
 const loadStack = async ({ packs }: Generation) =>
-  new PackStack(await Promise.all(packs.map(async (path) => loadPack(await readFile(join(ROOT, path)), path))));
+  new PackStack(
+    await Promise.all(
+      packs.map(async (path) =>
+        loadPack(await readFile(join(ROOT, path)), path),
+      ),
+    ),
+  );
 
 async function probe(stack: PackStack) {
   setCanvasBackend(skiaCanvas);
@@ -183,28 +236,47 @@ async function probe(stack: PackStack) {
     }),
   );
 
-  const draws = await Promise.allSettled(ids.map((id) => renderer.render({ id: "minecraft:paper", itemModel: id }, 1)));
+  const draws = await Promise.allSettled(
+    ids.map((id) =>
+      renderer.render({ id: "minecraft:paper", itemModel: id }, 1),
+    ),
+  );
   const failed = ids.filter((_, index) => draws[index].status === "rejected");
 
-  if (failed.length === ids.length) throw new Error(`${stack.hash} can't draw any of its ${ids.length} items`);
+  if (failed.length === ids.length)
+    throw new Error(`${stack.hash} can't draw any of its ${ids.length} items`);
   return failed;
 }
 
 async function prune(kept: Generation[]) {
-  const folders = new Set(kept.flatMap(({ packs }) => packs.map((path) => dirname(path))));
+  const folders = new Set(
+    kept.flatMap(({ packs }) => packs.map((path) => dirname(path))),
+  );
 
   await settle(
     ["minecraft", "hypixel"].map(async (source) => {
       if (!existsSync(join(ROOT, source))) return;
 
-      const unused = (await readdir(join(ROOT, source))).filter((folder) => !folders.has(`${source}/${folder}`));
-      await settle(unused.map((folder) => rm(join(ROOT, source, folder), { recursive: true, force: true })));
+      const unused = (await readdir(join(ROOT, source))).filter(
+        (folder) => !folders.has(`${source}/${folder}`),
+      );
+      await settle(
+        unused.map((folder) =>
+          rm(join(ROOT, source, folder), { recursive: true, force: true }),
+        ),
+      );
     }),
   );
 
   // An update that died mid-write leaves its staging folder behind
-  const staging = (await readdir(ROOT)).filter((folder) => folder.startsWith(STAGING));
-  await settle(staging.map((folder) => rm(join(ROOT, folder), { recursive: true, force: true })));
+  const staging = (await readdir(ROOT)).filter((folder) =>
+    folder.startsWith(STAGING),
+  );
+  await settle(
+    staging.map((folder) =>
+      rm(join(ROOT, folder), { recursive: true, force: true }),
+    ),
+  );
 }
 
 async function lock() {
@@ -220,7 +292,10 @@ async function lock() {
       onCompromised: () => (lost = true),
     });
 
-    return { owned: () => !lost, release: () => (lost ? undefined : release()) };
+    return {
+      owned: () => !lost,
+      release: () => (lost ? undefined : release()),
+    };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ELOCKED") return;
     throw error;
@@ -234,7 +309,9 @@ export async function activeResourcePacks() {
 }
 
 /** The active packs, or undefined until an update first activates some */
-export async function loadResourcePacks(): Promise<{ id: string; stack: PackStack } | undefined> {
+export async function loadResourcePacks(): Promise<
+  { id: string; stack: PackStack } | undefined
+> {
   const active = await readGeneration(ACTIVE);
   if (!active) return;
 
@@ -243,7 +320,8 @@ export async function loadResourcePacks(): Promise<{ id: string; stack: PackStac
   } catch (error) {
     // An update can prune these packs while they load, once it has activated newer ones
     const replaced = (await activeResourcePacks()) !== generationId(active);
-    if ((error as NodeJS.ErrnoException).code === "ENOENT" && replaced) return loadResourcePacks();
+    if ((error as NodeJS.ErrnoException).code === "ENOENT" && replaced)
+      return loadResourcePacks();
     throw error;
   }
 }
@@ -259,7 +337,9 @@ export async function updateResourcePacks(): Promise<PackUpdate> {
   if (!lease) return { status: "running" };
 
   try {
-    const generation = { packs: await settle([minecraftClient(MINECRAFT_VERSION), hypixelPack()]) };
+    const generation = {
+      packs: await settle([minecraftClient(MINECRAFT_VERSION), hypixelPack()]),
+    };
     const active = await readGeneration(ACTIVE);
     if (active && generationId(active) === generationId(generation)) {
       await rm(join(ROOT, HELD), { force: true });
