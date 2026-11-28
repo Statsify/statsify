@@ -15,19 +15,18 @@ import {
 } from "@statsify/assets/resource-packs";
 import { setResourcePacks } from "@statsify/skyblock/icons";
 
-const UPDATE_INTERVAL = 6 * 60 * 60 * 1000;
+const UPDATE_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
-/** Keeps SkyBlock's item icons on the newest resource packs, which the updater downloads and checks. */
 @Service()
 export class ResourcePacksService {
   private readonly logger = new Logger("ResourcePacksService");
   private active?: string;
 
   public async init() {
-    // Icons draw from 1.8's textures until packs load, so startup doesn't wait on a download
+    // Startup doesn't wait on a download, since icons fall back to 1.8's.
     await this.load().catch((error) => this.logger.error(error));
     void this.update();
-    setInterval(() => void this.update(), UPDATE_INTERVAL);
+    setInterval(() => void this.update(), UPDATE_INTERVAL_MS);
   }
 
   private async update() {
@@ -46,7 +45,7 @@ export class ResourcePacksService {
         );
       }
 
-      // Another process may have activated packs too
+      // Another process may have activated packs too.
       await this.load();
     } catch (error) {
       this.logger.error(error);
